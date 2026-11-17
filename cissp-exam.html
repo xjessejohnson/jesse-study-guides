@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CISSP Mock Exam | Jesse's Study Guides</title>
+  <meta name="description" content="100-question interactive CISSP practice exam with instant memory-aid feedback." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .exam-topbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.85rem;
+      margin-bottom: 1.25rem;
+      position: relative;
+      z-index: 20;
+    }
+    .btn-ghost {
+      padding: 0.55rem 1rem;
+      border-radius: 8px;
+      border: 1px solid var(--border-slate);
+      background: transparent;
+      color: var(--text-secondary);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.76rem;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .btn-ghost:hover { border-color: var(--cyan); color: #fff; }
+    .btn-lime {
+      padding: 0.78rem 1.45rem;
+      border-radius: 9px;
+      border: none;
+      background: var(--lime);
+      color: #05070c;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+    .btn-lime:hover {
+      filter: brightness(1.08);
+      box-shadow: 0 0 22px rgba(158, 255, 51, 0.35);
+      transform: translateY(-1px);
+    }
+
+    /* Custom Scrollable Jump Dropdown */
+    .jump-wrapper {
+      position: relative;
+      display: inline-block;
+    }
+    .jump-trigger {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.5rem 0.9rem;
+      border-radius: 8px;
+      border: 1px solid var(--border-slate);
+      background: var(--bg-card);
+      color: #f8fafc;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: border-color 0.15s ease;
+    }
+    .jump-trigger:hover,
+    .jump-trigger.open {
+      border-color: var(--cyan);
+      color: var(--cyan);
+    }
+    .jump-menu {
+      position: absolute;
+      right: 0;
+      top: calc(100% + 6px);
+      width: 260px;
+      max-height: 290px;
+      overflow-y: auto;
+      background: #0d121c;
+      border: 1px solid var(--cyan);
+      border-radius: 10px;
+      padding: 0.5rem;
+      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.85);
+      display: none;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.35rem;
+      z-index: 60;
+    }
+    .jump-menu.open { display: grid; }
+    .jump-opt {
+      padding: 0.45rem 0.25rem;
+      border-radius: 6px;
+      border: 1px solid transparent;
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--text-secondary);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.12s ease;
+    }
+    .jump-opt:hover {
+      background: var(--cyan-dim);
+      color: #fff;
+      border-color: rgba(34, 211, 238, 0.4);
+    }
+    .jump-opt.current {
+      background: var(--lime);
+      color: #05070c;
+      font-weight: 700;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 5px;
+      background: rgba(148, 163, 184, 0.14);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 1.6rem;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--cyan), var(--lime));
+      transition: width 0.25s ease;
+    }
+    .q-meta {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.76rem;
+      color: var(--cyan);
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+    .q-type-tag {
+      padding: 0.18rem 0.55rem;
+      border-radius: 6px;
+      background: var(--cyan-dim);
+      color: var(--cyan);
+      border: 1px solid rgba(34, 211, 238, 0.3);
+      font-size: 0.7rem;
+    }
+    .q-text {
+      font-size: 1.1rem;
+      line-height: 1.6;
+      color: #fff;
+      font-weight: 500;
+      margin-bottom: 1.45rem;
+    }
+    .options-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+      margin-bottom: 1.65rem;
+    }
+    .option-card {
+      width: 100%;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.9rem;
+      padding: 0.95rem 1.15rem;
+      border-radius: 10px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-slate);
+      color: var(--text-primary);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      user-select: none;
+    }
+    .option-card:hover { border-color: rgba(34, 211, 238, 0.45); background: var(--bg-card-hover); }
+    .option-card.selected { border-color: var(--lime); background: var(--lime-dim); }
+    .option-indicator {
+      width: 19px;
+      height: 19px;
+      flex-shrink: 0;
+      margin-top: 2px;
+      border: 2px solid var(--text-muted);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s ease;
+    }
+    .option-indicator.radio { border-radius: 50%; }
+    .option-indicator.checkbox { border-radius: 5px; }
+    .option-card.selected .option-indicator { border-color: var(--lime); background: var(--lime); }
+    .option-card.selected .option-indicator::after { content: ""; display: block; }
+    .option-card.selected .option-indicator.radio::after {
+      width: 7px; height: 7px; border-radius: 50%; background: #05070c;
+    }
+    .option-card.selected .option-indicator.checkbox::after {
+      width: 5px; height: 9px; border: solid #05070c; border-width: 0 2.2px 2.2px 0;
+      transform: rotate(45deg); margin-bottom: 2px;
+    }
+    .exam-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.85rem; }
+
+    /* Feedback Modal Overrides */
+    .modal-box.wrong { border-color: rgba(251, 113, 133, 0.65); }
+    .modal-box.correct { border-color: rgba(158, 255, 51, 0.65); }
+    .modal-box.wrong .modal-title { color: var(--rose); }
+    .modal-box.correct .modal-title { color: var(--lime); }
+    .modal-body:empty { display: none; }
+    .modal-body code {
+      font-family: 'JetBrains Mono', monospace;
+      background: rgba(148, 163, 184, 0.15);
+      padding: 0.1rem 0.35rem;
+      border-radius: 4px;
+      color: var(--cyan);
+      font-size: 0.88em;
+    }
+    .modal-body strong { color: #fff; }
+  </style>
+</head>
+<body>
+
+  <div class="frame-wrapper">
+    <aside>
+      <div class="brand-block">
+        <div class="brand-row">
+          <div>
+            <a href="index.html" class="brand-title">Jesse's Study Guides</a>
+            <div class="brand-tagline">Unofficial compiled training database v1.0</div>
+          </div>
+          <button class="mobile-menu-btn" id="mobile-menu-btn" aria-expanded="false" aria-controls="nav-drawer">
+            Menu &#9776;
+          </button>
+        </div>
+        <a class="coffee-btn" href="https://www.buymeacoffee.com/YOUR_USERNAME" target="_blank" rel="noopener noreferrer">
+          &#9749; Buy Me a Coffee
+        </a>
+      </div>
+
+      <nav class="nav-drawer" id="nav-drawer" aria-label="Study Categories">
+        <div class="nav-section">
+          <div class="nav-label">Cybersecurity</div>
+          <a href="cissp.html" class="nav-item active">
+            <span>CISSP</span>
+            <span class="badge live">Active</span>
+          </a>
+          <span class="nav-item disabled" aria-disabled="true">
+            <span>CISM</span>
+            <span class="badge">Coming Soon</span>
+          </span>
+          <span class="nav-item disabled" aria-disabled="true">
+            <span>Security+</span>
+            <span class="badge">Coming Soon</span>
+          </span>
+        </div>
+
+        <div class="nav-section">
+          <div class="nav-label">Psychology</div>
+          <span class="nav-item disabled" aria-disabled="true">
+            <span>NCE</span>
+            <span class="badge">Coming Soon</span>
+          </span>
+        </div>
+
+        <div class="nav-section">
+          <div class="nav-label">Other</div>
+          <span class="nav-item disabled" aria-disabled="true">
+            <span>Coming Soon</span>
+            <span class="badge">Coming Soon</span>
+          </span>
+        </div>
+      </nav>
+    </aside>
+
+    <div class="main-area">
+      <div class="topbar">
+        <div class="breadcrumb">JESSE'S STUDY GUIDES / CISSP / <span>MOCK EXAM</span></div>
+        <div class="status-pill"><span class="status-dot"></span> SYSTEM ONLINE</div>
+      </div>
+
+      <main class="content-body" id="exam-main"></main>
+    </div>
+  </div>
+
+  <!-- Answer Feedback Modal -->
+  <div class="modal-backdrop" id="feedback-modal" role="dialog" aria-modal="true">
+    <div class="modal-box" id="feedback-box">
+      <div class="modal-top" style="border-bottom:none;padding-bottom:0;">
+        <div class="modal-title" id="feedback-status"></div>
+        <button class="modal-close" id="feedback-close-btn" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body" id="feedback-body"></div>
+    </div>
+  </div>
+
+  <!-- Privacy Policy Modal -->
+  <div class="modal-backdrop" id="privacy-modal" role="dialog" aria-modal="true" aria-labelledby="privacy-title">
+    <div class="modal-box">
+      <div class="modal-top">
+        <div class="modal-title" id="privacy-title">Privacy Policy</div>
+        <button class="modal-close" id="privacy-close-btn" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body">
+        <p><strong>Effective Date:</strong> November 17, 2026</p>
+        <h4>1. Information We Collect</h4>
+        <p>Jesse's Study Guides is a static, informational study website. We do not require user registration, accounts, or logins, and we do not directly collect names, email addresses, or payment details on this site.</p>
+        <h4>2. Hosting and Server Logs</h4>
+        <p>This website is hosted via Vercel. As part of standard web delivery and security operations, our hosting provider may automatically process basic technical request data such as your IP address, browser type, operating system, and timestamps in temporary server logs.</p>
+        <h4>3. Cookies and Tracking</h4>
+        <p>This website does not use advertising trackers or third-party marketing cookies.</p>
+        <h4>4. Third-Party Links</h4>
+        <p>This site includes an external link to Buy Me a Coffee for voluntary donations. If you choose to visit or donate through that platform, any information you provide is governed directly by Buy Me a Coffee's own privacy policy and terms of service.</p>
+        <h4>5. Changes to This Policy</h4>
+        <p>This policy may be updated as new features or study modules are added to the site. Questions regarding this notice can be directed to the site owner, Jesse Johnson.</p>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2026 Jesse Johnson. All rights reserved.</p>
+    <p>
+      This portal is an independent, unofficial personal study resource and is not affiliated with, endorsed by, or sponsored by ISC2, ISACA, CompTIA, NBCC, or any other certification body.
+      CISSP&reg; is a registered trademark of ISC2. CISM&reg; is a registered trademark of ISACA. CompTIA Security+&reg; is a registered trademark of CompTIA. NCE&reg; is a registered trademark of NBCC. All vendor materials, trademarks, and copyrights remain the property of their respective owners.
+    </p>
+    <div class="footer-links">
+      <button type="button" class="privacy-link" id="open-privacy-btn">Privacy Policy</button>
+    </div>
+  </footer>
+
+  <script>
+    const questions = [
+      { id: 1, q: "By what terminology is the core of information security commonly summed up? Choose the best response:", opts: ["CIA triad", "Threat-vector assessment", "Security controls", "Principle of least privilege"], ans: [0], exp: "Memorize **CIA (Confidentiality, Integrity, Availability)** as the overarching goal of all security, whereas controls, threat assessments, and least privilege are merely tools used to protect the triad." },
+      { id: 2, q: "What are the benefits of a job rotation policy? Select all that apply.", opts: ["Helps detect fraudulent activity over time", "Trains employees more broadly", "Allows employees to discover each other’s mistakes in multi-step processes", "Minimizes permissions given to any one employee", "Prevents data loss"], ans:, exp: "Job rotation **uncovers long-term fraud** and **cross-trains staff** by moving people into new seats. Catching mistakes in multi-step workflows is Separation of Duties, and minimizing permissions is Least Privilege." },
+      { id: 3, q: "Which functions are performed by the Kerberos KDC? Select all that apply.", opts: ["Authentication service", "TGT", "Resource server", "Domain controller", "Identity provider"], ans:, exp: "For the exam, remember that the KDC's internal jobs are running the **Authentication Service (AS)** and issuing the **TGT**; the Domain Controller is just the server hardware that hosts it, and the Resource Server is the target machine." },
+      { id: 4, q: "What access control model was popularized by military usage? Choose the best response.", opts: ["Mandatory", "Discretionary", "Role-based", "Rule-based"], ans: [0], exp: "Associate **Military = Mandatory (MAC)** because only MAC enforces top-down classification labels (Secret/Top Secret) where users cannot override permissions." },
+      { id: 5, q: "Which of the following statements about SSO are accurate? Select all that apply.", opts: ["SSO can increase enterprise risk", "SSO can make accessing enterprise systems simpler", "SSO enforces the principle of least privilege", "Attackers cannot access SSO-guarded systems as long as the authorized user is already authenticated", "When the SSO identity provider is down, users are automatically presented with separate dialogs to authenticate with each backend service individually"], ans:, exp: "Remember the classic SSO trade-off: **high convenience (simpler login)** vs. **high risk (one stolen master password unlocks everything)**. SSO only handles authentication, not least-privilege permissions, and fails closed if the IdP goes down." },
+      { id: 6, q: "You’ve been asked to consult on security for an application that’s designed to interoperate with Google and Salesforce SSO systems. What protocol should you study first? Choose the best response.", opts: ["SAML", "Kerberos", "LDAP", "RADIUS"], ans: [0], exp: "Whenever a question mentions **web/cloud SSO across big SaaS platforms (Google, Salesforce)**, immediately pick **SAML**; Kerberos, LDAP, and RADIUS are for internal corporate LAN/network logins." },
+      { id: 7, q: "You’ve been instructed to implement two-factor authentication for a secure system. What of the following would qualify? Select all that apply.", opts: ["Password and OTP", "Smart card and OTP", "Smart card and fingerprint scan", "Iris scan and fingerprint scan", "Password and iris scan"], ans:, exp: "You must pair **two different categories**: Something you **Know** (Password), **Have** (Smart card or OTP token), or **Are** (Fingerprint/Iris). Two biometrics or two possession tokens (Smart card + OTP) only count as single-factor." },
+      { id: 8, q: "Your wireless network is configured in 802.1X mode. What kind of server does it most likely use as a backend? Choose the best response.", opts: ["KERBEROS", "RADIUS", "TACACS+", "TKIP"], ans:, exp: "Lock in the word association **802.1X = RADIUS**; 802.1X port security always forwards EAP wireless authentication requests to a RADIUS backend, while TACACS+ is for router/switch admin logins." },
+      { id: 9, q: "You’re evaluating NAC solutions. One feature you need is to make sure that when sales users join the network remotely, they’ll automatically be joined to the Sales network and given access to its resources. What kind of solution should you look for? Choose the best response.", opts: ["Agentless", "Location-based", "Role-based", "Rule-based"], ans:, exp: "When access is grouped by **job title or department (\"Sales users\")**, the answer is always **Role-based**; rule-based applies universal firewall rules to everyone regardless of job title." },
+      { id: 10, q: "For regulatory compliance, you’re required to use unique user IDs for all computer access. There’s one isolated critical system that doesn’t support user-based access and must be used by multiple people. What might be a valid compensatory control? Choose the best response.", opts: ["Enabling system logging on that computer", "Encrypting all connections from that computer", "Placing a firewall between that computer and the network", "Using security cameras and a logbook to track access to the computer itself"], ans:, exp: "Unique IDs exist to prove who sat at the keyboard; if the software only has one shared account, only **physical cameras and a paper logbook** can prove which human used it at a given time." },
+      { id: 11, q: "What qualifies as both a preventative and a detective control? Choose the best response.", opts: ["A locked door", "A motion detector", "A security guard", "A surveillance camera"], ans: [0], exp: "On this test bank, **a locked door** prevents entry when intact and acts as a detective indicator when broken or picked, whereas motion detectors and cameras are strictly detective." },
+      { id: 12, q: "You’ve been asked to help consult for security on an application that’s designed to interoperate with Google and Salesforce SSO systems. What protocol should you study first? Choose the best response.", opts: ["Kerberos", "LDAP", "RADIUS", "SAML"], ans:, exp: "Duplicate concept: **Cloud/Web SSO (Google/Salesforce) = SAML**, while the other three choices are legacy internal network protocols." },
+      { id: 13, q: "Your company is developing a custom web app for the sales team. It should be able to access a list of Salesforce contacts, but for security reasons, the app shouldn’t be able to access the actual Salesforce account. What standard would allow this? Choose the best response.", opts: ["Kerberos", "OAuth", "OpenID Connect", "SAML"], ans:, exp: "Whenever an app needs **partial permission to read data (like contacts) without getting full login access**, choose **OAuth** (Authorization/Delegation), not SAML or OIDC (which are for full user sign-on)." },
+      { id: 14, q: "You’re configuring a router, and want it to check the properties of incoming traffic before passing it on. What will this require? Choose the best response.", opts: ["Configuring ACLs", "Configuring routing tables", "Either would have the same effect", "Only a fully featured firewall can do this."], ans: [0], exp: "Routing tables only tell a router where to send traffic, while **ACLs (Access Control Lists)** tell a router whether to allow or block traffic based on IP/port properties." },
+      { id: 15, q: "Your remote access system currently uses RADIUS, but one administrator is proposing replacing it with TACACS+. What benefits might this provide? Select all that apply.", opts: ["Better able to support non-IP protocols", "Better suited to large networks", "Less complicated to administer", "More secure", "More focused on user authentication"], ans:, exp: "Memorize TACACS+ as **More Secure** (encrypts the whole packet, not just the password), **Scalable for large networks**, and **supporting non-IP protocols**; however, separating AAA makes it more complex to administer, not less." },
+      { id: 16, q: "Which of the following is not a primary type of access control? Choose the best response.", opts: ["DAC", "MAC", "Role-based access control", "Rule-based access control", "RBAC"], ans:, exp: "When both `RBAC` and `Role-based access control` appear in the choices, remember that **RBAC** can stand for Rule-Based Access Control (a primary type alongside DAC and MAC), making spelled-out **Role-based access control** the secondary subtype to eliminate." },
+      { id: 17, q: "Which of the following statements are true of Discretionary Access Control (DAC)? Select all that apply.", opts: ["Each user controls their own system and resources", "Any object that does not have an owner is left unprotected", "Every object in a system must have an owner", "Access is determined by the system"], ans:, exp: "In **DAC**, everything revolves around the **Owner**—every object must have one, owners control their own resources, and ownerless objects have no protection. \"Access is determined by the system\" is the definition of MAC." },
+      { id: 18, q: "Which protocol is more of a message framework than an authentication method in itself? Choose the best response.", opts: ["CHAP", "EAP", "MS-CHAP", "PAP"], ans:, exp: "**EAP (Extensible Authentication Protocol)** is just an empty \"envelope\" (framework) that carries actual authentication methods like TLS, whereas PAP and CHAP are specific login methods." },
+      { id: 19, q: "What advantages does TACACS+ provide over RADIUS? Select all that apply.", opts: ["While RADIUS uses UDP, TACACS+ uses TCP port 49. Since TCP is connection-oriented, it provides message acknowledgment, so when a client or server doesn’t get a quick response, it knows something is wrong.", "Unlike RADIUS, TACACS+ encrypts entire access request packets.", "While RADIUS combines authentication and authorization into a single step, TACACS+ entirely separates all three steps of the AAA process.", "TACACS+ supports more non-IP protocols, such as AppleTalk, NetBIOS, Novell, and X.25"], ans:, exp: "Memorize the 4 wins of TACACS+ over RADIUS: **TCP port 49** (vs. UDP), **Full packet encryption** (vs. password-only), **Separates all 3 AAA steps**, and **Non-IP protocol support**." },
+      { id: 20, q: "For cloud and other online services, you’re more likely to see the following SSO-related protocols. Select all that apply.", opts: ["SAML", "Kerberos", "LDAP", "OAuth"], ans:, exp: "**Cloud/Web = SAML and OAuth** (which work over HTTPS/browsers), while **On-Premises LAN = Kerberos and LDAP** (Active Directory)." },
+      { id: 21, q: "Which of the following statements characterize systems using Decentralized Access Control? Select all that apply.", opts: ["Maintains multiple domains and trusts", "Uses one centralized entity to process access requests", "Is used in Database Management Systems (DBMS)", "Is peer-to-peer in design", "Includes rigorous standards and overlapping rights"], ans:, exp: "Decentralized means **no single boss**—instead, it uses **peer-to-peer design, multiple domains/trusts, and DBMS-style distributed grants**, lacking rigorous central standards." },
+      { id: 22, q: "Which of the following biometric systems is the most accurate? Choose the best response.", opts: ["Retina scan", "Fingerprint", "Keyboard dynamics", "Voice recognition"], ans: [0], exp: "Always pick **Retina (or Iris) eye scans** as the most accurate biometric because eye blood vessels cannot be forged or worn down like fingerprints or voices." },
+      { id: 23, q: "Which statement below describes the process of using credentials from one system to log in to another organization’s system. Choose the best response.", opts: ["Transitive trust", "Federated ID", "Nontransitive trust", "Single Sign-on"], ans:, exp: "The keyword is **\"another organization's system\"**—SSO works inside one company, but crossing into a different company makes it **Federated ID**." },
+      { id: 24, q: "Which of the following attacks target passwords that include a combination of A-Z, a-z, 0-9, and special characters? Select all that apply.", opts: ["Brute force attacks", "Dictionary attacks", "Hybrid attacks", "Rainbow tables"], ans:, exp: "Adding numbers and symbols defeats a plain **Dictionary attack** (which only tries normal words), forcing attackers to use **Brute force**, **Rainbow tables** (precomputed hashes), or **Hybrid attacks** (dictionary words + appended numbers/symbols)." },
+      { id: 25, q: "Which access control method makes use of a join and a meet? Choose the best response.", opts: ["Rule-based access control", "Mandatory access control", "Discretionary access control", "Lattice-based access control (LBAC)"], ans:, exp: "Memorize the phrase **\"Join and Meet = Lattice\"**—a lattice is a math grid with a ceiling (Join / least upper bound) and a floor (Meet / greatest lower bound)." },
+      { id: 26, q: "Which of the following are OAuth roles? Select all that apply.", opts: ["Resource owner", "Resource server", "Supplicant", "Authentication server"], ans:, exp: "Eliminate **Supplicant** immediately because \"Supplicant\" is an **802.1X wireless** term; the other three represent the user, data server, and login server in OAuth." },
+      { id: 27, q: "What are the 4 components of SAML? Choose the best response.", opts: ["Assertions, protocols, bindings, and resource owners", "Assertions, protocols, bindings, and profiles", "Resource owners, protocols, bindings, and resource servers", "Resource owners, protocols, authorization servers, and resource servers"], ans:, exp: "Eliminate any choice containing \"Resource owners\" or \"Resource servers\" (those are OAuth terms); SAML's 4 building blocks are **Assertions, Protocols, Bindings, and Profiles**." },
+      { id: 28, q: "Which of the following statements are true of OpenID Connect (OIDC)? Select all that apply.", opts: ["OIDC handles SSO authentication between systems.", "OIDC enables access delegation", "OIDC runs as a layer on top of the OAuth framework", "Like SAML, OIDC can give access based on ABAC principles"], ans:, exp: "Remember **OAuth = Authorization (delegation)** and **OIDC = Authentication (SSO)**; OIDC sits on top of OAuth specifically to verify who the user is for SSO." },
+      { id: 29, q: "What SIEM software feature finds broader trends and relationships formed by individually insignificant events? Choose the best response.", opts: ["Aggregation", "Correlation", "Deduplication", "Synchronization"], ans:, exp: "**Correlation = connecting the dots** between separate events to spot an attack trend, whereas aggregation just collects logs into one place and deduplication deletes duplicates." },
+      { id: 30, q: "You’re reviewing security logs to ensure that only authorized users have logged on. What aspect of identity management are you engaging in? Choose the best response.", opts: ["Identification", "Authorization", "Authentication", "Accountability"], ans:, exp: "Whenever you see **\"reviewing logs\" or \"auditing past actions,\"** the answer is always **Accountability** (holding users responsible after the fact)." },
+      { id: 31, q: "What is the process of verifying identification before provisioning accounts called? Choose the best response.", opts: ["Registration", "Identity proofing", "Establishment of identity", "Background check"], ans:, exp: "Checking a person's real-world ID (like a birth certificate or passport) before creating their account is specifically called **Identity proofing**." },
+      { id: 32, q: "Which of the following statements is not true of Federated Identity Management (FIM)? Choose the best response.", opts: ["Members of a federation can share authentication tokens, access shared authentication servers, or otherwise behave as though they’re part of a unified security system.", "A federation is synonymous with a transitive trust.", "They allow authentication systems to be shared across multiple systems or networks that share authentication standards even if they’re not directly associated with each other.", "An increasingly popular approach to FIM is access delegation."], ans:, exp: "Watch out for the \"NOT true\" phrasing: Federation relies on explicit legal/technical agreements between separate companies, so it is **not** an automatic Active Directory transitive trust." },
+      { id: 33, q: "Your large company has a partnership with an online training provider so that you can log into free courses with your employee ID. You have implemented a process whereby users can sign into the training provider’s site using their company log in. What is this an example of? Choose the best response.", opts: ["SSO", "Just-In-Time provisioning", "Multi-factor authentication", "Registration"], ans:, exp: "When employees log into a partner site with their work ID and the partner site **automatically creates their student account on the fly**, that automated account creation is **Just-In-Time (JIT) provisioning**." },
+      { id: 34, q: "You are the administrator of your company’s isolated network. You are responsible for buying the hardware and software as well as integrating and maintaining all aspects of the network. In this scenario, what is the most likely choice for identity management? Choose the best response.", opts: ["On-premise", "Cloud", "Federated", "None of the above"], ans: [0], exp: "The giveaway clue is **\"isolated network\"** plus **\"buying the hardware\"**—an air-gapped network with your own servers must be **On-premise**, not Cloud or Federated." },
+      { id: 35, q: "In further analysis of the web application, you’ve discovered a hidden combination of commands any authenticated user can use to unlock a management console that gives administrative access to the application. What kind of vulnerability have you uncovered? Choose the best response.", opts: ["Backdoor", "Logic bomb", "Privilege escalation", "Rootkit"], ans:, exp: "Because the user is already authenticated as a normal user and uses commands to jump up to **administrative access**, this flaw is **Privilege escalation** (whereas a backdoor bypasses login altogether)." },
+      { id: 36, q: "Consider the permissions system used by Linux and other Unix-like operating systems. In that system, every file or directory is owned by a particular user, and it’s also assigned to a particular group, which can include multiple users. The owner (or an administrator) can then configure the object’s access permissions, or modes, separately for the owner, the group, and any other user. What type of access control mechanism is this?", opts: ["DAC", "MAC", "ABAC", "RBAC"], ans: [0], exp: "Standard Linux/Windows file permissions where the **file owner decides `rwx` permissions** is the textbook example of **DAC (Discretionary Access Control)**." },
+      { id: 37, q: "Consider the eXtensible Access Control Markup Language (XACML), an XML-based standard that defines a policy language, attribute elements, and system architecture to evaluate and enforce policies. What type of access control mechanism is this an example of? Choose the best response.", opts: ["DAC", "MAC", "RBAC", "ABAC"], ans:, exp: "The question stem literally says **\"attribute elements\"**—always link **XACML = ABAC (Attribute-Based Access Control)**." },
+      { id: 38, q: "Consider the Microsoft Azure Active Directory, which is a typical example of conditional access. It allows you to incorporate both user identification, device authentication, and other conditions into determining access. What type of access control mechanism is this an example of? Choose the best response.", opts: ["DAC", "MAC", "Risk-based access control", "RBAC"], ans:, exp: "Azure Conditional Access evaluates **changing conditions (device health, IP location, login risk)** in real time, which defines **Risk-based access control**." },
+      { id: 39, q: "If a password cracker is not in a particular hurry and wants to target a system with a very large number of user accounts and a policy that locks accounts after three failed login attempts, which attack has the best chance of succeeding to find even a single account to compromise? Choose the best response.", opts: ["A password spraying attack", "A dictionary attack", "A plaintext attack", "A rainbow table attack"], ans: [0], exp: "To beat a **3-strike lockout policy**, attackers \"spray\" **one common password across thousands of usernames** instead of guessing many passwords on one account (dictionary attack)." },
+      { id: 40, q: "A third-party team is going to formally examine your organization’s overall security practices to make sure they meet regulatory compliance goals. Your organization may be fined if it fails. What would this verification process best be called? Choose the best response.", opts: ["Assessment", "Audit", "Certification", "Evaluation"], ans:, exp: "The keywords **\"third-party,\" \"regulatory compliance,\" and \"fined if it fails\"** always point to a formal **Audit**, whereas assessments are internal self-checks for improvement." },
+      { id: 41, q: "You’re auditing login passwords using a brute force cracker with a GUI interface that can perform simultaneous parallel attacks against multiple accounts. What tool are you most likely using? Choose the best response.", opts: ["Hydra", "Medusa", "Hashcat", "Cain and Abel"], ans: [0], exp: "Memorize **Hydra** for **parallel network login cracking with a GUI (xHydra)**; Medusa is command-line only, and Hashcat cracks offline hashes rather than live login prompts." },
+      { id: 42, q: "Recently, you have read a lot about data breaches, and you want to know what vulnerabilities an attacker will likely find in your network and highlight the changes you need to make. What will your security audit need to include? Select all that apply.", opts: ["Escalation", "Reconnaissance", "Real attacks", "Penetration tests"], ans:, exp: "To see what an attacker would find and fix it safely, you perform **Reconnaissance** (to map exposed weaknesses) and **Penetration tests** (simulated attacks), never destructive \"real attacks.\"" },
+      { id: 43, q: "To achieve your testing goal, you need to maintain access for two weeks, then clean up your tracks in time for an internal security audit a week later. Ideally, there should be no sign an attack had even occurred. Which element of your draft plan should you probably change? Choose the best response", opts: ["Completely wipe system logs before you leave", "Compromise only a few hosts at any given time", "Install fake Linux daemons using xinetd instead of as standalone processes", "Perform most of your work using common protocols on a busy server"], ans: [0], exp: "If you want **\"no sign an attack had occurred,\"** you must **never wipe the entire system log**—an empty log file is an obvious red flag that someone erased evidence." },
+      { id: 44, q: "For an outside attacker, what reconnaissance method is much easier on wireless networks than wired ones? Choose the best response.", opts: ["DNS harvesting", "Log review", "Packet capture", "Service discovery"], ans:, exp: "Wi-Fi signals travel through walls into parking lots, making **Packet capture (sniffing)** easy for an outsider without needing to physically plug into a switch inside the building." },
+      { id: 45, q: "Why might an administrator engage in the arduous task of manually reviewing log files on a regular basis? Choose the best response.", opts: ["To comply with PCI DSS regulations", "To search for hidden false positives", "To spare the expense of implementing Syslog and SIEM", "To discover events and incidents more quickly", "As a compensating control for vulnerability assessments"], ans:, exp: "Manual log review is slow (not quicker than SIEM), so admins do it when **mandated by compliance rules like PCI DSS** or **as a compensating control** when automated tools aren't in place." },
+      { id: 46, q: "What kind of penetration test involves a tester with full knowledge of your network configuration? Choose the best response.", opts: ["White box", "Black box", "Black hat", "White hat"], ans: [0], exp: "**White box = clear/transparent box (full knowledge of the network)**, whereas Black box means zero prior knowledge, and White/Black \"hat\" refers to a hacker's ethics, not test types." },
+      { id: 47, q: "What document specifically covers moving operations to a temporary site? Choose the best response.", opts: ["COOP", "BCP", "BIA", "DRP"], ans: [0], exp: "Memorize **COOP (Continuity of Operations Plan) = moving people and mission functions to a temporary site**, whereas DRP focuses on restoring IT servers and BIA just calculates risk impact." },
+      { id: 48, q: "In the field of account management, which of the following sources can be used individually as proof of identity when authenticating a user or system? Each correct answer represents a complete solution. Choose the four that best apply.", opts: ["IdP", "Certificate", "Token", "Smart card"], ans:, exp: "Notice the prompt says **\"Choose the four that best apply\"** and gives exactly four options—all four (**IdP assertions, Certificates, Tokens, and Smart cards**) can prove a user's or system's identity." },
+      { id: 49, q: "What steps might be taken as part of a vulnerability scan? Select all that apply.", opts: ["Bypassing security controls", "Exploiting vulnerabilities", "Finding open ports", "Identifying vulnerabilities", "Passively testing security controls"], ans:, exp: "A **vulnerability scan only looks and reports** (open ports, vulnerabilities, passive checks); **bypassing and exploiting** cross the line into a Penetration Test." },
+      { id: 50, q: "What kind of penetration test involves a tester with full knowledge of your network configuration? Choose the best response.", opts: ["Black box", "Black hat", "White box", "White hat"], ans:, exp: "Duplicate of Question 46: **Full knowledge = White box**." },
+      { id: 51, q: "While conducting a penetration test, you’ve just managed to get access to a critical server. The main problem is that you got it through a session hijacking attack that took both luck and precise timing, and might be cut off at any time. Given limited time, what should your next step be? Choose the best response.", opts: ["Escalate privileges", "Establish persistence", "Perform reconnaissance", "Pivot"], ans:, exp: "If your connection **\"might be cut off at any time,\"** your immediate move is **Establish persistence** (drop a backdoor or SSH key) so you can get right back in when the lucky session drops." },
+      { id: 52, q: "A user logs into their computer and is presented with a screen showing a Department of Justice logo indicating the computer has been locked due to the user violating federal law. The screen gives several details of the violation and indicates that the user must pay a fine of $500 within 72 hours, or a warrant will be issued for their arrest. The user cannot unlock the system. What type of malware has likely infected the computer? Choose the best response.", opts: ["Keylogger", "Ransomware", "Rootkit", "Trojan", "Worm"], ans:, exp: "Anytime malware **locks the computer and demands money ($500 fine)** to unlock it, the answer is **Ransomware**." },
+      { id: 53, q: "You have discovered malware that logs keystrokes on a user’s computer. What aspect of security was primarily attacked? Choose the best response.", opts: ["Confidentiality", "Authority", "Integrity", "Availability"], ans: [0], exp: "A keylogger **spies on secret passwords and messages** without changing them or crashing the PC, which is a pure attack on **Confidentiality**." },
+      { id: 54, q: "Which statements about reconnaissance are true? Select all that apply.", opts: ["Cybersecurity reconnaissance is sometimes called footprinting", "Reconnaissance encompasses just about any technique you can use to gather information about any target", "Reconnaissance includes direct attacks such as system exploits or privilege escalation", "Reconnaissance is always from the perspective of an outsider."], ans:, exp: "**Reconnaissance = Footprinting (gathering information)**; it never includes active exploits, and insiders can do reconnaissance too." },
+      { id: 55, q: "Which attack is characterized by maliciously looking for wireless signals? Choose the best response.", opts: ["OSINT", "Wardriving", "Footprinting", "UAV"], ans:, exp: "Driving or walking around with an antenna to **hunt for Wi-Fi signals** is the exact definition of **Wardriving**." },
+      { id: 56, q: "As part of your reconnaissance, you search a company’s recycling bins for information. What social engineering technique are you using? Choose the best response.", opts: ["Spear phishing", "Dumpster diving", "Impersonation", "Shoulder surfing"], ans:, exp: "Digging through **trash or recycling bins** for sensitive paper documents is always called **Dumpster diving**." },
+      { id: 57, q: "As part of a test, you want to see if you can get a passcode to enter a secure location within your company. You are able to get close enough to someone with clearance and you note the code he used. What technique are you using? Choose the best response.", opts: ["Shoulder surfing", "Tailgating", "Piggybacking", "Dumpster diving"], ans: [0], exp: "Standing close to someone to **watch them type a keypad code** is **Shoulder surfing** (whereas walking through the door behind them without knowing the code is tailgating)." },
+      { id: 58, q: "What category of attackers are defined by their limited sophistication and reliance on pre-packaged tools? Choose the best response.", opts: ["APTs", "Hacktivists", "Organized criminals", "Script kiddies"], ans:, exp: "**Low skill + pre-packaged tools = Script kiddies**, as opposed to APTs which are highly sophisticated nation-state teams." },
+      { id: 59, q: "What category of attacker might also be called cyberterrorists? Choose the best response.", opts: ["Hacktivists", "Nation states", "Script kiddies", "Shadow IT"], ans: [0], exp: "Both **Hacktivists** and cyberterrorists are driven by **political, social, or ideological causes** rather than military espionage (Nation states) or curiosity (Script kiddies)." },
+      { id: 60, q: "What tasks are enumeration tools used for? Choose the best response.", opts: ["Finding weak points in enumerated services?", "Targeting general file information", "Using reconnaissance results to identify specific resources", "Identifying hardware platform and operating system information"], ans:, exp: "Enumeration takes initial recon data and actively queries the target to **list (\"enumerate\") specific resources** like shares, usernames, and groups." },
+      { id: 61, q: "What kind of attack can be used against a software vulnerability that hasn’t been patched yet? Choose the best response.", opts: ["Zero-day", "DDOS", "Pharming", "Smurf"], ans: [0], exp: "**\"Hasn't been patched yet\" = Zero-day** because defenders have had zero days to apply a fix." },
+      { id: 62, q: "Complex passwords that are combinations of upper- and lower-case letters, numbers, and special characters protect your system from which types of attacks? Select all that apply.", opts: ["Pass-the-hash", "Brute force", "Dictionary", "Man-in-the-middle"], ans:, exp: "Password complexity only stops **guessing attacks (Brute force and Dictionary)**; it cannot stop network interception (Man-in-the-middle) or stolen hash reuse (Pass-the-hash)." },
+      { id: 63, q: "You have performed packet sniffing on a Wi-Fi network that uses strong WPA2 encryption. You hope to find the key, but even if you don’t, what can you still learn? Select all that apply.", opts: ["Active applications", "MAC addresses", "IP addresses", "Most active hosts", "SSIDs"], ans:, exp: "WPA2 encrypts Layer 3 and above (hiding IP addresses and applications), but **Layer 2 Wi-Fi radio headers (MAC addresses, SSIDs, and which hosts talk the most) remain unencrypted**." },
+      { id: 64, q: "During your technical assessment of an organization’s network, what technique might you use to determine if the organization would benefit from increasing end user security training? Choose the best response.", opts: ["Application security testing", "Network sniffing", "Social engineering", "Vulnerability scanning"], ans:, exp: "The other three test machines, whereas **Social engineering (like phishing tests)** is the only option that tests **human end users**." },
+      { id: 65, q: "You think attackers are using packet sniffers on your Wi-Fi network. The network is using secure WPA2 encryption, but what can the attackers still learn without the key? Select all that apply.", opts: ["Active applications", "IP addresses", "MAC addresses", "Most active hosts", "SSIDs"], ans:, exp: "Duplicate of Question 63: without the WPA2 key, sniffers only see **Layer 2 wireless metadata (MACs, SSIDs, and host activity volume)**, never Layer 3 IPs or apps." },
+      { id: 66, q: "What kind of attack can be used against a software vulnerability that hasn’t been patched yet? Choose the best response.", opts: ["Zero-day", "DDOS", "Pharming", "Smurf"], ans: [0], exp: "Duplicate of Question 61: **unpatched software flaw = Zero-day**." },
+      { id: 67, q: "What is a common form of accessibility attack against public-facing services, such as web applications that is intended to knock services offline or bog them down so that they can’t be used? Choose the best response.", opts: ["Phishing", "On-path", "HIDS", "DDOS"], ans:, exp: "**\"Knock services offline\" (Availability/Accessibility) = DDoS (Distributed Denial of Service)**." },
+      { id: 68, q: "What tools allow amplification of a DoS attack? Select all that apply.", opts: ["Bluesnarfing", "Botnets", "Malformed packets", "Reflection", "VLAN hopping"], ans:, exp: "**Botnets, Reflection, and Malformed packets** all multiply the impact of a DoS flood, whereas Bluesnarfing (Bluetooth theft) and VLAN hopping (switch bypass) are not DoS techniques." },
+      { id: 69, q: "On a subnet with limited physical security, you’re worried about ARP poisoning and DHCP spoofing attacks. What switch feature could help prevent both? Choose the best response.", opts: ["DHCP snooping", "MAC filtering", "MACsec", "Port security"], ans:, exp: "While DHCP snooping only stops rogue DHCP by itself, **MACsec (802.1AE)** cryptographically authenticates and encrypts all Layer 2 Ethernet frames on the link, blocking both ARP poisoning and DHCP spoofing at once." },
+      { id: 70, q: "An end user forwarded an email to the IT department with the subject “Package shipped” and in the body of the email a link to check the tracking. The user hadn’t ordered anything. How should you classify this email? Choose the best response.", opts: ["Spoofing", "Whaling", "Phishing", "Vishing"], ans:, exp: "A generic fake tracking link sent by **email** to a regular user is standard **Phishing** (Whaling targets executives, and Vishing uses voice/phone calls)." },
+      { id: 71, q: "You’ve found a computer infected by stealth malware. The program installed itself as part of the computer’s boot process to gain access to the entire operating system and hide from anti-malware software. What kind of malware is it? Choose the best response.", opts: ["Armored virus", "Backdoor", "Rootkit", "Spyware"], ans:, exp: "The keywords **\"stealth,\" \"boot process,\" and \"hide from anti-malware\"** always define a **Rootkit**." },
+      { id: 72, q: "You’ve been tracking unauthorized access to a web application. On examining the source code, you find a hidden routine that allows access to any account using the password wrtsglz, regardless of the usual password associated with that account. What kind of vulnerability have you uncovered? Choose the best response.", opts: ["Backdoor", "Logic bomb", "Privilege escalation", "Rootkit"], ans: [0], exp: "A **hardcoded master password (`wrtsglz`) in the source code** that lets an unauthenticated outsider log into any account is a classic **Backdoor**." },
+      { id: 73, q: "A user complains that every time they open their Internet browser, it no longer goes to their preferred home page, and advertisements pop up in dialog boxes that they have to close. What is the likely cause? Choose the best response.", opts: ["Spyware", "Trojan", "Virus", "Worm"], ans: [0], exp: "**Hijacked browser homepages and pop-up ads** are the classic symptoms of **Spyware** (and adware)." },
+      { id: 74, q: "Which of the following statements are true of tests an assessments? Select all that apply.", opts: ["A test is a general term for any operation to make sure some security control, or set of controls, is functioning as intended.", "A test is a systematic evaluation against a set of specific criteria, such regulatory compliance or cost-effectiveness.", "An assessment is a comprehensive review process comparing existing security controls against specific goals or objectives.", "A tabletop exercise, where a team gathers together and walks through objectives step by step, is an example of an assessment include.", "An assessment is a broader, more research-based approach to determining the effectiveness of a security strategy and how it might be improved."], ans:, exp: "Remember that a **Test** checks if a control works as intended, while an **Assessment** compares controls against specific goals (including **tabletop exercises**)." },
+      { id: 75, q: "Which of the following statements are true of audits? Select all that apply.", opts: ["An assessment is a systematic evaluation against a set of specific criteria, such regulatory compliance or cost-effectiveness.", "Since audits must be impartial and objective, they're typically performed by an independent entity.", "An audit is a broader, more research-based approach to determining the effectiveness of a security strategy and how it might be improved.", "An audit is a test or assessment that focuses on demonstrating compliance with a specific set of regulatory requirements or industry standards."], ans:, exp: "On this exam bank, memorize that **Audits must be impartial/independent**, and select the definition pairing **systematic evaluation against specific criteria**." },
+      { id: 76, q: "One guideline for security assessment is found in NIST SP 800-53A. What are the items it addresses? Select all that apply.", opts: ["Specifications", "Mechanisms", "Activities", "Quality control", "Individuals"], ans:, exp: "Use the mnemonic **SMAI** for the 4 assessment objects in NIST 800-53A: **Specifications** (documents), **Mechanisms** (hardware/software), **Activities** (processes), and **Individuals** (people)—never \"Quality control.\"" },
+      { id: 77, q: "Which of the following statements is true of third-party audits? Choose the best response.", opts: ["Audits performed by an auditing firm hired by the organization.", "Audits conducted for the benefit of a business partner or regulatory body.", "The party who requests the audit also determines its terms and who will perform it.", "Audits performed by largely independent firms."], ans:, exp: "In this course's terminology, a **third-party audit** is defined by who demands and controls it—an **external business partner or regulator** who sets the terms and picks the auditor." },
+      { id: 78, q: "What is the name of the specific type of dynamic testing where testers supply the program with expected real-world inputs and then verify that it created the expected output? Choose the best response.", opts: ["Mutation fuzzing", "Generational fuzzing", "Synthetic transactions", "None of the above"], ans:, exp: "Fuzzing sends garbage/random inputs to crash a program, whereas **Synthetic transactions** send **normal, expected real-world inputs** to verify normal outputs." },
+      { id: 79, q: "Which of the following are methods of vulnerability remediation? Select all that apply.", opts: ["Applying security patches", "Identify false positives", "Modifying configurations", "Adding whole new security controls", "Implementing workarounds to reduce exposure"], ans:, exp: "**Every action that actually fixes or reduces risk** (patches, configs, new controls, workarounds) is remediation; **identifying false positives** just cleans up the scan report without fixing anything." },
+      { id: 80, q: "What should you keep in mind when managing exceptions? Select all that apply.", opts: ["Exceptions must receive written approval by management before being enacted in accordance with policy.", "If the exception is due to the difficulty of remediation, explore compensating controls you can use to reduce risk.", "When you perform a scan, never refer to the list of existing exceptions.", "Exceptions and their reasoning must be documented to prevent your work from being repeated or undone by a later scan."], ans:, exp: "Select all three rules of good governance (**written management approval, compensating controls, and documentation**), and eliminate the absurd statement that says \"never refer to the list of existing exceptions.\"" },
+      { id: 81, q: "After discovering a security vulnerability, which of the following steps are not required to ensure ethical disclosure? Choose the best response.", opts: ["Try to find a workaround", "Privately inform the vendor", "Wait for a reasonable period to see if a fix is implemented", "If the vendor does not produce a timely fix, or indicates that they will not address the vulnerability at all, the vulnerability is disclosed to the public so that users are aware of the risk"], ans: [0], exp: "Ethical disclosure only requires **telling the vendor privately, waiting a reasonable time, and warning the public if ignored**—it is the vendor's job, not the researcher's, to **find a workaround**." },
+      { id: 82, q: "Which of the following might a security audit include? Select all that apply.", opts: ["Security logs to find unusual activities or unreported incidents", "Incident response reports", "Device configurations and installed applications for comparison to the security baseline", "User and administrator activities to verify compliance with network policies"], ans:, exp: "A security audit is a complete checkup, so **all four items (logs, IR reports, baseline configs, and user/admin activities)** are valid audit targets." },
+      { id: 83, q: "Which of the following statements are true of account management? Select all that apply.", opts: ["Security training programs must be documented to demonstrate that all employees have received appropriate training for their job roles.", "Security logging events from hosts, services, firewalls, IDS, and the like should be compiled for review.", "User, device, and service accounts must be inventoried and reviewed for unexpected changes or signs of abused privileges.", "Common problems to look for include unauthorized accounts, unnecessary privileges, failure to terminate accounts, and suspicious activity."], ans:, exp: "Only pick the two choices that literally talk about **accounts and privileges**; training documentation and firewall/IDS log compilation belong to other security domains." },
+      { id: 84, q: "What are the requirements of effective backup verification? Choose the best response.", opts: ["Backups themselves must be regularly tested", "Backup recovery procedures must be verified", "Evaluated the security of backup media to make sure they meet business and security needs", "All of the above"], ans:, exp: "Effective backup management requires **testing the files, verifying the recovery steps, and securing the physical media**, making **All of the above** the complete answer." },
+      { id: 85, q: "Which of the following statements is not true of interface testing? Choose the best response.", opts: ["Includes the API interfaces", "Refers only to the user interface with which human users of an application will interact", "Includes web services", "Includes network connections"], ans:, exp: "Watch for the extreme word **\"only\"**—interface testing checks APIs, web services, and network links too, so claiming it only tests the human GUI is false." },
+      { id: 86, q: "Which type of fuzzing sends forged, modified, replayed, or otherwise non-standard packets to a network application? Choose the best response.", opts: ["Application fuzzing", "Protocol fuzzing", "Network fuzzing", "File format fuzzing"], ans:, exp: "Sending mutated **network packets** to test how an app handles network communication rules is specifically called **Protocol fuzzing**." },
+      { id: 87, q: "Your employer stores a copy of all private keys used on devices in the enterprise because the regulatory agency that audits and certifies your company’s business practices demands centralized access to them in case the court’s order decryption of any official communications at the agency’s request. What is this an example of? Choose the best response.", opts: ["Key escrow", "Key recovery", "Chain of trust", "Revocation"], ans: [0], exp: "Whenever copies of **private keys are held in reserve for court orders or government regulators**, associate that immediately with **Key escrow**." },
+      { id: 88, q: "Which of the following statements concerning Syslog and SIEM is most accurate? Choose the best response.", opts: ["Syslog offers central log collection; SIEM draws upon those log entries for analysis.", "Syslog is the original specification; SIEM is the modern replacement for Syslog.", "Syslog is a centralized service; SIEM is a distributed one.", "Syslog operates on log entries; SIEM does not."], ans: [0], exp: "Remember the division of labor: **Syslog = collects and transports logs**, while **SIEM = analyzes and correlates those logs**." },
+      { id: 89, q: "A company configures workstations only to run software on an approved list. What is this an example of? Choose the best response.", opts: ["Allow listing", "Block listing", "Hardening", "Sandboxing"], ans: [0], exp: "**\"Only run software on an approved list\" = Allow listing** (whereas Block listing lets everything run except banned apps)." },
+      { id: 90, q: "Why is it important to record time offsets when collecting evidence? Choose the best response.", opts: ["To compensate for logging systems that don’t record precise times", "To compensate for time differences between multiple systems", "To document the precise order of events", "To document the precise timing of events"], ans:, exp: "Different computers have drifting clocks or different time zones, so recording each machine's **time offset** lets you line up logs **between multiple systems**." },
+      { id: 91, q: "The documentation for your company’s existing threat hunting program doesn’t clearly describe the methodology for hypothesis development, but it speaks a lot about crown jewels analysis. What is its most likely methodology? Choose the best response.", opts: ["Analytics-driven", "Awareness-driven", "Intelligence-driven", "Risk-driven"], ans:, exp: "Memorize the pairing **\"Crown jewels analysis = Situational/Awareness-driven threat hunting\"** because understanding your own critical internal assets is called situational awareness." },
+      { id: 92, q: "Also known as after-action meetings and reports, what alternate name for these bears evidence to the importance of discussing and documenting the outcome of an incident response-team activation? Choose the best response.", opts: ["Lessons learned", "Actions taken", "Tools utilized", "Gap analysis"], ans: [0], exp: "In the Incident Response lifecycle, an **after-action meeting/report** is universally called the **Lessons learned** phase." },
+      { id: 93, q: "While doing forensic investigation and gathering evidence, which of the following should you keep in mind? Choose the best response.", opts: ["Classify available evidence according to its order of volatility.", "Divide your findings into multiple reports including a summary of the items investigated.", "Preserve the evidence in an alterable form.", "Give some time to the witness and speak with them later."], ans: [0], exp: "Always prioritize the **Order of volatility** (collect fragile RAM before hard drives), keep evidence unalterable, and interview witnesses immediately before memories fade." },
+      { id: 94, q: "A company configures workstations only to run software on an approved list. What is this an example of? Choose the best response.", opts: ["Block listing", "Hardening", "Sandboxing", "Allow listing"], ans:, exp: "Duplicate of Question 89: **Approved software list = Allow listing**." },
+      { id: 95, q: "Which policy is focused on preventing data loss? Choose the best response.", opts: ["AUP", "Clean desk policy", "Mandatory vacation", "Separation of duties"], ans:, exp: "Out of these four administrative policies, only a **Clean desk policy** directly prevents sensitive data (papers, sticky notes, USBs) from being stolen or lost off desks." },
+      { id: 96, q: "After a security incident, you rush to take a screenshot of a telltale running process before you leisurely take a backup of suspicious files on the hard drive. What forensic principle are you exercising? Choose the best response.", opts: ["Audit trail", "Chain of custody", "eDiscovery", "Order of volatility"], ans:, exp: "Capturing **temporary RAM/processes first** before permanent hard drive files is the textbook execution of the **Order of volatility**." },
+      { id: 97, q: "A third-party team is going to formally examine your organization’s overall security practices to make sure they meet regulatory compliance goals. Your organization may be fined if it fails. What would this verification process best be called? Choose the best response.", opts: ["Assessment", "Audit", "Certification", "Evaluation"], ans:, exp: "Duplicate of Question 40: **Third-party + regulatory compliance + fines = Audit**." },
+      { id: 98, q: "What is eDiscovery? Choose the best response.", opts: ["A process for identifying security incidents", "A process for sharing electronic forensic data", "A standard for forensic backup software", "A software application used to track security incidents"], ans:, exp: "**eDiscovery (Electronic Discovery)** is a legal process for collecting and **sharing electronic forensic data** with courts and opposing counsel during litigation." },
+      { id: 99, q: "A forensic specialist discovered that an intruder infiltrated a system as a standard user and was therefore unable to remove evidence of their attack to evade detection. The specialist found log entries and inconsistent version-tracking metadata. What is the collective term for the various sources of evidence that an attacker might leave behind? Choose the best response.", opts: ["Artifacts", "Snapshots", "Page files", "Provenance"], ans: [0], exp: "Any **leftover traces of an attack** (logs, metadata, registry keys) found by a forensic investigator are collectively called **Artifacts**." },
+      { id: 100, q: "The forensic specialist associated with your company’s incident response team has requested the various dump files of a system for which you are the administrator. Why might the specialist request such files? Choose the best response.", opts: ["To obtain a snapshot of the state of the system's RAM under one or more circumstances", "To be able to examine the current hibernation file for the system", "To inspect the latest state of the system's virtual memory", "To be able to use the cache contents of the various hard drives and solid-state drives in the system"], ans: [0], exp: "Memorize **Dump files = Snapshot of RAM** (whereas hibernation uses `hiberfil.sys` and virtual memory uses `pagefile.sys`)." }
+    ];
+
+    let currentQ = 0;
+    let selectedIndices = new Set();
+    let lastWasCorrect = false;
+
+    const mainEl = document.getElementById("exam-main");
+    const feedbackModal = document.getElementById("feedback-modal");
+    const feedbackBox = document.getElementById("feedback-box");
+    const feedbackStatus = document.getElementById("feedback-status");
+    const feedbackBody = document.getElementById("feedback-body");
+    const feedbackCloseBtn = document.getElementById("feedback-close-btn");
+
+    function formatExp(text) {
+      return text.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>").replace(/`(.*?)`/g, "<code>$1</code>");
+    }
+
+    function renderQuestion() {
+      if (currentQ >= questions.length) {
+        mainEl.innerHTML = `
+          <div style="text-align:center;padding:2.5rem 1rem;">
+            <div class="eyebrow" style="justify-content:center;">Module Complete</div>
+            <h1 class="hero-headline">EXAM <span class="outline">COMPLETE</span></h1>
+            <p class="prose" style="margin:0 auto 2rem;">
+              You have completed all 100 CISSP practice questions. Review any weak domains or restart the exam for another pass.
+            </p>
+            <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+              <button class="btn-lime" id="restart-btn">Restart Exam</button>
+              <a href="cissp.html" class="btn-ghost">Back to CISSP Hub</a>
+            </div>
+          </div>
+        `;
+        document.getElementById("restart-btn").addEventListener("click", () => {
+          currentQ = 0;
+          selectedIndices.clear();
+          renderQuestion();
+        });
+        return;
+      }
+
+      const item = questions[currentQ];
+      const isMulti = item.ans.length > 1;
+      const pct = Math.round(((currentQ + 1) / questions.length) * 100);
+
+      let jumpGrid = "";
+      for (let i = 0; i < questions.length; i++) {
+        jumpGrid += `<button type="button" class="jump-opt ${i === currentQ ? "current" : ""}" data-q="${i}">Q${i + 1}</button>`;
+      }
+
+      mainEl.innerHTML = `
+        <div class="exam-topbar">
+          <a href="cissp.html" class="btn-ghost">&larr; CISSP Hub</a>
+          <div class="jump-wrapper" id="jump-wrapper">
+            <button type="button" class="jump-trigger" id="jump-trigger" aria-expanded="false">
+              Jump to: Question ${currentQ + 1} &#9662;
+            </button>
+            <div class="jump-menu" id="jump-menu">${jumpGrid}</div>
+          </div>
+        </div>
+
+        <div class="progress-track">
+          <div class="progress-fill" style="width:${pct}%"></div>
+        </div>
+
+        <div class="q-meta">
+          <span>QUESTION ${item.id} OF ${questions.length}</span>
+          <span class="q-type-tag">${isMulti ? "Select All That Apply" : "Single Best Response"}</span>
+        </div>
+
+        <div class="q-text">${item.q}</div>
+
+        <div class="options-list" id="options-list">
+          ${item.opts.map((opt, idx) => `
+            <button type="button" class="option-card ${selectedIndices.has(idx) ? "selected" : ""}" data-idx="${idx}">
+              <span class="option-indicator ${isMulti ? "checkbox" : "radio"}"></span>
+              <span>${opt}</span>
+            </button>
+          `).join("")}
+        </div>
+
+        <div class="exam-actions">
+          <button type="button" class="btn-lime" id="submit-ans-btn">Submit Answer</button>
+          ${currentQ > 0 ? `<button type="button" class="btn-ghost" id="prev-q-btn">&larr; Previous</button>` : ""}
+          ${currentQ < questions.length - 1 ? `<button type="button" class="btn-ghost" id="skip-q-btn">Skip &rarr;</button>` : ""}
+        </div>
+      `;
+
+      const jumpTrigger = document.getElementById("jump-trigger");
+      const jumpMenu = document.getElementById("jump-menu");
+      jumpTrigger.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const isOpen = jumpMenu.classList.toggle("open");
+        jumpTrigger.classList.toggle("open", isOpen);
+        jumpTrigger.setAttribute("aria-expanded", String(isOpen));
+      });
+
+      document.querySelectorAll("#jump-menu .jump-opt").forEach(btn => {
+        btn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          currentQ = parseInt(btn.dataset.q, 10);
+          selectedIndices.clear();
+          renderQuestion();
+        });
+      });
+
+      document.getElementById("submit-ans-btn").addEventListener("click", submitAnswer);
+
+      const prevBtn = document.getElementById("prev-q-btn");
+      if (prevBtn) prevBtn.addEventListener("click", () => { currentQ--; selectedIndices.clear(); renderQuestion(); });
+
+      const skipBtn = document.getElementById("skip-q-btn");
+      if (skipBtn) skipBtn.addEventListener("click", () => { currentQ++; selectedIndices.clear(); renderQuestion(); });
+
+      document.querySelectorAll("#options-list .option-card").forEach(btn => {
+        btn.addEventListener("click", () => toggleOption(parseInt(btn.dataset.idx, 10)));
+      });
+    }
+
+    document.addEventListener("click", () => {
+      const jumpMenu = document.getElementById("jump-menu");
+      const jumpTrigger = document.getElementById("jump-trigger");
+      if (jumpMenu && jumpMenu.classList.contains("open")) {
+        jumpMenu.classList.remove("open");
+        jumpTrigger.classList.remove("open");
+        jumpTrigger.setAttribute("aria-expanded", "false");
+      }
+    });
+
+    function toggleOption(idx) {
+      const item = questions[currentQ];
+      const isMulti = item.ans.length > 1;
+      if (isMulti) {
+        if (selectedIndices.has(idx)) selectedIndices.delete(idx);
+        else selectedIndices.add(idx);
+      } else {
+        selectedIndices.clear();
+        selectedIndices.add(idx);
+      }
+      document.querySelectorAll("#options-list .option-card").forEach((card, i) => {
+        card.classList.toggle("selected", selectedIndices.has(i));
+      });
+    }
+
+    function submitAnswer() {
+      if (selectedIndices.size === 0) {
+        openFeedback(false, "Please select at least one answer before submitting.");
+        return;
+      }
+      const item = questions[currentQ];
+      const expected = [...item.ans].sort((a, b) => a - b);
+      const actual = Array.from(selectedIndices).sort((a, b) => a - b);
+      const isCorrect = expected.length === actual.length && expected.every((v, i) => v === actual[i]);
+      if (isCorrect) openFeedback(true, "");
+      else openFeedback(false, formatExp(item.exp));
+    }
+
+    function openFeedback(isCorrect, htmlContent) {
+      lastWasCorrect = isCorrect;
+      feedbackBox.className = "modal-box " + (isCorrect ? "correct" : "wrong");
+      feedbackStatus.textContent = isCorrect ? "Correct!" : "Wrong";
+      feedbackBody.innerHTML = htmlContent;
+      feedbackModal.classList.add("open");
+    }
+
+    function closeFeedback() {
+      feedbackModal.classList.remove("open");
+      if (lastWasCorrect) {
+        currentQ++;
+        selectedIndices.clear();
+        renderQuestion();
+      }
+    }
+
+    feedbackCloseBtn.addEventListener("click", closeFeedback);
+    feedbackModal.addEventListener("click", (e) => { if (e.target === feedbackModal) closeFeedback(); });
+
+    const menuBtn = document.getElementById("mobile-menu-btn");
+    const navDrawer = document.getElementById("nav-drawer");
+    menuBtn.addEventListener("click", () => {
+      const isOpen = navDrawer.classList.toggle("open");
+      menuBtn.setAttribute("aria-expanded", String(isOpen));
+      menuBtn.innerHTML = isOpen ? "Close &#10005;" : "Menu &#9776;";
+    });
+
+    const privacyModal = document.getElementById("privacy-modal");
+    document.getElementById("open-privacy-btn").addEventListener("click", () => privacyModal.classList.add("open"));
+    document.getElementById("privacy-close-btn").addEventListener("click", () => privacyModal.classList.remove("open"));
+    privacyModal.addEventListener("click", (e) => { if (e.target === privacyModal) privacyModal.classList.remove("open"); });
+
+    renderQuestion();
+  </script>
+</body>
+</html>
