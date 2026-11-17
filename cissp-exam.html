@@ -110,25 +110,56 @@
       position: absolute;
       right: 0;
       top: calc(100% + 6px);
-      width: 260px;
-      max-height: 290px;
+      width: 276px;
+      max-height: 320px;
       overflow-y: auto;
       background: #0d121c;
       border: 1px solid var(--cyan);
       border-radius: 10px;
-      padding: 0.5rem;
+      padding: 0.6rem;
       box-shadow: 0 18px 45px rgba(0, 0, 0, 0.85);
       display: none;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 0.35rem;
       z-index: 60;
     }
-    .jump-menu.open { display: grid; }
+    .jump-menu.open { display: block; }
+    .jump-legend {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.4rem;
+      padding-bottom: 0.5rem;
+      margin-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border-slate);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.62rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+    }
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.28rem;
+    }
+    .legend-swatch {
+      width: 9px;
+      height: 9px;
+      border-radius: 2px;
+      display: inline-block;
+    }
+    .swatch-current { background: var(--lime); }
+    .swatch-answered { background: var(--cyan); }
+    .swatch-unanswered { background: rgba(255, 255, 255, 0.12); border: 1px solid var(--border-slate); }
+
+    .jump-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.35rem;
+    }
     .jump-opt {
       padding: 0.45rem 0.25rem;
       border-radius: 6px;
       border: 1px solid transparent;
-      background: rgba(255, 255, 255, 0.03);
+      background: rgba(255, 255, 255, 0.04);
       color: var(--text-secondary);
       font-family: 'JetBrains Mono', monospace;
       font-size: 0.72rem;
@@ -137,16 +168,19 @@
       transition: all 0.12s ease;
     }
     .jump-opt:hover {
-      background: var(--cyan-dim);
+      background: rgba(255, 255, 255, 0.12);
       color: #fff;
-      border-color: rgba(34, 211, 238, 0.4);
+      border-color: rgba(255, 255, 255, 0.3);
     }
     .jump-opt.answered {
-      border-color: rgba(158, 255, 51, 0.35);
-      color: var(--lime);
+      background: rgba(34, 211, 238, 0.22);
+      border-color: rgba(34, 211, 238, 0.7);
+      color: var(--cyan);
+      font-weight: 700;
     }
     .jump-opt.current {
       background: var(--lime);
+      border-color: var(--lime);
       color: #05070c;
       font-weight: 700;
     }
@@ -592,6 +626,7 @@
     let currentQ = 0;
     let selectedIndices = new Set();
     let userAnswers = Array(questions.length).fill(null);
+    let completedInstant = new Set();
     let lastWasCorrect = false;
 
     const mainEl = document.getElementById("exam-main");
@@ -610,12 +645,20 @@
       currentQ = 0;
       selectedIndices.clear();
       userAnswers = Array(questions.length).fill(null);
+      completedInstant.clear();
       modeModal.classList.remove("open");
       renderQuestion();
     }
 
     function formatExp(text) {
       return text.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>").replace(/`(.*?)`/g, "<code>$1</code>");
+    }
+
+    function isQuestionAnswered(idx) {
+      if (examMode === "instant") {
+        return completedInstant.has(idx);
+      }
+      return Array.isArray(userAnswers[idx]) && userAnswers[idx].length > 0;
     }
 
     function saveCurrentSelection() {
@@ -735,7 +778,7 @@
 
       let jumpGrid = "";
       for (let i = 0; i < questions.length; i++) {
-        const isAns = examMode === "end" && Array.isArray(userAnswers[i]) && userAnswers[i].length > 0;
+        const isAns = isQuestionAnswered(i);
         jumpGrid += `<button type="button" class="jump-opt ${isAns ? "answered" : ""} ${i === currentQ ? "current" : ""}" data-q="${i}">Q${i + 1}</button>`;
       }
 
@@ -750,7 +793,14 @@
               <button type="button" class="jump-trigger" id="jump-trigger" aria-expanded="false">
                 Jump to: Question ${currentQ + 1} &#9662;
               </button>
-              <div class="jump-menu" id="jump-menu">${jumpGrid}</div>
+              <div class="jump-menu" id="jump-menu">
+                <div class="jump-legend">
+                  <span class="legend-item"><span class="legend-swatch swatch-current"></span> Current</span>
+                  <span class="legend-item"><span class="legend-swatch swatch-answered"></span> Answered</span>
+                  <span class="legend-item"><span class="legend-swatch swatch-unanswered"></span> Open</span>
+                </div>
+                <div class="jump-grid">${jumpGrid}</div>
+              </div>
             </div>
           </div>
         </div>
@@ -870,6 +920,10 @@
       document.querySelectorAll("#options-list .option-card").forEach((card, i) => {
         card.classList.toggle("selected", selectedIndices.has(i));
       });
+      const currentGridBtn = document.querySelector(`#jump-menu .jump-opt[data-q="${currentQ}"]`);
+      if (currentGridBtn) {
+        currentGridBtn.classList.toggle("answered", isQuestionAnswered(currentQ));
+      }
     }
 
     function submitAnswer() {
@@ -881,8 +935,12 @@
       const expected = [...item.ans].sort((a, b) => a - b);
       const actual = Array.from(selectedIndices).sort((a, b) => a - b);
       const isCorrect = expected.length === actual.length && expected.every((v, i) => v === actual[i]);
-      if (isCorrect) openFeedback(true, "");
-      else openFeedback(false, formatExp(item.exp));
+      if (isCorrect) {
+        completedInstant.add(currentQ);
+        openFeedback(true, "");
+      } else {
+        openFeedback(false, formatExp(item.exp));
+      }
     }
 
     function openFeedback(isCorrect, htmlContent) {
