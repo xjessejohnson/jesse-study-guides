@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CISM Flash Cards | Jesse's Study Guides</title>
+  <meta name="description" content="100 essential CISM exam keywords and definitions in an interactive flashcard deck." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .fc-topbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.85rem;
+      margin-bottom: 1.25rem;
+      position: relative;
+      z-index: 20;
+    }
+    .fc-controls-right {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      flex-wrap: wrap;
+    }
+    .btn-ghost {
+      padding: 0.55rem 1rem;
+      border-radius: 8px;
+      border: 1px solid var(--border-slate);
+      background: transparent;
+      color: var(--text-secondary);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.76rem;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .btn-ghost:hover:not(:disabled) { border-color: var(--cyan); color: #fff; }
+    .btn-ghost:disabled { opacity: 0.4; cursor: not-allowed; }
+    .btn-lime {
+      padding: 0.78rem 1.45rem;
+      border-radius: 9px;
+      border: none;
+      background: var(--lime);
+      color: #05070c;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+    .btn-lime:hover {
+      filter: brightness(1.08);
+      box-shadow: 0 0 22px rgba(158, 255, 51, 0.35);
+      transform: translateY(-1px);
+    }
+
+    /* Custom Scrollable Jump Dropdown */
+    .jump-wrapper { position: relative; display: inline-block; }
+    .jump-trigger {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.5rem 0.9rem;
+      border-radius: 8px;
+      border: 1px solid var(--border-slate);
+      background: var(--bg-card);
+      color: #f8fafc;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: border-color 0.15s ease;
+    }
+    .jump-trigger:hover, .jump-trigger.open { border-color: var(--cyan); color: var(--cyan); }
+    .jump-menu {
+      position: absolute;
+      right: 0;
+      top: calc(100% + 6px);
+      width: 260px;
+      max-height: 290px;
+      overflow-y: auto;
+      background: #0d121c;
+      border: 1px solid var(--cyan);
+      border-radius: 10px;
+      padding: 0.5rem;
+      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.85);
+      display: none;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.35rem;
+      z-index: 60;
+    }
+    .jump-menu.open { display: grid; }
+    .jump-opt {
+      padding: 0.45rem 0.25rem;
+      border-radius: 6px;
+      border: 1px solid transparent;
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--text-secondary);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      text-align: center;
+      cursor: pointer;
+    }
+    .jump-opt:hover { background: var(--cyan-dim); color: #fff; border-color: rgba(34, 211, 238, 0.4); }
+    .jump-opt.current { background: var(--lime); color: #05070c; font-weight: 700; }
+
+    .progress-track {
+      width: 100%;
+      height: 5px;
+      background: rgba(148, 163, 184, 0.14);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--cyan), var(--lime));
+      transition: width 0.25s ease;
+    }
+
+    /* Flash Card */
+    .flashcard {
+      position: relative;
+      background: var(--bg-card);
+      border: 1px solid var(--border-slate);
+      border-radius: 14px;
+      padding: 2.1rem 1.9rem;
+      min-height: 290px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.45);
+      margin-bottom: 1.5rem;
+    }
+    .flashcard:hover { border-color: rgba(34, 211, 238, 0.5); }
+    .flashcard.flipped {
+      border-color: var(--lime);
+      background: #0e1624;
+      box-shadow: 0 0 30px rgba(158, 255, 51, 0.1);
+    }
+
+    .fc-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.74rem;
+    }
+    .fc-side-tag {
+      padding: 0.2rem 0.6rem;
+      border-radius: 6px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .fc-side-tag.front {
+      background: var(--cyan-dim);
+      color: var(--cyan);
+      border: 1px solid rgba(34, 211, 238, 0.3);
+    }
+    .fc-side-tag.back {
+      background: var(--lime-dim);
+      color: var(--lime);
+      border: 1px solid var(--border-bright);
+    }
+    .fc-domain { color: var(--text-secondary); }
+
+    .fc-term {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: clamp(1.55rem, 3vw, 2.2rem);
+      color: #fff;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      margin: 1rem 0;
+    }
+
+    .fc-def-box {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .fc-def {
+      color: #fff;
+      font-size: 1.05rem;
+      line-height: 1.6;
+      font-weight: 500;
+    }
+    .fc-purpose {
+      padding: 0.9rem 1.1rem;
+      border-radius: 10px;
+      background: rgba(158, 255, 51, 0.08);
+      border-left: 3px solid var(--lime);
+      color: var(--text-secondary);
+      font-size: 0.94rem;
+      line-height: 1.55;
+    }
+    .fc-purpose strong { color: var(--lime); }
+
+    .fc-hint {
+      margin-top: 1.5rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .fc-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.85rem;
+    }
+    .fc-nav-group { display: flex; gap: 0.65rem; flex-wrap: wrap; }
+  </style>
+</head>
+<body>
+
+  <div class="frame-wrapper">
+    <aside>
+      <div class="brand-block">
+        <div class="brand-row">
+          <div>
+            <a href="index.html" class="brand-title">Jesse's Study Guides</a>
+            <div class="brand-tagline">Unofficial compiled training database v1.0</div>
+          </div>
+          <button class="mobile-menu-btn" id="mobile-menu-btn" aria-expanded="false" aria-controls="nav-drawer">
+            Menu &#9776;
+          </button>
+        </div>
+        <a class="coffee-btn" href="https://www.buymeacoffee.com/YOUR_USERNAME" target="_blank" rel="noopener noreferrer">
+          &#9749; Buy Me a Coffee
+        </a>
+      </div>
+
+      <nav class="nav-drawer" id="nav-drawer" aria-label="Study Categories">
+        <div class="nav-section">
+          <div class="nav-label">Cybersecurity</div>
+          <a href="cissp.html" class="nav-item">
+            <span>CISSP</span>
+            <span class="badge live">Active</span>
+          </a>
+          <a href="cism.html" class="nav-item active">
+            <span>CISM</span>
+            <span class="badge live">Active</span>
+          </a>
+          <span class="nav-item disabled" aria-disabled="true">
+            <span>Security+</span>
+            <span class="badge">Coming Soon</span>
+          </span>
+        </div>
+
+        <div class="nav-section">
+          <div class="nav-label">Psychology</div>
+          <span class="nav-item disabled" aria-disabled="true">
+            <span>NCE</span>
+            <span class="badge">Coming Soon</span>
+          </span>
+        </div>
+
+        <div class="nav-section">
+          <div class="nav-label">Other</div>
+          <span class="nav-item disabled" aria-disabled="true">
+            <span>Coming Soon</span>
+            <span class="badge">Coming Soon</span>
+          </span>
+        </div>
+      </nav>
+    </aside>
+
+    <div class="main-area">
+      <div class="topbar">
+        <div class="breadcrumb">JESSE'S STUDY GUIDES / CISM / <span>FLASH CARDS</span></div>
+        <div class="status-pill"><span class="status-dot"></span> SYSTEM ONLINE</div>
+      </div>
+
+      <main class="content-body" id="fc-main"></main>
+    </div>
+  </div>
+
+  <!-- Privacy Policy Modal -->
+  <div class="modal-backdrop" id="privacy-modal" role="dialog" aria-modal="true" aria-labelledby="privacy-title">
+    <div class="modal-box">
+      <div class="modal-top">
+        <div class="modal-title" id="privacy-title">Privacy Policy</div>
+        <button class="modal-close" id="privacy-close-btn" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body">
+        <p><strong>Effective Date:</strong> November 17, 2026</p>
+        <h4>1. Information We Collect</h4>
+        <p>Jesse's Study Guides is a static, informational study website. We do not require user registration, accounts, or logins, and we do not directly collect names, email addresses, or payment details on this site.</p>
+        <h4>2. Hosting and Server Logs</h4>
+        <p>This website is hosted via Vercel. As part of standard web delivery and security operations, our hosting provider may automatically process basic technical request data such as your IP address, browser type, operating system, and timestamps in temporary server logs.</p>
+        <h4>3. Cookies and Tracking</h4>
+        <p>This website does not use advertising trackers or third-party marketing cookies.</p>
+        <h4>4. Third-Party Links</h4>
+        <p>This site includes an external link to Buy Me a Coffee for voluntary donations. If you choose to visit or donate through that platform, any information you provide is governed directly by Buy Me a Coffee's own privacy policy and terms of service.</p>
+        <h4>5. Changes to This Policy</h4>
+        <p>This policy may be updated as new features or study modules are added to the site. Questions regarding this notice can be directed to the site owner, Jesse Johnson.</p>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2026 Jesse Johnson. All rights reserved.</p>
+    <p>
+      This portal is an independent, unofficial personal study resource and is not affiliated with, endorsed by, or sponsored by ISC2, ISACA, CompTIA, NBCC, or any other certification body.
+      CISSP&reg; is a registered trademark of ISC2. CISM&reg; is a registered trademark of ISACA. CompTIA Security+&reg; is a registered trademark of CompTIA. NCE&reg; is a registered trademark of NBCC. All vendor materials, trademarks, and copyrights remain the property of their respective owners.
+    </p>
+    <div class="footer-links">
+      <button type="button" class="privacy-link" id="open-privacy-btn">Privacy Policy</button>
+    </div>
+  </footer>
+
+  <script>
+    const terms = [
+      { term: "Risk Appetite", domain: "Domain 2 // Risk", def: "The amount and type of risk that an organization is willing to pursue or retain in pursuit of its business objectives.", use: "Provides the foundational boundary for determining which risks must be mitigated and which can be accepted." },
+      { term: "Risk Tolerance", domain: "Domain 2 // Risk", def: "The acceptable level of variation that management is willing to tolerate around specific control objectives and business targets.", use: "Used to establish operational thresholds; tolerance represents the practical, measurable boundaries of risk appetite." },
+      { term: "Steering Committee", domain: "Domain 1 // Governance", def: "A cross-functional group of senior business leaders responsible for aligning security initiatives with business strategy and authorizing projects.", use: "The ultimate indicator of working security governance; ensures business units take collective ownership of security decisions." },
+      { term: "Business Alignment", domain: "Domain 1 // Governance", def: "The continuous process of ensuring information security goals, policies, and initiatives directly support and enable corporate objectives.", use: "Always the first step in creating any security strategy or program; security must never operate in a silo." },
+      { term: "Business Impact Analysis (BIA)", domain: "Domain 2 // Risk", def: "An assessment that identifies critical business processes, calculates downtime tolerances, and quantifies loss impacts.", use: "Used to establish recovery parameters (RTO, RPO, SDO) and prioritize the order of system restoration during a disaster." },
+      { term: "Key Risk Indicators (KRIs)", domain: "Domain 2 // Risk", def: "Early warning metrics designed to predict and alert management to emerging risk events or deviations from risk appetite.", use: "Must be predictive in nature; an unexpected spike in employee turnover is a classic KRI for insider threat risk." },
+      { term: "Key Performance Indicators (KPIs)", domain: "Domain 3 // Program", def: "Metrics that measure how effectively a security control, process, or program is achieving its defined operational objectives.", use: "Used to demonstrate program effectiveness and progress to management; focus on trend analysis over time." },
+      { term: "Information Asset Owner", domain: "Domain 1 // Governance", def: "A business manager accountable for classifying data sensitivity, defining access controls, and periodically reviewing privileges.", use: "Owns the risk and holds legal liability for the asset; the IT department is only the custodian." },
+      { term: "SLA (Service Level Agreement)", domain: "Domain 3 // Program", def: "A contractually binding agreement defining specific, measurable performance and response metrics an outsourcer must deliver.", use: "The most important tool for managing third-party vendor compliance and operational expectations." },
+      { term: "Service Delivery Objective (SDO)", domain: "Domain 4 // Incident", def: "The minimum level of service and throughput capability required at a recovery site to maintain essential operations during a disaster.", use: "Used to measure recovery success; a warm site running at 50% capacity satisfies the SDO for critical services." },
+      { term: "RTO (Recovery Time Objective)", domain: "Domain 4 // Incident", def: "The target timeframe within which systems, applications, or functions must be fully restored following a service disruption.", use: "Determines recovery site strategies (Hot, Warm, or Cold); RTO plus Work Recovery Time (WRT) must remain below the MTD." },
+      { term: "RPO (Recovery Point Objective)", domain: "Domain 4 // Incident", def: "The maximum tolerable period of data loss measured in time (e.g., 4 hours of lost transaction records).", use: "Directly dictates backup frequencies, replication strategies, and journal logging schedules." },
+      { term: "Maximum Tolerable Downtime (MTD)", domain: "Domain 2 // Risk", def: "The total length of time a critical business function can remain offline before the enterprise suffers irreversible damage.", use: "Serves as the absolute ceiling for recovery planning; must be established by senior business leaders during the BIA." },
+      { term: "Business Case", domain: "Domain 1 // Governance", def: "A structured proposal demonstrating the business necessity, costs, benefits, risk reductions, and ROI of a proposed security project.", use: "The primary tool used to justify unbudgeted security requests (like a new SIEM) to executive leadership." },
+      { term: "Inherent Risk", domain: "Domain 2 // Risk", def: "The raw, baseline level of risk that exists in the complete absence of any security controls or mitigating factors.", use: "Used during risk assessments to establish a starting point before deciding on a risk treatment option." },
+      { term: "Residual Risk", domain: "Domain 2 // Risk", def: "The level of risk that remains after security controls, countermeasures, and risk treatment strategies have been successfully applied.", use: "Risk management is successful only when residual risk is reduced to a level equal to or below the risk appetite." },
+      { term: "Risk Mitigation", domain: "Domain 2 // Risk", def: "The risk treatment option of applying security controls to reduce the likelihood or impact of a threat.", use: "Used when the risk level exceeds the organization's risk appetite and can be cost-effectively reduced." },
+      { term: "Risk Acceptance", domain: "Domain 2 // Risk", def: "The conscious, documented decision by executive management to retain and absorb the consequences of a specific risk.", use: "Only business owners or senior leaders have the authority to accept risk; the security manager merely advises." },
+      { term: "Risk Transfer", domain: "Domain 2 // Risk", def: "The risk treatment option of sharing or shifting the financial consequences of a risk to a third party (e.g., insurance).", use: "Reduces financial impact but never transfers ultimate legal, regulatory, or reputational accountability." },
+      { term: "Risk Avoidance", domain: "Domain 2 // Risk", def: "The risk treatment option of completely eliminating a risk by discontinuing the associated business activity or asset.", use: "Used when a risk is too severe to mitigate, transfer, or accept (e.g., shutting down a high-risk service)." },
+      { term: "Qualitative Risk Analysis", domain: "Domain 2 // Risk", def: "A subjective risk assessment method using descriptive ratings (High, Medium, Low) based on scenarios and expert opinions.", use: "Used when numerical data is unavailable or when assessing soft risk areas like brand reputation or customer perception." },
+      { term: "Quantitative Risk Analysis", domain: "Domain 2 // Risk", def: "An objective risk assessment method utilizing exact numerical data, percentage estimates, and financial figures.", use: "Allows management to make direct, metrics-driven decisions based on expected monetary losses." },
+      { term: "NIST Cybersecurity Framework", domain: "Domain 3 // Program", def: "A structured, voluntary framework designed to help organizations manage and reduce cybersecurity risks.", use: "The core areas (Identify, Protect, Detect, Respond, Recover) guide program development and maturity modeling." },
+      { term: "Gap Analysis", domain: "Domain 3 // Program", def: "A comparative evaluation that measures the organization's current security state against its desired future target state.", use: "Used to identify missing security capabilities and build a structured project roadmap to close the gaps." },
+      { term: "Triage", domain: "Domain 4 // Incident", def: "The immediate sorting, classification, and prioritization of incoming security alerts based on severity and potential impact.", use: "Ensures that limited incident response resources are directed to the most critical business threats first." },
+      { term: "Containment", domain: "Domain 4 // Incident", def: "The phase of incident response focused on isolating affected systems to prevent an active compromise from spreading.", use: "Always prioritize containment (e.g., isolating a network segment) before attempting eradication or recovery." },
+      { term: "Eradication", domain: "Domain 4 // Incident", def: "The phase of incident response focused on completely removing malware, backdoors, and threat components from infected systems.", use: "Must be performed thoroughly; involves deleting malicious code, patching vulnerabilities, and resetting compromised credentials." },
+      { term: "Post-Incident Review", domain: "Domain 4 // Incident", def: "An after-action analysis (lessons learned) held after an incident to evaluate the root cause, response effectiveness, and controls.", use: "The primary driver of continuous improvement for the incident management plan; often involves impartial third-party auditors." },
+      { term: "Compensating Control", domain: "Domain 3 // Program", def: "An alternative security safeguard deployed to mitigate risk when a primary required control is technically or financially impossible.", use: "Used to maintain compliance (e.g., adding security cameras and a physical logbook for a server lacking unique user logins)." },
+      { term: "Privacy Statement", domain: "Domain 1 // Governance", def: "A public-facing disclosure explaining exactly how an organization collects, uses, protects, and shares customer personal data.", use: "A core requirement of legal compliance; must clearly state what the company will do with collected customer information." },
+      { term: "Indemnification Clause", domain: "Domain 3 // Program", def: "A contractual clause where one party agrees to financially compensate the other for legal liabilities, damages, or losses.", use: "Used in third-party and outsourcing contracts to reduce financial risk while legal responsibility remains unchanged." },
+      { term: "Reciprocal Arrangement", domain: "Domain 4 // Incident", def: "An agreement between two organizations to share data center processing capabilities with each other in an emergency.", use: "A high-risk recovery strategy that frequently fails due to capacity constraints, software differences, and legal issues." },
+      { term: "Warm Site", domain: "Domain 4 // Incident", def: "A recovery facility equipped with electrical, cooling, and network infrastructure, along with servers that lack current database copies.", use: "A balanced, cost-effective recovery strategy; requires restoring data from backups before operations can resume." },
+      { term: "Hot Site", domain: "Domain 4 // Incident", def: "A fully operational, redundant recovery facility containing identical hardware and real-time database synchronization.", use: "Used for highly critical systems requiring near-zero recovery times (RTO); expensive to maintain." },
+      { term: "Cold Site", domain: "Domain 4 // Incident", def: "A recovery facility providing empty floor space with heating, ventilation, air conditioning, and electrical power, but no computer hardware.", use: "The cheapest recovery option with the longest setup time; requires shipping and installing servers before use." },
+      { term: "DDoS Attack", domain: "Domain 4 // Incident", def: "A Distributed Denial of Service attack utilizing a botnet to flood systems with traffic, exhausting bandwidth or compute resources.", use: "An operational risk that directly impacts system Availability; mitigated with upstream traffic scrubbers." },
+      { term: "SQL Injection (SQLi)", domain: "Domain 3 // Program", def: "An input validation attack where malicious SQL queries are submitted into web application fields to manipulate backend databases.", use: "Can result in unauthorized data exposure or modification; prevented with parameterized queries and input sanitization." },
+      { term: "Network Probe", domain: "Domain 4 // Incident", def: "A scanning activity where an external host systematically probes ports to map active servers, operating systems, and open ports.", use: "A precursor to an attack; should be actively monitored, and targeted segments isolated if suspicious activity increases." },
+      { term: "Due Diligence", domain: "Domain 1 // Governance", def: "The continuous research, verification, and monitoring of security controls to ensure they function properly and comply with policies.", use: "Proves management's ongoing compliance; the investigation phase that must occur before making any major risk decision." },
+      { term: "Due Care", domain: "Domain 1 // Governance", def: "The act of immediately taking reasonable steps and implementing safeguards to protect the organization's assets.", use: "The direct action phase ('doing the right thing'); failure to exercise due care constitutes legal negligence." },
+      { term: "Security Steering Committee", domain: "Domain 1 // Governance", def: "A governance body made up of senior business unit leaders who meet regularly to review and align security projects with business goals.", use: "Ensures cross-functional business representation and shared organizational ownership of security decisions." },
+      { term: "Maturity Model", domain: "Domain 1 // Governance", def: "A framework (such as CMMI) used to assess and benchmark the maturity and repeat-ability of an organization's processes.", use: "Provides management with a clear indicator of the state of security governance, showing progress from ad-hoc to optimized states." },
+      { term: "Enterprise Architecture", domain: "Domain 3 // Program", def: "The comprehensive map of an organization's IT assets, business processes, and security controls, showing how they interact.", use: "Enables the security manager to identify dependencies and apply consistent security blueprints across the enterprise." },
+      { term: "Asset Classification", domain: "Domain 2 // Risk", def: "The process of categorizing assets based on their criticality to operations and sensitivity to unauthorized disclosure.", use: "Determines the level of protection, encryption, and access controls required for different types of information." },
+      { term: "Threat Landscape", domain: "Domain 2 // Risk", def: "The collective mix of active external threats, attack vectors, and exploit trends facing an organization.", use: "The most difficult risk factor to estimate; requires continuous threat intelligence monitoring." },
+      { term: "Business Case", domain: "Domain 1 // Governance", def: "A formal proposal demonstrating the business justification, cost-benefit analysis, and risk reduction of a proposed security initiative.", use: "Essential for securing executive budget approvals for unfunded program components like a SIEM." },
+      { term: "Gap Analysis", domain: "Domain 3 // Program", def: "An assessment comparing the current state of security controls against the desired future state to identify missing capabilities.", use: "The primary tool used to build a security program's tactical project roadmap." },
+      { term: "Risk Appetite", domain: "Domain 2 // Risk", def: "The high-level boundary of how much risk senior leadership is willing to accept in pursuit of strategic goals.", use: "Defines the target ceiling for risk mitigation; resources should be directed to risks exceeding this appetite." },
+      { term: "Risk Register", domain: "Domain 2 // Risk", def: "A centralized database documenting identified risks, their likelihood and impact, assigned owners, and current treatment status.", use: "Must be updated regularly to provide management with a current view of the enterprise risk landscape." },
+      { term: "Control Risk", domain: "Domain 2 // Risk", def: "The risk that a security control will fail to prevent, detect, or correct a threat event in a timely manner.", use: "Must be evaluated regularly during control assessments to identify weak links in defense-in-depth." },
+      { term: "Inherent Risk", domain: "Domain 2 // Risk", def: "The raw risk level associated with an activity or asset before any security controls are applied.", use: "Established during the initial phase of risk assessments to understand the true exposure." },
+      { term: "Residual Risk", domain: "Domain 2 // Risk", def: "The risk remaining after all mitigation controls and treatment options have been implemented.", use: "Must be reviewed with the business asset owner to ensure it falls within acceptable risk tolerance levels." },
+      { term: "Quantitative Analysis", domain: "Domain 2 // Risk", def: "An objective risk analysis method that calculates exact financial loss values (ALE, SLE) using percentage and probability estimates.", use: "Most appropriate when concrete numerical data is available to justify security expenditures." },
+      { term: "Qualitative Analysis", domain: "Domain 2 // Risk", def: "A subjective risk analysis method that uses descriptive rankings (High, Medium, Low) based on scenarios and expert opinions.", use: "Used when exact asset values or threat frequencies are difficult to calculate numerically." },
+      { term: "BIA (Business Impact Analysis)", domain: "Domain 2 // Risk", def: "An assessment that identifies critical business functions and quantifies the operational and financial impact of disruptions.", use: "The best tool for establishing the priority of system restoration and recovery time objectives (RTOs)." },
+      { term: "Maximum Tolerable Downtime (MTD)", domain: "Domain 2 // Risk", def: "The maximum amount of time a critical business function can remain offline before the organization suffers catastrophic failure.", use: "Serves as the absolute ceiling for recovery planning; established by business leaders." },
+      { term: "RTO (Recovery Time Objective)", domain: "Domain 4 // Incident", def: "The target timeframe within which systems, applications, or functions must be restored after a service disruption.", use: "Used to select the recovery site strategy (Hot, Warm, or Cold site) so systems come back online before the MTD is breached." },
+      { term: "RPO (Recovery Point Objective)", domain: "Domain 4 // Incident", def: "The maximum acceptable period of data loss measured in time (e.g., 4 hours of lost transactions).", use: "Dictates the backup frequency and database replication schedules." },
+      { term: "SDO (Service Delivery Objective)", domain: "Domain 4 // Incident", def: "The minimum level of service and throughput capability required at a recovery site to maintain essential operations during a disaster.", use: "Used to measure recovery success; a warm site running at 50% capacity satisfies the SDO for critical services." },
+      { term: "COOP (Continuity of Operations Plan)", domain: "Domain 1 // Governance", def: "A plan detailing how essential organizational functions and personnel are relocated and sustained at an alternate temporary site.", use: "Used to keep mission-critical operations running during facility loss or regional emergencies." },
+      { term: "BCP vs. DRP", domain: "Domain 1 // Governance", def: "Business Continuity Plan (BCP) keeps the whole business running long-term; Disaster Recovery Plan (DRP) restores IT systems immediately after an event.", use: "Used to separate strategic executive continuity (BCP) from tactical IT restoration (DRP)." },
+      { term: "Third-Party Risk Management", domain: "Domain 2 // Risk", def: "The process of identifying, assessing, and mitigating risks introduced by third-party vendors, SaaS suppliers, and outsourced partners.", use: "Contracts must explicitly require third-party compliance with the organization's information security requirements." },
+      { term: "Service Level Agreement (SLA)", domain: "Domain 3 // Program", def: "A contractually binding agreement defining specific, measurable performance and response metrics an outsourcer must deliver.", use: "The most important tool for managing third-party vendor compliance and operational expectations." },
+      { term: "Indemnification", domain: "Domain 3 // Program", def: "A contractual clause where one party agrees to financially compensate the other for legal liabilities, damages, or losses.", use: "Used in third-party contracts to reduce financial risk while legal responsibility remains unchanged." },
+      { term: "Reciprocal Arrangement", domain: "Domain 4 // Incident", def: "An agreement between two organizations to share data center processing capabilities with each other in an emergency.", use: "A high-risk recovery strategy that frequently fails due to capacity constraints, software differences, and legal issues." },
+      { term: "Separation of Duties (SoD)", domain: "Domain 3 // Program", def: "Splitting a sensitive multi-step task across two or more individuals so no single person can complete it alone.", use: "Used to prevent fraud, catch errors in multi-step workflows, and force collusion to bypass controls." },
+      { term: "Job Rotation", domain: "Domain 3 // Program", def: "Periodically moving employees into different job functions or departments.", use: "Used to detect hidden long-term fraud when a new person takes over a role and to cross-train staff." },
+      { term: "Mandatory Vacation", domain: "Domain 3 // Program", def: "Requiring employees in sensitive roles to take consecutive time off while someone else covers their duties.", use: "Used to uncover ongoing embezzlement or unauthorized system manipulation that requires the perpetrator's daily presence." },
+      { term: "Least Privilege", domain: "Domain 3 // Program", def: "A security principle restricting user access rights to only the minimum permissions necessary to perform their job duties.", use: "Prevents accidental or malicious modification of sensitive production data." },
+      { term: "Security Steering Committee", domain: "Domain 1 // Governance", def: "A governance body made up of senior business unit leaders who meet regularly to review and align security projects with business goals.", use: "Ensures cross-functional business representation and shared organizational ownership of security decisions." },
+      { term: "Maturity Model", domain: "Domain 1 // Governance", def: "A framework (such as CMMI) used to assess and benchmark the maturity and repeat-ability of an organization's processes.", use: "Provides management with a clear indicator of the state of security governance, showing progress from ad-hoc to optimized states." },
+      { term: "Centralized Security Structure", domain: "Domain 3 // Program", def: "A security organizational structure where all policy decisions, standards, and control implementations are managed by a single central unit.", use: "Makes the security program easier to manage and control across the entire enterprise." },
+      { term: "Decentralized Security Structure", domain: "Domain 3 // Program", def: "A security structure where individual business units or regions manage and enforce their own security implementations.", use: "Responsive to local business unit needs but introduces a higher risk of inconsistent security postures." },
+      { term: "Triage", domain: "Domain 4 // Incident", def: "The immediate sorting, classification, and prioritization of incoming security alerts based on severity and potential impact.", use: "Ensures that limited incident response resources are directed to the most critical business threats first." },
+      { term: "Containment", domain: "Domain 4 // Incident", def: "The phase of incident response focused on isolating affected systems to prevent an active compromise from spreading.", use: "Always prioritize containment (e.g., isolating a network segment) before attempting eradication or recovery." },
+      { term: "Eradication", domain: "Domain 4 // Incident", def: "The phase of incident response focused on completely removing malware, backdoors, and threat components from infected systems.", use: "Must be performed thoroughly; involves deleting malicious code, patching vulnerabilities, and resetting compromised credentials." },
+      { term: "Post-Incident Review", domain: "Domain 4 // Incident", def: "An after-action analysis (lessons learned) held after an incident to evaluate the root cause, response effectiveness, and controls.", use: "The primary driver of continuous improvement for the incident management plan; often involves impartial third-party auditors." },
+      { term: "Compensating Control", domain: "Domain 3 // Program", def: "An alternative security safeguard deployed to mitigate risk when a primary required control is technically or financially impossible.", use: "Used to maintain compliance (e.g., adding security cameras and a physical logbook for a server lacking unique user logins)." },
+      { term: "Privacy Statement", domain: "Domain 1 // Governance", def: "A public-facing disclosure explaining exactly how an organization collects, uses, protects, and shares customer personal data.", use: "A core requirement of legal compliance; must clearly state what the company will do with collected customer information." },
+      { term: "Key Risk Indicators (KRIs)", domain: "Domain 2 // Risk", def: "Early warning metrics designed to predict and alert management to emerging risk events or deviations from risk appetite.", use: "Must be predictive in nature; an unexpected spike in employee turnover is a classic KRI for insider threat risk." },
+      { term: "Key Performance Indicators (KPIs)", domain: "Domain 3 // Program", def: "Metrics that measure how effectively a security control, process, or program is achieving its defined operational objectives.", use: "Used to demonstrate program effectiveness and progress to management; focus on trend analysis over time." },
+      { term: "Information Asset Owner", domain: "Domain 1 // Governance", def: "A business manager accountable for classifying data sensitivity, defining access controls, and periodically reviewing privileges.", use: "Owns the risk and holds legal liability for the asset; the IT department is only the custodian." },
+      { term: "Symmetric Encryption", domain: "Domain 3 // Program", def: "A fast cryptographic method using a single shared secret key to encrypt and decrypt bulk transit or storage data.", use: "The most appropriate and cost-effective method to ensure data confidentiality in transit for enterprise messaging." },
+      { term: "Asymmetric Encryption", domain: "Domain 3 // Program", def: "A cryptographic method utilizing a public/private key pair to encrypt data or verify digital signatures.", use: "Slower than symmetric encryption; used for key exchanges, digital signatures, and establishing trusted connections." },
+      { term: "Digital Signature", domain: "Domain 3 // Program", def: "A cryptographic value generated by hashing data and encrypting it with the sender's private key.", use: "Provides integrity, authentication, and non-repudiation, but does not provide confidentiality." },
+      { term: "Hashing Algorithm", domain: "Domain 3 // Program", def: "A one-way cryptographic function that converts any input into a unique, fixed-length string (hash value).", use: "Used to verify file and message integrity; cannot be decrypted back to the original input." },
+      { term: "Intrusion Detection System (IDS)", domain: "Domain 4 // Incident", def: "A passive network security monitoring control that analyzes traffic for suspicious access patterns and potential attacks.", use: "The primary tool for identifying potential unauthorized access attempts on the internal network." },
+      { term: "Antivirus Signatures", domain: "Domain 4 // Incident", def: "A database of known malware patterns used by antivirus engines to identify and block malicious code.", use: "New malware is written constantly, so production servers must update antivirus signatures daily." },
+      { term: "Change Management", domain: "Domain 3 // Program", def: "A structured process to ensure all technical modifications are reviewed, authorized, and tested before production deployment.", use: "Integrating threat assessments into change management reduces the need for frequent full-scale risk assessments." },
+      { term: "Vulnerability Management", domain: "Domain 2 // Risk", def: "The process of continuously identifying, assessing, mitigating, and remediating software flaws and exposures.", use: "When a zero-day is published before a patch exists, the security manager should immediately apply compensating controls." },
+      { term: "Black Box Pen Test", domain: "Domain 3 // Program", def: "A simulated attack where testers have zero prior knowledge of network layouts, simulating an external threat.", use: "A clear definition of scope must be established and authorized before testing begins." },
+      { term: "Security Awareness Program", domain: "Domain 3 // Program", def: "Continuous training and campaigns designed to educate employees on security policies, phishing threats, and best practices.", use: "The most effective long-term tool for changing organizational culture and enforcing restrictive password policies." },
+      { term: "Incident Escalation", domain: "Domain 4 // Incident", def: "The process of notifying senior executives, legal teams, or business owners when an incident exceeds specific severity thresholds.", use: "The first step after verifying a customer database or sensitive asset has been exposed." },
+      { term: "Data Loss Prevention (DLP)", domain: "Domain 3 // Program", def: "Controls designed to inspect, detect, and block sensitive enterprise data from being transmitted outside authorized boundaries.", use: "Prevents data leakage across email, cloud storage, and endpoint USB drives." },
+      { term: "Access Privilege Review", domain: "Domain 3 // Program", def: "The administrative process of auditing and verifying active user permissions against their current job roles.", use: "Must be performed immediately when an operator's role changes to prevent privilege creep and maintain SoD." },
+      { term: "Network Segment Isolation", domain: "Domain 4 // Incident", def: "The containment action of disconnecting or blocking network traffic to/from a compromised network zone.", use: "The first action to take when an online business discovers an active network attack in progress." },
+      { term: "Incident Detection", domain: "Domain 4 // Incident", def: "The technical capability to identify and alert on security anomalies and suspicious access patterns.", use: "The most important prerequisite for ensuring the timely identification of active security incidents." },
+      { term: "Forensic Imaging", domain: "Domain 4 // Incident", def: "The bit-by-bit cryptographic copy of a digital storage medium to preserve potential evidence for analysis.", use: "The security manager must generate cryptographic hashes of the images immediately after creation to prove integrity." },
+      { term: "Ethics and Professionalism", domain: "Domain 1 // Governance", def: "Adhering to professional codes of conduct, regulatory compliance, and protecting society.", use: "Security decisions must balance business objectives with legal, regulatory, and ethical frameworks." }
+    ];
+
+    function shuffleArray(arr) {
+      const copy = [...arr];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    let deck = [...terms];
+    let currentCard = 0;
+    let isFlipped = false;
+
+    const fcMain = document.getElementById("fc-main");
+
+    function renderCard() {
+      const item = deck[currentCard];
+      const pct = Math.round(((currentCard + 1) / deck.length) * 100);
+
+      let jumpGrid = "";
+      for (let i = 0; i < deck.length; i++) {
+        jumpGrid += `<button type="button" class="jump-opt ${i === currentCard ? "current" : ""}" data-c="${i}">#${i + 1}</button>`;
+      }
+
+      fcMain.innerHTML = `
+        <div class="fc-topbar">
+          <a href="cism.html" class="btn-ghost">&larr; CISM Hub</a>
+          <div class="fc-controls-right">
+            <button type="button" class="btn-ghost" id="shuffle-btn">&#8645; Shuffle Deck</button>
+            <div class="jump-wrapper">
+              <button type="button" class="jump-trigger" id="fc-jump-trigger" aria-expanded="false">
+                Jump to: Card ${currentCard + 1} &#9662;
+              </button>
+              <div class="jump-menu" id="fc-jump-menu">${jumpGrid}</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="progress-track">
+          <div class="progress-fill" style="width:${pct}%"></div>
+        </div>
+
+        <div class="flashcard ${isFlipped ? "flipped" : ""}" id="flashcard-el" tabindex="0" role="button" aria-label="Flip flash card">
+          <div>
+            <div class="fc-meta">
+              <span class="fc-side-tag ${isFlipped ? "back" : "front"}">${isFlipped ? "Definition & Exam Use" : "Keyword"}</span>
+              <span class="fc-domain">CARD ${currentCard + 1} OF ${deck.length} &middot; ${item.domain}</span>
+            </div>
+
+            ${!isFlipped ? `
+              <div class="fc-term" style="font-size: clamp(1.4rem, 2.8vw, 2rem);">${item.term}</div>
+            ` : `
+              <div class="fc-def-box">
+                <div class="fc-def">${item.def}</div>
+                <div class="fc-purpose"><strong>Exam Application:</strong> ${item.use}</div>
+              </div>
+            `}
+          </div>
+
+          <div class="fc-hint">${isFlipped ? "Click card to see keyword again" : "Click card to reveal definition"}</div>
+        </div>
+
+        <div class="fc-actions">
+          <div class="fc-nav-group">
+            <button type="button" class="btn-ghost" id="fc-prev" ${currentCard === 0 ? "disabled" : ""}>&larr; Prev Card</button>
+            <button type="button" class="btn-ghost" id="fc-next" ${currentCard === deck.length - 1 ? "disabled" : ""}>Next Card &rarr;</button>
+          </div>
+          <button type="button" class="btn-lime" id="fc-flip-btn">${isFlipped ? "Show Keyword" : "Reveal Definition"}</button>
+        </div>
+      `;
+
+      const flipCard = () => { isFlipped = !isFlipped; renderCard(); };
+      document.getElementById("flashcard-el").addEventListener("click", flipCard);
+      document.getElementById("fc-flip-btn").addEventListener("click", flipCard);
+
+      document.getElementById("fc-prev").addEventListener("click", () => {
+        if (currentCard > 0) { currentCard--; isFlipped = false; renderCard(); }
+      });
+      document.getElementById("fc-next").addEventListener("click", () => {
+        if (currentCard < deck.length - 1) { currentCard++; isFlipped = false; renderCard(); }
+      });
+
+      const jumpTrigger = document.getElementById("fc-jump-trigger");
+      const jumpMenu = document.getElementById("fc-jump-menu");
+      jumpTrigger.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const isOpen = jumpMenu.classList.toggle("open");
+        jumpTrigger.classList.toggle("open", isOpen);
+        jumpTrigger.setAttribute("aria-expanded", String(isOpen));
+      });
+
+      document.querySelectorAll("#fc-jump-menu .jump-opt").forEach(btn => {
+        btn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          currentCard = parseInt(btn.dataset.c, 10);
+          isFlipped = false;
+          renderCard();
+        });
+      });
+
+      document.getElementById("shuffle-btn").addEventListener("click", () => {
+        deck = shuffleArray(terms);
+        currentCard = 0;
+        isFlipped = false;
+        renderCard();
+      });
+    }
+
+    document.addEventListener("click", () => {
+      const jumpMenu = document.getElementById("fc-jump-menu");
+      const jumpTrigger = document.getElementById("fc-jump-trigger");
+      if (jumpMenu && jumpMenu.classList.contains("open")) {
+        jumpMenu.classList.remove("open");
+        jumpTrigger.classList.remove("open");
+        jumpTrigger.setAttribute("aria-expanded", "false");
+      }
+    });
+
+    const menuBtn = document.getElementById("mobile-menu-btn");
+    const navDrawer = document.getElementById("nav-drawer");
+    menuBtn.addEventListener("click", () => {
+      const isOpen = navDrawer.classList.toggle("open");
+      menuBtn.setAttribute("aria-expanded", String(isOpen));
+      menuBtn.innerHTML = isOpen ? "Close &#10005;" : "Menu &#9776;";
+    });
+
+    const privacyModal = document.getElementById("privacy-modal");
+    document.getElementById("open-privacy-btn").addEventListener("click", () => privacyModal.classList.add("open"));
+    document.getElementById("privacy-close-btn").addEventListener("click", () => privacyModal.classList.remove("open"));
+    privacyModal.addEventListener("click", (e) => { if (e.target === privacyModal) privacyModal.classList.remove("open"); });
+
+    renderCard();
+  </script>
+</body>
+</html>
