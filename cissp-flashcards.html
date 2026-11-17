@@ -253,10 +253,10 @@
             <span>CISSP</span>
             <span class="badge live">Active</span>
           </a>
-          <span class="nav-item disabled" aria-disabled="true">
+          <a href="cism.html" class="nav-item">
             <span>CISM</span>
-            <span class="badge">Coming Soon</span>
-          </span>
+            <span class="badge live">Active</span>
+          </a>
           <span class="nav-item disabled" aria-disabled="true">
             <span>Security+</span>
             <span class="badge">Coming Soon</span>
@@ -368,7 +368,7 @@
       { term: "Brewer-Nash (Chinese Wall) Model", domain: "Domain 3 // Architecture", def: "An access control model that dynamically updates permissions to prevent conflicts of interest.", use: "Used in consulting and legal firms so an analyst working for Bank A is blocked from viewing Bank B's files." },
       { term: "TCB (Trusted Computing Base)", domain: "Domain 3 // Architecture", def: "The totality of hardware, firmware, and software protection mechanisms responsible for enforcing a security policy.", use: "Used to define the security perimeter inside an operating system; if the TCB is compromised, the whole system is untrusted." },
       { term: "Reference Monitor", domain: "Domain 3 // Architecture", def: "An abstract machine inside the TCB that mediates all access between subjects and objects; it must be tamperproof, always invoked, and small enough to verify.", use: "Used as the conceptual gatekeeper implemented by the Security Kernel." },
-      { term: "TPM (Trusted Platform Module)", domain: "Domain 3 // Architecture", def: "A dedicated hardware cryptoprocessor chip on a motherboard that securely stores keys, certificates, and boot measurements.", use: "Used for BitLocker full-disk encryption, measured boot integrity, and hardware-backed device identity." },
+      { term: "TPM (Trusted Platform Module)", domain: "Domain 3 // Architecture", def: "A dedicated hardware cryptoprocessor chip on a motherboard that securely stores keys, measurements, and credentials.", use: "Used for BitLocker full-disk encryption, measured boot integrity, and hardware-backed device identity." },
       { term: "HSM (Hardware Security Module)", domain: "Domain 3 // Architecture", def: "A tamper-resistant physical appliance designed to generate, store, and manage cryptographic keys at high speed.", use: "Used by Certificate Authorities (CAs) and banks to protect root private keys from extraction." },
       { term: "Symmetric vs. Asymmetric Encryption", domain: "Domain 3 // Architecture", def: "Symmetric uses one shared secret key (fast, bulk data); Asymmetric uses a public/private key pair (key exchange, digital signatures).", use: "Used together in hybrid cryptography (TLS): Asymmetric exchanges the key, Symmetric encrypts the session." },
       { term: "AES (Advanced Encryption Standard)", domain: "Domain 3 // Architecture", def: "A symmetric block cipher (Rijndael) using 128-bit blocks and 128, 192, or 256-bit keys.", use: "Used as the global government and enterprise standard for encrypting data at rest and in transit." },
