@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Home | Jesse's Study Guides</title>
-  <meta name="description" content="An independent study portal compiling practice questions, study notes, and reference material across cybersecurity, psychology, and more." />
+  <meta name="description" content="An independent study portal compiling practice questions, study notes, and reference material across multiple subjects." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -31,7 +31,7 @@
 
       <nav class="nav-drawer" id="nav-drawer" aria-label="Study Categories">
         <div class="nav-section">
-          <div class="nav-label">// Cybersecurity</div>
+          <div class="nav-label">Cybersecurity</div>
           <a href="cissp.html" class="nav-item">
             <span>CISSP</span>
             <span class="badge live">Active</span>
@@ -47,7 +47,7 @@
         </div>
 
         <div class="nav-section">
-          <div class="nav-label">// Psychology</div>
+          <div class="nav-label">Psychology</div>
           <span class="nav-item disabled" aria-disabled="true">
             <span>NCE</span>
             <span class="badge">Coming Soon</span>
@@ -55,7 +55,7 @@
         </div>
 
         <div class="nav-section">
-          <div class="nav-label">// Other</div>
+          <div class="nav-label">Other</div>
           <span class="nav-item disabled" aria-disabled="true">
             <span>Coming Soon</span>
             <span class="badge">Coming Soon</span>
@@ -67,33 +67,69 @@
     <div class="main-area">
       <div class="topbar">
         <div class="breadcrumb">JESSE'S STUDY GUIDES / <span>HOME</span></div>
-        <div>STATUS: ONLINE</div>
+        <div class="status-pill"><span class="status-dot"></span> SYSTEM ONLINE</div>
       </div>
 
       <main class="content-body">
-        <div class="eyebrow">Training Database // v1.0</div>
+        <div class="eyebrow">Command Hub // Database v1.0</div>
         <h1 class="hero-headline">
           LEARN FASTER<br />
           MASTER THE<br />
           <span class="outline">MATERIAL</span>
         </h1>
 
-        <div class="prose">
-          <p>
-            Welcome to my personal study portal. When looking for reliable study materials across different subjects, I found it difficult to tell which resources were accurate and worth the time.
-          </p>
-          <p>
-            To solve that problem, I built this independent site as a personal notebook to organize practice questions, study notes, and key concepts in one place. Feel free to use any of these guides for your own preparation. If you find this site helpful, please consider supporting my work by <a class="inline-link" href="https://www.buymeacoffee.com/YOUR_USERNAME" target="_blank" rel="noopener noreferrer">buying me a coffee</a>.
-          </p>
+        <div class="hud-panel">
+          <div class="prose">
+            <p>
+              Welcome to my personal study portal. When looking for reliable study materials across different subjects, I found it difficult to tell which resources were accurate and worth the time.
+            </p>
+            <p>
+              To solve that problem, I built this independent site as a personal notebook to organize practice questions, study notes, and key concepts in one place. Feel free to use any of these guides for your own preparation. If you find this site helpful, please consider supporting my work by <a class="inline-link" href="https://www.buymeacoffee.com/YOUR_USERNAME" target="_blank" rel="noopener noreferrer">buying me a coffee</a>.
+            </p>
+          </div>
         </div>
 
         <div class="about-card">
-          <h3>// About Me</h3>
+          <h3>About Me</h3>
           <p class="prose">
             I am a U.S. Army veteran with 19 years of professional experience and a lifelong learner who enjoys diving into new subjects. I created this platform to keep my own study materials structured and accessible, and I hope it helps you reach your goals as well.
           </p>
         </div>
+
+        <div class="telemetry-strip">
+          <div class="telemetry-tag">Access: <strong>Open</strong></div>
+          <div class="telemetry-tag">Active Track: <strong>CISSP</strong></div>
+          <div class="telemetry-tag">Mode: <strong>Independent Study</strong></div>
+        </div>
       </main>
+    </div>
+  </div>
+
+  <!-- Privacy Policy Modal -->
+  <div class="modal-backdrop" id="privacy-modal" role="dialog" aria-modal="true" aria-labelledby="privacy-title">
+    <div class="modal-box">
+      <div class="modal-top">
+        <div class="modal-title" id="privacy-title">Privacy Policy</div>
+        <button class="modal-close" id="privacy-close-btn" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body">
+        <p><strong>Effective Date:</strong> November 17, 2026</p>
+
+        <h4>1. Information We Collect</h4>
+        <p>Jesse's Study Guides is a static, informational study website. We do not require user registration, accounts, or logins, and we do not directly collect names, email addresses, or payment details on this site.</p>
+
+        <h4>2. Hosting and Server Logs</h4>
+        <p>This website is hosted via Vercel. As part of standard web delivery and security operations, our hosting provider may automatically process basic technical request data such as your IP address, browser type, operating system, and timestamps in temporary server logs.</p>
+
+        <h4>3. Cookies and Tracking</h4>
+        <p>This website does not use advertising trackers or third-party marketing cookies.</p>
+
+        <h4>4. Third-Party Links</h4>
+        <p>This site includes an external link to Buy Me a Coffee for voluntary donations. If you choose to visit or donate through that platform, any information you provide is governed directly by Buy Me a Coffee's own privacy policy and terms of service.</p>
+
+        <h4>5. Changes to This Policy</h4>
+        <p>This policy may be updated as new features or study modules are added to the site. Questions regarding this notice can be directed to the site owner, Jesse Johnson.</p>
+      </div>
     </div>
   </div>
 
@@ -103,6 +139,9 @@
       This portal is an independent, unofficial personal study resource and is not affiliated with, endorsed by, or sponsored by ISC2, ISACA, CompTIA, NBCC, or any other certification body.
       CISSP&reg; is a registered trademark of ISC2. CISM&reg; is a registered trademark of ISACA. CompTIA Security+&reg; is a registered trademark of CompTIA. NCE&reg; is a registered trademark of NBCC. All vendor materials, trademarks, and copyrights remain the property of their respective owners.
     </p>
+    <div class="footer-links">
+      <button type="button" class="privacy-link" id="open-privacy-btn">Privacy Policy</button>
+    </div>
   </footer>
 
   <script>
@@ -113,6 +152,16 @@
       const isOpen = navDrawer.classList.toggle("open");
       menuBtn.setAttribute("aria-expanded", String(isOpen));
       menuBtn.innerHTML = isOpen ? "Close &#10005;" : "Menu &#9776;";
+    });
+
+    const privacyModal = document.getElementById("privacy-modal");
+    const openPrivacyBtn = document.getElementById("open-privacy-btn");
+    const closePrivacyBtn = document.getElementById("privacy-close-btn");
+
+    openPrivacyBtn.addEventListener("click", () => privacyModal.classList.add("open"));
+    closePrivacyBtn.addEventListener("click", () => privacyModal.classList.remove("open"));
+    privacyModal.addEventListener("click", (e) => {
+      if (e.target === privacyModal) privacyModal.classList.remove("open");
     });
   </script>
 </body>
