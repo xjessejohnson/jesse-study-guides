@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CISSP Flash Cards | Jesse's Study Guides</title>
+  <meta name="description" content="100 essential 2026 CISSP exam keywords and definitions in an interactive flashcard deck." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .fc-topbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.85rem;
+      margin-bottom: 1.25rem;
+      position: relative;
+      z-index: 20;
+    }
+    .fc-controls-right {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      flex-wrap: wrap;
+    }
+    .btn-ghost {
+      padding: 0.55rem 1rem;
+      border-radius: 8px;
+      border: 1px solid var(--border-slate);
+      background: transparent;
+      color: var(--text-secondary);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.76rem;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .btn-ghost:hover:not(:disabled) { border-color: var(--cyan); color: #fff; }
+    .btn-ghost:disabled { opacity: 0.4; cursor: not-allowed; }
+    .btn-lime {
+      padding: 0.78rem 1.45rem;
+      border-radius: 9px;
+      border: none;
+      background: var(--lime);
+      color: #05070c;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+    .btn-lime:hover {
+      filter: brightness(1.08);
+      box-shadow: 0 0 22px rgba(158, 255, 51, 0.35);
+      transform: translateY(-1px);
+    }
+
+    /* Custom Scrollable Jump Dropdown */
+    .jump-wrapper { position: relative; display: inline-block; }
+    .jump-trigger {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.5rem 0.9rem;
+      border-radius: 8px;
+      border: 1px solid var(--border-slate);
+      background: var(--bg-card);
+      color: #f8fafc;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: border-color 0.15s ease;
+    }
+    .jump-trigger:hover, .jump-trigger.open { border-color: var(--cyan); color: var(--cyan); }
+    .jump-menu {
+      position: absolute;
+      right: 0;
+      top: calc(100% + 6px);
+      width: 260px;
+      max-height: 290px;
+      overflow-y: auto;
+      background: #0d121c;
+      border: 1px solid var(--cyan);
+      border-radius: 10px;
+      padding: 0.5rem;
+      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.85);
+      display: none;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.35rem;
+      z-index: 60;
+    }
+    .jump-menu.open { display: grid; }
+    .jump-opt {
+      padding: 0.45rem 0.25rem;
+      border-radius: 6px;
+      border: 1px solid transparent;
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--text-secondary);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      text-align: center;
+      cursor: pointer;
+    }
+    .jump-opt:hover { background: var(--cyan-dim); color: #fff; border-color: rgba(34, 211, 238, 0.4); }
+    .jump-opt.current { background: var(--lime); color: #05070c; font-weight: 700; }
+
+    .progress-track {
+      width: 100%;
+      height: 5px;
+      background: rgba(148, 163, 184, 0.14);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--cyan), var(--lime));
+      transition: width 0.25s ease;
+    }
+
+    /* Flash Card */
+    .flashcard {
+      position: relative;
+      background: var(--bg-card);
+      border: 1px solid var(--border-slate);
+      border-radius: 14px;
+      padding: 2.1rem 1.9rem;
+      min-height: 290px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.45);
+      margin-bottom: 1.5rem;
+    }
+    .flashcard:hover { border-color: rgba(34, 211, 238, 0.5); }
+    .flashcard.flipped {
+      border-color: var(--lime);
+      background: #0e1624;
+      box-shadow: 0 0 30px rgba(158, 255, 51, 0.1);
+    }
+
+    .fc-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.74rem;
+    }
+    .fc-side-tag {
+      padding: 0.2rem 0.6rem;
+      border-radius: 6px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .fc-side-tag.front {
+      background: var(--cyan-dim);
+      color: var(--cyan);
+      border: 1px solid rgba(34, 211, 238, 0.3);
+    }
+    .fc-side-tag.back {
+      background: var(--lime-dim);
+      color: var(--lime);
+      border: 1px solid var(--border-bright);
+    }
+    .fc-domain { color: var(--text-secondary); }
+
+    .fc-term {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: clamp(1.55rem, 3vw, 2.2rem);
+      color: #fff;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      margin: 1rem 0;
+    }
+
+    .fc-def-box {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .fc-def {
+      color: #fff;
+      font-size: 1.05rem;
+      line-height: 1.6;
+      font-weight: 500;
+    }
+    .fc-purpose {
+      padding: 0.9rem 1.1rem;
+      border-radius: 10px;
+      background: rgba(158, 255, 51, 0.08);
+      border-left: 3px solid var(--lime);
+      color: var(--text-secondary);
+      font-size: 0.94rem;
+      line-height: 1.55;
+    }
+    .fc-purpose strong { color: var(--lime); }
+
+    .fc-hint {
+      margin-top: 1.5rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .fc-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.85rem;
+    }
+    .fc-nav-group { display: flex; gap: 0.65rem; flex-wrap: wrap; }
+  </style>
+</head>
+<body>
+
+  <div class="frame-wrapper">
+    <aside>
+      <div class="brand-block">
+        <div class="brand-row">
+          <div>
+            <a href="index.html" class="brand-title">Jesse's Study Guides</a>
+            <div class="brand-tagline">Unofficial compiled training database v1.0</div>
+          </div>
+          <button class="mobile-menu-btn" id="mobile-menu-btn" aria-expanded="false" aria-controls="nav-drawer">
+            Menu &#9776;
+          </button>
+        </div>
+        <a class="coffee-btn" href="https://www.buymeacoffee.com/YOUR_USERNAME" target="_blank" rel="noopener noreferrer">
+          &#9749; Buy Me a Coffee
+        </a>
+      </div>
+
+      <nav class="nav-drawer" id="nav-drawer" aria-label="Study Categories">
+        <div class="nav-section">
+          <div class="nav-label">Cybersecurity</div>
+          <a href="cissp.html" class="nav-item active">
+            <span>CISSP</span>
+            <span class="badge live">Active</span>
+          </a>
+          <span class="nav-item disabled" aria-disabled="true">
+            <span>CISM</span>
+            <span class="badge">Coming Soon</span>
+          </span>
+          <span class="nav-item disabled" aria-disabled="true">
+            <span>Security+</span>
+            <span class="badge">Coming Soon</span>
+          </span>
+        </div>
+
+        <div class="nav-section">
+          <div class="nav-label">Psychology</div>
+          <span class="nav-item disabled" aria-disabled="true">
+            <span>NCE</span>
+            <span class="badge">Coming Soon</span>
+          </span>
+        </div>
+
+        <div class="nav-section">
+          <div class="nav-label">Other</div>
+          <span class="nav-item disabled" aria-disabled="true">
+            <span>Coming Soon</span>
+            <span class="badge">Coming Soon</span>
+          </span>
+        </div>
+      </nav>
+    </aside>
+
+    <div class="main-area">
+      <div class="topbar">
+        <div class="breadcrumb">JESSE'S STUDY GUIDES / CISSP / <span>FLASH CARDS</span></div>
+        <div class="status-pill"><span class="status-dot"></span> SYSTEM ONLINE</div>
+      </div>
+
+      <main class="content-body" id="fc-main"></main>
+    </div>
+  </div>
+
+  <!-- Privacy Policy Modal -->
+  <div class="modal-backdrop" id="privacy-modal" role="dialog" aria-modal="true" aria-labelledby="privacy-title">
+    <div class="modal-box">
+      <div class="modal-top">
+        <div class="modal-title" id="privacy-title">Privacy Policy</div>
+        <button class="modal-close" id="privacy-close-btn" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body">
+        <p><strong>Effective Date:</strong> November 17, 2026</p>
+        <h4>1. Information We Collect</h4>
+        <p>Jesse's Study Guides is a static, informational study website. We do not require user registration, accounts, or logins, and we do not directly collect names, email addresses, or payment details on this site.</p>
+        <h4>2. Hosting and Server Logs</h4>
+        <p>This website is hosted via Vercel. As part of standard web delivery and security operations, our hosting provider may automatically process basic technical request data such as your IP address, browser type, operating system, and timestamps in temporary server logs.</p>
+        <h4>3. Cookies and Tracking</h4>
+        <p>This website does not use advertising trackers or third-party marketing cookies.</p>
+        <h4>4. Third-Party Links</h4>
+        <p>This site includes an external link to Buy Me a Coffee for voluntary donations. If you choose to visit or donate through that platform, any information you provide is governed directly by Buy Me a Coffee's own privacy policy and terms of service.</p>
+        <h4>5. Changes to This Policy</h4>
+        <p>This policy may be updated as new features or study modules are added to the site. Questions regarding this notice can be directed to the site owner, Jesse Johnson.</p>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2026 Jesse Johnson. All rights reserved.</p>
+    <p>
+      This portal is an independent, unofficial personal study resource and is not affiliated with, endorsed by, or sponsored by ISC2, ISACA, CompTIA, NBCC, or any other certification body.
+      CISSP&reg; is a registered trademark of ISC2. CISM&reg; is a registered trademark of ISACA. CompTIA Security+&reg; is a registered trademark of CompTIA. NCE&reg; is a registered trademark of NBCC. All vendor materials, trademarks, and copyrights remain the property of their respective owners.
+    </p>
+    <div class="footer-links">
+      <button type="button" class="privacy-link" id="open-privacy-btn">Privacy Policy</button>
+    </div>
+  </footer>
+
+  <script>
+    const terms = [
+      { term: "802.1X", domain: "Domain 4 // Network", def: "An IEEE standard for port-based Network Access Control (PNAC) that authenticates devices before granting LAN or Wi-Fi access.", use: "Used to block unauthorized devices from plugging into switch ports or joining enterprise Wi-Fi; typically pairs EAP with a RADIUS backend." },
+      { term: "MACsec (802.1AE)", domain: "Domain 4 // Network", def: "Media Access Control Security provides hop-by-hop Layer 2 Ethernet frame encryption and integrity checks between switches and endpoints.", use: "Used to stop Layer 2 wiretapping, ARP poisoning, and DHCP spoofing on local physical links." },
+      { term: "Zero Trust Architecture (ZTA)", domain: "Domain 3 // Architecture", def: "A security model (NIST SP 800-207) built on the principle of 'never trust, always verify' regardless of network location.", use: "Used to eliminate implicit trust inside the corporate perimeter by enforcing continuous authentication, microsegmentation, and Policy Enforcement Points (PEP)." },
+      { term: "SAML 2.0", domain: "Domain 5 // IAM", def: "Security Assertion Markup Language is an XML-based open standard for exchanging authentication and authorization assertions between an IdP and a Service Provider.", use: "Used for browser-based enterprise Single Sign-On (SSO) to cloud SaaS apps like Salesforce and Google Workspace." },
+      { term: "OAuth 2.0", domain: "Domain 5 // IAM", def: "An open authorization framework that allows third-party applications to obtain scoped access tokens without exposing user passwords.", use: "Used for API access delegation (e.g., letting an app read your contacts without giving it your master login)." },
+      { term: "OpenID Connect (OIDC)", domain: "Domain 5 // IAM", def: "An identity and authentication layer built on top of OAuth 2.0 that uses lightweight JSON Web Tokens (JWT).", use: "Used for modern mobile and web SSO authentication ('Sign in with Google/Apple') where OAuth alone only handles authorization." },
+      { term: "Kerberos KDC", domain: "Domain 5 // IAM", def: "Key Distribution Center is the trusted third-party service running the Authentication Service (AS) and Ticket Granting Service (TGS).", use: "Used in Active Directory domains to issue Ticket Granting Tickets (TGTs) and service tickets using symmetric encryption without sending passwords over the network." },
+      { term: "RADIUS", domain: "Domain 5 // IAM", def: "Remote Authentication Dial-In User Service is an open AAA protocol operating over UDP that encrypts only the password field.", use: "Used as the backend authentication server for 802.1X Wi-Fi, VPNs, and dial-up/remote access." },
+      { term: "TACACS+", domain: "Domain 5 // IAM", def: "A Cisco-developed AAA protocol over TCP port 49 that encrypts the entire packet payload and separates Authentication, Authorization, and Accounting.", use: "Used for granular command-level administration of network routers and switches." },
+      { term: "EAP (Extensible Authentication Protocol)", domain: "Domain 4 // Network", def: "An authentication framework rather than a single method, designed to carry specific credential types inside a standardized wrapper.", use: "Used in wireless and 802.1X networks to encapsulate methods like EAP-TLS, PEAP, and EAP-TTLS." },
+      { term: "CIA Triad", domain: "Domain 1 // Risk Mgmt", def: "Confidentiality (keeping data secret), Integrity (preventing unauthorized modification), and Availability (ensuring timely access).", use: "Used as the foundational benchmark for every security control and architectural decision on the CISSP exam." },
+      { term: "ALE = SLE x ARO", domain: "Domain 1 // Risk Mgmt", def: "Annualized Loss Expectancy equals Single Loss Expectancy (Asset Value x Exposure Factor) multiplied by Annualized Rate of Occurrence.", use: "Used in quantitative risk analysis to justify whether the annual cost of a security safeguard is worth the risk reduction." },
+      { term: "BIA (Business Impact Analysis)", domain: "Domain 1 // Risk Mgmt", def: "An assessment that identifies critical business functions and quantifies the operational and financial impact of disruptions.", use: "Used to determine Recovery Time Objectives (RTO), Recovery Point Objectives (RPO), and Maximum Tolerable Downtime (MTD)." },
+      { term: "RTO (Recovery Time Objective)", domain: "Domain 7 // Operations", def: "The maximum acceptable amount of time it takes to restore a system or application after a disruption.", use: "Used to select recovery site tiers (Hot, Warm, or Cold site) so systems come back online before the MTD is breached." },
+      { term: "RPO (Recovery Point Objective)", domain: "Domain 7 // Operations", def: "The maximum acceptable amount of data loss measured in time (e.g., 4 hours of lost transactions).", use: "Used to dictate backup frequency and database replication schedules." },
+      { term: "MTD (Maximum Tolerable Downtime)", domain: "Domain 1 // Risk Mgmt", def: "The total time a business process can remain offline before the organization suffers irreversible harm or failure.", use: "Used as the hard ceiling for recovery planning: RTO plus Work Recovery Time (WRT) must be less than MTD." },
+      { term: "COOP (Continuity of Operations Plan)", domain: "Domain 1 // Risk Mgmt", def: "A plan detailing how essential organizational functions and personnel are relocated and sustained at an alternate temporary site.", use: "Used to keep mission-critical operations running during facility loss or regional emergencies." },
+      { term: "BCP vs. DRP", domain: "Domain 1 // Risk Mgmt", def: "Business Continuity Plan (BCP) keeps the whole business running long-term; Disaster Recovery Plan (DRP) restores IT systems immediately after an event.", use: "Used to separate strategic executive continuity (BCP) from tactical IT restoration (DRP)." },
+      { term: "Due Care vs. Due Diligence", domain: "Domain 1 // Risk Mgmt", def: "Due Care is doing what a reasonable person would do (taking action); Due Diligence is continuously researching, monitoring, and verifying.", use: "Used to establish legal defensibility and prove management wasn't negligent after a breach." },
+      { term: "SCRM (Supply Chain Risk Management)", domain: "Domain 1 // Risk Mgmt", def: "The process of identifying, assessing, and mitigating risks introduced by third-party vendors, hardware suppliers, and software dependencies.", use: "Used to vet vendors via SOC 2 reports, SBOMs, and contractual SLAs before integrating their products." },
+      { term: "SBOM (Software Bill of Materials)", domain: "Domain 8 // Software", def: "A formal, machine-readable inventory listing all open-source libraries, third-party components, and dependencies inside an application.", use: "Used to rapidly identify whether your software is exposed when a new zero-day vulnerability (like Log4j) is announced." },
+      { term: "Separation of Duties (SoD)", domain: "Domain 1 // Risk Mgmt", def: "Splitting a sensitive multi-step task across two or more individuals so no single person can complete it alone.", use: "Used to prevent fraud, catch errors in multi-step workflows, and force collusion to bypass controls." },
+      { term: "Job Rotation", domain: "Domain 7 // Operations", def: "Periodically moving employees into different job functions or desks.", use: "Used to detect hidden long-term fraud when a new person takes over a role and to cross-train staff." },
+      { term: "Mandatory Vacation", domain: "Domain 7 // Operations", def: "Requiring employees in sensitive roles to take consecutive time off while someone else covers their duties.", use: "Used to uncover ongoing embezzlement or unauthorized system manipulation that requires the perpetrator's daily presence." },
+      { term: "Data Classification", domain: "Domain 2 // Asset Sec", def: "Labeling data based on its sensitivity and impact if disclosed (e.g., Top Secret, Secret, Confidential, Unclassified).", use: "Used to apply consistent encryption, access, and disposal controls proportional to data value." },
+      { term: "Data Owner vs. Data Custodian", domain: "Domain 2 // Asset Sec", def: "The Data Owner (senior manager) decides classification and access; the Custodian (IT admin) implements backups, patching, and permissions.", use: "Used on exam scenarios to assign accountability—legal liability rests with the Owner, not the IT Custodian." },
+      { term: "Data Remanence", domain: "Domain 2 // Asset Sec", def: "Residual data that remains on storage media even after normal file deletion or reformatting.", use: "Used to determine proper sanitization (Clearing, Purging/Degaussing, or Destruction) before media leaves an organization." },
+      { term: "Crypto-shredding", domain: "Domain 2 // Asset Sec", def: "Sanitizing encrypted data by permanently destroying the cryptographic decryption keys.", use: "Used to securely dispose of data in cloud environments or SSDs where physical destruction or overwriting is impossible." },
+      { term: "DLP (Data Loss Prevention)", domain: "Domain 2 // Asset Sec", def: "Controls that inspect data in use, in motion, and at rest to detect and block unauthorized exfiltration of sensitive data.", use: "Used to stop employees from emailing PII, credit card numbers, or source code outside the company." },
+      { term: "CASB (Cloud Access Security Broker)", domain: "Domain 2 // Asset Sec", def: "A security policy enforcement point placed between cloud consumers and cloud providers.", use: "Used to discover Shadow IT, enforce DLP in SaaS apps, and apply consistent IAM policies across multi-cloud environments." },
+      { term: "DAC (Discretionary Access Control)", domain: "Domain 5 // IAM", def: "An access model where every object has an owner who decides who gets access via Access Control Lists (ACLs).", use: "Used in standard Windows NTFS and Linux file permissions where owners control their own files." },
+      { term: "MAC (Mandatory Access Control)", domain: "Domain 5 // IAM", def: "A strict system-enforced model using security labels (classifications) and clearances that users cannot override.", use: "Used in military and classified government networks to prevent unauthorized downward data leaks." },
+      { term: "RBAC (Role-Based Access Control)", domain: "Domain 5 // IAM", def: "Assigning permissions to job roles or groups rather than individual user accounts.", use: "Used in large enterprises to simplify onboarding/offboarding and enforce least privilege by job title." },
+      { term: "ABAC (Attribute-Based Access Control)", domain: "Domain 5 // IAM", def: "Evaluating dynamic attributes of the subject, resource, action, and environment (time, location, device health) using languages like XACML.", use: "Used for fine-grained conditional access in cloud and Zero Trust environments." },
+      { term: "Lattice-Based Access Control", domain: "Domain 3 // Architecture", def: "A mathematical access model that uses a least upper bound (join) and greatest lower bound (meet) to define dominance relationships.", use: "Used as the mathematical foundation behind Mandatory Access Control (MAC) classification hierarchies." },
+      { term: "Bell-LaPadula Model", domain: "Domain 3 // Architecture", def: "A formal state-machine security model focused strictly on Confidentiality: 'No Read Up, No Write Down.'", use: "Used to prevent classified secrets from leaking to lower clearance levels." },
+      { term: "Biba Model", domain: "Domain 3 // Architecture", def: "A formal security model focused strictly on Integrity: 'No Read Down, No Write Up.'", use: "Used to prevent untrusted, lower-integrity data from corrupting high-integrity systems." },
+      { term: "Clark-Wilson Model", domain: "Domain 3 // Architecture", def: "A commercial integrity model that enforces well-formed transactions and separation of duties via Transformation Procedures.", use: "Used in banking and ERP systems where users cannot modify database tables directly." },
+      { term: "Brewer-Nash (Chinese Wall) Model", domain: "Domain 3 // Architecture", def: "An access control model that dynamically updates permissions to prevent conflicts of interest.", use: "Used in consulting and legal firms so an analyst working for Bank A is blocked from viewing Bank B's files." },
+      { term: "TCB (Trusted Computing Base)", domain: "Domain 3 // Architecture", def: "The totality of hardware, firmware, and software protection mechanisms responsible for enforcing a security policy.", use: "Used to define the security perimeter inside an operating system; if the TCB is compromised, the whole system is untrusted." },
+      { term: "Reference Monitor", domain: "Domain 3 // Architecture", def: "An abstract machine inside the TCB that mediates all access between subjects and objects; it must be tamperproof, always invoked, and small enough to verify.", use: "Used as the conceptual gatekeeper implemented by the Security Kernel." },
+      { term: "TPM (Trusted Platform Module)", domain: "Domain 3 // Architecture", def: "A dedicated hardware cryptoprocessor chip on a motherboard that securely stores keys, certificates, and boot measurements.", use: "Used for BitLocker full-disk encryption, measured boot integrity, and hardware-backed device identity." },
+      { term: "HSM (Hardware Security Module)", domain: "Domain 3 // Architecture", def: "A tamper-resistant physical appliance designed to generate, store, and manage cryptographic keys at high speed.", use: "Used by Certificate Authorities (CAs) and banks to protect root private keys from extraction." },
+      { term: "Symmetric vs. Asymmetric Encryption", domain: "Domain 3 // Architecture", def: "Symmetric uses one shared secret key (fast, bulk data); Asymmetric uses a public/private key pair (key exchange, digital signatures).", use: "Used together in hybrid cryptography (TLS): Asymmetric exchanges the key, Symmetric encrypts the session." },
+      { term: "AES (Advanced Encryption Standard)", domain: "Domain 3 // Architecture", def: "A symmetric block cipher (Rijndael) using 128-bit blocks and 128, 192, or 256-bit keys.", use: "Used as the global government and enterprise standard for encrypting data at rest and in transit." },
+      { term: "ECC (Elliptic Curve Cryptography)", domain: "Domain 3 // Architecture", def: "An asymmetric algorithm providing the same security strength as RSA with much shorter key lengths.", use: "Used in mobile devices, IoT, and modern TLS handshakes where bandwidth and CPU power are limited." },
+      { term: "Diffie-Hellman (DH / ECDHE)", domain: "Domain 3 // Architecture", def: "A cryptographic key agreement protocol that lets two parties establish a shared secret over an untrusted network.", use: "Used to enable Perfect Forward Secrecy (PFS) so past traffic stays safe even if a server's private key is later stolen." },
+      { term: "Post-Quantum Cryptography (PQC)", domain: "Domain 3 // Architecture", def: "Quantum-resistant algorithms (such as NIST's ML-KEM and ML-DSA) designed to withstand attacks from future quantum computers.", use: "Used to defend against 'harvest now, decrypt later' threats targeting long-lived sensitive data." },
+      { term: "Digital Signature", domain: "Domain 3 // Architecture", def: "A cryptographic hash of a message encrypted with the sender's private key.", use: "Used to provide Integrity, Authentication, and Non-Repudiation (never Confidentiality)." },
+      { term: "PKI & Certificate Authority (CA)", domain: "Domain 3 // Architecture", def: "Public Key Infrastructure binds public keys to identities using X.509 digital certificates signed by a trusted CA.", use: "Used to verify website authenticity in HTTPS/TLS and issue smart card credentials." },
+      { term: "CRL vs. OCSP", domain: "Domain 3 // Architecture", def: "Certificate Revocation List (CRL) is a downloaded list of revoked certs; OCSP queries a responder in real time for one cert's status.", use: "Used by browsers and VPNs to reject stolen or compromised certificates before they expire." },
+      { term: "Key Escrow", domain: "Domain 3 // Architecture", def: "Storing copies of private decryption keys with a trusted third party or central corporate authority.", use: "Used to satisfy legal/court decryption orders or recover encrypted business data if an employee leaves." },
+      { term: "Side-Channel Attack", domain: "Domain 3 // Architecture", def: "Extracting secrets by measuring physical hardware emissions (power draw, timing, electromagnetic leaks, or acoustics) rather than breaking math.", use: "Used against cryptographic hardware; mitigated with shielding (TEMPEST) and constant-time code." },
+      { term: "OSI Model (7 Layers)", domain: "Domain 4 // Network", def: "Physical (1), Data Link (2), Network (3), Transport (4), Session (5), Presentation (6), Application (7).", use: "Used to map protocols and attacks to layers (e.g., ARP/MACsec at Layer 2, IP/IPsec at Layer 3, TLS at Layer 5-6)." },
+      { term: "SASE (Secure Access Service Edge)", domain: "Domain 4 // Network", def: "A cloud-delivered architecture combining SD-WAN networking with cloud security services (SWG, CASB, ZTNA, FWaaS).", use: "Used to secure remote and branch-office users without backhauling traffic through a central data center." },
+      { term: "IPsec (AH & ESP)", domain: "Domain 4 // Network", def: "A Layer 3 security suite using Authentication Header (AH) for integrity and Encapsulating Security Payload (ESP) for encryption + integrity.", use: "Used in site-to-site VPNs in Tunnel Mode (encrypts whole packet) or Transport Mode (encrypts payload only)." },
+      { term: "TLS 1.3", domain: "Domain 4 // Network", def: "Transport Layer Security v1.3 encrypts web and application traffic while removing weak legacy ciphers and speeding up handshakes.", use: "Used to protect HTTPS, APIs, and DoT/DoH traffic in transit." },
+      { term: "Microsegmentation", domain: "Domain 4 // Network", def: "Dividing a network into granular, isolated security zones down to individual workloads or applications.", use: "Used to stop attackers from moving laterally across a flat internal network after an initial breach." },
+      { term: "VLAN Hopping", domain: "Domain 4 // Network", def: "A Layer 2 attack using switch spoofing or double-tagging to send traffic across unauthorized VLANs.", use: "Used by attackers to bypass network isolation; prevented by disabling DTP and changing the native VLAN." },
+      { term: "ARP Poisoning", domain: "Domain 4 // Network", def: "Sending forged Address Resolution Protocol (ARP) replies to link an attacker's MAC address with the gateway's IP.", use: "Used to execute Man-in-the-Middle attacks on a LAN; mitigated with Dynamic ARP Inspection (DAI) or MACsec." },
+      { term: "DHCP Snooping", domain: "Domain 4 // Network", def: "A switch security feature that blocks rogue DHCP servers and builds a trusted IP-to-MAC binding table.", use: "Used as the prerequisite database for Dynamic ARP Inspection (DAI) to stop spoofing." },
+      { term: "WPA3 (SAE)", domain: "Domain 4 // Network", def: "Wi-Fi Protected Access 3 replaces WPA2's 4-way PSK handshake with Simultaneous Authentication of Equals (SAE).", use: "Used to stop offline dictionary cracking of captured Wi-Fi handshakes and add forward secrecy." },
+      { term: "IDS vs. IPS", domain: "Domain 4 // Network", def: "Intrusion Detection System (IDS) passively monitors and alerts; Intrusion Prevention System (IPS) sits inline and actively drops malicious traffic.", use: "Used to distinguish detective monitoring (IDS) from preventative inline blocking (IPS)." },
+      { term: "Identity Proofing", domain: "Domain 5 // IAM", def: "Verifying a person's real-world identity (government ID, biometrics, background check) before provisioning an account.", use: "Used during onboarding to ensure digital credentials are bound to the right human." },
+      { term: "Just-In-Time (JIT) Provisioning", domain: "Domain 5 // IAM", def: "Automatically creating a user account on a destination application the first time they authenticate via SSO/Federation.", use: "Used to eliminate manual account pre-creation across SaaS partner platforms." },
+      { term: "Password Spraying", domain: "Domain 5 // IAM", def: "Testing one or two common passwords across thousands of user accounts rather than hammering one account.", use: "Used by attackers to compromise accounts while staying below account lockout thresholds." },
+      { term: "Federated Identity Management (FIM)", domain: "Domain 5 // IAM", def: "A trust framework allowing users from one organization to authenticate into systems owned by another organization.", use: "Used for cross-company B2B collaboration without duplicating user directories." },
+      { term: "Policy Decision Point (PDP) & PEP", domain: "Domain 5 // IAM", def: "In Zero Trust/ABAC, the PDP evaluates access rules and makes the decision; the Policy Enforcement Point (PEP) allows or blocks the connection.", use: "Used to separate central policy logic (PDP) from distributed gateways/proxies (PEP)." },
+      { term: "Service Account Hardening", domain: "Domain 5 // IAM", def: "Securing non-human accounts used by applications and scripts via least privilege, blocked interactive logins, and automated credential rotation.", use: "Used to prevent attackers from abusing over-privileged service accounts for lateral movement." },
+      { term: "NIST SP 800-53A", domain: "Domain 6 // Assessment", def: "The NIST guide for assessing security controls using three methods: Examine, Interview, and Test.", use: "Used to audit four assessment objects (SMAI): Specifications, Mechanisms, Activities, and Individuals." },
+      { term: "Vulnerability Scan vs. Pen Test", domain: "Domain 6 // Assessment", def: "Vulnerability scans passively identify and report known flaws; Penetration tests actively exploit flaws to measure real-world impact.", use: "Used to determine testing scope—never exploit production systems during a basic vulnerability scan." },
+      { term: "White-Box vs. Black-Box Testing", domain: "Domain 6 // Assessment", def: "White-box gives testers full architecture/source code knowledge; Black-box gives zero prior knowledge (simulating an external attacker).", use: "Used to balance thoroughness (White-box) against realistic external threat simulation (Black-box)." },
+      { term: "SAST vs. DAST", domain: "Domain 8 // Software", def: "Static Application Security Testing (SAST) scans source code without running it; Dynamic (DAST) tests the running application from the outside.", use: "Used in CI/CD pipelines to catch coding flaws early (SAST) and runtime configuration/injection flaws later (DAST)." },
+      { term: "Fuzzing (Mutation & Generational)", domain: "Domain 6 // Assessment", def: "Injecting malformed, random, or unexpected inputs into an application or protocol to trigger crashes or memory leaks.", use: "Used to uncover buffer overflows and input validation bugs before software release." },
+      { term: "Synthetic Transactions", domain: "Domain 6 // Assessment", def: "Dynamic testing that feeds expected, real-world user inputs into a live system to verify normal output and availability.", use: "Used to monitor application health and functional correctness continuously." },
+      { term: "SOC 1 vs. SOC 2 (Type I & II)", domain: "Domain 6 // Assessment", def: "SOC 1 audits financial reporting controls; SOC 2 audits Trust Services Criteria (Security, Availability, Confidentiality). Type I = point in time; Type II = over a period (6-12 months).", use: "Used to evaluate third-party cloud and SaaS vendors—always ask for a SOC 2 Type II report." },
+      { term: "BAS (Breach and Attack Simulation)", domain: "Domain 6 // Assessment", def: "Automated, continuous software tools that safely simulate real-world attacker TTPs against production defenses.", use: "Used to verify whether SIEM alerts, EDR, and firewall rules actually detect attacks between annual pen tests." },
+      { term: "SIEM & Log Correlation", domain: "Domain 7 // Operations", def: "Security Information and Event Management aggregates logs (via Syslog) and correlates unrelated low-level events into actionable security alerts.", use: "Used by SOC analysts to detect multi-stage attacks across endpoints, firewalls, and identity servers." },
+      { term: "SOAR", domain: "Domain 7 // Operations", def: "Security Orchestration, Automation, and Response connects security tools with automated playbooks.", use: "Used to automatically enrich alerts, isolate infected hosts, or block malicious IPs in seconds." },
+      { term: "EDR / XDR", domain: "Domain 7 // Operations", def: "Endpoint Detection and Response (EDR) monitors host behavior and processes; Extended (XDR) correlates telemetry across endpoints, network, email, and cloud.", use: "Used to detect fileless malware, lateral movement, and living-off-the-land attacks." },
+      { term: "Order of Volatility (RFC 3227)", domain: "Domain 7 // Operations", def: "Collecting digital forensic evidence from most fleeting to most persistent: Registers/Cache -> RAM -> Network/Processes -> Disk -> Backups.", use: "Used during incident response so volatile evidence in memory isn't lost by rebooting or imaging the disk first." },
+      { term: "Chain of Custody", domain: "Domain 7 // Operations", def: "A chronological paper/digital trail documenting who collected, handled, transferred, and stored evidence, plus cryptographic hashes.", use: "Used to prove in court that forensic evidence was never tampered with or altered." },
+      { term: "eDiscovery", domain: "Domain 7 // Operations", def: "The legal process of identifying, preserving, collecting, and producing Electronically Stored Information (ESI) for litigation.", use: "Used to place legal holds on emails, logs, and documents during lawsuits or regulatory investigations." },
+      { term: "Forensic Artifacts", domain: "Domain 7 // Operations", def: "Residual traces left behind by an attacker or user, such as log entries, registry keys, prefetch files, and metadata.", use: "Used by investigators to reconstruct attacker timelines even after malware is deleted." },
+      { term: "Memory Dump vs. Pagefile vs. Hibernation", domain: "Domain 7 // Operations", def: "Memory dump = snapshot of physical RAM; pagefile.sys = virtual memory overflow on disk; hiberfil.sys = compressed RAM saved during hibernation.", use: "Used in forensics to extract unencrypted keys, passwords, and active malware from volatile memory." },
+      { term: "Incident Response Lifecycle", domain: "Domain 7 // Operations", def: "NIST SP 800-61 phases: Preparation -> Detection & Analysis -> Containment, Eradication & Recovery -> Post-Incident Activity (Lessons Learned).", use: "Used to structure SOC response; always contain an active breach before erasing malware or rebuilding." },
+      { term: "Lessons Learned", domain: "Domain 7 // Operations", def: "The post-incident review (after-action report) analyzing what worked, what failed, and how to improve controls.", use: "Used after every incident or tabletop exercise to harden defenses and update IR playbooks." },
+      { term: "Threat Hunting (Awareness-Driven)", domain: "Domain 7 // Operations", def: "Proactively searching for hidden threats by forming hypotheses around critical internal assets ('crown jewels analysis').", use: "Used to prioritize hunting on the systems whose compromise would hurt the business most." },
+      { term: "Allow Listing vs. Block Listing", domain: "Domain 7 // Operations", def: "Allow listing (whitelisting) uses a default-deny posture permitting only approved apps; Block listing blocks known-bad apps.", use: "Used on high-security servers and kiosks to stop unknown zero-day executables from running." },
+      { term: "Compensating Control", domain: "Domain 1 // Risk Mgmt", def: "An alternative control implemented when a primary required control is technically or financially infeasible.", use: "Used to satisfy compliance audits (e.g., cameras + logbook when a legacy system lacks unique user IDs)." },
+      { term: "MTBF vs. MTTR", domain: "Domain 7 // Operations", def: "Mean Time Between Failures (hardware reliability) vs. Mean Time to Repair (how fast a failed component is fixed).", use: "Used to evaluate hardware redundancy needs and vendor maintenance SLAs." },
+      { term: "Clean Desk Policy", domain: "Domain 7 // Operations", def: "An administrative rule requiring staff to lock away sensitive documents, notes, and media when stepping away.", use: "Used to prevent physical data loss, dumpster-diving leaks, and insider shoulder surfing." },
+      { term: "Zero-Day Vulnerability", domain: "Domain 7 // Operations", def: "A previously unknown software flaw exploited by attackers before the vendor has released a patch.", use: "Used to test whether defense-in-depth (EDR, segmentation, allow listing) can stop attacks without signatures." },
+      { term: "Rootkit / Bootkit", domain: "Domain 7 // Operations", def: "Stealth malware that embeds itself into the OS kernel or boot process to hide its presence from antivirus and admins.", use: "Used by attackers for long-term persistence; usually requires wiping and rebuilding the OS from trusted media." },
+      { term: "Backdoor vs. Privilege Escalation", domain: "Domain 8 // Software", def: "A backdoor bypasses normal authentication (e.g., hardcoded password); privilege escalation elevates an authenticated low-level user to admin.", use: "Used to distinguish authentication bypass flaws from authorization flaws." },
+      { term: "SDLC & DevSecOps", domain: "Domain 8 // Software", def: "Integrating automated security gates (SAST, DAST, SCA, secrets scanning) into every phase of the Software Development Life Cycle.", use: "Used to catch vulnerabilities during coding ('shift left') rather than after production deployment." },
+      { term: "OWASP Top 10 (Injection / Broken Access Control)", domain: "Domain 8 // Software", def: "The industry benchmark of critical web app risks, led by Broken Access Control, Cryptographic Failures, and Injection (SQLi/XSS).", use: "Used to prioritize parameterized queries (prepared statements) to stop SQL injection and server-side auth checks." },
+      { term: "Database Normalization & Polyinstantiation", domain: "Domain 8 // Software", def: "Normalization removes redundant data; Polyinstantiation stores multiple rows with the same primary key at different classification levels.", use: "Used in MLS databases to prevent inference attacks where low-clearance users deduce secret records." },
+      { term: "Inference vs. Aggregation Attacks", domain: "Domain 8 // Software", def: "Aggregation combines many low-sensitivity records to reveal sensitive totals; Inference uses clues from public data to deduce secret facts.", use: "Used to justify query-size limits, cell suppression, and noise injection in statistical databases." },
+      { term: "ISC2 Code of Ethics (4 Canons)", domain: "Domain 1 // Risk Mgmt", def: "1) Protect society/infrastructure, 2) Act honorably/justly/legally, 3) Provide diligent/competent service, 4) Advance and protect the profession.", use: "Used in priority order on ethics questions: always protect human life and society first, even over your employer." }
+    ];
+
+    function shuffleArray(arr) {
+      const copy = [...arr];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    let deck = [...terms];
+    let currentCard = 0;
+    let isFlipped = false;
+
+    const fcMain = document.getElementById("fc-main");
+
+    function renderCard() {
+      const item = deck[currentCard];
+      const pct = Math.round(((currentCard + 1) / deck.length) * 100);
+
+      let jumpGrid = "";
+      for (let i = 0; i < deck.length; i++) {
+        jumpGrid += `<button type="button" class="jump-opt ${i === currentCard ? "current" : ""}" data-c="${i}">#${i + 1}</button>`;
+      }
+
+      fcMain.innerHTML = `
+        <div class="fc-topbar">
+          <a href="cissp.html" class="btn-ghost">&larr; CISSP Hub</a>
+          <div class="fc-controls-right">
+            <button type="button" class="btn-ghost" id="shuffle-btn">&#8645; Shuffle Deck</button>
+            <div class="jump-wrapper">
+              <button type="button" class="jump-trigger" id="fc-jump-trigger" aria-expanded="false">
+                Jump to: Card ${currentCard + 1} &#9662;
+              </button>
+              <div class="jump-menu" id="fc-jump-menu">${jumpGrid}</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="progress-track">
+          <div class="progress-fill" style="width:${pct}%"></div>
+        </div>
+
+        <div class="flashcard ${isFlipped ? "flipped" : ""}" id="flashcard-el" tabindex="0" role="button" aria-label="Flip flash card">
+          <div>
+            <div class="fc-meta">
+              <span class="fc-side-tag ${isFlipped ? "back" : "front"}">${isFlipped ? "Definition & Exam Use" : "Keyword"}</span>
+              <span class="fc-domain">CARD ${currentCard + 1} OF ${deck.length} &middot; ${item.domain}</span>
+            </div>
+
+            ${!isFlipped ? `
+              <div class="fc-term">${item.term}</div>
+            ` : `
+              <div class="fc-def-box">
+                <div class="fc-def">${item.def}</div>
+                <div class="fc-purpose"><strong>What it's for:</strong> ${item.use}</div>
+              </div>
+            `}
+          </div>
+
+          <div class="fc-hint">${isFlipped ? "Click card to see keyword again" : "Click card to reveal definition"}</div>
+        </div>
+
+        <div class="fc-actions">
+          <div class="fc-nav-group">
+            <button type="button" class="btn-ghost" id="fc-prev" ${currentCard === 0 ? "disabled" : ""}>&larr; Prev Card</button>
+            <button type="button" class="btn-ghost" id="fc-next" ${currentCard === deck.length - 1 ? "disabled" : ""}>Next Card &rarr;</button>
+          </div>
+          <button type="button" class="btn-lime" id="fc-flip-btn">${isFlipped ? "Show Keyword" : "Reveal Definition"}</button>
+        </div>
+      `;
+
+      const flipCard = () => { isFlipped = !isFlipped; renderCard(); };
+      document.getElementById("flashcard-el").addEventListener("click", flipCard);
+      document.getElementById("fc-flip-btn").addEventListener("click", flipCard);
+
+      document.getElementById("fc-prev").addEventListener("click", () => {
+        if (currentCard > 0) { currentCard--; isFlipped = false; renderCard(); }
+      });
+      document.getElementById("fc-next").addEventListener("click", () => {
+        if (currentCard < deck.length - 1) { currentCard++; isFlipped = false; renderCard(); }
+      });
+
+      const jumpTrigger = document.getElementById("fc-jump-trigger");
+      const jumpMenu = document.getElementById("fc-jump-menu");
+      jumpTrigger.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const isOpen = jumpMenu.classList.toggle("open");
+        jumpTrigger.classList.toggle("open", isOpen);
+        jumpTrigger.setAttribute("aria-expanded", String(isOpen));
+      });
+
+      document.querySelectorAll("#fc-jump-menu .jump-opt").forEach(btn => {
+        btn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          currentCard = parseInt(btn.dataset.c, 10);
+          isFlipped = false;
+          renderCard();
+        });
+      });
+
+      document.getElementById("shuffle-btn").addEventListener("click", () => {
+        deck = shuffleArray(terms);
+        currentCard = 0;
+        isFlipped = false;
+        renderCard();
+      });
+    }
+
+    document.addEventListener("click", () => {
+      const jumpMenu = document.getElementById("fc-jump-menu");
+      const jumpTrigger = document.getElementById("fc-jump-trigger");
+      if (jumpMenu && jumpMenu.classList.contains("open")) {
+        jumpMenu.classList.remove("open");
+        jumpTrigger.classList.remove("open");
+        jumpTrigger.setAttribute("aria-expanded", "false");
+      }
+    });
+
+    const menuBtn = document.getElementById("mobile-menu-btn");
+    const navDrawer = document.getElementById("nav-drawer");
+    menuBtn.addEventListener("click", () => {
+      const isOpen = navDrawer.classList.toggle("open");
+      menuBtn.setAttribute("aria-expanded", String(isOpen));
+      menuBtn.innerHTML = isOpen ? "Close &#10005;" : "Menu &#9776;";
+    });
+
+    const privacyModal = document.getElementById("privacy-modal");
+    document.getElementById("open-privacy-btn").addEventListener("click", () => privacyModal.classList.add("open"));
+    document.getElementById("privacy-close-btn").addEventListener("click", () => privacyModal.classList.remove("open"));
+    privacyModal.addEventListener("click", (e) => { if (e.target === privacyModal) privacyModal.classList.remove("open"); });
+
+    renderCard();
+  </script>
+</body>
+</html>
