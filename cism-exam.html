@@ -1,0 +1,1019 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CISM Mock Exam | Jesse's Study Guides</title>
+  <meta name="description" content="145-question interactive CISM practice exam with instant feedback or full exam grading mode." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .exam-topbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.85rem;
+      margin-bottom: 1.25rem;
+      position: relative;
+      z-index: 20;
+    }
+    .exam-topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      flex-wrap: wrap;
+    }
+    .btn-ghost {
+      padding: 0.55rem 1rem;
+      border-radius: 8px;
+      border: 1px solid var(--border-slate);
+      background: transparent;
+      color: var(--text-secondary);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.76rem;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .btn-ghost:hover { border-color: var(--cyan); color: #fff; }
+    .btn-lime {
+      padding: 0.78rem 1.45rem;
+      border-radius: 9px;
+      border: none;
+      background: var(--lime);
+      color: #05070c;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+    .btn-lime:hover {
+      filter: brightness(1.08);
+      box-shadow: 0 0 22px rgba(158, 255, 51, 0.35);
+      transform: translateY(-1px);
+    }
+    .btn-cyan {
+      padding: 0.78rem 1.45rem;
+      border-radius: 9px;
+      border: 1px solid var(--cyan);
+      background: var(--cyan-dim);
+      color: var(--cyan);
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+    .btn-cyan:hover {
+      background: var(--cyan);
+      color: #05070c;
+      box-shadow: 0 0 22px rgba(34, 211, 238, 0.35);
+    }
+
+    /* Custom Scrollable Jump Dropdown */
+    .jump-wrapper {
+      position: relative;
+      display: inline-block;
+    }
+    .jump-trigger {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.5rem 0.9rem;
+      border-radius: 8px;
+      border: 1px solid var(--border-slate);
+      background: var(--bg-card);
+      color: #f8fafc;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: border-color 0.15s ease;
+    }
+    .jump-trigger:hover,
+    .jump-trigger.open {
+      border-color: var(--cyan);
+      color: var(--cyan);
+    }
+    .jump-menu {
+      position: absolute;
+      right: 0;
+      top: calc(100% + 6px);
+      width: 280px;
+      max-height: 320px;
+      overflow-y: auto;
+      background: #0d121c;
+      border: 1px solid var(--cyan);
+      border-radius: 10px;
+      padding: 0.6rem;
+      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.85);
+      display: none;
+      z-index: 60;
+    }
+    .jump-menu.open { display: block; }
+    .jump-legend {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.4rem;
+      padding-bottom: 0.5rem;
+      margin-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border-slate);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.62rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+    }
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.28rem;
+    }
+    .legend-swatch {
+      width: 9px;
+      height: 9px;
+      border-radius: 2px;
+      display: inline-block;
+    }
+    .swatch-current { background: var(--lime); }
+    .swatch-answered { background: var(--cyan); }
+    .swatch-unanswered { background: rgba(255, 255, 255, 0.12); border: 1px solid var(--border-slate); }
+
+    .jump-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.35rem;
+    }
+    .jump-opt {
+      padding: 0.45rem 0.25rem;
+      border-radius: 6px;
+      border: 1px solid transparent;
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text-secondary);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.12s ease;
+    }
+    .jump-opt:hover {
+      background: rgba(255, 255, 255, 0.12);
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+    .jump-opt.answered {
+      background: rgba(34, 211, 238, 0.22);
+      border-color: rgba(34, 211, 238, 0.7);
+      color: var(--cyan);
+      font-weight: 700;
+    }
+    .jump-opt.current {
+      background: var(--lime);
+      border-color: var(--lime);
+      color: #05070c;
+      font-weight: 700;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 5px;
+      background: rgba(148, 163, 184, 0.14);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 1.6rem;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--cyan), var(--lime));
+      transition: width 0.25s ease;
+    }
+    .q-meta {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.76rem;
+      color: var(--cyan);
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+    .q-type-tag {
+      padding: 0.18rem 0.55rem;
+      border-radius: 6px;
+      background: var(--cyan-dim);
+      color: var(--cyan);
+      border: 1px solid rgba(34, 211, 238, 0.3);
+      font-size: 0.7rem;
+    }
+    .q-mode-tag {
+      padding: 0.18rem 0.55rem;
+      border-radius: 6px;
+      background: var(--lime-dim);
+      color: var(--lime);
+      border: 1px solid var(--border-bright);
+      font-size: 0.7rem;
+    }
+    .q-text {
+      font-size: 1.1rem;
+      line-height: 1.6;
+      color: #fff;
+      font-weight: 500;
+      margin-bottom: 1.45rem;
+    }
+    .options-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+      margin-bottom: 1.65rem;
+    }
+    .option-card {
+      width: 100%;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.9rem;
+      padding: 0.95rem 1.15rem;
+      border-radius: 10px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-slate);
+      color: var(--text-primary);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      user-select: none;
+    }
+    .option-card:hover { border-color: rgba(34, 211, 238, 0.45); background: var(--bg-card-hover); }
+    .option-card.selected { border-color: var(--lime); background: var(--lime-dim); }
+    .option-indicator {
+      width: 19px;
+      height: 19px;
+      flex-shrink: 0;
+      margin-top: 2px;
+      border: 2px solid var(--text-muted);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s ease;
+    }
+    .option-card.selected .option-indicator { border-color: var(--lime); background: var(--lime); }
+    .option-card.selected .option-indicator::after {
+      content: "";
+      display: block;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #05070c;
+    }
+    .exam-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.85rem; }
+
+    /* Mode Selector Modal */
+    .mode-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.9rem;
+      margin-top: 1.25rem;
+    }
+    .mode-choice {
+      background: var(--bg-card);
+      border: 1px solid var(--border-slate);
+      border-radius: 12px;
+      padding: 1.15rem;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.18s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+    .mode-choice:hover {
+      border-color: var(--lime);
+      background: var(--bg-card-hover);
+      transform: translateY(-2px);
+    }
+    .mode-choice-title {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      color: var(--lime);
+    }
+    .mode-choice.cyan:hover { border-color: var(--cyan); }
+    .mode-choice.cyan .mode-choice-title { color: var(--cyan); }
+    .mode-choice-desc {
+      font-size: 0.84rem;
+      color: var(--text-secondary);
+      line-height: 1.45;
+    }
+
+    /* End Results */
+    .score-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+      margin: 1.5rem 0 2rem;
+    }
+    .score-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-slate);
+      border-radius: 12px;
+      padding: 1.15rem;
+      text-align: center;
+    }
+    .score-num {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 2rem;
+      line-height: 1.1;
+    }
+    .score-num.lime { color: var(--lime); }
+    .score-num.rose { color: var(--rose); }
+    .score-num.cyan { color: var(--cyan); }
+    .score-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      margin-top: 0.35rem;
+    }
+    .review-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+    .review-item {
+      background: var(--bg-card);
+      border: 1px solid rgba(251, 113, 133, 0.35);
+      border-left: 3px solid var(--rose);
+      border-radius: 10px;
+      padding: 1.2rem;
+    }
+    .review-q { color: #fff; font-weight: 600; margin-bottom: 0.6rem; line-height: 1.5; }
+    .review-meta { font-size: 0.86rem; color: var(--text-secondary); line-height: 1.55; }
+    .review-meta strong { color: var(--lime); }
+    .review-meta .yours { color: var(--rose); }
+
+    /* Feedback Modal Overrides */
+    .modal-box.wrong { border-color: rgba(251, 113, 133, 0.65); }
+    .modal-box.correct { border-color: rgba(158, 255, 51, 0.65); }
+    .modal-box.wrong .modal-title { color: var(--rose); }
+    .modal-box.correct .modal-title { color: var(--lime); }
+    .modal-body:empty { display: none; }
+    .modal-body code {
+      font-family: 'JetBrains Mono', monospace;
+      background: rgba(148, 163, 184, 0.15);
+      padding: 0.1rem 0.35rem;
+      border-radius: 4px;
+      color: var(--cyan);
+      font-size: 0.88em;
+    }
+    .modal-body strong { color: #fff; }
+
+    @media (max-width: 600px) {
+      .mode-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="frame-wrapper">
+    <aside>
+      <div class="brand-block">
+        <div class="brand-row">
+          <div>
+            <a href="index.html" class="brand-title">Jesse's Study Guides</a>
+            <div class="brand-tagline">Unofficial compiled training database v1.0</div>
+          </div>
+          <button class="mobile-menu-btn" id="mobile-menu-btn" aria-expanded="false" aria-controls="nav-drawer">
+            Menu &#9776;
+          </button>
+        </div>
+        <a class="coffee-btn" href="https://www.buymeacoffee.com/YOUR_USERNAME" target="_blank" rel="noopener noreferrer">
+          &#9749; Buy Me a Coffee
+        </a>
+      </div>
+
+      <nav class="nav-drawer" id="nav-drawer" aria-label="Study Categories">
+        <div class="nav-section">
+          <div class="nav-label">Cybersecurity</div>
+          <a href="cissp.html" class="nav-item">
+            <span>CISSP</span>
+            <span class="badge live">Active</span>
+          </a>
+          <a href="cism.html" class="nav-item active">
+            <span>CISM</span>
+            <span class="badge live">Active</span>
+          </a>
+          <span class="nav-item disabled" aria-disabled="true">
+            <span>Security+</span>
+            <span class="badge">Coming Soon</span>
+          </span>
+        </div>
+
+        <div class="nav-section">
+          <div class="nav-label">Psychology</div>
+          <span class="nav-item disabled" aria-disabled="true">
+            <span>NCE</span>
+            <span class="badge">Coming Soon</span>
+          </span>
+        </div>
+
+        <div class="nav-section">
+          <div class="nav-label">Other</div>
+          <span class="nav-item disabled" aria-disabled="true">
+            <span>Coming Soon</span>
+            <span class="badge">Coming Soon</span>
+          </span>
+        </div>
+      </nav>
+    </aside>
+
+    <div class="main-area">
+      <div class="topbar">
+        <div class="breadcrumb">JESSE'S STUDY GUIDES / CISM / <span>MOCK EXAM</span></div>
+        <div class="status-pill"><span class="status-dot"></span> SYSTEM ONLINE</div>
+      </div>
+
+      <main class="content-body" id="exam-main"></main>
+    </div>
+  </div>
+
+  <!-- Exam Mode Selector Modal -->
+  <div class="modal-backdrop open" id="mode-modal" role="dialog" aria-modal="true" aria-labelledby="mode-title">
+    <div class="modal-box" style="border-color: var(--cyan);">
+      <div class="modal-top">
+        <div class="modal-title" id="mode-title">Select Exam Mode</div>
+      </div>
+      <div class="modal-body">
+        <p>Choose how you want to take the 145-question CISM Mock Exam:</p>
+        <div class="mode-grid">
+          <button type="button" class="mode-choice" id="choose-instant">
+            <div class="mode-choice-title">Answers Instantly</div>
+            <div class="mode-choice-desc">Immediate feedback on every question with study notes and retry until right.</div>
+          </button>
+          <button type="button" class="mode-choice cyan" id="choose-end">
+            <div class="mode-choice-title">Answers at the End</div>
+            <div class="mode-choice-desc">Answer questions 1–145 like a real exam and see how many you got wrong at the end.</div>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Answer Feedback Modal -->
+  <div class="modal-backdrop" id="feedback-modal" role="dialog" aria-modal="true">
+    <div class="modal-box" id="feedback-box">
+      <div class="modal-top" style="border-bottom:none;padding-bottom:0;">
+        <div class="modal-title" id="feedback-status"></div>
+        <button class="modal-close" id="feedback-close-btn" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body" id="feedback-body"></div>
+    </div>
+  </div>
+
+  <!-- Privacy Policy Modal -->
+  <div class="modal-backdrop" id="privacy-modal" role="dialog" aria-modal="true" aria-labelledby="privacy-title">
+    <div class="modal-box">
+      <div class="modal-top">
+        <div class="modal-title" id="privacy-title">Privacy Policy</div>
+        <button class="modal-close" id="privacy-close-btn" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body">
+        <p><strong>Effective Date:</strong> November 17, 2026</p>
+        <h4>1. Information We Collect</h4>
+        <p>Jesse's Study Guides is a static, informational study website. We do not require user registration, accounts, or logins, and we do not directly collect names, email addresses, or payment details on this site.</p>
+        <h4>2. Hosting and Server Logs</h4>
+        <p>This website is hosted via Vercel. As part of standard web delivery and security operations, our hosting provider may automatically process basic technical request data such as your IP address, browser type, operating system, and timestamps in temporary server logs.</p>
+        <h4>3. Cookies and Tracking</h4>
+        <p>This website does not use advertising trackers or third-party marketing cookies.</p>
+        <h4>4. Third-Party Links</h4>
+        <p>This site includes an external link to Buy Me a Coffee for voluntary donations. If you choose to visit or donate through that platform, any information you provide is governed directly by Buy Me a Coffee's own privacy policy and terms of service.</p>
+        <h4>5. Changes to This Policy</h4>
+        <p>This policy may be updated as new features or study modules are added to the site. Questions regarding this notice can be directed to the site owner, Jesse Johnson.</p>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2026 Jesse Johnson. All rights reserved.</p>
+    <p>
+      This portal is an independent, unofficial personal study resource and is not affiliated with, endorsed by, or sponsored by ISC2, ISACA, CompTIA, NBCC, or any other certification body.
+      CISSP&reg; is a registered trademark of ISC2. CISM&reg; is a registered trademark of ISACA. CompTIA Security+&reg; is a registered trademark of CompTIA. NCE&reg; is a registered trademark of NBCC. All vendor materials, trademarks, and copyrights remain the property of their respective owners.
+    </p>
+    <div class="footer-links">
+      <button type="button" class="privacy-link" id="open-privacy-btn">Privacy Policy</button>
+    </div>
+  </footer>
+
+  <script>
+    const questions = [
+      { id: 1, q: "Which of the following choices would provide the BEST measure of the effectiveness of the security strategy?", opts: ["Minimizing risk across the enterprise", "Countermeasures existing for all known threats", "Losses consistent with annual loss expectations", "The extent to which control objectives are met"], ans: [3], exp: "In ISACA exams, strategy effectiveness is always measured by **how well control objectives are met**, because control objectives directly reflect business goals." },
+      { id: 2, q: "Which of the following situations would MOST inhibit the effective implementation of security governance?", opts: ["The complexity of technology", "Budgetary constraints", "Conflicting business priorities", "Lack of high-level sponsorship"], ans: [3], exp: "Governance is top-down: without **high-level executive sponsorship**, funding, authority, and business alignment all fail." },
+      { id: 3, q: "An IS manager has decided to implement a security system to monitor access to the Internet and prevent access to numerous sites. Immediately upon installation, employees flood the IT help desk with complaints of being unable to perform business functions on Internet sites. This is an example of:", opts: ["conflicting security controls with organizational needs.", "strong protection of information resources.", "implementing appropriate controls to reduce risk.", "proving information security’s protective abilities."], ans: [0], exp: "Security exists to support the business; blocking legitimate work shows **security controls conflicting with organizational needs**." },
+      { id: 4, q: "A security manager is preparing a report to obtain the commitment of executive management to a security program. Inclusion of which of the following items would be of MOST value?", opts: ["Examples of genuine incidents at similar organizations", "Statement of generally accepted good practices", "Associating realistic threats to corporate objectives", "Analysis of current technological exposures"], ans: [2], exp: "Executives care about business goals; always win commitment by **linking realistic threats directly to corporate objectives**." },
+      { id: 5, q: "Which of the following choices would be the MOST significant key risk indicator?", opts: ["A deviation in employee turnover", "The number of packets dropped by the firewall", "The number of viruses detected", "The reporting relationship of IT"], ans: [0], exp: "A KRI must predict emerging business/insider risk; a sudden **deviation in employee turnover** signals morale, insider threat, or operational instability, whereas dropped packets and viruses are routine operational metrics." },
+      { id: 6, q: "Which of the following would be the BEST indicator of effective information security governance within an organization?", opts: ["The steering committee approves security projects.", "Security policy training is provided to all managers.", "Security training is available to all employees on the intranet.", "IT personnel are trained in testing and applying required patches."], ans: [0], exp: "When a cross-functional **steering committee approves security projects**, it proves executive oversight and business alignment are actively working." },
+      { id: 7, q: "To achieve effective strategic alignment of information security initiatives, it is important that:", opts: ["steering committee leadership rotates among members.", "major organizational units provide input and reach a consensus.", "the business strategy is updated periodically.", "procedures and standards are approved by all departmental heads."], ans: [1], exp: "Strategic alignment requires **major organizational units to provide input and reach consensus** so security supports every business line." },
+      { id: 8, q: "The PRIMARY concern of an information security manager documenting a formal data retention policy is:", opts: ["generally accepted industry good practices.", "business requirements.", "legislative and regulatory requirements.", "storage availability."], ans: [1], exp: "In CISM, **business requirements** (which incorporate legal/regulatory mandates plus operational needs) always drive policy creation." },
+      { id: 9, q: "Which person or group should have final approval of an organization’s information technology (IT) security policies?", opts: ["Business unit managers", "Chief information security officer", "Senior management", "Chief information officer"], ans: [2], exp: "High-level security policies must always be approved by **senior management** to carry enterprise-wide authority and enforceability." },
+      { id: 10, q: "Which of the following steps should be FIRST in developing an information security plan?", opts: ["Perform a technical vulnerabilities assessment.", "Analyze the current business strategy.", "Perform a business impact analysis.", "Assess the current levels of security awareness."], ans: [1], exp: "Before scanning or building controls, always **analyze the current business strategy first** so the security plan aligns with where the business is going." },
+      { id: 11, q: "The enactment of policies and procedures for preventing hacker intrusions is an example of an activity that belongs to:", opts: ["risk management.", "compliance.", "IT management.", "governance."], ans: [3], exp: "Enacting high-level policies to direct and control the organization is a core function of **governance**." },
+      { id: 12, q: "Senior management commitment and support for information security can BEST be obtained through presentations that:", opts: ["use illustrative examples of successful attacks.", "explain the technical risk to the organization.", "evaluate the organization against good security practices.", "tie security risk to key business objectives."], ans: [3], exp: "Senior leadership speaks the language of business outcomes—always **tie security risk to key business objectives**." },
+      { id: 13, q: "Which of the following recommendations is the BEST one to promote a positive information security governance culture within an organization?", opts: ["Strong oversight by the audit committee", "Organizational governance transparency", "Collaboration across business lines", "Positive governance ratings by stock analysts"], ans: [2], exp: "A positive security governance culture is built through **collaboration across business lines**, making security a shared partnership rather than a policing function." },
+      { id: 14, q: "Information security governance is PRIMARILY driven by:", opts: ["technology constraints.", "regulatory requirements.", "litigation potential.", "business strategy."], ans: [3], exp: "Memorize the golden rule of CISM: **Information security governance is primarily driven by business strategy**." },
+      { id: 15, q: "The BEST approach to developing an information security program is to use a:", opts: ["process.", "framework.", "model.", "guideline."], ans: [1], exp: "A **framework** (such as COBIT, ISO 27001, or NIST CSF) provides the structured skeleton adaptable to an organization's specific needs." },
+      { id: 16, q: "Which of the following internal or external influences on an organization is the MOST difficult to estimate?", opts: ["Vulnerability posture", "Compliance requirements", "Outsourcing expenses", "Threat landscape"], ans: [3], exp: "Internal vulnerabilities, compliance, and costs are controllable and measurable, whereas the external **threat landscape** changes constantly and is hardest to predict." },
+      { id: 17, q: "The FIRST step to create an internal culture that embraces information security is to:", opts: ["implement stronger controls.", "conduct periodic awareness training.", "actively monitor operations.", "gain endorsement from executive management."], ans: [3], exp: "Culture flows from the top down; the first step is always to **gain endorsement from executive management**." },
+      { id: 18, q: "An information security manager wants to implement a security information and event management (SIEM) system not funded in the current budget. Which of the following choices is MOST likely to persuade management of this need?", opts: ["A comprehensive risk assessment", "An enterprisewide impact assessment", "A well-developed business case", "Computing the net present value of future savings"], ans: [2], exp: "To get unbudgeted funding approved by executives, you must present **a well-developed business case** showing value, costs, and ROI." },
+      { id: 19, q: "An enterprise’s board of directors has learned of recent legislation requiring enterprises within the industry to enact specific safeguards to protect confidential customer information. What actions should the board take next?", opts: ["Direct information security on what actions to take.", "Research solutions to determine the proper solutions.", "Require management to report on compliance.", "Do nothing; information security does not report to the board."], ans: [2], exp: "The Board provides oversight, not hands-on management; their proper role is to **require executive management to report on compliance**." },
+      { id: 20, q: "Which of the following choices is the MOST likely cause of significant inconsistencies in system configurations?", opts: ["A lack of procedures", "Inadequate governance", "Poor standards", "Insufficient training"], ans: [1], exp: "Widespread inconsistency across an enterprise stems from the root cause of **inadequate governance** failing to mandate and enforce baselines." },
+      { id: 21, q: "An information security manager must understand the relationship between information security and business operations in order to:", opts: ["Support organizational objectives.", "Determine likely areas of noncompliance.", "Assess the possible impacts of compromise.", "Understand the threats to the business."], ans: [0], exp: "The ultimate purpose of understanding business operations is to **support organizational objectives**." },
+      { id: 22, q: "Which of the following factors is the MOST significant in determining an enterprise’s risk appetite?", opts: ["The nature and extent of threats", "Organizational policies", "The overall security strategy", "The organizational culture"], ans: [3], exp: "An enterprise's willingness to take or avoid risk (**risk appetite**) is fundamentally shaped by **organizational culture** and leadership mindset." },
+      { id: 23, q: "Which of the following actions would help to change an enterprise's security culture?", opts: ["Develop procedures to enforce the information security policy.", "Obtain strong management support.", "Implement strict technical security controls.", "Periodically audit compliance with the information security policy."], ans: [1], exp: "Lasting cultural change requires **strong management support** setting the tone at the top." },
+      { id: 24, q: "Effective governance of enterprise security is BEST ensured by:", opts: ["Using a bottom-up approach.", "Management by the IT department.", "Referring the matter to the enterprise’s legal department.", "Using a top-down approach."], ans: [3], exp: "Governance must always follow a **top-down approach** driven by senior leadership down through policies, standards, and procedures." },
+      { id: 25, q: "The FIRST step to create an internal culture that embraces information security is to:", opts: ["Implement stronger controls.", "Conduct periodic awareness training.", "Actively monitor operations.", "Gain endorsement from executive management."], ans: [3], exp: "Duplicate of Question 17: always **gain endorsement from executive management** first." },
+      { id: 26, q: "Which of the following recommendations is the BEST one to promote a positive information security governance culture within an enterprise?", opts: ["Strong oversight by the audit committee", "Organizational governance transparency", "Collaboration across business lines", "Positive governance ratings by stock analysts"], ans: [2], exp: "Duplicate of Question 13: **collaboration across business lines** builds shared ownership and positive security culture." },
+      { id: 27, q: "Which of the following is the MOST likely to change an enterprise’s culture to one that is more security conscious?", opts: ["Adequate security policies and procedures", "Periodic compliance reviews", "Security steering committees", "Security awareness campaigns"], ans: [3], exp: "Once leadership support exists, ongoing **security awareness campaigns** are the primary tool for changing day-to-day employee behavior and consciousness." },
+      { id: 28, q: "Which of the following BEST describes the key objective of an information security program?", opts: ["Achieve strategic business goals and objectives.", "Establish accountability for information security risk", "Establish ownership of information security risk", "Eliminate threats to the enterprise."], ans: [0], exp: "The overarching objective of an information security program is helping the enterprise **achieve strategic business goals and objectives**." },
+      { id: 29, q: "A multinational enterprise operating in fifteen countries is considering implementing an information security program. Which factor will MOST influence the design of the information security program?", opts: ["Representation by regional business leaders", "Composition of the board", "Cultures of the different countries", "IT security skills"], ans: [2], exp: "When operating across 15 countries, local norms, privacy expectations, and **cultures of the different countries** most heavily influence program design." },
+      { id: 30, q: "Which of the following will BEST ensure that management takes ownership of the decision-making process for information security?", opts: ["Security policies and procedures", "Annual self-assessment by management", "Security steering committees", "Security awareness campaigns"], ans: [2], exp: "**Security steering committees** bring business unit leaders together to make and own security decisions collectively." },
+      { id: 31, q: "The MOST basic requirement for an information security governance program is to:", opts: ["Be aligned with the corporate business strategy.", "Be based on a sound risk management approach.", "Provide adequate regulatory compliance.", "Provide good practices for security initiatives."], ans: [0], exp: "Above all else, security governance must **be aligned with the corporate business strategy**." },
+      { id: 32, q: "Which of the following choices is the BEST indicator of the state of information security governance?", opts: ["A defined maturity level", "A developed security strategy", "Complete policies and standards", "Low numbers of incidents"], ans: [0], exp: "**A defined maturity level** (using a capability maturity model) measures how repeatable, managed, and optimized governance processes actually are." },
+      { id: 33, q: "An information security strategy presented to senior management for approval MUST incorporate:", opts: ["specific technologies.", "compliance mechanisms.", "business priorities.", "detailed procedures."], ans: [2], exp: "A strategy presented to executives must incorporate **business priorities** rather than low-level technical details or procedures." },
+      { id: 34, q: "Which of the following choices will MOST influence how the information security program will be designed and implemented?", opts: ["Type and nature of risk", "Organizational culture", "Overall business objectives", "Lines of business"], ans: [1], exp: "While business objectives define *what* to achieve, **organizational culture** most heavily influences *how* the program is designed and implemented." },
+      { id: 35, q: "Which of the following is the GREATEST success factor for effectively managing information security?", opts: ["An adequate budget", "Senior level authority", "Robust technology", "Effective business relationships"], ans: [3], exp: "For an information security manager, building **effective business relationships** with department heads is the greatest day-to-day operational success factor." },
+      { id: 36, q: "Management requests that an information security manager determine which regulations regarding disclosure, reporting and privacy are the most important for the organization to address. The recommendations for addressing these legal and regulatory requirements will be MOST useful if based on which of the following choices?", opts: ["The extent of enforcement actions", "The probability and consequences", "The sanctions for noncompliance", "The amount of personal liability"], ans: [1], exp: "Treat regulatory noncompliance like any other risk—prioritize based on **probability (likelihood of enforcement) and consequences (impact)**." },
+      { id: 37, q: "The classification level of an asset must be PRIMARILY based on which of the following choices?", opts: ["Criticality and sensitivity", "Likelihood and impact", "Valuation and replacement cost", "Threat vector and exposure"], ans: [0], exp: "Asset classification is always based on **criticality** (importance to business operations) and **sensitivity** (need for confidentiality)." },
+      { id: 38, q: "If a security incident is not the result of the failure of a control, then it is MOST likely the result of which of the following choices?", opts: ["An incomplete risk analysis", "The absence of a control", "A zero-day attack", "A user error"], ans: [1], exp: "If a control didn't fail during an incident, then **no control was in place (absence of a control)** to prevent that threat." },
+      { id: 39, q: "A risk management process is MOST effective in achieving organizational objectives if:", opts: ["asset owners perform risk assessments.", "the risk register is updated regularly.", "the process is overseen by a steering committee.", "risk activities are embedded in business processes."], ans: [3], exp: "Risk management works best when **risk activities are embedded directly into daily business processes** rather than treated as an isolated checklist." },
+      { id: 40, q: "A business impact analysis is the BEST tool for determining:", opts: ["total cost of ownership.", "priority of restoration.", "annual loss expectancy.", "residual risk."], ans: [1], exp: "Memorize **BIA = Priority of restoration**; the BIA identifies which systems are most time-critical to recover first after a disaster." },
+      { id: 41, q: "Why should the analysis of risk include consideration of potential impact?", opts: ["Potential impact is a central element of risk.", "Potential impact is related to asset value.", "Potential impact affects the extent of mitigation.", "Potential impact helps determine the exposure."], ans: [2], exp: "We calculate potential impact because it **determines how much money and effort we should spend on mitigation**." },
+      { id: 42, q: "Quantitative risk analysis is MOST appropriate when assessment results:", opts: ["include customer perceptions.", "contain percentage estimates.", "lack specific details.", "contain subjective information."], ans: [1], exp: "Quantitative analysis requires numerical data, such as **percentage estimates** and financial figures, whereas subjective perceptions are qualitative." },
+      { id: 43, q: "There is a delay between the time when a security vulnerability is first published, and the time when a patch is delivered. Which of the following should be carried out FIRST to mitigate the risk during this time period?", opts: ["Identify the vulnerable systems and apply compensating controls.", "Minimize the use of vulnerable systems.", "Communicate the vulnerability to system users.", "Update the signatures database of the intrusion detection system."], ans: [0], exp: "When a zero-day has no patch yet, your first move is to **identify affected systems and apply compensating controls**." },
+      { id: 44, q: "Which of the following techniques MOST clearly indicates whether specific risk-reduction controls should be implemented?", opts: ["Cost-benefit analysis", "Penetration testing", "Frequent risk assessment programs", "Annual loss expectancy calculation"], ans: [0], exp: "A **cost-benefit analysis** compares the cost of the control against the reduction in ALE, proving whether the control is worth implementing." },
+      { id: 45, q: "How does knowledge of risk appetite help to increase security control effectiveness?", opts: ["It shows senior management that you understand their needs.", "It provides a basis for redistributing resources to mitigate risk above the risk appetite.", "It requires continuous monitoring because the entire risk environment is constantly changing.", "It facilitates communication with management about the importance of security."], ans: [1], exp: "Knowing the risk appetite lets you **focus and redistribute resources onto risks that exceed what management is willing to accept**." },
+      { id: 46, q: "Which of the following is the MOST appropriate use of gap analysis?", opts: ["Evaluating a business impact analysis", "Developing a business balanced scorecard", "Demonstrating the relationship between controls", "Measuring current state versus desired future state"], ans: [3], exp: "Memorize the definition: **Gap analysis = Measuring current state versus desired future state**." },
+      { id: 47, q: "An information security manager determines that management of risk is inconsistent across a mature organization, creating a weak link in overall protection. The MOST appropriate initial response for the information security manager is to:", opts: ["escalate to the steering committee.", "review compliance with standards.", "write more stringent policies.", "increase enforcement."], ans: [1], exp: "In a mature organization, standards already exist; if risk management is inconsistent, first **review compliance with existing standards** to see where units are deviating." },
+      { id: 48, q: "Control objectives are MOST closely aligned with:", opts: ["risk tolerance.", "criticality.", "risk appetite.", "sensitivity."], ans: [2], exp: "**Control objectives** define the desired level of control to keep residual risk within management's **risk appetite**." },
+      { id: 49, q: "An information security manager is advised by contacts in law enforcement that there is evidence that the company is being targeted by a skilled gang of hackers known to use a variety of techniques, including social engineering and network penetration. The FIRST step that the security manager should take is to:", opts: ["perform a comprehensive assessment of the organization’s exposure to the hackers’ techniques.", "initiate awareness training to counter social engineering.", "immediately advise senior management of the elevated risk.", "increase monitoring activities to provide early detection of intrusion."], ans: [2], exp: "When credible intelligence reveals an imminent targeted threat against the enterprise, **immediately advise senior management of the elevated risk**." },
+      { id: 50, q: "At what point in the risk management process is residual risk determined?", opts: ["When evaluating the results of the application of new or existing controls or countermeasures", "When identifying and classifying information resources or assets that need protection", "When assessing threats and the consequences of a compromise", "After the elements of risk have been established, when combining them to form an overall view of risk"], ans: [0], exp: "**Residual risk** is the risk remaining *after* controls are applied, so it is determined **when evaluating the results of applying controls**." },
+      { id: 51, q: "The information security policies of an organization require that all confidential information must be encrypted while communicating to external entities. A regulatory agency insisted that a compliance report must be sent without encryption. The information security manager should:", opts: ["extend the information security awareness program to include employees of the regulatory authority.", "send the report without encryption on the authority of the regulatory agency.", "initiate an exception process for sending the report without encryption.", "refuse to send the report without encryption."], ans: [2], exp: "Never violate policy informally; if a regulator requires unencrypted transmission, **initiate a formal policy exception process** so management documents and approves the risk." },
+      { id: 52, q: "The fact that an organization may suffer a significant disruption as the result of a distributed denial-of-service (DDoS) attack is considered:", opts: ["an intrinsic risk.", "a systemic risk.", "a residual risk.", "an operational risk."], ans: [3], exp: "A DDoS outage that disrupts day-to-day business processes and service delivery is classified as **an operational risk**." },
+      { id: 53, q: "The effectiveness of managing business risk is BEST measured by the number of:", opts: ["significant IT-related incidents that were not identified during risk assessment.", "security assessments compliant with organizational standards and guidelines.", "vulnerabilities identified by risk assessment and not properly mitigated.", "security incidents causing significant financial loss or business disruption."], ans: [3], exp: "The ultimate measure of business risk management is minimizing **security incidents that cause significant financial loss or business disruption**." },
+      { id: 54, q: "Reducing exposure of a critical asset is an effective mitigation measure because it reduces:", opts: ["the impact of a compromise.", "the likelihood of being exploited.", "the vulnerability of the asset.", "the time needed for recovery."], ans: [1], exp: "Reducing an asset's exposure (attack surface) directly lowers **the likelihood of it being exploited**, though the asset's value/impact if compromised stays the same." },
+      { id: 55, q: "Assuming all options are technically feasible, which of the following would be the MOST effective approach for the information security manager to address excessive exposure of a critical customer-facing server?", opts: ["Develop an incident response plan", "Reduce the attack surface", "Initiate compartmentalization", "Implement compensating controls"], ans: [1], exp: "To fix excessive exposure directly, **reduce the attack surface** (harden services, close unused ports, remove unnecessary components)." },
+      { id: 56, q: "Which of the following activities MUST a financial-services organization do with regard to a web-based service that is gaining popularity among its customers?", opts: ["Perform annual vulnerability mitigation.", "Maintain third-party liability insurance.", "Conduct periodic business impact analyses.", "Architect a real-time failover capability."], ans: [2], exp: "As a service grows in business importance, its criticality changes—you must **conduct periodic BIAs** to ensure recovery targets match its new value." },
+      { id: 57, q: "What is the goal of risk aggregation?", opts: ["To combine homogenous elements to reduce overall risk", "To influence the organization’s risk acceptance methodologies", "To group individual acceptable risk events for simplified risk reporting", "To identify significant overall risk from a single threat vector"], ans: [3], exp: "**Risk aggregation** looks at how many small, individually acceptable risks can combine into **a significant overall risk from a single threat vector**." },
+      { id: 58, q: "Which of the following situations presents the GREATEST information security risk for an organization with multiple, but small, domestic processing locations?", opts: ["Systems operation guidelines are not enforced.", "Change management procedures are poor.", "Systems development is outsourced.", "Systems capacity management is not performed."], ans: [1], exp: "Across distributed processing sites, **poor change management procedures** introduce unauthorized or untested changes, creating the highest security and availability risk." },
+      { id: 59, q: "Which of the following BEST indicates a successful risk management practice?", opts: ["Overall risk is quantified.", "Inherent risk is eliminated.", "Residual risk is acceptable.", "Control risk is tied to business units."], ans: [2], exp: "Risk can never be 100% eliminated; risk management succeeds when **residual risk is brought down to an acceptable level**." },
+      { id: 60, q: "Which of the following is MOST likely to initiate a review of an information security standard? Changes in the:", opts: ["Effectiveness of security controls.", "Responsibilities of department heads.", "Information security procedures.", "Results of periodic risk assessments."], ans: [3], exp: "When **results of periodic risk assessments** show new or shifted risks, security standards must be reviewed and updated to address them." },
+      { id: 61, q: "What is the MOST essential attribute of an effective key risk indicator (KRI)? The KRI:", opts: ["Is accurate and reliable.", "Provides quantitative metrics.", "Indicates required action.", "Is predictive of a risk event."], ans: [3], exp: "The defining feature of a **KRI** (unlike a historical KPI) is that it is a leading indicator that **is predictive of a future risk event**." },
+      { id: 62, q: "Which of the following is the PRIMARY reason for implementing a risk management program? A risk management program:", opts: ["Allows the enterprise to eliminate risk.", "Is a necessary part of management’s due diligence.", "Satisfies audit and regulatory requirements.", "Assists in increasing the return on investment."], ans: [1], exp: "Implementing a formal risk management program is a core requirement of **management's due diligence** to protect organizational assets." },
+      { id: 63, q: "Which of the following is the MOST usable deliverable of an information security risk analysis?", opts: ["Business impact analysis report", "List of action items to mitigate risk", "Assignment of risk to process owners", "Quantification of organizational risk"], ans: [1], exp: "For management to act on a risk analysis, the most usable deliverable is a prioritized **list of action items (recommendations) to mitigate risk**." },
+      { id: 64, q: "Which of the following BEST supports continuous improvement of the risk management process?", opts: ["Regular review of risk treatment options", "Classification of assets in order of criticality", "Adoption of a maturity model", "Integration of assurance functions"], ans: [2], exp: "**Adoption of a maturity model** provides a structured roadmap to continuously benchmark and improve the risk management process over time." },
+      { id: 65, q: "Which of the following is the MOST important reason to include an effective threat and vulnerability assessment in the change management process?", opts: ["To reduce the need for periodic full risk assessments.", "To ensure that information security is aware of changes.", "To ensure that policies are changed to address new threats.", "To maintain regulatory compliance."], ans: [0], exp: "Assessing threats and vulnerabilities during every change keeps risk assessments continuously current, **reducing the need for frequent full risk assessments**." },
+      { id: 66, q: "A risk assessment and business impact analysis (BIA) have been completed for a major proposed purchase and new process for an enterprise. There is disagreement between the information security manager and the business department manager who will be responsible for evaluating the results and identified risk. Which of the following would be the BEST approach of the information security manager?", opts: ["Acceptance of the business manager’s decision on the risk to the corporation", "Acceptance of the information security manager’s decision on the risk to the corporation", "Review of the risk assessment with executive management for final input", "Create a new risk assessment and BIA to resolve the disagreement"], ans: [2], exp: "When the security manager and business department manager disagree on major corporate risk, **escalate and review the risk assessment with executive management** for final decision-making." },
+      { id: 67, q: "The PRIMARY reason to consider information security during the first stage of a project life cycle is:", opts: ["the cost of security is higher in later stages.", "information security may affect project feasibility.", "information security is essential to project approval.", "it ensures proper project classification."], ans: [1], exp: "Evaluating security in the initiation phase is vital because regulatory or security constraints **may affect whether the project is feasible at all**." },
+      { id: 68, q: "The information security policies of an enterprise require that all confidential information must be encrypted while communicating to external entities. A regulatory agency insisted that a compliance report must be sent without encryption. The information security manager should:", opts: ["extend the information security awareness program to include employees of the regulatory authority.", "send the report without encryption on the authority of the regulatory agency.", "initiate an exception process for sending the report without encryption.", "refuse to send the report without encryption."], ans: [2], exp: "Duplicate of Question 51: **initiate a formal exception process** so senior management approves and documents the deviation." },
+      { id: 69, q: "Control objectives are MOST closely aligned with:", opts: ["risk tolerance.", "criticality.", "risk appetite.", "sensitivity."], ans: [2], exp: "Duplicate of Question 48: **Control objectives** align directly with **risk appetite**." },
+      { id: 70, q: "Once the objective of performing a security review has been defined, the NEXT step for the information security manager is to determine:", opts: ["constraints.", "approach.", "scope.", "results."], ans: [2], exp: "In any audit or review, right after defining the **objective**, the very next step is defining the **scope** (boundaries of what will be reviewed)." },
+      { id: 71, q: "When an organization is setting up a relationship with a third-party IT service provider, which of the following is one of the MOST important topics to include in the contract from a security standpoint?", opts: ["Compliance with international security standards", "Use of a two-factor authentication system", "Existence of an alternate hot site in case of business disruption", "Compliance with the organization’s information security requirements"], ans: [3], exp: "Third-party contracts must explicitly mandate **compliance with the organization's own information security requirements**." },
+      { id: 72, q: "Which of the following would be MOST effective in successfully implementing restrictive password policies?", opts: ["Regular password audits", "Single sign-on system", "Security awareness program", "Penalties for noncompliance"], ans: [2], exp: "Without a **security awareness program** explaining *why* strong passwords matter, users will write them down or find workarounds." },
+      { id: 73, q: "Assuming that the value of information assets is known, which of the following gives the information security manager the MOST objective basis for determining that the information security program is delivering value?", opts: ["Number of controls", "Cost of achieving control objectives", "Effectiveness of controls", "Test results of controls"], ans: [2], exp: "Program value is proven by the **effectiveness of controls** in protecting known asset values and meeting business objectives." },
+      { id: 74, q: "Which of the following metrics would be the MOST useful in measuring how well information security is monitoring violation logs?", opts: ["Penetration attempts investigated", "Violation log reports produced", "Violation log entries", "Frequency of corrective actions taken"], ans: [0], exp: "Counting raw log entries or reports doesn't prove anyone is acting on them; **penetration attempts investigated** measures active monitoring and follow-through." },
+      { id: 75, q: "Who should be responsible for enforcing access rights to application data?", opts: ["Data owners", "Business process owners", "The security steering committee", "Security administrators"], ans: [3], exp: "Remember the CISM distinction: **Data owners *approve* access**, while **Security administrators *enforce/implement* access rights** technically." },
+      { id: 76, q: "When developing an information security program, what is the MOST useful source of information for determining available human resources?", opts: ["Proficiency test", "Job descriptions", "Organization chart", "Skills inventory"], ans: [3], exp: "A **skills inventory** shows the actual competencies and certifications your current staff possess to execute the security program." },
+      { id: 77, q: "What is the MOST important contractual element when contracting with an outsourcer to provide security administration?", opts: ["The right-to-terminate clause", "Limitations of liability", "The service level agreement", "The financial penalties clause"], ans: [2], exp: "The **Service Level Agreement (SLA)** defines measurable performance, response times, and security metrics the outsourcer must meet." },
+      { id: 78, q: "Which of the following should be included in a good privacy statement?", opts: ["A notification of liability on accuracy of information", "A notification that information will be encrypted", "A statement of what the company will do with information it collects", "A description of the information classification process"], ans: [2], exp: "A privacy notice must clearly inform customers **what the company will do with the personal information it collects**." },
+      { id: 79, q: "Which of the following is one of the BEST metrics an information security manager can employ to effectively evaluate the results of a security program?", opts: ["Number of controls implemented", "Percent of control objectives accomplished", "Percent of compliance with the security policy", "Reduction in the number of reported security incidents"], ans: [1], exp: "Evaluating program results is best measured by the **percent of control objectives accomplished**." },
+      { id: 80, q: "An organization has adopted a practice of regular staff rotation to minimize the risk of fraud and encourage cross-training. Which type of authorization policy would BEST address this practice?", opts: ["Multilevel", "Role-based", "Discretionary", "Mandatory"], ans: [1], exp: "When staff rotate jobs frequently, **Role-Based Access Control (RBAC)** lets you switch a user's permissions cleanly by moving them from one role to another." },
+      { id: 81, q: "Which of the following should be reviewed to ensure that security controls are effective?", opts: ["Risk assessment policies", "Return on security investment", "Security metrics", "User access rights"], ans: [2], exp: "Reviewing **security metrics** provides ongoing, quantifiable evidence of whether controls are operating effectively." },
+      { id: 82, q: "Which of the following is the BEST metric for evaluating the effectiveness of security awareness training?", opts: ["The number of password resets", "The number of reported incidents", "The number of incidents resolved", "The number of access rule violations"], ans: [1], exp: "An increase in **the number of reported incidents** by staff proves employees recognize suspicious activity and know how to report it." },
+      { id: 83, q: "Which of the following is the BEST approach to dealing with inadequate funding of the security program?", opts: ["Eliminate low-priority security services.", "Require management to accept the increased risk.", "Prioritize risk mitigation and educate management.", "Reduce monitoring and compliance enforcement activities."], ans: [2], exp: "When budget is tight, **prioritize risk mitigation (highest risks first) and educate management** on the remaining unmitigated risks." },
+      { id: 84, q: "Which of the following is an advantage of a centralized information security organizational structure?", opts: ["It is easier to promote security awareness.", "It is easier to manage and control.", "It is more responsive to business unit needs.", "It provides a faster turnaround for security requests."], ans: [1], exp: "Centralization provides uniform policy enforcement and **is easier to manage and control** (whereas decentralization is faster and more responsive to local units)." },
+      { id: 85, q: "The organization has decided to outsource the majority of the IT department with a vendor that is hosting servers in a foreign country. Of the following, which is the MOST critical security consideration?", opts: ["Laws and regulations of the country of origin may not be enforceable in the foreign country.", "A security breach notification might get delayed due to the time difference.", "Additional network intrusion detection sensors should be installed, resulting in an additional cost.", "The company could lose physical control over the server and be unable to monitor the physical security posture of the servers."], ans: [0], exp: "Cross-border outsourcing creates a major legal risk: **laws and privacy regulations of your home country may not be enforceable in the foreign jurisdiction**." },
+      { id: 86, q: "What is the PRIMARY purpose of installing an intrusion detection system?", opts: ["To identify weaknesses in network security", "To identify patterns of suspicious access", "To identify how an attack was launched on the network", "To identify potential attacks on the internal network"], ans: [3], exp: "An IDS is a detective control whose primary purpose is **to identify potential attacks on the network** in real time." },
+      { id: 87, q: "After obtaining commitment from senior management, which of the following should be completed NEXT when establishing an information security program?", opts: ["Define security metrics.", "Conduct a risk assessment.", "Perform a gap analysis.", "Procure security tools."], ans: [1], exp: "Once senior management commits to establishing a security program, **conduct a risk assessment** to identify what assets and risks exist." },
+      { id: 88, q: "Which of the following is MOST important to the success of an information security program?", opts: ["Security awareness training", "Achievable goals and objectives", "Senior management sponsorship", "Adequate start-up budget and staffing"], ans: [2], exp: "Without **senior management sponsorship**, a security program lacks the authority and resources to succeed." },
+      { id: 89, q: "In the process of deploying a new email system, an information security manager would like to ensure the confidentiality of messages while in transit. Which of the following is the MOST appropriate method to ensure data confidentiality in a new email system implementation?", opts: ["Encryption", "Strong authentication", "Digital signature", "Hashing algorithm"], ans: [0], exp: "Confidentiality in transit is only provided by **encryption** (digital signatures and hashing only provide integrity and authentication)." },
+      { id: 90, q: "Which of the following is the MOST cost-effective type of access control?", opts: ["Centralized", "Role-based", "Decentralized", "Discretionary"], ans: [1], exp: "**Role-based access control (RBAC)** is the most cost-effective to administer at scale because permissions are managed per role rather than per individual user." },
+      { id: 91, q: "Which of the following is the MOST effective solution for preventing individuals external to the enterprise from modifying sensitive information on a corporate database?", opts: ["Screened subnets", "Information classification policies and procedures", "Role-based access control", "Intrusion detection system"], ans: [0], exp: "To block external Internet attackers from reaching an internal database, network isolation via **screened subnets (DMZ architecture)** is the primary barrier." },
+      { id: 92, q: "An account with full administrative privileges over a production file is found to be accessible by a member of the software development team. This account was set up to allow the developer to download nonsensitive production data for software testing purposes. Assuming all options are possible, which of the following should the information security manager recommend?", opts: ["Restrict account access to read-only.", "Log all usage of this account.", "Suspend the account and activate only when needed.", "Require that a change request be submitted for each download."], ans: [0], exp: "Enforce Least Privilege: if the developer only needs to download data, **restrict account access to read-only** so they cannot modify production files." },
+      { id: 93, q: "Segregation of duties (SoD) has been designed and introduced into an accounts payable system. Which of the following should be in place to BEST maintain the effectiveness of SoD?", opts: ["A strong password rule is assigned to disbursement staff.", "Security awareness is publicized by the compliance department.", "An operational role matrix is aligned with the organizational chart.", "Access privilege is reviewed when an operator’s role changes."], ans: [3], exp: "SoD breaks down over time due to privilege creep; to maintain SoD, **review access privileges whenever an operator's role changes**." },
+      { id: 94, q: "How should an information security manager determine the selection of controls required to meet business objectives?", opts: ["Prioritize the use of role-based access controls.", "Focus on key controls.", "Restrict controls to critical applications.", "Focus on automated controls."], ans: [1], exp: "To meet business objectives efficiently, **focus on key controls** that directly mitigate the primary risks to those objectives." },
+      { id: 95, q: "Outsourcing combined with indemnification:", opts: ["reduces legal responsibility but leaves financial risk relatively unchanged.", "is more cost-effective as a means of risk transfer than purchasing insurance.", "eliminates the reputational risk present when operations remain in-house.", "reduces financial risk but leaves legal responsibility generally unchanged."], ans: [3], exp: "Remember this legal rule: indemnification reimburses money (**reduces financial risk**), but you can never outsource ultimate **legal/regulatory responsibility**." },
+      { id: 96, q: "Which is the FIRST thing that should be determined by the information security manager when developing an information security program?", opts: ["The control objectives", "The strategic aims", "The desired outcomes", "The logical architecture"], ans: [2], exp: "Always begin with the end in mind: first determine **the desired outcomes** of the security program so all controls work toward that state." },
+      { id: 97, q: "What is the MAIN advantage of implementing automated password synchronization?", opts: ["It reduces the overall administrative workload.", "It increases security between multi-tier systems.", "It allows passwords to be changed less frequently.", "It reduces the need for two-factor authentication."], ans: [0], exp: "Automated password synchronization cuts down help-desk reset tickets and **reduces the overall administrative workload**." },
+      { id: 98, q: "Which of the following technologies is utilized to ensure that an individual connecting to a corporate internal network over the Internet is not an intruder masquerading as an authorized user?", opts: ["Intrusion detection system", "IP address packet filtering", "Two-factor authentication", "Embedded digital signature"], ans: [2], exp: "To stop an attacker with a stolen password from masquerading as an authorized remote user, enforce **two-factor authentication**." },
+      { id: 99, q: "When is the BEST time to perform a penetration test?", opts: ["After an attempted penetration has occurred", "After an audit has reported weaknesses in security controls", "After various infrastructure changes are made", "After a high turnover in systems staff"], ans: [2], exp: "The best time to run a penetration test is **after infrastructure changes are made** to verify that new deployments didn't introduce exploitable holes." },
+      { id: 100, q: "For which of the following types of controls is notification of a verified network intrusion an indication that the control is working properly?", opts: ["Preventative", "Corrective", "Detective", "Deterrent"], ans: [2], exp: "Alerting on an intrusion means a **Detective** control (like an IDS or SIEM) did its job properly." },
+      { id: 101, q: "Which of the following is the MOST cost-effective type of access control?", opts: ["Centralized", "Role-based", "Decentralized", "Discretionary"], ans: [1], exp: "Duplicate of Question 90: **Role-based** access control is the most cost-effective." },
+      { id: 102, q: "Controls are effective when:", opts: ["residual risk is at a level acceptable to the enterprise.", "continuous monitoring programs are in place.", "inherent risk is within the organizational risk tolerance.", "key performance indicators have been identified."], ans: [0], exp: "Controls are effective when they reduce risk so that **residual risk is at a level acceptable to the enterprise**." },
+      { id: 103, q: "Which of the following is the BEST indicator that security controls are performing effectively?", opts: ["The monthly service level statistics indicate minimal impact from security issues.", "The cost of implementing security controls is less than the value of the assets.", "The percentage of systems that are compliant with security standards is satisfactory.", "Audit reports do not reflect any significant findings on security."], ans: [2], exp: "Because security standards are designed to achieve desired control states, **a satisfactory percentage of systems compliant with security standards** indicates controls are performing as intended." },
+      { id: 104, q: "Which of the following should be in place before a black box penetration test begins?", opts: ["IT management approval", "Proper communication and awareness training", "A clearly stated definition of scope", "An incident response plan"], ans: [2], exp: "Before any penetration test begins, you must have **a clearly stated definition of scope** (rules of engagement) so testers don't attack out-of-bounds systems." },
+      { id: 105, q: "Which of the following is the MOST appropriate frequency for updating antivirus signature files for antivirus software on production servers?", opts: ["Daily", "Weekly", "Concurrently with operating system patch updates", "During scheduled change control updates"], ans: [0], exp: "New malware emerges constantly, so antivirus signature files on production servers should be updated **Daily** (or more frequently)." },
+      { id: 106, q: "Which of the following should be performed FIRST in the aftermath of a denial-of-service (DoS) attack?", opts: ["Restore servers from backup media stored offsite.", "Conduct an assessment to determine system status.", "Perform an impact analysis of the outage.", "Isolate the screened subnet."], ans: [1], exp: "Immediately after a DoS attack subsides, **conduct an assessment to determine system status** (whether any data was corrupted or if the DoS was a smokescreen for a breach)." },
+      { id: 107, q: "A company has a network of branch offices with local file/print and mail servers; each branch individually contracts a hot site. Which of the following would be the GREATEST weakness in recovery capability?", opts: ["Exclusive use of the hot site is limited to six weeks.", "The hot site may have to be shared with other customers.", "The time of declaration determines site access priority.", "The provider services all major companies in the area."], ans: [3], exp: "If a regional disaster hits and **the provider services all major companies in the area**, multiple subscribers will declare at once and overwhelm the hot site." },
+      { id: 108, q: "During the security review of organizational servers it was found that a file server containing confidential human resources (HR) data was accessible to all user IDs. What is the FIRST step the security manager should perform?", opts: ["Copy sample files as evidence.", "Remove access privileges to the folder containing the data.", "Report this situation to the data owner.", "Train the HR team on properly controlling file permissions."], ans: [2], exp: "In CISM, the security manager does not unilaterally change business permissions; first **report the situation to the data owner** (HR) to authorize corrective action." },
+      { id: 109, q: "Which of the following actions should be taken when an online trading company discovers a network attack in progress?", opts: ["Shut off all network access points", "Dump all event logs to removable media", "Isolate the affected network segment", "Enable trace logging on all events"], ans: [2], exp: "During an active attack, **isolate the affected network segment** (containment) to stop the attack from spreading while keeping unaffected business operations online." },
+      { id: 110, q: "Which of the following is the FIRST step after the intrusion detection system sends out an alert about a possible attack?", opts: ["Assess the type and severity of the attack.", "Determine whether it is an actual incident.", "Contain the damage to minimize the risk.", "Minimize the disruption of computer resources."], ans: [1], exp: "IDS sensors generate false positives; the first step after an alert is triage to **determine whether it is an actual incident**." },
+      { id: 111, q: "Which of the following choices should be assessed after the likelihood of a loss event has been determined?", opts: ["The magnitude of impact", "Risk tolerance", "The replacement cost of assets", "The book value of assets"], ans: [0], exp: "Risk equals Likelihood x Impact; once likelihood is known, assess **the magnitude of impact**." },
+      { id: 112, q: "The MOST timely and effective approach to detecting nontechnical security violations in an organization is:", opts: ["the development of organizationwide communication channels.", "periodic third-party auditing of incident reporting logs.", "an automated policy compliance monitoring system.", "deployment of suggestion boxes throughout the organization."], ans: [0], exp: "Nontechnical violations (like social engineering or physical policy breaches) can't be caught by automated software; they require **organization-wide communication channels** so employees report them promptly." },
+      { id: 113, q: "A security operations center detected an attempted structured query language injection, but could not determine if it was successful. Which of the following resources should the information security manager approach to assess the possible impact?", opts: ["Application support team", "Business process owner", "Network management team", "System administrator"], ans: [0], exp: "To determine if a technical SQL injection succeeded against an application database, consult the **Application support team** who know the application's tables and logs." },
+      { id: 114, q: "Which of the following is the MOST important consideration for an organization interacting with the media during a disaster?", opts: ["Communicating specially drafted messages by an authorized person", "Refusing to comment until recovery", "Referring the media to the authorities", "Reporting the losses and recovery strategy to the media"], ans: [0], exp: "Media relations during a crisis must always use **specially drafted messages delivered by a single designated, authorized spokesperson**." },
+      { id: 115, q: "Which of the following should be determined FIRST when establishing a business continuity program?", opts: ["Cost to rebuild information processing facilities", "Incremental daily cost of the unavailability of systems", "Location and cost of offsite recovery facilities", "Composition and mission of individual recovery teams"], ans: [1], exp: "Before choosing recovery sites, perform a BIA to find the **incremental daily cost of the unavailability of systems**." },
+      { id: 116, q: "After a service interruption of a critical system, the incident response team finds that it needs to activate the warm recovery site. Discovering that throughput is only half of the primary site, the team nevertheless notifies management that it has restored the critical system. This is MOST likely because it has achieved the:", opts: ["recovery point objective.", "recovery time objective.", "service delivery objective.", "maximum tolerable outage"], ans: [2], exp: "The **Service Delivery Objective (SDO)** defines the minimum acceptable level of service (e.g., 50% capacity) required at the alternate site during disaster mode." },
+      { id: 117, q: "A new email virus that uses an attachment disguised as a picture file is spreading rapidly over the Internet. Which of the following should be performed FIRST in response to this threat?", opts: ["Quarantine all picture files stored on file servers.", "Block all emails containing picture file attachments.", "Quarantine all mail servers connected to the Internet.", "Block incoming Internet mail but permit outgoing mail."], ans: [1], exp: "Contain the threat at the perimeter with minimal business disruption by **blocking all incoming emails containing picture file attachments**." },
+      { id: 118, q: "Which of the following is MOST important when deciding whether to build an alternate facility or subscribe to a third-party hot site?", opts: ["Cost to build a redundant processing facility and location", "Daily cost of losing critical systems and recovery time objectives", "Infrastructure complexity and system sensitivity", "Criticality results from the business impact analysis"], ans: [0], exp: "When choosing between building your own site vs. subscribing to a vendor hot site, the deciding factor is the **location and cost to build a redundant facility**." },
+      { id: 119, q: "The PRIMARY purpose of involving third-party teams for carrying out post incident reviews of information security incidents is to:", opts: ["enable independent and objective review of the root cause of the incidents.", "obtain support for enhancing the expertise of the third-party teams.", "identify lessons learned for further improving the information security management process.", "obtain better buy-in for the information security program."], ans: [0], exp: "External third-party investigators are brought in specifically to **enable an independent and objective review of the root cause** without internal bias or cover-ups." },
+      { id: 120, q: "Which of the following choices includes the activity of evaluating the computing infrastructure by performing proactive security assessment and evaluation?", opts: ["A disaster recovery plan", "A business continuity plan", "An incident management plan", "A continuity of operations plan"], ans: [2], exp: "Proactive vulnerability and infrastructure assessment is part of the preparation/prevention phase of **an incident management plan**." },
+      { id: 121, q: "Which of the following is the FIRST step in developing an incident response plan?", opts: ["Set the minimum time required to respond to incidents.", "Establish a process to report incidents to senior management.", "Ensure the availability of skilled resources", "Categorize incidents based on likelihood and impact."], ans: [3], exp: "To build an incident response plan, first **categorize incidents based on likelihood and impact** so you know what scenarios you are planning for." },
+      { id: 122, q: "To ensure the timely identification of security incidents, the BEST course of action is to:", opts: ["document a business impact analysis.", "review a risk analysis.", "implement incident detection.", "apply preventive and detective controls."], ans: [2], exp: "Timely identification of incidents directly requires **implementing incident detection** capabilities." },
+      { id: 123, q: "The information security manager identifies a vulnerability in a publicly exposed business application during risk assessment activities. The NEXT step to take is:", opts: ["containment.", "eradication.", "analysis.", "recovery."], ans: [2], exp: "After identifying a vulnerability during an assessment, the next step is **analysis** to determine its likelihood, potential impact, and risk level." },
+      { id: 124, q: "What makes an incident management program effective?", opts: ["It identifies, assesses and prevents recurrence of incidents.", "It detects and documents incidents.", "It includes a risk management strategy.", "It reflects the capabilities of the enterprise."], ans: [0], exp: "An effective incident management program covers the full cycle: **it identifies, assesses, and prevents recurrence of incidents**." },
+      { id: 125, q: "Which of the following is the BEST basis for determining the criticality and sensitivity of information assets?", opts: ["A threat assessment", "A vulnerability assessment", "A resource dependency assessment", "An impact assessment"], ans: [3], exp: "Criticality and sensitivity are determined by how much damage a compromise or outage would cause—measured through **an impact assessment (BIA)**." },
+      { id: 126, q: "A business impact analysis is the BEST tool for determining:", opts: ["total cost of ownership.", "priority of restoration.", "annual loss expectancy.", "residual risk."], ans: [1], exp: "Duplicate of Question 40: **BIA = Priority of restoration**." },
+      { id: 127, q: "An enterprise’s chief information security officer would like to ensure that operations are prioritized correctly for recovery in case of a disaster. Which of the following would be the BEST to use?", opts: ["A business impact analysis", "An enterprise risk assessment", "A business process map", "A threat statement"], ans: [0], exp: "To prioritize operations for disaster recovery, always use **a business impact analysis (BIA)**." },
+      { id: 128, q: "Which of the following activities MUST a financial services enterprise do with regard to a web-based service that is gaining popularity among its customers?", opts: ["Perform annual vulnerability mitigation.", "Maintain third-party liability insurance.", "Conduct periodic business impact analysis", "Architect a real-time failover capability."], ans: [2], exp: "Duplicate of Question 56: **conduct periodic business impact analysis (BIA)** as customer adoption increases the service's criticality." },
+      { id: 129, q: "Which of the following are the essential ingredients of a business impact analysis?", opts: ["Downtime tolerance, resources and criticality", "Cost of business outages in a year as a factor of the security budget", "Business continuity testing methodology being deployed", "Structure of the crisis management team"], ans: [0], exp: "A BIA's core ingredients are **downtime tolerance (MTD/RTO), required resources, and business criticality**." },
+      { id: 130, q: "Recovery point objectives can be used to determine which of the following?", opts: ["Maximum tolerable period of data loss", "Maximum tolerable downtime", "Baseline for operational resiliency", "Time to restore backups"], ans: [0], exp: "Memorize **RPO (Recovery Point Objective) = Maximum tolerable period of data loss** (how far back in time your last backup can be)." },
+      { id: 131, q: "An information security manager is investigating an internal cybersecurity incident and has been directed to preserve potential evidence. After creating an image copy of the hard drive of suspected systems with a commonly used tool and making copies on which to perform analysis, which of the following should the information security manager do NEXT?", opts: ["Encrypt the primary and backup hard drive images.", "Use an alternative tool to make an image copy of the hard drive.", "Generate hashes for the primary and backup hard drive images.", "Document the process used to make an image copy of the hard drive."], ans: [2], exp: "Immediately after imaging a drive, **generate cryptographic hashes (SHA-256/MD5)** of the images to prove forensic integrity in court." },
+      { id: 132, q: "Prioritization of incident response activities is driven primarily by a:", opts: ["recovery point objective.", "quantitative risk assessment.", "business continuity plan.", "business impact analysis."], ans: [3], exp: "Incident response prioritization is driven by asset criticality established in the **business impact analysis (BIA)**." },
+      { id: 133, q: "Which of the following is MOST closely associated with a business continuity program?", opts: ["Confirming that detailed technical recovery plans exist", "Periodically testing network redundancy", "Updating the hot site equipment configuration every quarter", "Developing recovery time objectives for critical functions"], ans: [3], exp: "A business continuity program focuses on business-level continuity metrics like **developing recovery time objectives (RTOs) for critical functions**." },
+      { id: 134, q: "Which of the following recovery strategies has the GREATEST chance of failure?", opts: ["Hot site", "Redundant site", "Reciprocal arrangement", "Cold site"], ans: [2], exp: "A **reciprocal arrangement** (two companies promising to share each other's data center in an emergency) has the highest failure rate due to lack of spare capacity, incompatible changes, and legal unenforceable friction." },
+      { id: 135, q: "What is the MOST important concern when an enterprise with multiple data centers designates one of its own facilities as the recovery site?", opts: ["Communication line capacity between data centers", "Current processing capacity loads at data centers", "Differences in logical security at each center", "Synchronization of system software release versions"], ans: [1], exp: "If a sister data center is already running near 100% utilization, it cannot absorb a failed site's workload—so **current processing capacity loads** is the top concern." },
+      { id: 136, q: "Which of the following has the highest priority when defining an emergency response plan?", opts: ["Critical data", "Critical infrastructure", "Safety of personnel", "Vital records"], ans: [2], exp: "In every certification exam (CISM and CISSP), **human life and safety of personnel** is always the #1 priority." },
+      { id: 137, q: "Which of the following is MOST important when deciding whether to build an alternate facility or to subscribe to a third-party hot site?", opts: ["Location of a redundant processing facility and cost to build it", "Daily cost of losing critical systems and recovery time objectives", "Infrastructure complexity and system sensitivity", "Criticality results from the business impact analysis"], ans: [0], exp: "Duplicate of Question 118: **Location of a redundant processing facility and cost to build it**." },
+      { id: 138, q: "Which of the following is the MOST important element to ensure the successful recovery of a business during a disaster?", opts: ["Detailed technical recovery plans are maintained offsite.", "Network redundancy is maintained through separate providers.", "Hot site equipment needs are recertified on a regular basis.", "Appropriate declaration criteria have been established."], ans: [0], exp: "If your recovery plans are trapped inside the destroyed primary building, recovery fails—**detailed technical recovery plans must be maintained offsite**." },
+      { id: 139, q: "What is the PRIMARY factor to be taken into account when designing a backup strategy that will be consistent with a disaster recovery strategy?", opts: ["Volume of sensitive data", "Recovery point objective", "Recovery time objective", "Interruption window"], ans: [1], exp: "Backup frequency (daily tape vs. real-time mirroring) is directly dictated by the **Recovery Point Objective (RPO)**." },
+      { id: 140, q: "At the conclusion of a disaster recovery test, which of the following should ALWAYS be performed prior to leaving the vendor’s hot site facility?", opts: ["Erase data and software from devices.", "Conduct a meeting to evaluate the test.", "Complete an assessment of the hot site provider.", "Evaluate the results from all test scripts."], ans: [0], exp: "Before leaving a shared third-party hot site, **always erase all corporate data and software from the vendor's devices** so the next customer cannot access your data." },
+      { id: 141, q: "Which of the following choices is MOST useful to an incident response team determining the severity level of reported security incidents?", opts: ["Reviewing past incidents to determine impact", "Integrating incident management with business continuity", "Maintaining an inventory of assets and resources", "Involving managers from affected operational areas"], ans: [3], exp: "To accurately judge the real-world business severity of an incident, **involve managers from the affected operational areas**." },
+      { id: 142, q: "What is the PRIMARY reason for conducting triage?", opts: ["To prioritize limited resources when handling incidents", "To align with mandatory process steps in the incident handling process", "To mitigate the chance of an incident occurring", "To detect an incident before it can spread further"], ans: [0], exp: "**Triage** sorts incoming incidents by severity **to prioritize limited response resources** on the most critical threats first." },
+      { id: 143, q: "When a large enterprise discovers that it is the subject of a network probe, which of the following actions should be taken?", opts: ["Reboot the router connecting the demilitarized zone (DMZ) to the firewall.", "Power down all servers located on the DMZ segment.", "Monitor the probe and isolate the affected segment.", "Enable server trace logging on the affected segment."], ans: [2], exp: "During a network probe, do not panic and shut down business servers; **monitor the probe to gather intelligence and isolate the affected segment** if needed." },
+      { id: 144, q: "An enterprise has verified that its customer information was recently exposed. Which of the following is the FIRST step a security manager should take in this situation?", opts: ["Inform senior management.", "Determine the extent of the compromise.", "Report the incident to the authorities.", "Communicate with the affected customers."], ans: [1], exp: "Before briefing executives, regulators, or customers, first **determine the extent of the compromise** so you have accurate facts on what was exposed." },
+      { id: 145, q: "Which of the following activities is MOST likely to be performed during the eradication of a confirmed and successful information security incident?", opts: ["Identify and prevent the incident from spreading across the network.", "Remove and clean up all incident components from affected systems.", "Recover and return the impacted systems to normal operations.", "Categorize and assign a priority to the incident."], ans: [1], exp: "In the IR lifecycle, **Eradication = removing malware, backdoors, and all incident components from affected systems**." }
+    ];
+
+    let examMode = "instant"; // "instant" | "end"
+    let currentQ = 0;
+    let selectedIndices = new Set();
+    let userAnswers = Array(questions.length).fill(null);
+    let completedInstant = new Set();
+    let lastWasCorrect = false;
+
+    const mainEl = document.getElementById("exam-main");
+    const modeModal = document.getElementById("mode-modal");
+    const feedbackModal = document.getElementById("feedback-modal");
+    const feedbackBox = document.getElementById("feedback-box");
+    const feedbackStatus = document.getElementById("feedback-status");
+    const feedbackBody = document.getElementById("feedback-body");
+    const feedbackCloseBtn = document.getElementById("feedback-close-btn");
+
+    document.getElementById("choose-instant").addEventListener("click", () => startMode("instant"));
+    document.getElementById("choose-end").addEventListener("click", () => startMode("end"));
+
+    function startMode(mode) {
+      examMode = mode;
+      currentQ = 0;
+      selectedIndices.clear();
+      userAnswers = Array(questions.length).fill(null);
+      completedInstant.clear();
+      modeModal.classList.remove("open");
+      renderQuestion();
+    }
+
+    function formatExp(text) {
+      return text.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>").replace(/`(.*?)`/g, "<code>$1</code>");
+    }
+
+    function isQuestionAnswered(idx) {
+      if (examMode === "instant") {
+        return completedInstant.has(idx);
+      }
+      return Array.isArray(userAnswers[idx]) && userAnswers[idx].length > 0;
+    }
+
+    function saveCurrentSelection() {
+      if (examMode === "end") {
+        userAnswers[currentQ] = selectedIndices.size > 0 ? Array.from(selectedIndices).sort((a, b) => a - b) : null;
+      }
+    }
+
+    function loadSelectionForCurrentQ() {
+      selectedIndices.clear();
+      if (examMode === "end" && Array.isArray(userAnswers[currentQ])) {
+        userAnswers[currentQ].forEach(i => selectedIndices.add(i));
+      }
+    }
+
+    function renderEndResults() {
+      saveCurrentSelection();
+      let wrongItems = [];
+      let rightCount = 0;
+
+      questions.forEach((item, idx) => {
+        const expected = [...item.ans].sort((a, b) => a - b);
+        const actual = Array.isArray(userAnswers[idx]) ? [...userAnswers[idx]].sort((a, b) => a - b) : [];
+        const isCorrect = expected.length === actual.length && expected.every((v, i) => v === actual[i]);
+        if (isCorrect) {
+          rightCount++;
+        } else {
+          wrongItems.push({ item, actual });
+        }
+      });
+
+      const wrongCount = wrongItems.length;
+      const pct = Math.round((rightCount / questions.length) * 100);
+
+      mainEl.innerHTML = `
+        <div>
+          <div class="eyebrow">Exam Results // Answers at the End</div>
+          <h1 class="hero-headline">FINAL <span class="outline">RESULTS</span></h1>
+
+          <div class="score-grid">
+            <div class="score-box">
+              <div class="score-num rose">${wrongCount}</div>
+              <div class="score-label">Got Wrong</div>
+            </div>
+            <div class="score-box">
+              <div class="score-num lime">${rightCount}</div>
+              <div class="score-label">Got Right</div>
+            </div>
+            <div class="score-box">
+              <div class="score-num cyan">${pct}%</div>
+              <div class="score-label">Final Score</div>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:0.85rem;flex-wrap:wrap;margin-bottom:2rem;">
+            <button type="button" class="btn-lime" id="retake-mode-btn">Change Mode / Retake</button>
+            <a href="cism.html" class="btn-ghost">Back to CISM Hub</a>
+          </div>
+
+          ${wrongCount > 0 ? `
+            <div class="eyebrow" style="color:var(--rose);">Missed Questions Review (${wrongCount})</div>
+            <div class="review-list">
+              ${wrongItems.map(({ item, actual }) => `
+                <div class="review-item">
+                  <div class="review-q">Q${item.id}: ${item.q}</div>
+                  <div class="review-meta">
+                    <p><span class="yours">Your Answer:</span> ${actual.length ? actual.map(i => item.opts[i]).join(", ") : "Unanswered"}</p>
+                    <p><strong>Correct Answer:</strong> ${item.ans.map(i => item.opts[i]).join(", ")}</p>
+                    <p style="margin-top:0.45rem;">${formatExp(item.exp)}</p>
+                  </div>
+                </div>
+              `).join("")}
+            </div>
+          ` : `
+            <div class="hud-panel">
+              <p class="prose" style="color:var(--lime);font-weight:600;">Perfect 145/145 score! You answered every question correctly.</p>
+            </div>
+          `}
+        </div>
+      `;
+
+      document.getElementById("retake-mode-btn").addEventListener("click", () => {
+        modeModal.classList.add("open");
+      });
+    }
+
+    function renderQuestion() {
+      if (currentQ >= questions.length) {
+        if (examMode === "end") {
+          renderEndResults();
+          return;
+        }
+        mainEl.innerHTML = `
+          <div style="text-align:center;padding:2.5rem 1rem;">
+            <div class="eyebrow" style="justify-content:center;">Module Complete</div>
+            <h1 class="hero-headline">EXAM <span class="outline">COMPLETE</span></h1>
+            <p class="prose" style="margin:0 auto 2rem;">
+              You have completed all 145 CISM practice questions. Review any weak domains or restart the exam for another pass.
+            </p>
+            <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+              <button class="btn-lime" id="restart-btn">Restart Exam</button>
+              <a href="cism.html" class="btn-ghost">Back to CISM Hub</a>
+            </div>
+          </div>
+        `;
+        document.getElementById("restart-btn").addEventListener("click", () => {
+          modeModal.classList.add("open");
+        });
+        return;
+      }
+
+      loadSelectionForCurrentQ();
+
+      const item = questions[currentQ];
+      const pct = Math.round(((currentQ + 1) / questions.length) * 100);
+
+      let jumpGrid = "";
+      for (let i = 0; i < questions.length; i++) {
+        const isAns = isQuestionAnswered(i);
+        jumpGrid += `<button type="button" class="jump-opt ${isAns ? "answered" : ""} ${i === currentQ ? "current" : ""}" data-q="${i}">Q${i + 1}</button>`;
+      }
+
+      const isLast = currentQ === questions.length - 1;
+      const letters = ["A", "B", "C", "D"];
+
+      mainEl.innerHTML = `
+        <div class="exam-topbar">
+          <a href="cism.html" class="btn-ghost">&larr; CISM Hub</a>
+          <div class="exam-topbar-right">
+            <button type="button" class="btn-ghost" id="switch-mode-btn">Switch Mode</button>
+            <div class="jump-wrapper" id="jump-wrapper">
+              <button type="button" class="jump-trigger" id="jump-trigger" aria-expanded="false">
+                Jump to: Question ${currentQ + 1} &#9662;
+              </button>
+              <div class="jump-menu" id="jump-menu">
+                <div class="jump-legend">
+                  <span class="legend-item"><span class="legend-swatch swatch-current"></span> Current</span>
+                  <span class="legend-item"><span class="legend-swatch swatch-answered"></span> Answered</span>
+                  <span class="legend-item"><span class="legend-swatch swatch-unanswered"></span> Open</span>
+                </div>
+                <div class="jump-grid">${jumpGrid}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="progress-track">
+          <div class="progress-fill" style="width:${pct}%"></div>
+        </div>
+
+        <div class="q-meta">
+          <span>QUESTION ${item.id} OF ${questions.length}</span>
+          <span class="q-type-tag">Single Best Response</span>
+          <span class="q-mode-tag">${examMode === "instant" ? "Answers Instantly" : "Answers at the End"}</span>
+        </div>
+
+        <div class="q-text">${item.q}</div>
+
+        <div class="options-list" id="options-list">
+          ${item.opts.map((opt, idx) => `
+            <button type="button" class="option-card ${selectedIndices.has(idx) ? "selected" : ""}" data-idx="${idx}">
+              <span class="option-indicator"></span>
+              <span><strong>${letters[idx]}.</strong> ${opt}</span>
+            </button>
+          `).join("")}
+        </div>
+
+        <div class="exam-actions">
+          ${examMode === "instant"
+            ? `<button type="button" class="btn-lime" id="submit-ans-btn">Submit Answer</button>`
+            : isLast
+              ? `<button type="button" class="btn-lime" id="finish-exam-btn">Finish &amp; Grade Exam</button>`
+              : `<button type="button" class="btn-lime" id="next-end-btn">Next Question &rarr;</button>`
+          }
+          ${currentQ > 0 ? `<button type="button" class="btn-ghost" id="prev-q-btn">&larr; Previous</button>` : ""}
+          ${examMode === "instant" && !isLast ? `<button type="button" class="btn-ghost" id="skip-q-btn">Skip &rarr;</button>` : ""}
+          ${examMode === "end" && !isLast ? `<button type="button" class="btn-cyan" id="finish-early-btn">Finish Exam Now</button>` : ""}
+        </div>
+      `;
+
+      document.getElementById("switch-mode-btn").addEventListener("click", () => {
+        modeModal.classList.add("open");
+      });
+
+      const jumpTrigger = document.getElementById("jump-trigger");
+      const jumpMenu = document.getElementById("jump-menu");
+      jumpTrigger.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const isOpen = jumpMenu.classList.toggle("open");
+        jumpTrigger.classList.toggle("open", isOpen);
+        jumpTrigger.setAttribute("aria-expanded", String(isOpen));
+      });
+
+      document.querySelectorAll("#jump-menu .jump-opt").forEach(btn => {
+        btn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          saveCurrentSelection();
+          currentQ = parseInt(btn.dataset.q, 10);
+          renderQuestion();
+        });
+      });
+
+      const submitBtn = document.getElementById("submit-ans-btn");
+      if (submitBtn) submitBtn.addEventListener("click", submitAnswer);
+
+      const nextEndBtn = document.getElementById("next-end-btn");
+      if (nextEndBtn) nextEndBtn.addEventListener("click", () => {
+        saveCurrentSelection();
+        currentQ++;
+        renderQuestion();
+      });
+
+      const finishBtn = document.getElementById("finish-exam-btn");
+      if (finishBtn) finishBtn.addEventListener("click", renderEndResults);
+
+      const finishEarlyBtn = document.getElementById("finish-early-btn");
+      if (finishEarlyBtn) finishEarlyBtn.addEventListener("click", renderEndResults);
+
+      const prevBtn = document.getElementById("prev-q-btn");
+      if (prevBtn) prevBtn.addEventListener("click", () => {
+        saveCurrentSelection();
+        currentQ--;
+        renderQuestion();
+      });
+
+      const skipBtn = document.getElementById("skip-q-btn");
+      if (skipBtn) skipBtn.addEventListener("click", () => {
+        currentQ++;
+        selectedIndices.clear();
+        renderQuestion();
+      });
+
+      document.querySelectorAll("#options-list .option-card").forEach(btn => {
+        btn.addEventListener("click", () => toggleOption(parseInt(btn.dataset.idx, 10)));
+      });
+    }
+
+    document.addEventListener("click", () => {
+      const jumpMenu = document.getElementById("jump-menu");
+      const jumpTrigger = document.getElementById("jump-trigger");
+      if (jumpMenu && jumpMenu.classList.contains("open")) {
+        jumpMenu.classList.remove("open");
+        jumpTrigger.classList.remove("open");
+        jumpTrigger.setAttribute("aria-expanded", "false");
+      }
+    });
+
+    function toggleOption(idx) {
+      selectedIndices.clear();
+      selectedIndices.add(idx);
+      saveCurrentSelection();
+      document.querySelectorAll("#options-list .option-card").forEach((card, i) => {
+        card.classList.toggle("selected", selectedIndices.has(i));
+      });
+      const currentGridBtn = document.querySelector(`#jump-menu .jump-opt[data-q="${currentQ}"]`);
+      if (currentGridBtn) {
+        currentGridBtn.classList.toggle("answered", isQuestionAnswered(currentQ));
+      }
+    }
+
+    function submitAnswer() {
+      if (selectedIndices.size === 0) {
+        openFeedback(false, "Please select an answer before submitting.");
+        return;
+      }
+      const item = questions[currentQ];
+      const expected = [...item.ans].sort((a, b) => a - b);
+      const actual = Array.from(selectedIndices).sort((a, b) => a - b);
+      const isCorrect = expected.length === actual.length && expected.every((v, i) => v === actual[i]);
+      if (isCorrect) {
+        completedInstant.add(currentQ);
+        openFeedback(true, "");
+      } else {
+        openFeedback(false, formatExp(item.exp));
+      }
+    }
+
+    function openFeedback(isCorrect, htmlContent) {
+      lastWasCorrect = isCorrect;
+      feedbackBox.className = "modal-box " + (isCorrect ? "correct" : "wrong");
+      feedbackStatus.textContent = isCorrect ? "Correct!" : "Wrong";
+      feedbackBody.innerHTML = htmlContent;
+      feedbackModal.classList.add("open");
+    }
+
+    function closeFeedback() {
+      feedbackModal.classList.remove("open");
+      if (lastWasCorrect) {
+        currentQ++;
+        selectedIndices.clear();
+        renderQuestion();
+      }
+    }
+
+    feedbackCloseBtn.addEventListener("click", closeFeedback);
+    feedbackModal.addEventListener("click", (e) => { if (e.target === feedbackModal) closeFeedback(); });
+
+    const menuBtn = document.getElementById("mobile-menu-btn");
+    const navDrawer = document.getElementById("nav-drawer");
+    menuBtn.addEventListener("click", () => {
+      const isOpen = navDrawer.classList.toggle("open");
+      menuBtn.setAttribute("aria-expanded", String(isOpen));
+      menuBtn.innerHTML = isOpen ? "Close &#10005;" : "Menu &#9776;";
+    });
+
+    const privacyModal = document.getElementById("privacy-modal");
+    document.getElementById("open-privacy-btn").addEventListener("click", () => privacyModal.classList.add("open"));
+    document.getElementById("privacy-close-btn").addEventListener("click", () => privacyModal.classList.remove("open"));
+    privacyModal.addEventListener("click", (e) => { if (e.target === privacyModal) privacyModal.classList.remove("open"); });
+
+    renderQuestion();
+  </script>
+</body>
+</html>
