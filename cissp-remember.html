@@ -37,7 +37,7 @@
       width: 100%;
       max-width: 1060px;
       height: 90vh;
-      max-height: 820px;
+      max-height: 840px;
       display: flex;
       flex-direction: column;
       box-shadow: 0 30px 70px rgba(0, 0, 0, 0.8), 0 0 35px rgba(34, 211, 238, 0.12);
@@ -175,7 +175,7 @@
       line-height: 1.5;
     }
 
-    /* Unique Arcade Game UI Styles */
+    /* Arcade Arena Styles */
     .arcade-arena {
       display: flex;
       flex-direction: column;
@@ -196,27 +196,105 @@
 
     .arcade-display-text {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 1.2rem;
+      font-size: 1.15rem;
       color: #fff;
-      margin: 1rem 0;
+      margin: 0.75rem 0;
       line-height: 1.5;
     }
     .arcade-display-text span { color: var(--cyan); text-shadow: 0 0 12px var(--cyan-dim); }
 
-    /* Game 1: Blaster Cannon Grid */
-    .blaster-grid {
-      display: grid;
-      grid-template-columns: repeat(2, 1fr);
-      gap: 1rem;
-      margin-top: 1rem;
+    /* Game 1: Port Blaster Visual Shooting Arena */
+    .blaster-radar-screen {
+      position: relative;
+      background: #030712;
+      border: 2px solid var(--cyan);
+      border-radius: 12px;
+      height: 260px;
+      overflow: hidden;
+      margin: 1rem 0;
+      box-shadow: inset 0 0 30px rgba(34, 211, 238, 0.1);
+    }
+    .radar-grid-lines {
+      position: absolute;
+      inset: 0;
+      background-image: linear-gradient(rgba(34,211,238,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(34,211,238,0.05) 1px, transparent 1px);
+      background-size: 30px 30px;
+    }
+    .blaster-target-node {
+      position: absolute;
+      background: rgba(13, 18, 28, 0.92);
+      border: 2px solid var(--rose);
+      border-radius: 50px;
+      padding: 0.45rem 1rem;
+      color: #fff;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      box-shadow: 0 0 15px rgba(251, 113, 133, 0.4);
+      transition: transform 0.2s ease, border-color 0.2s ease;
+      animation: floatNode 3s ease-in-out infinite alternate;
+      z-index: 5;
+    }
+    .blaster-target-node:hover {
+      border-color: var(--lime);
+      box-shadow: 0 0 20px rgba(52, 211, 153, 0.6);
+      transform: scale(1.1);
+    }
+    @keyframes floatNode {
+      0% { transform: translateY(0px) translateX(0px); }
+      100% { transform: translateY(-8px) translateX(6px); }
+    }
+    .cannon-turret {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 40px;
+      background: var(--cyan);
+      border-radius: 30px 30px 0 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 0 20px var(--cyan);
+      z-index: 10;
+    }
+    .cannon-barrel {
+      position: absolute;
+      top: -15px;
+      width: 12px;
+      height: 20px;
+      background: #fff;
+      border-radius: 4px;
+    }
+    .laser-beam {
+      position: absolute;
+      background: var(--lime);
+      width: 4px;
+      height: 120px;
+      bottom: 35px;
+      left: 50%;
+      transform: translateX(-50%);
+      box-shadow: 0 0 12px var(--lime);
+      z-index: 8;
+      display: none;
+      animation: shootLaser 0.25s linear forwards;
+    }
+    @keyframes shootLaser {
+      0% { height: 10px; opacity: 1; }
+      100% { height: 200px; opacity: 0; }
     }
 
-    /* Game 2: Cipher Wheel */
+    /* Game 2: Wheel of Fortune Crypto Spinner */
     .wheel-slots {
       display: flex;
       justify-content: center;
       gap: 0.45rem;
-      margin: 1.5rem 0;
+      margin: 1.25rem 0;
       flex-wrap: wrap;
     }
     .wheel-slot {
@@ -253,7 +331,7 @@
     .alpha-key:hover:not(:disabled) { border-color: var(--cyan); background: var(--cyan-dim); }
     .alpha-key:disabled { opacity: 0.3; cursor: not-allowed; }
 
-    /* Game 3: Jeopardy Board (6 Categories x 5 Dollar Rows) */
+    /* Game 3: Jeopardy Board */
     .jeopardy-table-wrap {
       width: 100%;
       overflow-x: auto;
@@ -459,13 +537,13 @@
           <button type="button" class="game-selector-card" onclick="launchGame(1)">
             <div class="game-num">Cabinet 01</div>
             <div class="game-title">Port Blaster 9000</div>
-            <div class="game-desc">A retro action arcade shooter where incoming protocol queries rush down and you must fire your port cannon instantly!</div>
+            <div class="game-desc">A retro action arcade radar shooter where incoming port protocol targets float across the tactical display and you must laser-blast the correct one against the countdown clock!</div>
           </button>
 
           <button type="button" class="game-selector-card" onclick="launchGame(2)">
             <div class="game-num">Cabinet 02</div>
             <div class="game-title">Crypto Wheel Spinner</div>
-            <div class="game-desc">Solve hidden cryptographic ciphers and security protocols letter by letter before your tries expire!</div>
+            <div class="game-desc">Spin the professional Wheel of Fortune crypto ticker to win big cash, avoid Bankrupt, and solve hidden security ciphers letter by letter!</div>
           </button>
 
           <button type="button" class="game-selector-card" onclick="launchGame(3)">
@@ -489,7 +567,7 @@
           <button type="button" class="game-selector-card" onclick="launchGame(6)">
             <div class="game-num">Cabinet 06</div>
             <div class="game-title">Incident Response Time Attack</div>
-            <div class="game-desc">Classify NIST Incident Response lifecycle tasks and Certificate Lifecycle operations into their proper operational stage.</div>
+            <div class="game-desc">Classify NIST Incident Response lifecycle tasks and Certificate Lifecycle operations into their proper operational stage against the countdown clock.</div>
           </button>
         </div>
       </main>
@@ -507,7 +585,7 @@
 
         <div class="arcade-tracker-hud">
           <div class="arcade-stat-badge cash" id="hud-cash-badge" style="display:none;">💵 Cash Earned: $<span id="hud-cash">0</span></div>
-          <div class="arcade-stat-badge timer" id="hud-timer-badge" style="display:none;">⏱️ <span id="hud-timer">20</span>s</div>
+          <div class="arcade-stat-badge timer" id="hud-timer-badge" style="display:none;">⏱️ <span id="hud-timer">25</span>s</div>
           <div class="arcade-stat-badge" id="hud-remaining-badge">🎯 <span id="hud-remaining">0</span> remaining</div>
         </div>
 
@@ -950,14 +1028,14 @@
     // Jeopardy State
     let jeopardyCash = 0;
     let jeopardyBoardCategories = [];
-    let jeopardyBoardGrid = {}; // key: `${catIdx}_${val}` -> question obj
+    let jeopardyBoardGrid = {};
     let jeopardyRemainingCount = 0;
     let activeJeopardyCellKey = null;
 
     // Timer State
     let gameTimerInterval = null;
     let timeLeft = 0;
-    let activeTimerContext = null; // 'jeopardy' | 'scramble'
+    let activeTimerContext = null; // 'blaster' | 'jeopardy' | 'scramble' | 'incident'
     let pendingTimeoutAdvance = false;
 
     const arcadeModal = document.getElementById("arcade-modal");
@@ -1017,7 +1095,16 @@
     function handleTimerExpired() {
       pendingTimeoutAdvance = true;
 
-      if (activeTimerContext === "jeopardy" && activeJeopardyCellKey) {
+      if (activeTimerContext === "blaster" && currentItem) {
+        sessionLog.push({
+          item: currentItem.use,
+          userChoice: "⏱️ Ran out of time",
+          correctAnswer: `Port ${currentItem.num}`,
+          isCorrect: false,
+          explanation: currentItem.explanation
+        });
+        openFeedback(false, `<strong>Uh-oh you ran out of time!</strong><br><br>Target service <strong>${currentItem.use}</strong> runs on <strong>Port ${currentItem.num}</strong>.`);
+      } else if (activeTimerContext === "jeopardy" && activeJeopardyCellKey) {
         const cellObj = jeopardyBoardGrid[activeJeopardyCellKey];
         if (cellObj && !cellObj.answered) {
           cellObj.answered = true;
@@ -1042,6 +1129,15 @@
           explanation: currentItem.explanation
         });
         openFeedback(false, `<strong>Uh-oh you ran out of time!</strong><br><br>The correct security term was <strong>${scrambleCurrentWord}</strong>.`);
+      } else if (activeTimerContext === "incident" && currentItem) {
+        sessionLog.push({
+          item: currentItem.task,
+          userChoice: "⏱️ Ran out of time",
+          correctAnswer: currentItem.phase.toUpperCase(),
+          isCorrect: false,
+          explanation: currentItem.explanation
+        });
+        openFeedback(false, `<strong>Uh-oh you ran out of time!</strong><br><br>The correct NIST phase was <strong>${currentItem.phase.toUpperCase()}</strong>.`);
       }
     }
 
@@ -1052,19 +1148,18 @@
       sessionLog = [];
       arcadeModal.classList.add("open");
 
-      // Reset HUD visibility
       hudCashBadge.style.display = "none";
       hudTimerBadge.style.display = "none";
       hudRemainingBadge.style.display = "flex";
 
       if (gameId === 1) {
-        arcadeSubtitle.textContent = "CABINET 01 // ACTION SHOOTER";
+        arcadeSubtitle.textContent = "CABINET 01 // ACTION RADAR SHOOTER";
         arcadeTitle.textContent = "Port Blaster 9000";
         activeQueue = shuffleArray(ports);
         totalItemsCount = activeQueue.length;
         nextPortBlasterRound();
       } else if (gameId === 2) {
-        arcadeSubtitle.textContent = "CABINET 02 // WORD PUZZLE";
+        arcadeSubtitle.textContent = "CABINET 02 // WHEEL OF FORTUNE";
         arcadeTitle.textContent = "Crypto Wheel Spinner";
         activeQueue = shuffleArray(ciphers);
         totalItemsCount = activeQueue.length;
@@ -1115,7 +1210,6 @@
 
     function quitGameAction() {
       stopGameTimer();
-      // If already on the debrief report screen, close the modal completely to return to the homepage
       if (arcadeSubtitle.textContent === "MISSION DEBRIEF & REPORT") {
         arcadeModal.classList.remove("open");
         return;
@@ -1140,12 +1234,12 @@
 
       let correctCount = sessionLog.filter(s => s.isCorrect).length;
       let wrongCount = sessionLog.filter(s => !s.isCorrect).length;
-      let cashSummaryHtml = activeGameId === 3 ? ` | CASH EARNED: <span style="color:var(--lime);">$${jeopardyCash.toLocaleString()}</span>` : "";
+      let cashSummaryHtml = activeGameId === 2 ? ` | CASH WON: <span style="color:var(--lime);">$${wheelTotalCash.toLocaleString()}</span>` : (activeGameId === 3 ? ` | CASH EARNED: <span style="color:var(--lime);">$${jeopardyCash.toLocaleString()}</span>` : "");
 
       let debriefHtml = `
         <div style="margin-bottom:0.75rem;">
           <h3 style="color:#fff; font-family:'Archivo Black',sans-serif; margin-bottom:0.2rem;">SCORE: ${correctCount} Correct / ${wrongCount} Errors${cashSummaryHtml}</h3>
-          <p class="prose">Here is your verified tactical debrief with complete explanations (click <strong>Quit Game</strong> again to return to the Tactical Arcade menu):</p>
+          <p class="prose">Here is your verified tactical debrief with complete explanations (click <strong>Exit to Arcade Menu</strong> to return to the Tactical Arcade):</p>
         </div>
         <div class="debrief-container">
       `;
@@ -1183,9 +1277,10 @@
     }
 
     /* =========================================================================
-       GAME 1: PORT BLASTER (Action Shooter / Fast Target Selection)
+       GAME 1: PORT BLASTER 9000 (Visual Radar Shooter with Timer)
        ========================================================================= */
     function nextPortBlasterRound() {
+      stopGameTimer();
       if (activeQueue.length === 0) {
         showDebriefSummary();
         return;
@@ -1200,21 +1295,47 @@
       }
       choices = shuffleArray(choices);
 
+      // Random floating positions within radar box
+      const positions = [
+        { top: "18%", left: "15%" },
+        { top: "22%", left: "70%" },
+        { top: "58%", left: "20%" },
+        { top: "54%", left: "68%" }
+      ];
+      const randomizedPositions = shuffleArray(positions);
+
       arcadeBody.innerHTML = `
         <div class="arcade-arena">
-          <div class="arcade-screen-box">
-            <div style="font-size:0.75rem; font-family:'JetBrains Mono',monospace; color:var(--cyan);">INCOMING PROTOCOL PACKET</div>
-            <div class="arcade-display-text">Target Service: <span>"${currentItem.use}"</span></div>
-            <p class="prose" style="font-size:0.85rem;">Blast the correct port binding!</p>
-            <div class="blaster-grid">
-              ${choices.map(c => `<button class="arcade-btn-action" style="padding:1.1rem; font-size:1.1rem;" onclick="checkPortBlaster(${c}, ${currentItem.num}, '${currentItem.use.replace(/'/g, "\\'")}', '${currentItem.explanation.replace(/'/g, "\\'")}')">PORT ${c}</button>`).join("")}
+          <div class="arcade-screen-box" style="padding:1.2rem;">
+            <div style="font-size:0.75rem; font-family:'JetBrains Mono',monospace; color:var(--cyan);">TACTICAL RADAR TARGET INTERCEPT</div>
+            <div class="arcade-display-text" style="font-size:1.05rem;">Target Service: <span>"${currentItem.use}"</span></div>
+            
+            <div class="blaster-radar-screen">
+              <div class="radar-grid-lines"></div>
+              ${choices.map((c, idx) => `
+                <button class="blaster-target-node" style="top: ${randomizedPositions[idx].top}; left: ${randomizedPositions[idx].left};" onclick="shootPortTarget(${c}, ${currentItem.num}, '${currentItem.use.replace(/'/g, "\\'")}', '${currentItem.explanation.replace(/'/g, "\\'")}')">
+                  <span>🎯</span> PORT ${c}
+                </button>
+              `).join("")}
+              <div class="laser-beam" id="laser-effect"></div>
+              <div class="cannon-turret">
+                <div class="cannon-barrel"></div>
+              </div>
             </div>
+            <div style="font-size:0.78rem; color:var(--text-secondary);">Click the correct drifting port drone to fire your laser cannon!</div>
           </div>
         </div>
       `;
+
+      // Start 20-second countdown for Port Blaster
+      startGameTimer(20, "blaster");
     }
 
-    function checkPortBlaster(selected, correctNum, useName, explanation) {
+    function shootPortTarget(selected, correctNum, useName, explanation) {
+      stopGameTimer();
+      const laser = document.getElementById("laser-effect");
+      if (laser) laser.style.display = "block";
+
       const isCorrect = (selected === correctNum);
       sessionLog.push({
         item: useName,
@@ -1223,18 +1344,42 @@
         isCorrect: isCorrect,
         explanation: explanation
       });
-      openFeedback(isCorrect, isCorrect ? "Direct Hit! Port successfully defended." : `Missed! <strong>${useName}</strong> runs on <strong>Port ${correctNum}</strong>.`);
-      nextPortBlasterRound();
+
+      setTimeout(() => {
+        openFeedback(isCorrect, isCorrect ? "Direct Laser Hit! Port successfully defended." : `Missed target! <strong>${useName}</strong> runs on <strong>Port ${correctNum}</strong>.`);
+        nextPortBlasterRound();
+      }, 250);
     }
 
     /* =========================================================================
-       GAME 2: CRYPTO WHEEL SPINNER (Letter Guessing / Hangman Style)
+       GAME 2: WHEEL OF FORTUNE CRYPTO SPINNER
        ========================================================================= */
     let wheelSecret = "";
     let wheelGuessed = new Set();
-    let wheelErrors = 0;
+    let wheelRoundCash = 0;
+    let wheelTotalCash = 0;
+    let currentWheelSlice = null;
+    let wheelIsSpinning = false;
+    let wheelCurrentAngle = 0;
+
+    const wheelSlices = [
+      { text: "$200", val: 200, type: "cash" },
+      { text: "$500", val: 500, type: "cash" },
+      { text: "BANKRUPT", val: 0, type: "bankrupt" },
+      { text: "$300", val: 300, type: "cash" },
+      { text: "$700", val: 700, type: "cash" },
+      { text: "LOSE TURN", val: 0, type: "lose" },
+      { text: "$400", val: 400, type: "cash" },
+      { text: "$1000", val: 1000, type: "cash" },
+      { text: "$250", val: 250, type: "cash" },
+      { text: "BANKRUPT", val: 0, type: "bankrupt" },
+      { text: "$600", val: 600, type: "cash" },
+      { text: "$800", val: 800, type: "cash" }
+    ];
 
     function nextWheelRound() {
+      stopGameTimer();
+      hudTimerBadge.style.display = "none";
       if (activeQueue.length === 0) {
         showDebriefSummary();
         return;
@@ -1243,7 +1388,8 @@
       currentItem = activeQueue.pop();
       wheelSecret = currentItem.name.toUpperCase();
       wheelGuessed = new Set();
-      wheelErrors = 0;
+      wheelRoundCash = 0;
+      currentWheelSlice = null;
       renderWheelScreen();
     }
 
@@ -1252,7 +1398,7 @@
       let solved = true;
       for (let char of wheelSecret) {
         if (char === " " || char === "-") {
-          displayString += `<div class="wheel-slot" style="background:transparent; border:none; width:20px;">${char}</div>`;
+          displayString += `<div class="wheel-slot" style="background:transparent; border:none; width:22px;">${char}</div>`;
         } else if (wheelGuessed.has(char)) {
           displayString += `<div class="wheel-slot">${char}</div>`;
         } else {
@@ -1262,42 +1408,132 @@
       }
 
       if (solved) {
-        sessionLog.push({ item: currentItem.hint, userChoice: wheelSecret, correctAnswer: wheelSecret, isCorrect: true, explanation: currentItem.explanation });
-        openFeedback(true, `Crypto Puzzle Solved! <strong>${wheelSecret}</strong> decrypted.`);
+        wheelTotalCash += wheelRoundCash;
+        sessionLog.push({ item: currentItem.hint, userChoice: `${wheelSecret} ($${wheelRoundCash})`, correctAnswer: wheelSecret, isCorrect: true, explanation: currentItem.explanation });
+        openFeedback(true, `Crypto Puzzle Solved! <strong>${wheelSecret}</strong> decrypted. Earned +$${wheelRoundCash}!`);
         nextWheelRound();
         return;
       }
-
-      if (wheelErrors >= 4) {
-        sessionLog.push({ item: currentItem.hint, userChoice: "Failed attempts", correctAnswer: wheelSecret, isCorrect: false, explanation: currentItem.explanation });
-        openFeedback(false, `Cipher Locked! The correct answer was <strong>${wheelSecret}</strong>.`);
-        nextWheelRound();
-        return;
-      }
-
-      const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
       arcadeBody.innerHTML = `
         <div class="arcade-arena">
-          <div class="arcade-screen-box">
-            <div style="font-size:0.75rem; font-family:'JetBrains Mono',monospace; color:var(--cyan);">CRYPTOGRAPHIC DECRYPTION CLUE</div>
-            <div class="arcade-display-text" style="font-size:1.05rem;">"${currentItem.hint}"</div>
-            <div style="font-size:0.8rem; font-family:'JetBrains Mono',monospace; color:var(--rose);">Errors: ${wheelErrors} / 4 allowed</div>
+          <div class="arcade-screen-box" style="padding:1.2rem;">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
+              <div style="font-size:0.75rem; font-family:'JetBrains Mono',monospace; color:var(--cyan);">WHEEL OF FORTUNE // CRYPTO SPINNER</div>
+              <div style="font-family:'JetBrains Mono',monospace; font-size:0.85rem; color:var(--lime);">Round Cash: $<span id="round-cash-val">${wheelRoundCash}</span></div>
+            </div>
+
+            <!-- Professional Wheel Widget -->
+            <div style="display:flex; flex-direction:column; align-items:center; margin:0.5rem 0 1rem 0; position:relative;">
+              <div style="width:0; height:0; border-left:10px solid transparent; border-right:10px solid transparent; border-bottom:18px solid var(--rose); margin-bottom:-4px; z-index:10; filter:drop-shadow(0 0 6px var(--rose));"></div>
+              <div style="position:relative; width:200px; height:200px; border-radius:50%; border:3px solid var(--cyan); box-shadow:0 0 20px rgba(34,211,238,0.25); overflow:hidden; background:#070b12;">
+                <canvas id="fortune-wheel-canvas" width="200" height="200" style="width:100%; height:100%; transition: transform 3s cubic-bezier(0.15, 0.85, 0.15, 1); transform: rotate(${wheelCurrentAngle}deg);"></canvas>
+                <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; pointer-events:none;">
+                  <button id="spin-wheel-btn" onclick="spinFortuneWheel()" style="pointer-events:auto; background:var(--bg-card); border:2px solid var(--cyan); border-radius:50%; width:54px; height:54px; font-family:'JetBrains Mono',monospace; font-size:0.65rem; font-weight:700; color:#fff; cursor:pointer; box-shadow:0 0 12px rgba(34,211,238,0.4);">SPIN</button>
+                </div>
+              </div>
+              <div id="wheel-status-banner" style="font-family:'JetBrains Mono',monospace; font-size:0.82rem; color:var(--cyan); margin-top:0.6rem; min-height:22px;">${currentWheelSlice ? `Landed on: <strong>${currentWheelSlice.text}</strong>` : "Click SPIN to test your luck!"}</div>
+            </div>
+
+            <div class="arcade-display-text" style="font-size:0.95rem; margin:0.5rem 0;">"${currentItem.hint}"</div>
             <div class="wheel-slots">${displayString}</div>
-            <div class="alphabet-grid">
-              ${alphabet.map(letter => `<button class="alpha-key" ${wheelGuessed.has(letter) ? 'disabled' : ''} onclick="guessWheelLetter('${letter}')">${letter}</button>`).join("")}
+            
+            <div class="alphabet-grid" style="margin-top:0.75rem;">
+              ${"ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").map(letter => `<button class="alpha-key" ${wheelGuessed.has(letter) || !currentWheelSlice || currentWheelSlice.type !== 'cash' ? 'disabled' : ''} onclick="guessWheelLetter('${letter}')">${letter}</button>`).join("")}
             </div>
           </div>
         </div>
       `;
+
+      drawFortuneWheelCanvas();
+    }
+
+    function drawFortuneWheelCanvas() {
+      const canvas = document.getElementById("fortune-wheel-canvas");
+      if (!canvas) return;
+      const ctx = canvas.getContext("2d");
+      const numSlices = wheelSlices.length;
+      const arc = (2 * Math.PI) / numSlices;
+      const colors = ["#0e7490", "#1e3a8a", "#047857", "#b91c1c", "#b45309", "#4338ca", "#0f766e", "#6d28d9"];
+
+      ctx.clearRect(0, 0, 200, 200);
+      ctx.save();
+      ctx.translate(100, 100);
+
+      wheelSlices.forEach((slice, i) => {
+        const angle = i * arc;
+        ctx.beginPath();
+        ctx.fillStyle = colors[i % colors.length];
+        if (slice.type === 'bankrupt') ctx.fillStyle = "#7f1d1d";
+        if (slice.type === 'lose') ctx.fillStyle = "#374151";
+        ctx.moveTo(0, 0);
+        ctx.arc(0, 0, 100, angle, angle + arc);
+        ctx.lineTo(0, 0);
+        ctx.fill();
+        ctx.stroke();
+
+        ctx.save();
+        ctx.rotate(angle + arc / 2);
+        ctx.textAlign = "right";
+        ctx.fillStyle = "#fff";
+        ctx.font = "bold 10px 'JetBrains Mono', monospace";
+        ctx.fillText(slice.text, 88, 4);
+        ctx.restore();
+      });
+      ctx.restore();
+    }
+
+    function spinFortuneWheel() {
+      if (wheelIsSpinning) return;
+      wheelIsSpinning = true;
+      const spinBtn = document.getElementById("spin-wheel-btn");
+      if (spinBtn) spinBtn.disabled = true;
+
+      const randomSliceIdx = Math.floor(Math.random() * wheelSlices.length);
+      const sliceAngle = 360 / wheelSlices.length;
+      const extraSpins = 5 * 360;
+      const targetAngle = wheelCurrentAngle + extraSpins + (360 - (randomSliceIdx * sliceAngle + sliceAngle / 2));
+      
+      wheelCurrentAngle = targetAngle;
+      const canvas = document.getElementById("fortune-wheel-canvas");
+      if (canvas) {
+        canvas.style.transform = `rotate(${wheelCurrentAngle}deg)`;
+      }
+
+      setTimeout(() => {
+        wheelIsSpinning = false;
+        currentWheelSlice = wheelSlices[randomSliceIdx];
+        
+        if (currentWheelSlice.type === 'bankrupt') {
+          wheelRoundCash = 0;
+          openFeedback(false, "<strong>BANKRUPT!</strong> All accumulated round cash wiped out.");
+        } else if (currentWheelSlice.type === 'lose') {
+          openFeedback(false, "<strong>LOSE A TURN!</strong> Spin again.");
+          currentWheelSlice = null;
+        }
+
+        renderWheelScreen();
+      }, 3100);
     }
 
     function guessWheelLetter(letter) {
+      if (!currentWheelSlice || currentWheelSlice.type !== 'cash') return;
       wheelGuessed.add(letter);
-      if (!wheelSecret.includes(letter)) {
-        wheelErrors++;
+
+      if (wheelSecret.includes(letter)) {
+        let count = 0;
+        for (let char of wheelSecret) {
+          if (char === letter) count++;
+        }
+        const earned = currentWheelSlice.val * count;
+        wheelRoundCash += earned;
+        currentWheelSlice = null; // Require spin for next guess
+        renderWheelScreen();
+      } else {
+        currentWheelSlice = null;
+        openFeedback(false, `Letter <strong>${letter}</strong> is not in the cipher.`);
+        renderWheelScreen();
       }
-      renderWheelScreen();
     }
 
     /* =========================================================================
@@ -1309,7 +1545,6 @@
       hudCashBadge.style.display = "flex";
       hudTimerBadge.style.display = "none";
 
-      // Extract unique categories and randomize their column order
       const uniqueCats = [...new Set(jeopardyBank.map(item => item.cat))];
       jeopardyBoardCategories = shuffleArray(uniqueCats).slice(0, 6);
 
@@ -1347,12 +1582,10 @@
       const dollarRows = [200, 400, 600, 800, 1000];
       let gridCellsHtml = "";
 
-      // Top Row: 6 Randomized Categories
       jeopardyBoardCategories.forEach(cat => {
         gridCellsHtml += `<div class="jeopardy-cat-header">${cat}</div>`;
       });
 
-      // 5 Dollar Rows ($200 down to $1000)
       dollarRows.forEach(val => {
         jeopardyBoardCategories.forEach((cat, colIdx) => {
           const key = `${colIdx}_${val}`;
@@ -1405,7 +1638,6 @@
         </div>
       `;
 
-      // Start 25-second countdown timer for Jeopardy clue
       startGameTimer(25, "jeopardy");
     }
 
@@ -1465,7 +1697,6 @@
       userScrambleChoice = [];
       renderScrambleBuilder();
 
-      // Start 30-second timer per word
       startGameTimer(30, "scramble");
     }
 
@@ -1532,6 +1763,8 @@
        GAME 5: CLOUD ARCHITECTURE TOWER DEFENSE
        ========================================================================= */
     function nextCloudRound() {
+      stopGameTimer();
+      hudTimerBadge.style.display = "none";
       if (activeQueue.length === 0) {
         showDebriefSummary();
         return;
@@ -1569,9 +1802,10 @@
     }
 
     /* =========================================================================
-       GAME 6: INCIDENT RESPONSE TIME ATTACK
+       GAME 6: INCIDENT RESPONSE TIME ATTACK (With Countdown Timer)
        ========================================================================= */
     function nextIncidentRound() {
+      stopGameTimer();
       if (activeQueue.length === 0) {
         showDebriefSummary();
         return;
@@ -1591,7 +1825,7 @@
       arcadeBody.innerHTML = `
         <div class="arcade-arena">
           <div class="arcade-screen-box">
-            <div style="font-size:0.75rem; font-family:'JetBrains Mono',monospace; color:var(--cyan);">NIST SP 800-61 IR LIFECYCLE SEQUENCER</div>
+            <div style="font-size:0.75rem; font-family:'JetBrains Mono',monospace; color:var(--cyan);">NIST SP 800-61 IR LIFECYCLE TIME ATTACK</div>
             <div class="arcade-display-text" style="font-size:1.05rem;">Task: <span>"${currentItem.task}"</span></div>
             <div style="display:grid; grid-template-columns: repeat(2, 1fr); gap:0.75rem; margin-top:1.25rem;">
               ${phases.map(p => `<button class="arcade-btn-action" style="padding:0.9rem; text-align:left;" onclick="processIncidentChoice('${p.key}', '${currentItem.phase}', '${currentItem.task.replace(/'/g, "\\'")}', '${currentItem.explanation.replace(/'/g, "\\'")}')">${p.label}</button>`).join("")}
@@ -1599,9 +1833,12 @@
           </div>
         </div>
       `;
+
+      startGameTimer(25, "incident");
     }
 
     function processIncidentChoice(chosen, correct, taskName, explanation) {
+      stopGameTimer();
       const isCorrect = (chosen === correct);
       sessionLog.push({
         item: taskName,
@@ -1628,10 +1865,14 @@
       feedbackModal.classList.remove("open");
       if (pendingTimeoutAdvance) {
         pendingTimeoutAdvance = false;
-        if (activeGameId === 3) {
+        if (activeGameId === 1) {
+          nextPortBlasterRound();
+        } else if (activeGameId === 3) {
           renderJeopardyBoard();
         } else if (activeGameId === 4) {
           nextScrambleRound();
+        } else if (activeGameId === 6) {
+          nextIncidentRound();
         }
       }
     }
