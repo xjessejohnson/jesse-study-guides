@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NCE Flash Cards | Jesse's Study Guides</title>
+  <meta name="description" content="100 essential National Counselor Examination (NCE) keywords, theorists, and definitions in an interactive flashcard deck." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .fc-topbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.85rem;
+      margin-bottom: 1.25rem;
+      position: relative;
+      z-index: 20;
+    }
+    .fc-controls-right {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      flex-wrap: wrap;
+    }
+    .btn-ghost {
+      padding: 0.55rem 1rem;
+      border-radius: 8px;
+      border: 1px solid var(--border-slate);
+      background: transparent;
+      color: var(--text-secondary);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.76rem;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .btn-ghost:hover:not(:disabled) { border-color: var(--cyan); color: #fff; }
+    .btn-ghost:disabled { opacity: 0.4; cursor: not-allowed; }
+    .btn-lime {
+      padding: 0.78rem 1.45rem;
+      border-radius: 9px;
+      border: none;
+      background: var(--lime);
+      color: #05070c;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+    .btn-lime:hover {
+      filter: brightness(1.08);
+      box-shadow: 0 0 22px rgba(158, 255, 51, 0.35);
+      transform: translateY(-1px);
+    }
+
+    /* Custom Scrollable Jump Dropdown */
+    .jump-wrapper { position: relative; display: inline-block; }
+    .jump-trigger {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.5rem 0.9rem;
+      border-radius: 8px;
+      border: 1px solid var(--border-slate);
+      background: var(--bg-card);
+      color: #f8fafc;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: border-color 0.15s ease;
+    }
+    .jump-trigger:hover, .jump-trigger.open { border-color: var(--cyan); color: var(--cyan); }
+    .jump-menu {
+      position: absolute;
+      right: 0;
+      top: calc(100% + 6px);
+      width: 260px;
+      max-height: 290px;
+      overflow-y: auto;
+      background: #0d121c;
+      border: 1px solid var(--cyan);
+      border-radius: 10px;
+      padding: 0.5rem;
+      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.85);
+      display: none;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.35rem;
+      z-index: 60;
+    }
+    .jump-menu.open { display: grid; }
+    .jump-opt {
+      padding: 0.45rem 0.25rem;
+      border-radius: 6px;
+      border: 1px solid transparent;
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--text-secondary);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      text-align: center;
+      cursor: pointer;
+    }
+    .jump-opt:hover { background: var(--cyan-dim); color: #fff; border-color: rgba(34, 211, 238, 0.4); }
+    .jump-opt.current { background: var(--lime); color: #05070c; font-weight: 700; }
+
+    .progress-track {
+      width: 100%;
+      height: 5px;
+      background: rgba(148, 163, 184, 0.14);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--cyan), var(--lime));
+      transition: width 0.25s ease;
+    }
+
+    /* Flash Card */
+    .flashcard {
+      position: relative;
+      background: var(--bg-card);
+      border: 1px solid var(--border-slate);
+      border-radius: 14px;
+      padding: 2.1rem 1.9rem;
+      min-height: 290px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      cursor: pointer;
+      transition: border-color 0.2s ease, box-shadow 0.2s ease;
+      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.45);
+      margin-bottom: 1.5rem;
+    }
+    .flashcard:hover { border-color: rgba(34, 211, 238, 0.5); }
+    .flashcard.flipped {
+      border-color: var(--lime);
+      background: #0e1624;
+      box-shadow: 0 0 30px rgba(158, 255, 51, 0.1);
+    }
+
+    .fc-meta {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      margin-bottom: 1.5rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.74rem;
+    }
+    .fc-side-tag {
+      padding: 0.2rem 0.6rem;
+      border-radius: 6px;
+      font-weight: 700;
+      text-transform: uppercase;
+    }
+    .fc-side-tag.front {
+      background: var(--cyan-dim);
+      color: var(--cyan);
+      border: 1px solid rgba(34, 211, 238, 0.3);
+    }
+    .fc-side-tag.back {
+      background: var(--lime-dim);
+      color: var(--lime);
+      border: 1px solid var(--border-bright);
+    }
+    .fc-domain { color: var(--text-secondary); }
+
+    .fc-term {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: clamp(1.4rem, 2.8vw, 2rem);
+      color: #fff;
+      letter-spacing: -0.02em;
+      line-height: 1.2;
+      margin: 1rem 0;
+    }
+
+    .fc-def-box {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+    .fc-def {
+      color: #fff;
+      font-size: 1.05rem;
+      line-height: 1.6;
+      font-weight: 500;
+    }
+    .fc-purpose {
+      padding: 0.9rem 1.1rem;
+      border-radius: 10px;
+      background: rgba(158, 255, 51, 0.08);
+      border-left: 3px solid var(--lime);
+      color: var(--text-secondary);
+      font-size: 0.94rem;
+      line-height: 1.55;
+    }
+    .fc-purpose strong { color: var(--lime); }
+
+    .fc-hint {
+      margin-top: 1.5rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+    }
+    .fc-actions {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.85rem;
+    }
+    .fc-nav-group { display: flex; gap: 0.65rem; flex-wrap: wrap; }
+  </style>
+</head>
+<body>
+
+  <div class="frame-wrapper">
+    <aside>
+      <div class="brand-block">
+        <div class="brand-row">
+          <div>
+            <a href="index.html" class="brand-title">Jesse's Study Guides</a>
+            <div class="brand-tagline">Unofficial compiled training database v1.0</div>
+          </div>
+          <button class="mobile-menu-btn" id="mobile-menu-btn" aria-expanded="false" aria-controls="nav-drawer">
+            Menu &#9776;
+          </button>
+        </div>
+        <a class="coffee-btn" href="https://www.buymeacoffee.com/xjessejohnson" target="_blank" rel="noopener noreferrer">
+          &#9749; Buy Me a Coffee
+        </a>
+      </div>
+
+      <nav class="nav-drawer" id="nav-drawer" aria-label="Study Categories">
+        <div class="nav-section">
+          <div class="nav-label">Cybersecurity</div>
+          <a href="cissp.html" class="nav-item">
+            <span>CISSP</span>
+            <span class="badge live">Active</span>
+          </a>
+          <a href="cism.html" class="nav-item">
+            <span>CISM</span>
+            <span class="badge live">Active</span>
+          </a>
+          <span class="nav-item disabled" aria-disabled="true">
+            <span>Security+</span>
+            <span class="badge">Coming Soon</span>
+          </span>
+        </div>
+
+        <div class="nav-section">
+          <div class="nav-label">Psychology</div>
+          <a href="nce.html" class="nav-item active">
+            <span>NCE</span>
+            <span class="badge live">Active</span>
+          </a>
+        </div>
+
+        <div class="nav-section">
+          <div class="nav-label">Other</div>
+          <span class="nav-item disabled" aria-disabled="true">
+            <span>Coming Soon</span>
+            <span class="badge">Coming Soon</span>
+          </span>
+        </div>
+      </nav>
+    </aside>
+
+    <div class="main-area">
+      <div class="topbar">
+        <div class="breadcrumb">JESSE'S STUDY GUIDES / NCE / <span>FLASH CARDS</span></div>
+        <div class="status-pill"><span class="status-dot"></span> SYSTEM ONLINE</div>
+      </div>
+
+      <main class="content-body" id="fc-main"></main>
+    </div>
+  </div>
+
+  <!-- Privacy Policy Modal -->
+  <div class="modal-backdrop" id="privacy-modal" role="dialog" aria-modal="true" aria-labelledby="privacy-title">
+    <div class="modal-box">
+      <div class="modal-top">
+        <div class="modal-title" id="privacy-title">Privacy Policy</div>
+        <button class="modal-close" id="privacy-close-btn" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body">
+        <p><strong>Effective Date:</strong> November 17, 2026</p>
+        <h4>1. Information We Collect</h4>
+        <p>Jesse's Study Guides is a static, informational study website. We do not require user registration, accounts, or logins, and we do not directly collect names, email addresses, or payment details on this site.</p>
+        <h4>2. Hosting and Server Logs</h4>
+        <p>This website is hosted via Vercel. As part of standard web delivery and security operations, our hosting provider may automatically process basic technical request data such as your IP address, browser type, operating system, and timestamps in temporary server logs.</p>
+        <h4>3. Cookies and Tracking</h4>
+        <p>This website does not use advertising trackers or third-party marketing cookies.</p>
+        <h4>4. Third-Party Links</h4>
+        <p>This site includes an external link to Buy Me a Coffee for voluntary donations. If you choose to visit or donate through that platform, any information you provide is governed directly by Buy Me a Coffee's own privacy policy and terms of service.</p>
+        <h4>5. Changes to This Policy</h4>
+        <p>This policy may be updated as new features or study modules are added to the site. Questions regarding this notice can be directed to the site owner, Jesse Johnson.</p>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2026 Jesse Johnson. All rights reserved.</p>
+    <p>
+      This portal is an independent, unofficial personal study resource and is not affiliated with, endorsed by, or sponsored by ISC2, ISACA, CompTIA, NBCC, or any other certification body.
+      CISSP&reg; is a registered trademark of ISC2. CISM&reg; is a registered trademark of ISACA. CompTIA Security+&reg; is a registered trademark of CompTIA. NCE&reg; is a registered trademark of NBCC. All vendor materials, trademarks, and copyrights remain the property of their respective owners.
+    </p>
+    <div class="footer-links">
+      <button type="button" class="privacy-link" id="open-privacy-btn">Privacy Policy</button>
+    </div>
+  </footer>
+
+  <script>
+    const terms = [
+      { term: "Tarasoff v. Regents (1976)", domain: "Ethics & Law", def: "Landmark California Supreme Court ruling establishing that counselors have a legal duty to warn and protect an identifiable third party from a serious, foreseeable threat of physical violence.", use: "Overrides client confidentiality when three criteria exist: serious threat of violence, identifiable victim, and imminent/foreseeable harm." },
+      { term: "Kitchener's 5 Ethical Principles", domain: "Ethics & Law", def: "Autonomy (self-determination), Nonmaleficence (do no harm), Beneficence (do good), Justice (fairness/equity), and Fidelity (keeping promises/loyalty).", use: "Nonmaleficence ('do no harm') is the foundational priority when ethical principles conflict on the NCE." },
+      { term: "Subpoena Duces Tecum", domain: "Ethics & Law", def: "A legal writ commanding a counselor to produce tangible clinical documents or records at a legal proceeding.", use: "An attorney-issued subpoena is not a court order; assert privilege first and wait for client consent or a judge's signed order." },
+      { term: "FERPA (Buckley Amendment)", domain: "Ethics & Law", def: "Federal law granting parents the right to inspect and control educational records of minor children in schools receiving federal funds.", use: "Rights transfer from the parents to the 'eligible student' at age 18 or upon enrolling in a postsecondary institution." },
+      { term: "HIPAA Psychotherapy Notes", domain: "Ethics & Law", def: "A counselor's private process notes kept separate from the official medical/clinical chart.", use: "Receive heightened federal protection and require a separate, specific written authorization from the client before release." },
+      { term: "IDEA (FAPE & LRE)", domain: "Ethics & Law", def: "Individuals with Disabilities Education Act mandates Free Appropriate Public Education (FAPE) via an IEP in the Least Restrictive Environment (LRE).", use: "Covers eligible students with disabilities from birth through age 21 in public schools." },
+      { term: "42 CFR Part 2", domain: "Ethics & Law", def: "Strict federal confidentiality regulations protecting the identity and records of individuals receiving substance use disorder treatment.", use: "Prohibits re-disclosure of substance abuse records even to probation officers or courts without specific compliant consent or a special court order." },
+      { term: "Professional Will", domain: "Ethics & Law", def: "A formal written plan designating a qualified records custodian to manage client files and notifications if a clinician dies or becomes incapacitated.", use: "Required by the ACA Code of Ethics for private practitioners to prevent client abandonment and protect confidentiality." },
+      { term: "Cultural Encapsulation", domain: "Multicultural", def: "Coined by Gilbert Wrenn to describe a counselor who imposes their own culturally bound worldview onto clients while ignoring cultural differences.", use: "Classic exam error when a counselor pushes Western individualism onto a client from a collectivist culture." },
+      { term: "Sue & Sue R/CID Model", domain: "Multicultural", def: "Racial/Cultural Identity Development stages: 1) Conformity, 2) Dissonance, 3) Resistance & Immersion, 4) Introspection, 5) Integrative Awareness.", use: "In Conformity, minority clients prefer dominant-culture norms; in Integrative Awareness, they value both their own and other cultures." },
+      { term: "Microinvalidation", domain: "Multicultural", def: "A form of microaggression consisting of verbal comments or behaviors that negate, exclude, or dismiss the lived reality of a marginalized person.", use: "Exemplified by statements like 'I don't see color' or 'We are all just human beings.'" },
+      { term: "Emic vs. Etic Perspective", domain: "Multicultural", def: "Emic is the culture-specific insider view tailored to a unique cultural group; Etic is the universalist view assuming human principles apply across all cultures.", use: "Memorize: Emic = Culturally Specific; Etic = Universal." },
+      { term: "Autoplastic vs. Alloplastic", domain: "Multicultural", def: "Autoplastic interventions help a client change themselves to adapt to their environment; Alloplastic interventions change the external environment/system.", use: "Memorize: Auto = Self change; Allo = Environment/System advocacy." },
+      { term: "Piaget's 4 Cognitive Stages", domain: "Lifespan Dev", def: "1) Sensorimotor (0-2: Object Permanence), 2) Preoperational (2-7: Egocentrism, Animism), 3) Concrete Operational (7-11: Conservation), 4) Formal Operational (11+: Abstract logic).", use: "Conservation (liquid in a taller glass stays equal) is always Concrete Operational." },
+      { term: "Object Permanence", domain: "Lifespan Dev", def: "The understanding that objects and people continue to exist even when out of sight or hearing.", use: "Primary milestone of Piaget's Sensorimotor stage (birth to age 2)." },
+      { term: "Zone of Proximal Development (ZPD)", domain: "Lifespan Dev", def: "Lev Vygotsky's concept of the gap between what a learner can do alone and what they can master with scaffolding from a skilled partner.", use: "Highlights sociocultural learning—cognitive growth happens through social interaction first." },
+      { term: "Erikson's 8 Psychosocial Stages", domain: "Lifespan Dev", def: "Trust/Mistrust, Autonomy/Shame, Initiative/Guilt, Industry/Inferiority, Identity/Role Confusion, Intimacy/Isolation, Generativity/Stagnation, Ego Integrity/Despair.", use: "Adolescence (12-18) = Identity vs. Role Confusion; Middle Adulthood (40-65) = Generativity vs. Stagnation." },
+      { term: "Kohlberg's 3 Moral Levels", domain: "Lifespan Dev", def: "1) Preconventional (punishment/reward), 2) Conventional (good boy/nice girl & law and order), 3) Postconventional (social contract & universal ethical principles).", use: "Breaking an unjust law based on universal human rights belongs to the Postconventional level." },
+      { term: "Ainsworth's Attachment Styles", domain: "Lifespan Dev", def: "Measured via the Strange Situation: Secure, Insecure-Avoidant, Insecure-Ambivalent (Resistant), and Disorganized.", use: "Ambivalent/Resistant infants cling frantically yet push the mother away in anger upon reunion." },
+      { term: "Kübler-Ross 5 Grief Stages", domain: "Lifespan Dev", def: "Denial, Anger, Bargaining, Depression, and Acceptance (DABDA).", use: "Stages are non-linear; clients can move back and forth or experience multiple reactions." },
+      { term: "Levinson's Mid-Life Transition", domain: "Lifespan Dev", def: "From 'Seasons of a Man's Life,' a major developmental bridge between ages 40 and 45 involving reappraisal of life goals and mortality.", use: "Often triggered by recognizing that time left to live is finite." },
+      { term: "Rogers' 3 Core Conditions", domain: "Counseling Theories", def: "Congruence (genuineness/authenticity), Unconditional Positive Regard (nonjudgmental acceptance), and Accurate Empathic Understanding.", use: "Carl Rogers stated these three are both necessary and sufficient for therapeutic personality change." },
+      { term: "Transference vs. Countertransference", domain: "Counseling Theories", def: "Transference is the client projecting past relational feelings onto the counselor; Countertransference is the counselor's emotional reaction to the client.", use: "When countertransference arises, seek clinical supervision and consultation rather than terminating abruptly." },
+      { term: "Sublimation", domain: "Counseling Theories", def: "A mature Freudian ego defense mechanism that channels unacceptable impulses into socially constructive outlets (e.g., sports or art).", use: "Considered the healthiest defense mechanism on psychodynamic exam items." },
+      { term: "Adler's Individual Psychology", domain: "Counseling Theories", def: "Focuses on striving for superiority/perfection to overcome childhood feelings of inferiority, birth order, family constellation, and social interest.", use: "Uses 4 phases: Relationship -> Lifestyle Assessment -> Insight -> Reorientation." },
+      { term: "Jung's Collective Unconscious", domain: "Counseling Theories", def: "The inherited, transpersonal layer of the unconscious containing universal human symbols and archetypes (Shadow, Anima/Animus, Persona, Self).", use: "Forms the theoretical foundation for the Myers-Briggs Type Indicator (MBTI)." },
+      { term: "Beck's Cognitive Triad", domain: "Counseling Theories", def: "Aaron Beck's model of depression involving automatic negative beliefs about 1) the Self, 2) the World/Environment, and 3) the Future.", use: "Targeted via Socratic questioning, guided discovery, and collaborative empiricism." },
+      { term: "Ellis's REBT & ABCDE Model", domain: "Counseling Theories", def: "Activating Event (A) -> Irrational Belief (B) -> Emotional Consequence (C) -> Disputing the belief (D) -> Effective new philosophy (E).", use: "Targets rigid 'musts,' 'shoulds,' and 'awfulizing' through active disputation." },
+      { term: "Variable-Ratio (VR) Schedule", domain: "Counseling Theories", def: "Skinnerian operant reinforcement delivered after an unpredictable number of responses (like a slot machine).", use: "Produces the highest, steadiest rate of responding and the greatest resistance to extinction." },
+      { term: "Negative Reinforcement", domain: "Counseling Theories", def: "Increasing the frequency of a target behavior by removing an aversive or unpleasant stimulus immediately after the behavior occurs.", use: "Remember: Reinforcement (positive or negative) always INCREASES behavior; Punishment always DECREASES behavior." },
+      { term: "Systematic Desensitization", domain: "Counseling Theories", def: "Joseph Wolpe's classical conditioning intervention pairing deep muscle relaxation with a graduated anxiety hierarchy.", use: "Works via reciprocal inhibition—you cannot be physically relaxed and panicked at the same time." },
+      { term: "Exposure & Response Prevention (ERP)", domain: "Counseling Theories", def: "Gold-standard behavioral therapy for OCD that exposes clients to obsessive triggers while blocking compulsive rituals.", use: "Allows anxiety to habituate naturally without reinforcement from the compulsion." },
+      { term: "Shaping (Successive Approximations)", domain: "Counseling Theories", def: "Operant conditioning technique that builds a complex new behavior by reinforcing small steps that come closer and closer to the final goal.", use: "Often paired with chaining to teach multi-step skills." },
+      { term: "Gestalt Empty Chair & Rounds", domain: "Counseling Theories", def: "Fritz Perls' experiential techniques bringing unfinished business into the immediate 'here and now.'", use: "'Making the rounds' asks a group member to walk up to each peer and make a direct statement or express a feeling." },
+      { term: "Gestalt Boundary Disturbances", domain: "Counseling Theories", def: "Introjection (swallowing others' beliefs whole), Projection, Retroflection (doing to self what you want to do to others), Deflection, and Confluence (merging boundaries).", use: "Biting your lip or self-harming instead of expressing outward anger is Retroflection." },
+      { term: "Existential 4 Ultimate Concerns", domain: "Counseling Theories", def: "Irvin Yalom and Viktor Frankl's four givens of human existence: Death, Freedom (and responsibility), Existential Isolation, and Meaninglessness.", use: "Viktor Frankl's Logotherapy uses paradoxical intention and dereflection to help clients find meaning." },
+      { term: "Reality Therapy (WDEP)", domain: "Counseling Theories", def: "William Glasser's Choice Theory intervention system: Wants, Doing, self-Evaluation, and Planning.", use: "Focuses on present behavior and personal responsibility; rejects the medical model of mental illness." },
+      { term: "SFBT Miracle & Scaling Questions", domain: "Counseling Theories", def: "Steve de Shazer and Insoo Kim Berg's Solution-Focused Brief Therapy tools focusing on solutions and exceptions rather than problem history.", use: "Exception questions ask when the problem was NOT happening to uncover existing client strengths." },
+      { term: "Narrative Externalization", domain: "Counseling Theories", def: "Michael White and David Epston's technique of separating the person from the problem ('The person is not the problem; the problem is the problem').", use: "Helps clients re-author dominant problem-saturated stories using unique outcomes." },
+      { term: "ACT Cognitive Defusion", domain: "Counseling Theories", def: "Steven Hayes' Acceptance and Commitment Therapy skill of observing thoughts as passing words/sensations rather than literal truth.", use: "Promotes psychological flexibility and values-based action rather than fighting internal thoughts." },
+      { term: "DBT Dialectics & 4 Modules", domain: "Counseling Theories", def: "Marsha Linehan's therapy balancing Radical Acceptance and Change across Mindfulness, Distress Tolerance, Emotion Regulation, and Interpersonal Effectiveness.", use: "Evidence-based treatment of choice for Borderline Personality Disorder and chronic suicidality." },
+      { term: "Motivational Interviewing (MI)", domain: "Counseling Theories", def: "Miller and Rollnick's client-centered, directive style for resolving ambivalence via OARS (Open questions, Affirmations, Reflections, Summaries).", use: "Follows 4 sequential processes: Engaging -> Focusing -> Evoking (change talk) -> Planning." },
+      { term: "Transtheoretical Stages of Change", domain: "Counseling Theories", def: "Prochaska and DiClemente's stages: Precontemplation, Contemplation (ambivalence), Preparation, Action, and Maintenance.", use: "Match interventions to the client's stage—don't push an Action plan on a client in Contemplation." },
+      { term: "Transactional Analysis (TA)", domain: "Counseling Theories", def: "Eric Berne's model analyzing interactions across Parent, Adult, and Child ego states.", use: "Crossed transactions cause communication breakdown; Complementary transactions keep communication flowing." },
+      { term: "Feminist Therapy", domain: "Counseling Theories", def: "Built on the principle 'the personal is political,' egalitarian relationships, gender-role analysis, and empowerment.", use: "Frames individual distress within societal oppression and power imbalances rather than internal pathology." },
+      { term: "Bowen Family Systems", domain: "Family Counseling", def: "Murray Bowen's intergenerational model featuring Differentiation of Self, Triangulation, Nuclear Family Emotional System, and Genograms.", use: "Triangulation pulls a third person into a stressed two-person dyad to diffuse anxiety." },
+      { term: "Minuchin Structural Family Therapy", domain: "Family Counseling", def: "Salvador Minuchin's model examining family hierarchies, subsystems, and boundaries (Enmeshed/diffuse vs. Disengaged/rigid).", use: "Uses joining, enactment, boundary-making, and unbalancing to restructure family interactions in the room." },
+      { term: "Haley Strategic Family Therapy", domain: "Family Counseling", def: "Jay Haley and Cloe Madanes' brief, problem-focused systemic approach using directives, reframing, and paradoxical injunctions ('prescribing the symptom').", use: "Focuses on interrupting repetitive behavioral sequences and resolving hierarchical power struggles." },
+      { term: "Satir's 4 Survival Stances", domain: "Family Counseling", def: "Virginia Satir's experiential family communication roles under stress: Placater, Blamer, Computer (super-reasonable), and Distracter (irrelevant).", use: "The goal is congruent, leveled communication where words, body language, and inner feelings match." },
+      { term: "Circular Questioning", domain: "Family Counseling", def: "Milan Systemic technique asking one family member to describe the relationship or reactions between two other family members.", use: "Reveals systemic interconnectedness and shifts focus away from linear blame." },
+      { term: "First-Order vs. Second-Order Change", domain: "Family Counseling", def: "First-order change is a superficial behavioral adjustment within the existing system rules; Second-order change transforms the underlying system structure and rules.", use: "Lasting family therapy requires second-order structural change." },
+      { term: "Tuckman's 5 Group Stages", domain: "Group Counseling", def: "Forming (orientation/anxiety), Storming (conflict/resistance), Norming (cohesion/trust), Performing (productive work), and Adjourning (termination).", use: "Interpersonal conflict and challenging the leader are normal and expected during the Storming stage." },
+      { term: "Yalom's Therapeutic Factors", domain: "Group Counseling", def: "11 factors including Instillation of Hope, Universality ('I'm not alone'), Altruism (helping others), Catharsis, Cohesion, and Interpersonal Learning.", use: "Universality is especially powerful in early group sessions to reduce isolation and shame." },
+      { term: "Group Blocking vs. Linking", domain: "Group Counseling", def: "Blocking stops harmful behaviors (scapegoating, gossiping, probing); Linking connects shared themes across members to build cohesion.", use: "Both are essential leader skills for protecting safety and fostering member-to-member interaction." },
+      { term: "Pre-Group Screening", domain: "Group Counseling", def: "Individual interview/orientation conducted before a group begins to assess member readiness, goals, and compatibility.", use: "Required by ACA ethical standards to protect both prospective members and the group." },
+      { term: "Parsons' Trait-and-Factor Theory", domain: "Career Counseling", def: "Frank Parsons' (Father of Vocational Guidance) 3-step model: 1) Self-knowledge, 2) World-of-work knowledge, and 3) True reasoning to match them.", use: "Foundation of modern actuarial/person-environment fit career counseling." },
+      { term: "Holland's RIASEC Hexagon", domain: "Career Counseling", def: "John Holland's 6 personality/work environments: Realistic, Investigative, Artistic, Social, Enterprising, and Conventional.", use: "Key constructs: Congruence (fit between person and job), Consistency (closeness of top codes on the hexagon), and Differentiation (high vs. low score spread)." },
+      { term: "Super's Life-Span, Life-Space", domain: "Career Counseling", def: "Donald Super's 5 stages: Growth (0-14), Exploration (15-24), Establishment (25-44), Maintenance (45-64), and Disengagement (65+).", use: "Re-entering earlier stages in adulthood to change careers is called 'Recycling'; readiness for tasks is 'Career Maturity/Adaptability.'" },
+      { term: "Gottfredson's Circumscription & Compromise", domain: "Career Counseling", def: "Linda Gottfredson's theory explaining how children progressively rule out careers based on gender roles and social prestige (Circumscription) and later adjust to reality (Compromise).", use: "Explains why sex-role stereotyping restricts children's perceived zone of acceptable occupational alternatives." },
+      { term: "Krumboltz's Planned Happenstance", domain: "Career Counseling", def: "John Krumboltz's social learning theory encouraging clients to turn unplanned chance events into career opportunities through curiosity, persistence, and flexibility.", use: "Frames indecision as open-mindedness rather than a problem." },
+      { term: "Savickas' Career Construction", domain: "Career Counseling", def: "Mark Savickas' postmodern narrative approach using the Career Style Interview (role models, favorite stories, early recollections) to uncover life themes.", use: "Helps clients author subjective meaning and build career adaptability in a changing economy." },
+      { term: "SCCT (Lent, Brown, & Hackett)", domain: "Career Counseling", def: "Social Cognitive Career Theory built on Bandura's triadic reciprocal determinism: Self-Efficacy beliefs, Outcome Expectations, and Personal Goals.", use: "Low career self-efficacy causes clients to prematurely rule out fields they could succeed in." },
+      { term: "Roe's Needs Approach", domain: "Career Counseling", def: "Anne Roe's theory linking early parent-child emotional climates (Warm/Accepting, Overprotective, or Cold/Avoidant) to adult career orientation.", use: "Warm homes foster Person-oriented careers; Cold/Avoidant homes foster Non-person (things/data/science) careers." },
+      { term: "O*NET vs. DOT & OOH", domain: "Career Counseling", def: "O*NET is the online Department of Labor database that replaced the print Dictionary of Occupational Titles (DOT); the Occupational Outlook Handbook (OOH) projects job growth and pay.", use: "Use O*NET for job tasks/skills and the OOH for salary and 10-year labor market projections." },
+      { term: "Strong Interest Inventory (SII)", domain: "Assessment", def: "Career inventory using Holland's RIASEC General Occupational Themes, Basic Interest Scales, and empirically keyed Occupational Scales.", use: "Measures vocational INTERESTS (what you enjoy), whereas aptitude tests measure capability/potential." },
+      { term: "Reliability vs. Validity", domain: "Assessment", def: "Reliability is consistency/repeatability of scores; Validity is accuracy (whether the test measures what it claims to measure).", use: "Memorize the rule: A test can be reliable without being valid, but it can NEVER be valid without first being reliable." },
+      { term: "Cronbach's Alpha vs. KR-20", domain: "Assessment", def: "Both measure internal consistency reliability from a single test administration: KR-20 is for dichotomous (right/wrong) items; Cronbach's Alpha is for Likert/polytomous scales.", use: "Acceptable reliability for clinical/educational tests is typically 0.80 or higher." },
+      { term: "Content, Criterion, & Construct Validity", domain: "Assessment", def: "Content = covers full subject domain; Criterion = Concurrent (same time) & Predictive (future); Construct = Convergent & Discriminant.", use: "Correlating a new depression scale with the established BDI-II given on the same day establishes Concurrent Validity." },
+      { term: "Standard Error of Measurement (SEM)", domain: "Assessment", def: "Estimates how much an individual's observed test score would vary across repeated testing due to random error: SEM = SD * sqrt(1 - r).", use: "Higher reliability (r) produces a smaller SEM and a tighter confidence interval around the client's true score." },
+      { term: "Normal Curve (68 - 95 - 99.7 Rule)", domain: "Assessment", def: "In a normal distribution, 68% of scores fall within ±1 SD, 95.4% within ±2 SD, and 99.7% within ±3 SD of the mean.", use: "A score at +1 SD above the mean (e.g., IQ 115, Z = +1, T = 60) sits at the 84th percentile." },
+      { term: "Z-Scores, T-Scores, & Stanines", domain: "Assessment", def: "Z-score: Mean = 0, SD = 1. T-score: Mean = 50, SD = 10. Deviation IQ: Mean = 100, SD = 15. Stanine: Mean = 5, SD = 2 (scale 1 to 9).", use: "If a client has Z = +1.0, their T-score is 60, their IQ score is 115, and their Stanine is 7." },
+      { term: "Mean, Median, & Mode in Skewed Curves", domain: "Research & Stats", def: "Mean = arithmetic average (most pulled by outliers); Median = 50th percentile middle score; Mode = most frequent score.", use: "In a Negatively skewed curve (tail left): Mean < Median < Mode. In a Positively skewed curve (tail right): Mode < Median < Mean." },
+      { term: "Scales of Measurement (NOIR)", domain: "Research & Stats", def: "Nominal (categories/names), Ordinal (rank order), Interval (equal distance, no true zero), Ratio (equal distance + absolute zero).", use: "Nominal data requires non-parametric tests like Chi-Square; Interval/Ratio data allows parametric tests like t-tests and ANOVA." },
+      { term: "Internal vs. External Validity", domain: "Research & Stats", def: "Internal validity = confidence that the independent variable caused the change in the dependent variable; External validity = generalizability to other populations/settings.", use: "Threats to internal validity include selection bias, attrition/mortality, maturation, history, and regression toward the mean." },
+      { term: "Type I (Alpha) vs. Type II (Beta) Error", domain: "Research & Stats", def: "Type I Error = False Positive (rejecting a true null hypothesis); Type II Error = False Negative (failing to reject a false null hypothesis).", use: "When p <= alpha (e.g., p = 0.03 < 0.05), reject the null hypothesis." },
+      { term: "t-Test, ANOVA, & ANCOVA", domain: "Research & Stats", def: "t-test compares 2 group means; ANOVA compares 3+ group means; ANCOVA compares group means while statistically controlling for a pre-existing covariate.", use: "Use MANOVA when a study has two or more continuous dependent variables." },
+      { term: "Pearson r & Coefficient of Determination (r²)", domain: "Research & Stats", def: "Pearson r (-1.00 to +1.00) measures linear correlation; squaring r (r²) gives the proportion of shared variance explained.", use: "If r = 0.60, then r² = 0.36 (36% of variance explained)—and remember, correlation never proves causation." },
+      { term: "Hawthorne, Pygmalion, & Halo Effects", domain: "Research & Stats", def: "Hawthorne = subjects improve because they know they are watched; Pygmalion (Rosenthal) = teacher/experimenter expectations alter performance; Halo = overall impression biases ratings.", use: "Double-blind experimental designs prevent experimenter expectancy (Pygmalion) bias." },
+      { term: "ABAB Single-Subject Reversal Design", domain: "Research & Stats", def: "Time-series idiographic design: A (Baseline) -> B (Intervention) -> A (Withdraw treatment) -> B (Reintroduce treatment).", use: "If behavior improves during B, reverts during the second A, and improves again in B, strong causal internal validity is shown." },
+      { term: "Formative vs. Summative Evaluation", domain: "Research & Stats", def: "Formative evaluation monitors a program while it is underway to improve process delivery; Summative evaluation measures final outcomes at the end.", use: "Think: Formative = Forming/In-progress; Summative = Summary/Final outcome." },
+      { term: "Bipolar I vs. Bipolar II Disorder", domain: "DSM-5-TR Diagnosis", def: "Bipolar I requires at least one full Manic Episode (7+ days or hospitalization); Bipolar II requires at least one Hypomanic Episode (4+ days) AND one Major Depressive Episode.", use: "If a client has ever had a full manic episode or psychotic features during elevation, the diagnosis is Bipolar I." },
+      { term: "Persistent Depressive Disorder (Dysthymia)", domain: "DSM-5-TR Diagnosis", def: "Chronic depressed mood present most of the day, more days than not, for at least 2 years in adults (1 year in children/adolescents).", use: "Symptom-free intervals cannot last longer than 2 consecutive months during that 2-year period." },
+      { term: "MDD Melancholic vs. Atypical Specifiers", domain: "DSM-5-TR Diagnosis", def: "Melancholic = anhedonia, early morning awakening, worse in morning, weight loss; Atypical = mood reactivity, hypersomnia, weight gain, leaden paralysis, rejection sensitivity.", use: "Notice they are clinical opposites in sleep, appetite, and mood reactivity." },
+      { term: "PTSD vs. Acute Stress Disorder", domain: "DSM-5-TR Diagnosis", def: "Both follow trauma exposure with intrusion, avoidance, negative cognition/mood, and arousal: Acute Stress Disorder lasts 3 days to 1 month; PTSD lasts over 1 month.", use: "Always check the timeline in the vignette first (under 1 month = Acute Stress Disorder; over 1 month = PTSD)." },
+      { term: "Panic Disorder vs. Agoraphobia", domain: "DSM-5-TR Diagnosis", def: "Panic Disorder = recurrent unexpected panic attacks + 1 month of worry/avoidance; Agoraphobia = fear/avoidance of 2+ situations (transit, open/enclosed spaces, crowds, outside alone).", use: "They are coded as two separate diagnoses in DSM-5-TR if a client meets criteria for both." },
+      { term: "Anorexia, Bulimia, & Binge-Eating Disorder", domain: "DSM-5-TR Diagnosis", def: "Anorexia = significantly low body weight + fear of weight gain; Bulimia = bingeing + compensatory purging at normal/above weight; Binge-Eating = bingeing without purging.", use: "Significantly low BMI/body weight always rules in Anorexia Nervosa over Bulimia Nervosa." },
+      { term: "ODD vs. Conduct Disorder", domain: "DSM-5-TR Diagnosis", def: "Oppositional Defiant Disorder (ODD) = angry/irritable mood and defiance toward authority; Conduct Disorder = severe violation of others' rights, aggression, property destruction, or theft.", use: "ODD involves defiance without severe physical cruelty or major law-breaking." },
+      { term: "RAD vs. DSED", domain: "DSM-5-TR Diagnosis", def: "Both stem from severe early neglect: Reactive Attachment Disorder (RAD) is inhibited/emotionally withdrawn; Disinhibited Social Engagement Disorder (DSED) is overly familiar with strangers.", use: "RAD = never seeks comfort from caregivers; DSED = walks off with strangers without checking back." },
+      { term: "Somatic Symptom vs. Illness Anxiety Disorder", domain: "DSM-5-TR Diagnosis", def: "Somatic Symptom Disorder = distressing physical symptoms + excessive thoughts/anxiety about them; Illness Anxiety Disorder = high health anxiety with minimal or no somatic symptoms.", use: "Both persist for at least 6 months." },
+      { term: "Borderline Personality Disorder (BPD)", domain: "DSM-5-TR Diagnosis", def: "Cluster B disorder marked by frantic efforts to avoid abandonment, unstable relationships (idealization/devaluation splitting), identity disturbance, affect instability, and impulsivity.", use: "Dialectical Behavior Therapy (DBT) is the primary evidence-based treatment." },
+      { term: "Delusions vs. Hallucinations", domain: "DSM-5-TR Diagnosis", def: "Delusions are fixed false beliefs resistant to contrary evidence (disorder of thought content); Hallucinations are false sensory perceptions without external stimuli.", use: "Auditory hallucinations are the most common hallucination type in Schizophrenia." },
+      { term: "Depersonalization vs. Derealization", domain: "DSM-5-TR Diagnosis", def: "Depersonalization = feeling detached from one's own body, mind, or self; Derealization = feeling that the external world/surroundings are unreal or dreamlike.", use: "Common dissociative responses during or after acute trauma." },
+      { term: "MAOI Tyramine & Hypertensive Crisis", domain: "Psychopharmacology", def: "Monoamine Oxidase Inhibitors (phenelzine, tranylcypromine) block tyramine breakdown; eating aged cheese, cured meats, or red wine triggers a lethal blood pressure spike.", use: "High-yield psychopharmacology safety question on counselor exams." },
+      { term: "Lithium Toxicity", domain: "Psychopharmacology", def: "Lithium (mood stabilizer for Bipolar I) has a narrow therapeutic index; dehydration or low sodium causes coarse hand tremors, slurred speech, ataxia, confusion, and GI distress.", use: "Requires immediate emergency medical referral—never tell a client to wait it out." },
+      { term: "Serotonin Syndrome", domain: "Psychopharmacology", def: "Potentially fatal excess serotonin caused by combining SSRIs/SNRIs with MAOIs, St. John's wort, or triptans; causes agitation, hyperthermia, tachycardia, and muscle rigidity.", use: "Requires immediate emergency medical intervention." },
+      { term: "Alcohol Withdrawal & Delirium Tremens (DTs)", domain: "Psychopharmacology", def: "Abrupt cessation after heavy prolonged alcohol use causes tremors, diaphoresis, tachycardia, seizures, and visual/tactile hallucinations (formication) within 48-72 hours.", use: "Alcohol and benzodiazepine withdrawals can be fatal and require medically supervised detox." },
+      { term: "SMART Treatment Plan Objectives", domain: "Treatment Planning", def: "Specific, Measurable, Attainable, Relevant, and Time-bound behavioral targets written collaboratively with the client.", use: "Always pick the option with quantifiable numbers, a specific skill, and a target deadline." },
+      { term: "Suicide Risk Assessment vs. No-Harm Contracts", domain: "Crisis & Trauma", def: "Structured evaluation of ideation, plan, intent, access to lethal means, past attempts, and protective factors, paired with a collaborative Safety Plan.", use: "Standalone 'no-harm contracts' do not protect against suicide or legal liability; use collaborative safety planning instead." },
+      { term: "Psychological First Aid (PFA)", domain: "Crisis & Trauma", def: "Evidence-based acute disaster response focused on physical safety, calm stabilization, practical needs, and connecting survivors to social support.", use: "Preferred over mandatory single-session Critical Incident Stress Debriefing (CISD), which can re-traumatize survivors." },
+      { term: "Termination & Relapse Prevention", domain: "Treatment Planning", def: "The final phase of counseling initiated during informed consent, reviewing treatment gains, identifying warning triggers, and ensuring continuity of care.", use: "Temporary symptom return right before termination is a normal reaction to separation anxiety—process it openly." }
+    ];
+
+    function shuffleArray(arr) {
+      const copy = [...arr];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    let deck = [...terms];
+    let currentCard = 0;
+    let isFlipped = false;
+
+    const fcMain = document.getElementById("fc-main");
+
+    function renderCard() {
+      const item = deck[currentCard];
+      const pct = Math.round(((currentCard + 1) / deck.length) * 100);
+
+      let jumpGrid = "";
+      for (let i = 0; i < deck.length; i++) {
+        jumpGrid += `<button type="button" class="jump-opt ${i === currentCard ? "current" : ""}" data-c="${i}">#${i + 1}</button>`;
+      }
+
+      fcMain.innerHTML = `
+        <div class="fc-topbar">
+          <a href="nce.html" class="btn-ghost">&larr; NCE Hub</a>
+          <div class="fc-controls-right">
+            <button type="button" class="btn-ghost" id="shuffle-btn">&#8645; Shuffle Deck</button>
+            <div class="jump-wrapper">
+              <button type="button" class="jump-trigger" id="fc-jump-trigger" aria-expanded="false">
+                Jump to: Card ${currentCard + 1} &#9662;
+              </button>
+              <div class="jump-menu" id="fc-jump-menu">${jumpGrid}</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="progress-track">
+          <div class="progress-fill" style="width:${pct}%"></div>
+        </div>
+
+        <div class="flashcard ${isFlipped ? "flipped" : ""}" id="flashcard-el" tabindex="0" role="button" aria-label="Flip flash card">
+          <div>
+            <div class="fc-meta">
+              <span class="fc-side-tag ${isFlipped ? "back" : "front"}">${isFlipped ? "Definition & Exam Use" : "Keyword"}</span>
+              <span class="fc-domain">CARD ${currentCard + 1} OF ${deck.length} &middot; ${item.domain}</span>
+            </div>
+
+            ${!isFlipped ? `
+              <div class="fc-term">${item.term}</div>
+            ` : `
+              <div class="fc-def-box">
+                <div class="fc-def">${item.def}</div>
+                <div class="fc-purpose"><strong>Exam Application:</strong> ${item.use}</div>
+              </div>
+            `}
+          </div>
+
+          <div class="fc-hint">${isFlipped ? "Click card to see keyword again" : "Click card to reveal definition"}</div>
+        </div>
+
+        <div class="fc-actions">
+          <div class="fc-nav-group">
+            <button type="button" class="btn-ghost" id="fc-prev" ${currentCard === 0 ? "disabled" : ""}>&larr; Prev Card</button>
+            <button type="button" class="btn-ghost" id="fc-next" ${currentCard === deck.length - 1 ? "disabled" : ""}>Next Card &rarr;</button>
+          </div>
+          <button type="button" class="btn-lime" id="fc-flip-btn">${isFlipped ? "Show Keyword" : "Reveal Definition"}</button>
+        </div>
+      `;
+
+      const flipCard = () => { isFlipped = !isFlipped; renderCard(); };
+      document.getElementById("flashcard-el").addEventListener("click", flipCard);
+      document.getElementById("fc-flip-btn").addEventListener("click", flipCard);
+
+      document.getElementById("fc-prev").addEventListener("click", () => {
+        if (currentCard > 0) { currentCard--; isFlipped = false; renderCard(); }
+      });
+      document.getElementById("fc-next").addEventListener("click", () => {
+        if (currentCard < deck.length - 1) { currentCard++; isFlipped = false; renderCard(); }
+      });
+
+      const jumpTrigger = document.getElementById("fc-jump-trigger");
+      const jumpMenu = document.getElementById("fc-jump-menu");
+      jumpTrigger.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const isOpen = jumpMenu.classList.toggle("open");
+        jumpTrigger.classList.toggle("open", isOpen);
+        jumpTrigger.setAttribute("aria-expanded", String(isOpen));
+      });
+
+      document.querySelectorAll("#fc-jump-menu .jump-opt").forEach(btn => {
+        btn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          currentCard = parseInt(btn.dataset.c, 10);
+          isFlipped = false;
+          renderCard();
+        });
+      });
+
+      document.getElementById("shuffle-btn").addEventListener("click", () => {
+        deck = shuffleArray(terms);
+        currentCard = 0;
+        isFlipped = false;
+        renderCard();
+      });
+    }
+
+    document.addEventListener("click", () => {
+      const jumpMenu = document.getElementById("fc-jump-menu");
+      const jumpTrigger = document.getElementById("fc-jump-trigger");
+      if (jumpMenu && jumpMenu.classList.contains("open")) {
+        jumpMenu.classList.remove("open");
+        jumpTrigger.classList.remove("open");
+        jumpTrigger.setAttribute("aria-expanded", "false");
+      }
+    });
+
+    const menuBtn = document.getElementById("mobile-menu-btn");
+    const navDrawer = document.getElementById("nav-drawer");
+    menuBtn.addEventListener("click", () => {
+      const isOpen = navDrawer.classList.toggle("open");
+      menuBtn.setAttribute("aria-expanded", String(isOpen));
+      menuBtn.innerHTML = isOpen ? "Close &#10005;" : "Menu &#9776;";
+    });
+
+    const privacyModal = document.getElementById("privacy-modal");
+    document.getElementById("open-privacy-btn").addEventListener("click", () => privacyModal.classList.add("open"));
+    document.getElementById("privacy-close-btn").addEventListener("click", () => privacyModal.classList.remove("open"));
+    privacyModal.addEventListener("click", (e) => { if (e.target === privacyModal) privacyModal.classList.remove("open"); });
+
+    renderCard();
+  </script>
+</body>
+</html>
