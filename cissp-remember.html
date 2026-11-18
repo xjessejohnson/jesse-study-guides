@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CISSP Remember Engine | Jesse's Study Guides</title>
+  <meta name="description" content="Immersive tactical mini-games to help you master CISSP ports, ciphers, and mitigations." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .remember-container {
+      background: var(--bg-card);
+      border: 1px solid var(--border-slate);
+      border-radius: 14px;
+      padding: 1.5rem;
+      margin-top: 1rem;
+      min-height: 480px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+    }
+
+    .game-choice-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.15rem;
+      margin-top: 1rem;
+    }
+
+    .game-selector-card {
+      background: rgba(13, 18, 28, 0.95);
+      border: 1px solid var(--border-slate);
+      border-radius: 12px;
+      padding: 1.35rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: left;
+    }
+    .game-selector-card:hover {
+      border-color: var(--cyan);
+      box-shadow: 0 0 24px rgba(34, 211, 238, 0.15);
+      transform: translateY(-2px);
+    }
+    .game-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--cyan);
+      text-transform: uppercase;
+      margin-bottom: 0.55rem;
+      letter-spacing: 0.08em;
+    }
+    .game-title {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 1.05rem;
+      color: #fff;
+      margin-bottom: 0.55rem;
+      text-transform: uppercase;
+    }
+    .game-desc {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
+    /* Game 1: Port Defender Styles */
+    .p-hud {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 0.85rem;
+      border-bottom: 1px solid var(--border-slate);
+      margin-bottom: 1.25rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+    }
+    .p-score span { color: var(--lime); font-weight: 700; }
+    .p-threat { font-size: 1.15rem; color: #fff; font-weight: 600; text-align: center; margin: 1.5rem 0; }
+    .p-threat span { color: var(--cyan); font-family: 'JetBrains Mono', monospace; font-size: 1.35rem; font-weight: 700; text-shadow: 0 0 10px var(--cyan); }
+    .p-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+      gap: 0.65rem;
+      margin-bottom: 1.5rem;
+    }
+    .p-btn {
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border-slate);
+      border-radius: 8px;
+      padding: 0.85rem 0.45rem;
+      color: var(--text-primary);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      text-align: center;
+      transition: all 0.15s ease;
+    }
+    .p-btn:hover {
+      border-color: var(--cyan);
+      background: var(--cyan-dim);
+    }
+
+    /* Game 2: Cipher Matrix Styles */
+    .matrix-workspace {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+      margin: 1.25rem 0;
+    }
+    .matrix-bin {
+      background: rgba(13, 18, 28, 0.7);
+      border: 1px solid var(--border-slate);
+      border-radius: 12px;
+      padding: 1rem;
+      min-height: 180px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      gap: 0.55rem;
+      transition: border-color 0.2s ease;
+    }
+    .matrix-bin.active { border-color: var(--cyan); background: rgba(34, 211, 238, 0.05); }
+    .matrix-bin h4 {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.76rem;
+      text-transform: uppercase;
+      color: var(--text-secondary);
+      margin-bottom: 0.45rem;
+    }
+    .matrix-bin.symmetric h4 { color: var(--lime); }
+    .matrix-bin.asymmetric h4 { color: var(--cyan); }
+    
+    .matrix-word {
+      background: #111827;
+      border: 1px solid var(--cyan);
+      border-radius: 8px;
+      padding: 0.72rem 1.15rem;
+      color: #fff;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.1rem;
+      font-weight: 700;
+      cursor: grab;
+      text-align: center;
+      margin: 1.25rem auto;
+      display: inline-block;
+      box-shadow: 0 0 16px var(--cyan-dim);
+    }
+    .matrix-placed {
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-slate);
+      border-radius: 6px;
+      padding: 0.4rem 0.75rem;
+      font-size: 0.8rem;
+      font-family: 'JetBrains Mono', monospace;
+      color: #fff;
+      width: 100%;
+      text-align: center;
+    }
+
+    /* Game 3: Attack Matcher Styles */
+    .matcher-workspace {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+    .match-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+      align-items: center;
+    }
+    .match-threat {
+      background: rgba(251, 113, 133, 0.08);
+      border: 1px solid rgba(251, 113, 133, 0.35);
+      border-left: 3px solid var(--rose);
+      color: #fff;
+      padding: 0.9rem;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      line-height: 1.45;
+    }
+    .match-threat strong { color: var(--rose); font-family: 'JetBrains Mono', monospace; }
+    .match-select {
+      background: var(--bg-sidebar);
+      color: #fff;
+      border: 1px solid var(--border-slate);
+      border-radius: 8px;
+      padding: 0.75rem;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.88rem;
+      outline: none;
+      cursor: pointer;
+    }
+    .match-select:focus { border-color: var(--cyan); }
+    .match-select option { background: var(--bg-sidebar); }
+
+    /* Results overlay */
+    .game-over-screen {
+      position: absolute;
+      inset: 0;
+      background: rgba(13, 18, 28, 0.96);
+      border-radius: 14px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+      text-align: center;
+      gap: 1rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="frame-wrapper">
+    <aside>
+      <div class="brand-block">
+        <div class="brand-row">
+          <div>
+            <a href="index.html" class="brand-title">Jesse's Study Guides</a>
+            <div class="brand-tagline">Unofficial compiled training database v1.0</div>
+          </div>
+          <button class="mobile-menu-btn" id="mobile-menu-btn" aria-expanded="false" aria-controls="nav-drawer">
+            Menu &#9776;
+          </button>
+        </div>
+        <a class="coffee-btn" href="https://www.buymeacoffee.com/xjessejohnson" target="_blank" rel="noopener noreferrer">
+          &#9749; Buy Me a Coffee
+        </a>
+      </div>
+
+      <nav class="nav-drawer" id="nav-drawer" aria-label="Study Categories">
+        <div class="nav-section">
+          <div class="nav-label">Cybersecurity</div>
+          <a href="cissp.html" class="nav-item active">
+            <span>CISSP</span>
+            <span class="badge live">Active</span>
+          </a>
+          <a href="cism.html" class="nav-item">
+            <span>CISM</span>
+            <span class="badge live">Active</span>
+          </a>
+          <span class="nav-item disabled" aria-disabled="true">
+            <span>Security+</span>
+            <span class="badge">Coming Soon</span>
+          </span>
+        </div>
+
+        <div class="nav-section">
+          <div class="nav-label">Psychology</div>
+          <a href="nce.html" class="nav-item">
+            <span>NCE</span>
+            <span class="badge live">Active</span>
+          </a>
+        </div>
+
+        <div class="nav-section">
+          <div class="nav-label">Other</div>
+          <span class="nav-item disabled" aria-disabled="true">
+            <span>Coming Soon</span>
+            <span class="badge">Coming Soon</span>
+          </span>
+        </div>
+      </nav>
+    </aside>
+
+    <div class="main-area">
+      <div class="topbar">
+        <div class="breadcrumb">JESSE'S STUDY GUIDES / CISSP / <span>REMEMBER GAMES</span></div>
+        <div class="status-pill"><span class="status-dot"></span> SYSTEM ONLINE</div>
+      </div>
+
+      <main class="content-body" id="game-main">
+        <div class="eyebrow">Interactive Remember Engine // active learning</div>
+        <h1 class="hero-headline">TACTICAL <span class="outline">ARCADE</span></h1>
+        <p class="prose">Choose a gamified cyber training simulator below to reinforce your memory of core ciphers, port mapping configurations, and threat mitigations.</p>
+
+        <div class="game-choice-grid">
+          <button type="button" class="game-selector-card" id="btn-game1">
+            <div class="game-num">Simulator 01</div>
+            <div class="game-title">Port Boundary Defender</div>
+            <div class="game-desc">Unannounced data requests try to breach ports. Block them immediately by selecting the correct active networking port!</div>
+          </button>
+
+          <button type="button" class="game-selector-card" id="btn-game2">
+            <div class="game-num">Simulator 02</div>
+            <div class="game-title">Cipher Matrix Matcher</div>
+            <div class="game-desc">Drag and sort ciphers and algorithms into their proper Symmetric or Asymmetric cryptographic matrix.</div>
+          </button>
+
+          <button type="button" class="game-selector-card" id="btn-game3">
+            <div class="game-num">Simulator 03</div>
+            <div class="game-title">Attack Mitigation Decoder</div>
+            <div class="game-desc">A range of active network compromises require urgent defense. Match the threat to its proper architectural countermeasure.</div>
+          </button>
+        </div>
+
+        <div class="remember-container" id="remember-container" style="display:none; margin-top:2rem;"></div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Answer Feedback Modal -->
+  <div class="modal-backdrop" id="feedback-modal" role="dialog" aria-modal="true">
+    <div class="modal-box" id="feedback-box">
+      <div class="modal-top" style="border-bottom:none;padding-bottom:0;">
+        <div class="modal-title" id="feedback-status"></div>
+        <button class="modal-close" id="feedback-close-btn" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body" id="feedback-body"></div>
+    </div>
+  </div>
+
+  <!-- Privacy Policy Modal -->
+  <div class="modal-backdrop" id="privacy-modal" role="dialog" aria-modal="true" aria-labelledby="privacy-title">
+    <div class="modal-box">
+      <div class="modal-top">
+        <div class="modal-title" id="privacy-title">Privacy Policy</div>
+        <button class="modal-close" id="privacy-close-btn" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body">
+        <p><strong>Effective Date:</strong> November 17, 2026</p>
+        <h4>1. Information We Collect</h4>
+        <p>Jesse's Study Guides is a static, informational study website. We do not require user registration, accounts, or logins, and we do not directly collect names, email addresses, or payment details on this site.</p>
+        <h4>2. Hosting and Server Logs</h4>
+        <p>This website is hosted via Vercel. As part of standard web delivery and security operations, our hosting provider may automatically process basic technical request data such as your IP address, browser type, operating system, and timestamps in temporary server logs.</p>
+        <h4>3. Cookies and Tracking</h4>
+        <p>This website does not use advertising trackers or third-party marketing cookies.</p>
+        <h4>4. Third-Party Links</h4>
+        <p>This site includes an external link to Buy Me a Coffee for voluntary donations. If you choose to visit or donate through that platform, any information you provide is governed directly by Buy Me a Coffee's own privacy policy and terms of service.</p>
+        <h4>5. Changes to This Policy</h4>
+        <p>This policy may be updated as new features or study modules are added to the site. Questions regarding this notice can be directed to the site owner, Jesse Johnson.</p>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2026 Jesse Johnson. All rights reserved.</p>
+    <p>
+      This portal is an independent, unofficial personal study resource and is not affiliated with, endorsed by, or sponsored by ISC2, ISACA, CompTIA, NBCC, or any other certification body.
+      CISSP&reg; is a registered trademark of ISC2. CISM&reg; is a registered trademark of ISACA. CompTIA Security+&reg; is a registered trademark of CompTIA. NCE&reg; is a registered trademark of NBCC. All vendor materials, trademarks, and copyrights remain the property of their respective owners.
+    </p>
+    <div class="footer-links">
+      <button type="button" class="privacy-link" id="open-privacy-btn">Privacy Policy</button>
+    </div>
+  </footer>
+
+  <script>
+    const ports = [
+      { num: 21, use: "FTP (File Transfer Protocol)" },
+      { num: 22, use: "SSH (Secure Shell)" },
+      { num: 23, use: "Telnet" },
+      { num: 25, use: "SMTP (Simple Mail Transfer Protocol)" },
+      { num: 49, use: "TACACS+" },
+      { num: 53, use: "DNS (Domain Name System)" },
+      { num: 67, use: "DHCP Server" },
+      { num: 68, use: "DHCP Client" },
+      { num: 80, use: "HTTP (Web)" },
+      { num: 110, use: "POP3 (Mail Retrieval)" },
+      { num: 143, use: "IMAP4 (Mail Retrieval)" },
+      { num: 161, use: "SNMP (Simple Network Management Protocol)" },
+      { num: 389, use: "LDAP (Directory Services)" },
+      { num: 443, use: "HTTPS (Secure Web)" },
+      { num: 636, use: "LDAPS (Secure Directory)" }
+    ];
+
+    const ciphers = [
+      { name: "AES (Rijndael)", type: "symmetric" },
+      { name: "DES / 3DES", type: "symmetric" },
+      { name: "Blowfish / Twofish", type: "symmetric" },
+      { name: "RC4 / RC5 / RC6", type: "symmetric" },
+      { name: "IDEA", type: "symmetric" },
+      { name: "CAST", type: "symmetric" },
+      { name: "Diffie-Hellman", type: "asymmetric" },
+      { name: "RSA", type: "asymmetric" },
+      { name: "ECC (Elliptic Curve)", type: "asymmetric" },
+      { name: "DSA (Digital Signature)", type: "asymmetric" },
+      { name: "El Gamal", type: "asymmetric" }
+    ];
+
+    const mitigations = [
+      { threat: "SYN Flood (Misusing TCP handshake to overflow servers)", remedy: "SYN Cookies / Ingress Filtering" },
+      { threat: "Teardrop Attack (Overlapping fragmented UDP packets)", remedy: "Upgrade TCP/IP stack Bogus Reassembly" },
+      { threat: "Man-In-The-Middle Attack (Interception between hosts)", remedy: "Strong mutual authentication & encryption (PKI)" },
+      { threat: "IP Spoofing (Forged origin header packets)", remedy: "Ingress & Egress Router Filtering" },
+      { threat: "Dictionary / Brute Force Password attacks", remedy: "Greater keyspace complexity & lockouts" },
+      { threat: "Physical piggybacking / Tailgating", remedy: "Mantrap / Turnstile" }
+    ];
+
+    const gameContainer = document.getElementById("remember-container");
+    const feedbackModal = document.getElementById("feedback-modal");
+    const feedbackBox = document.getElementById("feedback-box");
+    const feedbackStatus = document.getElementById("feedback-status");
+    const feedbackBody = document.getElementById("feedback-body");
+    const feedbackCloseBtn = document.getElementById("feedback-close-btn");
+
+    let g1Score = 0;
+    let g1Rounds = 0;
+    let g1CurrentPort = null;
+
+    let g2Pool = [];
+    let g2CurrentWord = null;
+    let g2CorrectCount = 0;
+
+    document.getElementById("btn-game1").addEventListener("click", startPortGame);
+    document.getElementById("btn-game2").addEventListener("click", startCipherGame);
+    document.getElementById("btn-game3").addEventListener("click", startMitigationGame);
+
+    /* =========================================================================
+       GAME 01: PORT DEFENDER
+       ========================================================================= */
+    function startPortGame() {
+      gameContainer.style.display = "flex";
+      g1Score = 0;
+      g1Rounds = 0;
+      nextPortRound();
+    }
+
+    function nextPortRound() {
+      if (g1Rounds >= 10) {
+        endGame(1, `Port Defense Completed! Score: ${g1Score} / 10`);
+        return;
+      }
+      g1Rounds++;
+      const randIdx = Math.floor(Math.random() * ports.length);
+      g1CurrentPort = ports[randIdx];
+
+      // Shuffle options (including correct answer)
+      let choices = [g1CurrentPort.num];
+      while (choices.length < 4) {
+        const decoy = ports[Math.floor(Math.random() * ports.length)].num;
+        if (!choices.includes(decoy)) choices.push(decoy);
+      }
+      choices.sort(() => Math.random() - 0.5);
+
+      gameContainer.innerHTML = `
+        <div>
+          <div class="p-hud">
+            <div>STATUS: DEFENDING BROADCAST</div>
+            <div class="p-score">SUCCESSFUL BLOCKS: <span>${g1Score} / 10</span></div>
+          </div>
+          <p class="prose" style="text-align:center;">Incoming request packet query matches description:</p>
+          <div class="p-threat">"Establish connection to <span>${g1CurrentPort.use}</span>"</div>
+          <div class="p-grid">
+            ${choices.map(c => `<button class="p-btn" onclick="checkPort(${c})">Port ${c}</button>`).join("")}
+          </div>
+        </div>
+        <button class="btn-ghost" onclick="quitGame()">&larr; Quit Simulator</button>
+      `;
+    }
+
+    function checkPort(selected) {
+      if (selected === g1CurrentPort.num) {
+        g1Score++;
+        openFeedback(true, "Correct port block deployed!");
+      } else {
+        openFeedback(false, `Alert! Breach detected. **${g1CurrentPort.use}** operates on **Port ${g1CurrentPort.num}**.`);
+      }
+      nextPortRound();
+    }
+
+    /* =========================================================================
+       GAME 02: CIPHER MATRIX Drag & Drop
+       ========================================================================= */
+    function startCipherGame() {
+      gameContainer.style.display = "flex";
+      g2CorrectCount = 0;
+      g2Pool = shuffleArray(ciphers);
+      nextCipherRound();
+    }
+
+    function nextCipherRound() {
+      if (g2Pool.length === 0) {
+        endGame(2, "Matrix Cleared! You correctly sorted all cryptographic ciphers.");
+        return;
+      }
+      g2CurrentWord = g2Pool.pop();
+
+      gameContainer.innerHTML = `
+        <div>
+          <div class="p-hud">
+            <div>STATUS: SORTING SYSTEM DATA</div>
+            <div class="p-score">SORTED: <span>${g2CorrectCount} / ${ciphers.length}</span></div>
+          </div>
+          <p class="prose" style="text-align:center;">Drag or click the cipher block into its correct cryptographic architecture:</p>
+          
+          <div style="text-align:center;">
+            <div class="matrix-word" draggable="true" id="drag-word">${g2CurrentWord.name}</div>
+          </div>
+
+          <div class="matrix-workspace">
+            <div class="matrix-bin symmetric" id="bin-symmetric" onclick="dropCipher('symmetric')">
+              <h4>Symmetric Matrix (Single Key)</h4>
+            </div>
+            <div class="matrix-bin asymmetric" id="bin-asymmetric" onclick="dropCipher('asymmetric')">
+              <h4>Asymmetric Matrix (Double Keys)</h4>
+            </div>
+          </div>
+        </div>
+        <button class="btn-ghost" onclick="quitGame()">&larr; Quit Simulator</button>
+      `;
+
+      // Setup drag events for desktop
+      const dWord = document.getElementById("drag-word");
+      dWord.addEventListener("dragstart", (e) => {
+        e.dataTransfer.setData("text/plain", g2CurrentWord.type);
+      });
+
+      ["symmetric", "asymmetric"].forEach(type => {
+        const bin = document.getElementById(`bin-${type}`);
+        bin.addEventListener("dragover", (e) => e.preventDefault());
+        bin.addEventListener("dragenter", () => bin.classList.add("active"));
+        bin.addEventListener("dragleave", () => bin.classList.remove("active"));
+        bin.addEventListener("drop", (e) => {
+          bin.classList.remove("active");
+          const droppedType = e.dataTransfer.getData("text/plain");
+          processCipherSort(droppedType);
+        });
+      });
+    }
+
+    function dropCipher(chosenType) {
+      processCipherSort(chosenType);
+    }
+
+    function processCipherSort(chosenType) {
+      if (chosenType === g2CurrentWord.type) {
+        g2CorrectCount++;
+        openFeedback(true, "System aligned! Key structure matched.");
+      } else {
+        openFeedback(false, `Error: Misalignment! **${g2CurrentWord.name}** is an **${g2CurrentWord.type}** algorithm.`);
+      }
+      nextCipherRound();
+    }
+
+    /* =========================================================================
+       GAME 03: MITIGATION DECODER Matching
+       ========================================================================= */
+    function startMitigationGame() {
+      gameContainer.style.display = "flex";
+      
+      const remedies = shuffleArray(mitigations.map(m => m.remedy));
+
+      gameContainer.innerHTML = `
+        <div>
+          <div class="p-hud">
+            <div>STATUS: DECODING MITIGATION MATRICES</div>
+          </div>
+          <p class="prose" style="margin-bottom:1.25rem;">Deploy the correct administrative or architectural countermeasure for each system threat:</p>
+          
+          <div class="matcher-workspace">
+            ${mitigations.map((item, idx) => `
+              <div class="match-row">
+                <div class="match-threat"><strong>THREAT:</strong> ${item.threat}</div>
+                <select class="match-select" id="remedy-select-${idx}">
+                  <option value="">-- Deploy Mitigation --</option>
+                  ${remedies.map(r => `<option value="${r}">${r}</option>`).join("")}
+                </select>
+              </div>
+            `).join("")}
+          </div>
+
+          <div style="text-align:center; margin-top:1.5rem;">
+            <button class="btn-lime" onclick="gradeMitigations()">Deploy All Mitigations</button>
+          </div>
+        </div>
+        <button class="btn-ghost" onclick="quitGame()">&larr; Quit Simulator</button>
+      `;
+    }
+
+    function gradeMitigations() {
+      let correct = 0;
+      let reviewHTML = "";
+
+      mitigations.forEach((item, idx) => {
+        const sel = document.getElementById(`remedy-select-${idx}`).value;
+        if (sel === item.remedy) {
+          correct++;
+        } else {
+          reviewHTML += `<p style="margin-bottom:0.45rem;">&bull; For **${item.threat}**, the correct mitigation is **${item.remedy}**.</p>`;
+        }
+      });
+
+      if (correct === mitigations.length) {
+        endGame(3, "Perfect Defense! All network exploits successfully mitigated.");
+      } else {
+        openFeedback(false, `Review details below: <br/><br/>${reviewHTML}`);
+        startMitigationGame();
+      }
+    }
+
+    /* =========================================================================
+       CORE UTILITIES
+       ========================================================================= */
+    function openFeedback(isCorrect, htmlContent) {
+      feedbackBox.className = "modal-box " + (isCorrect ? "correct" : "wrong");
+      feedbackStatus.textContent = isCorrect ? "Correct!" : "System Alert";
+      feedbackBody.innerHTML = htmlContent;
+      feedbackModal.classList.add("open");
+    }
+
+    feedbackCloseBtn.addEventListener("click", () => feedbackModal.classList.remove("open"));
+    feedbackModal.addEventListener("click", (e) => {
+      if (e.target === feedbackModal) feedbackModal.classList.remove("open");
+    });
+
+    function endGame(gId, msg) {
+      gameContainer.innerHTML = `
+        <div class="game-over-screen">
+          <div class="eyebrow">Simulator Finished</div>
+          <h1 class="hero-headline" style="color:var(--lime);">MISSION <span class="outline">ACCOMPLISHED</span></h1>
+          <p class="prose">${msg}</p>
+          <div style="display:flex;gap:1rem;margin-top:1rem;">
+            <button class="btn-lime" onclick="restartSelectedGame(${gId})">Restart Game</button>
+            <button class="btn-ghost" onclick="quitGame()">Select Another Game</button>
+          </div>
+        </div>
+      `;
+    }
+
+    function restartSelectedGame(gId) {
+      if (gId === 1) startPortGame();
+      else if (gId === 2) startCipherGame();
+      else if (gId === 3) startMitigationGame();
+    }
+
+    function quitGame() {
+      gameContainer.style.display = "none";
+      document.querySelector(".game-choice-grid").style.display = "grid";
+    }
+
+    function shuffleArray(arr) {
+      const copy = [...arr];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    // Toggle menu
+    const menuBtn = document.getElementById("mobile-menu-btn");
+    const navDrawer = document.getElementById("nav-drawer");
+    menuBtn.addEventListener("click", () => {
+      const isOpen = navDrawer.classList.toggle("open");
+      menuBtn.setAttribute("aria-expanded", String(isOpen));
+      menuBtn.innerHTML = isOpen ? "Close &#10005;" : "Menu &#9776;";
+    });
+
+    const privacyModal = document.getElementById("privacy-modal");
+    document.getElementById("open-privacy-btn").addEventListener("click", () => privacyModal.classList.add("open"));
+    document.getElementById("privacy-close-btn").addEventListener("click", () => privacyModal.classList.remove("open"));
+    privacyModal.addEventListener("click", (e) => { if (e.target === privacyModal) privacyModal.classList.remove("open"); });
+  </script>
+</body>
+</html>
