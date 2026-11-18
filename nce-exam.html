@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>NCE Mock Exam | Jesse's Study Guides</title>
+  <meta name="description" content="200-question randomized NCE practice exam with a real 3h 45m timer, instant feedback, and 6-domain NBCC score report." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .exam-topbar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.85rem;
+      margin-bottom: 1.25rem;
+      position: relative;
+      z-index: 20;
+    }
+    .exam-topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      flex-wrap: wrap;
+    }
+    .timer-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.48rem 0.85rem;
+      border-radius: 8px;
+      background: rgba(13, 18, 28, 0.95);
+      border: 1px solid var(--cyan);
+      color: var(--cyan);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      box-shadow: 0 0 14px rgba(34, 211, 238, 0.15);
+    }
+    .timer-badge.warning {
+      border-color: var(--amber);
+      color: var(--amber);
+      box-shadow: 0 0 14px rgba(251, 191, 36, 0.2);
+    }
+    .timer-badge.danger {
+      border-color: var(--rose);
+      color: var(--rose);
+      box-shadow: 0 0 16px rgba(251, 113, 133, 0.3);
+      animation: pulseDot 1s infinite;
+    }
+
+    .btn-ghost {
+      padding: 0.55rem 1rem;
+      border-radius: 8px;
+      border: 1px solid var(--border-slate);
+      background: transparent;
+      color: var(--text-secondary);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.76rem;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .btn-ghost:hover { border-color: var(--cyan); color: #fff; }
+    .btn-lime {
+      padding: 0.78rem 1.45rem;
+      border-radius: 9px;
+      border: none;
+      background: var(--lime);
+      color: #05070c;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+    .btn-lime:hover {
+      filter: brightness(1.08);
+      box-shadow: 0 0 22px rgba(158, 255, 51, 0.35);
+      transform: translateY(-1px);
+    }
+    .btn-cyan {
+      padding: 0.78rem 1.45rem;
+      border-radius: 9px;
+      border: 1px solid var(--cyan);
+      background: var(--cyan-dim);
+      color: var(--cyan);
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 0.82rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+    .btn-cyan:hover {
+      background: var(--cyan);
+      color: #05070c;
+      box-shadow: 0 0 22px rgba(34, 211, 238, 0.35);
+    }
+
+    /* Custom Scrollable Jump Dropdown */
+    .jump-wrapper {
+      position: relative;
+      display: inline-block;
+    }
+    .jump-trigger {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.6rem;
+      padding: 0.5rem 0.9rem;
+      border-radius: 8px;
+      border: 1px solid var(--border-slate);
+      background: var(--bg-card);
+      color: #f8fafc;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: border-color 0.15s ease;
+    }
+    .jump-trigger:hover,
+    .jump-trigger.open {
+      border-color: var(--cyan);
+      color: var(--cyan);
+    }
+    .jump-menu {
+      position: absolute;
+      right: 0;
+      top: calc(100% + 6px);
+      width: 280px;
+      max-height: 320px;
+      overflow-y: auto;
+      background: #0d121c;
+      border: 1px solid var(--cyan);
+      border-radius: 10px;
+      padding: 0.6rem;
+      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.85);
+      display: none;
+      z-index: 60;
+    }
+    .jump-menu.open { display: block; }
+    .jump-legend {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.4rem;
+      padding-bottom: 0.5rem;
+      margin-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border-slate);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.62rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+    }
+    .legend-item {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.28rem;
+    }
+    .legend-swatch {
+      width: 9px;
+      height: 9px;
+      border-radius: 2px;
+      display: inline-block;
+    }
+    .swatch-current { background: var(--lime); }
+    .swatch-answered { background: var(--cyan); }
+    .swatch-unanswered { background: rgba(255, 255, 255, 0.12); border: 1px solid var(--border-slate); }
+
+    .jump-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0.35rem;
+    }
+    .jump-opt {
+      padding: 0.45rem 0.25rem;
+      border-radius: 6px;
+      border: 1px solid transparent;
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text-secondary);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      text-align: center;
+      cursor: pointer;
+      transition: all 0.12s ease;
+    }
+    .jump-opt:hover {
+      background: rgba(255, 255, 255, 0.12);
+      color: #fff;
+      border-color: rgba(255, 255, 255, 0.3);
+    }
+    .jump-opt.answered {
+      background: rgba(34, 211, 238, 0.22);
+      border-color: rgba(34, 211, 238, 0.7);
+      color: var(--cyan);
+      font-weight: 700;
+    }
+    .jump-opt.current {
+      background: var(--lime);
+      border-color: var(--lime);
+      color: #05070c;
+      font-weight: 700;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 5px;
+      background: rgba(148, 163, 184, 0.14);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 1.6rem;
+    }
+    .progress-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--cyan), var(--lime));
+      transition: width 0.25s ease;
+    }
+    .q-meta {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.76rem;
+      color: var(--cyan);
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+      flex-wrap: wrap;
+    }
+    .q-type-tag {
+      padding: 0.18rem 0.55rem;
+      border-radius: 6px;
+      background: var(--cyan-dim);
+      color: var(--cyan);
+      border: 1px solid rgba(34, 211, 238, 0.3);
+      font-size: 0.68rem;
+    }
+    .q-mode-tag {
+      padding: 0.18rem 0.55rem;
+      border-radius: 6px;
+      background: var(--lime-dim);
+      color: var(--lime);
+      border: 1px solid var(--border-bright);
+      font-size: 0.68rem;
+    }
+    .q-text {
+      font-size: 1.08rem;
+      line-height: 1.62;
+      color: #fff;
+      font-weight: 500;
+      margin-bottom: 1.45rem;
+    }
+    .options-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.7rem;
+      margin-bottom: 1.65rem;
+    }
+    .option-card {
+      width: 100%;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.9rem;
+      padding: 0.95rem 1.15rem;
+      border-radius: 10px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-slate);
+      color: var(--text-primary);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.95rem;
+      line-height: 1.5;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      user-select: none;
+    }
+    .option-card:hover { border-color: rgba(34, 211, 238, 0.45); background: var(--bg-card-hover); }
+    .option-card.selected { border-color: var(--lime); background: var(--lime-dim); }
+    .option-indicator {
+      width: 19px;
+      height: 19px;
+      flex-shrink: 0;
+      margin-top: 2px;
+      border: 2px solid var(--text-muted);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s ease;
+    }
+    .option-card.selected .option-indicator { border-color: var(--lime); background: var(--lime); }
+    .option-card.selected .option-indicator::after {
+      content: "";
+      display: block;
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: #05070c;
+    }
+    .exam-actions { display: flex; flex-wrap: wrap; align-items: center; gap: 0.85rem; }
+
+    /* Mode Selector Modal */
+    .mode-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.9rem;
+      margin-top: 1.25rem;
+    }
+    .mode-choice {
+      background: var(--bg-card);
+      border: 1px solid var(--border-slate);
+      border-radius: 12px;
+      padding: 1.15rem;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.18s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+    .mode-choice:hover {
+      border-color: var(--lime);
+      background: var(--bg-card-hover);
+      transform: translateY(-2px);
+    }
+    .mode-choice-title {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 0.95rem;
+      text-transform: uppercase;
+      color: var(--lime);
+    }
+    .mode-choice.cyan:hover { border-color: var(--cyan); }
+    .mode-choice.cyan .mode-choice-title { color: var(--cyan); }
+    .mode-choice-desc {
+      font-size: 0.84rem;
+      color: var(--text-secondary);
+      line-height: 1.45;
+    }
+
+    /* End Results & Domain Breakdown */
+    .score-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(145px, 1fr));
+      gap: 0.9rem;
+      margin: 1.35rem 0 1.5rem;
+    }
+    .score-box {
+      background: var(--bg-card);
+      border: 1px solid var(--border-slate);
+      border-radius: 12px;
+      padding: 1.1rem;
+      text-align: center;
+    }
+    .score-num {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 1.85rem;
+      line-height: 1.1;
+    }
+    .score-num.lime { color: var(--lime); }
+    .score-num.rose { color: var(--rose); }
+    .score-num.cyan { color: var(--cyan); }
+    .score-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      margin-top: 0.35rem;
+    }
+
+    .domain-report {
+      background: var(--bg-card);
+      border: 1px solid var(--border-slate);
+      border-radius: 12px;
+      padding: 1.35rem;
+      margin-bottom: 1.75rem;
+    }
+    .domain-report h3 {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 0.96rem;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin-bottom: 1rem;
+    }
+    .domain-row {
+      margin-bottom: 0.9rem;
+    }
+    .domain-row:last-child { margin-bottom: 0; }
+    .domain-row-top {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.75rem;
+      font-size: 0.84rem;
+      margin-bottom: 0.35rem;
+    }
+    .domain-name { color: #fff; font-weight: 600; }
+    .domain-stats {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      white-space: nowrap;
+    }
+    .domain-bar {
+      width: 100%;
+      height: 7px;
+      background: rgba(148, 163, 184, 0.14);
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .domain-bar-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--cyan), var(--lime));
+    }
+
+    .review-list {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+    .review-item {
+      background: var(--bg-card);
+      border: 1px solid rgba(251, 113, 133, 0.35);
+      border-left: 3px solid var(--rose);
+      border-radius: 10px;
+      padding: 1.2rem;
+    }
+    .review-q { color: #fff; font-weight: 600; margin-bottom: 0.6rem; line-height: 1.5; }
+    .review-meta { font-size: 0.86rem; color: var(--text-secondary); line-height: 1.55; }
+    .review-meta strong { color: var(--lime); }
+    .review-meta .yours { color: var(--rose); }
+
+    /* Feedback Modal Overrides */
+    .modal-box.wrong { border-color: rgba(251, 113, 133, 0.65); }
+    .modal-box.correct { border-color: rgba(158, 255, 51, 0.65); }
+    .modal-box.wrong .modal-title { color: var(--rose); }
+    .modal-box.correct .modal-title { color: var(--lime); }
+    .modal-body:empty { display: none; }
+    .modal-body code {
+      font-family: 'JetBrains Mono', monospace;
+      background: rgba(148, 163, 184, 0.15);
+      padding: 0.1rem 0.35rem;
+      border-radius: 4px;
+      color: var(--cyan);
+      font-size: 0.88em;
+    }
+    .modal-body strong { color: #fff; }
+
+    @media (max-width: 600px) {
+      .mode-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="frame-wrapper">
+    <aside>
+      <div class="brand-block">
+        <div class="brand-row">
+          <div>
+            <a href="index.html" class="brand-title">Jesse's Study Guides</a>
+            <div class="brand-tagline">Unofficial compiled training database v1.0</div>
+          </div>
+          <button class="mobile-menu-btn" id="mobile-menu-btn" aria-expanded="false" aria-controls="nav-drawer">
+            Menu &#9776;
+          </button>
+        </div>
+        <a class="coffee-btn" href="https://www.buymeacoffee.com/xjessejohnson" target="_blank" rel="noopener noreferrer">
+          &#9749; Buy Me a Coffee
+        </a>
+      </div>
+
+      <nav class="nav-drawer" id="nav-drawer" aria-label="Study Categories">
+        <div class="nav-section">
+          <div class="nav-label">Cybersecurity</div>
+          <a href="cissp.html" class="nav-item">
+            <span>CISSP</span>
+            <span class="badge live">Active</span>
+          </a>
+          <a href="cism.html" class="nav-item">
+            <span>CISM</span>
+            <span class="badge live">Active</span>
+          </a>
+          <span class="nav-item disabled" aria-disabled="true">
+            <span>Security+</span>
+            <span class="badge">Coming Soon</span>
+          </span>
+        </div>
+
+        <div class="nav-section">
+          <div class="nav-label">Psychology</div>
+          <a href="nce.html" class="nav-item active">
+            <span>NCE</span>
+            <span class="badge live">Active</span>
+          </a>
+        </div>
+
+        <div class="nav-section">
+          <div class="nav-label">Other</div>
+          <span class="nav-item disabled" aria-disabled="true">
+            <span>Coming Soon</span>
+            <span class="badge">Coming Soon</span>
+          </span>
+        </div>
+      </nav>
+    </aside>
+
+    <div class="main-area">
+      <div class="topbar">
+        <div class="breadcrumb">JESSE'S STUDY GUIDES / NCE / <span>MOCK EXAM</span></div>
+        <div class="status-pill"><span class="status-dot"></span> SYSTEM ONLINE</div>
+      </div>
+
+      <main class="content-body" id="exam-main"></main>
+    </div>
+  </div>
+
+  <!-- Exam Mode Selector Modal -->
+  <div class="modal-backdrop open" id="mode-modal" role="dialog" aria-modal="true" aria-labelledby="mode-title">
+    <div class="modal-box" style="border-color: var(--cyan);">
+      <div class="modal-top">
+        <div class="modal-title" id="mode-title">Select Exam Mode</div>
+      </div>
+      <div class="modal-body">
+        <p>Questions are shuffled into a new order every session and timed at the official <strong>3 hours and 45 minutes (225 minutes)</strong>:</p>
+        <div class="mode-grid">
+          <button type="button" class="mode-choice" id="choose-instant">
+            <div class="mode-choice-title">Answers Instantly</div>
+            <div class="mode-choice-desc">Immediate feedback on every question with study notes. Any questions left unanswered if time expires are marked wrong.</div>
+          </button>
+          <button type="button" class="mode-choice cyan" id="choose-end">
+            <div class="mode-choice-title">Answers at the End</div>
+            <div class="mode-choice-desc">Simulate the real NCE. Grades all 200 items when you finish or when the 3h 45m timer runs out, with a 6-domain breakdown.</div>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Answer Feedback Modal -->
+  <div class="modal-backdrop" id="feedback-modal" role="dialog" aria-modal="true">
+    <div class="modal-box" id="feedback-box">
+      <div class="modal-top" style="border-bottom:none;padding-bottom:0;">
+        <div class="modal-title" id="feedback-status"></div>
+        <button class="modal-close" id="feedback-close-btn" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body" id="feedback-body"></div>
+    </div>
+  </div>
+
+  <!-- Privacy Policy Modal -->
+  <div class="modal-backdrop" id="privacy-modal" role="dialog" aria-modal="true" aria-labelledby="privacy-title">
+    <div class="modal-box">
+      <div class="modal-top">
+        <div class="modal-title" id="privacy-title">Privacy Policy</div>
+        <button class="modal-close" id="privacy-close-btn" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body">
+        <p><strong>Effective Date:</strong> November 17, 2026</p>
+        <h4>1. Information We Collect</h4>
+        <p>Jesse's Study Guides is a static, informational study website. We do not require user registration, accounts, or logins, and we do not directly collect names, email addresses, or payment details on this site.</p>
+        <h4>2. Hosting and Server Logs</h4>
+        <p>This website is hosted via Vercel. As part of standard web delivery and security operations, our hosting provider may automatically process basic technical request data such as your IP address, browser type, operating system, and timestamps in temporary server logs.</p>
+        <h4>3. Cookies and Tracking</h4>
+        <p>This website does not use advertising trackers or third-party marketing cookies.</p>
+        <h4>4. Third-Party Links</h4>
+        <p>This site includes an external link to Buy Me a Coffee for voluntary donations. If you choose to visit or donate through that platform, any information you provide is governed directly by Buy Me a Coffee's own privacy policy and terms of service.</p>
+        <h4>5. Changes to This Policy</h4>
+        <p>This policy may be updated as new features or study modules are added to the site. Questions regarding this notice can be directed to the site owner, Jesse Johnson.</p>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2026 Jesse Johnson. All rights reserved.</p>
+    <p>
+      This portal is an independent, unofficial personal study resource and is not affiliated with, endorsed by, or sponsored by ISC2, ISACA, CompTIA, NBCC, or any other certification body.
+      CISSP&reg; is a registered trademark of ISC2. CISM&reg; is a registered trademark of ISACA. CompTIA Security+&reg; is a registered trademark of CompTIA. NCE&reg; is a registered trademark of NBCC. All vendor materials, trademarks, and copyrights remain the property of their respective owners.
+    </p>
+    <div class="footer-links">
+      <button type="button" class="privacy-link" id="open-privacy-btn">Privacy Policy</button>
+    </div>
+  </footer>
+
+  <script>
+    const domainNames = {
+      1: "1. Counseling Skills & Interventions",
+      2: "2. Areas of Clinical Focus",
+      3: "3. Professional Practice & Ethics",
+      4: "4. Intake, Assessment & Diagnosis",
+      5: "5. Treatment Planning",
+      6: "6. Core Counseling Attributes"
+    };
+
+    const rawQuestions = [
+      { id: 1, dom: 2, q: "What is the most common family structure in the United States?", opts: ["Single male householder", "Married couple households", "Single female householder", "Cohabiting couple households"], ans: [1], exp: "U.S. Census Bureau data consistently shows that **married-couple households** represent the largest single share of family households in the United States." },
+      { id: 2, dom: 4, q: "Which of the following is NOT a reason that a counselor may decide to administer a psychological test?", opts: ["To better understand the client", "To predict future performance", "To evaluate the outcomes of counseling", "To meet agency quotas for testing"], ans: [3], exp: "Under ACA and NBCC ethical codes, psychological assessments must serve the **clinical welfare and treatment goals of the client** rather than administrative or financial quotas." },
+      { id: 3, dom: 3, q: "An employer asks a counselor if it is legal to ask potential employees if they are disabled during an initial interview. Which of the following is the best response?", opts: ["\"Yes, you can ask if the person has a disability that may affect the job.\"", "\"You can ask if the person has any disability.\"", "\"You may ask only if the person can perform job functions.\"", "\"You may ask only if there are job-related functions the person cannot do.\""], ans: [2], exp: "Under the Americans with Disabilities Act (ADA), employers are prohibited from asking about disabilities pre-offer and **may only ask whether an applicant can perform essential job functions**." },
+      { id: 4, dom: 2, q: "Josie's little brother Jack likes when they play peek-a-boo. According to Piaget, Jack finds this game fun because he has not yet acquired __________, which is one of the primary tasks of the sensorimotor stage of cognitive development.", opts: ["conservation", "dual representation", "object permanence", "reversibility"], ans: [2], exp: "**Object permanence** is the sensorimotor milestone of understanding that objects and people continue to exist even when they cannot be seen or heard." },
+      { id: 5, dom: 4, q: "The Rorschach, TAT, and Rotter Incomplete Sentences Blank are all:", opts: ["Projective tests", "Observational tests", "Rating scales", "Standardized personality tests"], ans: [0], exp: "**Projective tests** present ambiguous stimuli (inkblots, pictures, incomplete sentences) so clients project unconscious needs, motives, and conflicts onto their responses." },
+      { id: 6, dom: 3, q: "A counselor in private practice receives a subpoena from an attorney requesting the clinical records of a current adult client who is involved in a child custody dispute. The client has not signed a release of information and explicitly tells the counselor they do not want their records released. What is the counselor’s MOST appropriate initial step?", opts: ["Immediately send the records to the attorney to avoid being held in contempt of court.", "Ignore the subpoena because counselor-client privilege legally overrides all attorney requests.", "Contact the client’s attorney and assert privilege, requesting the subpoena be quashed or awaiting a court order.", "Send a brief summary of the client’s diagnosis and attendance dates without including session notes."], ans: [2], exp: "An attorney-issued subpoena is not a judicial court order, so a counselor must protect confidentiality by **asserting privilege until the client consents or a judge orders release**." },
+      { id: 7, dom: 2, q: "During an initial intake session, a 28-year-old client says, \"I know drinking a fifth of vodka every night is ruining my marriage and my liver, and I want to stop, but honestly, it’s the only thing that shuts my brain off after work.\" According to Prochaska and DiClemente’s Transtheoretical Model, which stage of change is this client demonstrating?", opts: ["Precontemplation", "Contemplation", "Preparation", "Maintenance"], ans: [1], exp: "The **Contemplation** stage is characterized by awareness that a problem exists coupled with strong ambivalence about taking concrete action to change." },
+      { id: 8, dom: 2, q: "A 7-year-old child is shown two identical glasses containing the exact same amount of water. While the child watches, the examiner pours the water from one glass into a taller, thinner glass and asks which glass has more water. The child correctly states that both glasses still contain the same amount. According to Jean Piaget, this child has mastered which cognitive milestone?", opts: ["Object permanence", "Egocentrism", "Conservation", "Abstract hypothetical reasoning"], ans: [2], exp: "**Conservation**—recognizing that quantity remains invariant despite changes in container shape—is a primary achievement of Piaget’s concrete operational stage." },
+      { id: 9, dom: 4, q: "A counselor administers a newly developed anxiety inventory to a group of clients on Monday and re-administers the exact same test to the same group two weeks later, obtaining a correlation coefficient of r = 0.88. Which psychometric property has the counselor primarily demonstrated?", opts: ["Content validity", "Concurrent validity", "Test-retest reliability", "Split-half reliability"], ans: [2], exp: "Administering the exact same instrument to the same sample across two separate time points measures temporal stability, known as **test-retest reliability**." },
+      { id: 10, dom: 1, q: "During the fourth session of a process-oriented counseling group, two members begin arguing openly over how much time one member takes up during sessions, and a third member challenges the group leader’s lack of structure. According to Tuckman’s stages of group development, what stage is the group currently experiencing?", opts: ["Forming", "Storming", "Norming", "Performing"], ans: [1], exp: "Tuckman’s **Storming** stage is marked by interpersonal conflict, competition for airtime, and challenges to the leader before group cohesion forms." },
+      { id: 11, dom: 2, q: "According to Donald Super’s Life-Span, Life-Space theory, a 47-year-old corporate accountant who feels burned out and decides to return to graduate school to become a high school teacher is experiencing:", opts: ["Crystallization", "Recycling", "Disengagement", "Circumscription"], ans: [1], exp: "Super’s concept of **recycling** describes re-entering earlier career development stages (such as exploration and establishment) to make a major mid-life career transition." },
+      { id: 12, dom: 6, q: "When working with a client from a collectivist cultural background, a counselor encourages the client to set rigid personal boundaries and make career decisions solely based on individual fulfillment, ignoring the wishes of the client's parents. Which ethical/clinical error is the counselor committing?", opts: ["Cultural encapsulation", "Countertransference", "Universalism", "Acculturation"], ans: [0], exp: "**Cultural encapsulation** occurs when a counselor imposes their own culturally bound worldview (such as Western individualism) onto a client while disregarding the client's cultural context." },
+      { id: 13, dom: 3, q: "A researcher conducts a study comparing two different trauma therapies (EMDR vs. Prolonged Exposure) on PTSD symptom reduction. However, because participants were not randomly assigned, the EMDR group happened to have significantly lower baseline trauma scores before treatment began. This pre-existing difference threatens which type of validity?", opts: ["External validity", "Internal validity", "Construct validity", "Face validity"], ans: [1], exp: "Non-equivalent baseline groups caused by lack of random assignment introduce selection bias, a direct threat to a study's **internal validity**." },
+      { id: 14, dom: 1, q: "In Structural Family Therapy (Salvador Minuchin), a parent who consistently sides with a child against the other parent—creating a rigid, cross-generational alliance—is demonstrating which dysfunctional family dynamic?", opts: ["Triangulation / Cross-generational coalition", "Paradoxical intention", "Differentiation of self", "First-order change"], ans: [0], exp: "Minuchin identified a **cross-generational coalition** as a rigid boundary violation in which one parent allies with a child against the other parent." },
+      { id: 15, dom: 4, q: "A client scores at the 84th percentile on a standardized aptitude test with a mean of 100 and a standard deviation of 15. Assuming a normal distribution, what is this client’s approximate standard score?", opts: ["85", "100", "115", "130"], ans: [2], exp: "In a normal distribution, scoring +1 standard deviation above the mean (**100 + 15 = 115**) corresponds to the 50th percentile plus 34%, equaling the 84th percentile." },
+      { id: 16, dom: 2, q: "According to Erik Erikson’s psychosocial stages of development, the primary crisis faced during adolescence (ages 12 to 18) is:", opts: ["Industry vs. Inferiority", "Identity vs. Role Confusion", "Intimacy vs. Isolation", "Initiative vs. Guilt"], ans: [1], exp: "Erikson proposed that adolescents face **Identity vs. Role Confusion**, integrating their values, beliefs, and social roles to achieve a coherent sense of self." },
+      { id: 17, dom: 3, q: "A 14-year-old client tells her school counselor during a private session that she has been cutting her forearms with a razor blade every night for the past month, though she denies wanting to end her life. What is the counselor’s MOST appropriate ethical and legal action?", opts: ["Maintain strict confidentiality because non-suicidal self-injury does not meet the threshold for imminent danger.", "Notify the student’s parents/guardians and connect the student with appropriate mental health resources.", "Contact Child Protective Services immediately to report parental medical neglect.", "Require the student to sign a written no-harm contract before returning to class."], ans: [1], exp: "Even without explicit suicidal intent, ongoing self-harm in a minor represents a foreseeable risk of serious harm requiring **parental notification** under ethical duty-to-protect standards." },
+      { id: 18, dom: 2, q: "In John Holland’s theory of career choice (RIASEC), a person who prefers working with data, numbers, filing systems, and well-defined organizational rules belongs primarily to which personality type?", opts: ["Realistic", "Investigative", "Conventional", "Enterprising"], ans: [2], exp: "Holland’s **Conventional** type thrives in structured, systematic environments involving data management, recordkeeping, and clear procedures." },
+      { id: 19, dom: 3, q: "Which landmark federal law requires schools to provide a Free Appropriate Public Education (FAPE) in the Least Restrictive Environment (LRE) to students with disabilities?", opts: ["Section 504 of the Rehabilitation Act", "Individuals with Disabilities Education Act (IDEA)", "Family Educational Rights and Privacy Act (FERPA)", "Health Insurance Portability and Accountability Act (HIPAA)"], ans: [1], exp: "**IDEA** guarantees eligible children with disabilities a Free Appropriate Public Education tailored through an IEP in the Least Restrictive Environment." },
+      { id: 20, dom: 1, q: "A counselor using Rational Emotive Behavior Therapy (REBT) helps a client replace the belief \"I must be approved of by everyone or I am worthless\" with \"I prefer to be liked, but I can still accept myself when someone disapproves.\" Albert Ellis calls this therapeutic process:", opts: ["Systematic desensitization", "Disputing irrational beliefs", "Empty chair dialogue", "Externalizing the problem"], ans: [1], exp: "In REBT’s ABCDE model, \"D\" stands for actively **disputing irrational beliefs** (rigid \"musts\" and \"shoulds\") to produce an effective new philosophy." },
+      { id: 21, dom: 4, q: "Which measure of central tendency is MOST sensitive to extreme outliers in a skewed distribution?", opts: ["Mean", "Median", "Mode", "Interquartile range"], ans: [0], exp: "Because the arithmetic **mean** incorporates the exact numerical value of every score, extreme outliers pull it disproportionately toward the tail of a skewed distribution." },
+      { id: 22, dom: 1, q: "In Motivational Interviewing (Miller & Rollnick), which communication skill involves reflecting back both sides of a client’s ambivalence (e.g., \"You enjoy how marijuana helps you unwind, and at the same time you’re worried it’s costing you your motivation\")?", opts: ["Amplified reflection", "Double-sided reflection", "Rolling with resistance", "Confrontational feedback"], ans: [1], exp: "A **double-sided reflection** captures both sustain talk and change talk simultaneously so the client can hear their own ambivalence clearly." },
+      { id: 23, dom: 2, q: "Lawrence Kohlberg’s stage of moral development in which an individual makes ethical decisions based on universal principles of justice, human rights, and conscience—even if they conflict with written laws—is:", opts: ["Preconventional morality", "Conventional morality", "Postconventional morality", "Autonomous sensorimotor morality"], ans: [2], exp: "**Postconventional morality** (Stages 5 and 6) transcends social conformity and legalistic rules in favor of abstract social contracts and universal ethical principles." },
+      { id: 24, dom: 1, q: "A group counselor notices that a member consistently intellectualizes every emotional topic and avoids personal vulnerability. If the counselor uses the Gestalt technique of \"making the rounds,\" what will the counselor ask the member to do?", opts: ["Leave the group circle temporarily to observe from the outside.", "Walk around the room and say a specific, direct statement or feeling to each individual group member.", "Role-play a conversation with an absent family member sitting in an empty chair.", "Summarize the group’s themes at the close of the session."], ans: [1], exp: "**Making the rounds** is a Gestalt group exercise in which a member goes person-to-person around the circle to confront fears, test projections, or express direct feelings." },
+      { id: 25, dom: 1, q: "Which scheduling of reinforcement produces the highest rate of responding and the greatest resistance to extinction according to B.F. Skinner?", opts: ["Fixed-ratio (FR)", "Fixed-interval (FI)", "Variable-ratio (VR)", "Variable-interval (VI)"], ans: [2], exp: "**Variable-ratio (VR)** schedules reinforce behavior after an unpredictable number of responses (like slot machines), generating rapid, persistent responding that resists extinction." },
+      { id: 26, dom: 4, q: "A client reports experiencing sudden, unexpected surges of intense fear accompanied by heart palpitations, shortness of breath, dizziness, and fear of dying that peak within minutes. For the past two months, the client has constantly worried about having another episode and has avoided driving on highways. What is the MOST likely DSM-5-TR diagnosis?", opts: ["Generalized Anxiety Disorder", "Panic Disorder", "Specific Phobia", "Acute Stress Disorder"], ans: [1], exp: "**Panic Disorder** requires recurrent unexpected panic attacks followed by at least one month of persistent concern about future attacks or maladaptive avoidance behavior." },
+      { id: 27, dom: 2, q: "In career counseling, Mark Savickas is most closely associated with which theoretical approach?", opts: ["Trait-and-Factor Theory", "Career Construction Theory", "Social Learning Theory of Career Decision Making", "Circumscription and Compromise Theory"], ans: [1], exp: "Savickas developed **Career Construction Theory**, which uses narrative counseling and life themes to help clients build subjective meaning and career adaptability." },
+      { id: 28, dom: 3, q: "A researcher wants to determine whether a statistically significant difference exists between the mean depression scores of three different counseling treatment groups. Which statistical test is MOST appropriate?", opts: ["Independent-samples t-test", "One-way Analysis of Variance (ANOVA)", "Pearson product-moment correlation", "Chi-square test of independence"], ans: [1], exp: "A **one-way ANOVA** compares the means of three or more independent groups simultaneously without inflating Type I error rates." },
+      { id: 29, dom: 1, q: "According to Murray Bowen’s Family Systems Theory, when tension increases between two family members and they pull in a third person to stabilize the relationship and diffuse anxiety, this process is called:", opts: ["Enmeshment", "Triangulation", "Scapegoating", "Multigenerational transmission"], ans: [1], exp: "Bowen defined **triangulation** as a three-person emotional configuration used to relieve anxiety within an unstable two-person dyad." },
+      { id: 30, dom: 4, q: "What is the standard error of measurement (SEM) of a test with a standard deviation of 10 and a reliability coefficient of 0.91?", opts: ["0.90", "3.00", "4.50", "9.10"], ans: [1], exp: "Using the formula `SEM = SD * sqrt(1 - r)`, `SEM = 10 * sqrt(1 - 0.91) = 10 * sqrt(0.09) = 10 * 0.3 = 3.00`." },
+      { id: 31, dom: 1, q: "In Yalom’s therapeutic factors of group counseling, the relief a member feels upon realizing that other people share similar struggles, fears, and pain is known as:", opts: ["Altruism", "Catharsis", "Universality", "Instillation of hope"], ans: [2], exp: "**Universality** disconfirms a client's belief that they are uniquely wretched or isolated in their suffering by revealing shared human experiences." },
+      { id: 32, dom: 3, q: "Under the Family Educational Rights and Privacy Act (FERPA), at what age do rights regarding access to educational records transfer from the parents to the student?", opts: ["16", "18 (or upon attending a postsecondary institution)", "21", "14"], ans: [1], exp: "FERPA rights transfer from parents to the eligible student when the student turns **18 (or enters a postsecondary institution at any age)**." },
+      { id: 33, dom: 1, q: "A counselor asks a depressed client, \"Suppose tonight while you’re asleep, a miracle happens and the problem that brought you here is completely solved. When you wake up tomorrow, what will be the first small sign that tells you a miracle occurred?\" This intervention belongs to which model?", opts: ["Narrative Therapy", "Solution-Focused Brief Therapy (SFBT)", "Adlerian Therapy", "Cognitive Processing Therapy"], ans: [1], exp: "Steve de Shazer and Insoo Kim Berg developed the Miracle Question in **Solution-Focused Brief Therapy (SFBT)** to help clients envision concrete, observable behavioral goals." },
+      { id: 34, dom: 2, q: "Which stage of Sue and Sue’s Racial/Cultural Identity Development (R/CID) model is characterized by a strong preference for dominant culture values and depreciation of one’s own minority heritage?", opts: ["Dissonance", "Conformity", "Resistance and Immersion", "Integrative Awareness"], ans: [1], exp: "In the **Conformity** stage, minority individuals identify strongly with dominant-group standards while holding negative or ambivalent views toward their own cultural group." },
+      { id: 35, dom: 2, q: "A client taking a Monoamine Oxidase Inhibitor (MAOI) antidepressant must strictly avoid foods high in tyramine (such as aged cheeses and cured meats) primarily to prevent:", opts: ["Tardive dyskinesia", "Hypertensive crisis", "Serotonin syndrome", "Agranulocytosis"], ans: [1], exp: "MAOIs block the breakdown of tyramine, which can trigger a sudden, life-threatening spike in blood pressure known as a **hypertensive crisis**." },
+      { id: 36, dom: 2, q: "In classical conditioning (Ivan Pavlov), a dog salivates at the sound of a bell that was previously paired with meat powder. The bell is the:", opts: ["Unconditioned stimulus (UCS)", "Unconditioned response (UCR)", "Conditioned stimulus (CS)", "Conditioned response (CR)"], ans: [2], exp: "A neutral stimulus (the bell) that acquires the ability to elicit a learned response after repeated pairing with an unconditioned stimulus becomes the **conditioned stimulus (CS)**." },
+      { id: 37, dom: 3, q: "A counselor agrees to provide individual therapy to their best friend’s spouse. According to the ACA Code of Ethics, this arrangement is primarily a violation involving:", opts: ["Scope of competence", "Nonprofessional relationships / Dual relationships", "Duty to warn", "Fee splitting"], ans: [1], exp: "Providing counseling to someone with whom the counselor has a close personal connection compromises clinical objectivity and constitutes an unethical **dual relationship**." },
+      { id: 38, dom: 4, q: "Which type of validity assesses how well scores on a newly developed test correlate with scores on an established, gold-standard test administered at approximately the same time?", opts: ["Predictive validity", "Concurrent validity", "Face validity", "Discriminant validity"], ans: [1], exp: "**Concurrent validity** is a form of criterion-related validity established by correlating a new test with a validated criterion measure given simultaneously." },
+      { id: 39, dom: 1, q: "According to Alfred Adler’s Individual Psychology, the primary motivating force in human behavior is:", opts: ["Libidinal sexual energy", "Striving for superiority / perfection to overcome feelings of inferiority", "Unconditional positive regard", "Collective unconscious archetypes"], ans: [1], exp: "Adler posited that universal childhood feelings of inferiority drive individuals toward **striving for superiority/perfection** and social interest." },
+      { id: 40, dom: 5, q: "When conducting a program evaluation, assessing whether a counseling intervention is being implemented as designed while it is still underway—so adjustments can be made—is called:", opts: ["Summative evaluation", "Formative evaluation", "Meta-analysis", "Cost-benefit analysis"], ans: [1], exp: "**Formative evaluation** monitors ongoing program delivery and process quality during implementation to guide real-time improvements." },
+      { id: 41, dom: 3, q: "Which court case established that mental health professionals have a legal duty to take reasonable steps to protect an identifiable third party when a client communicates a serious threat of physical violence?", opts: ["Tarasoff v. Regents of the University of California", "Jaffee v. Redmond", "Wyatt v. Stickney", "Durham v. United States"], ans: [0], exp: "The 1976 **Tarasoff** ruling established that the duty to protect an identifiable victim from serious foreseeable violence supersedes client confidentiality." },
+      { id: 42, dom: 2, q: "In Frank Parsons’ trait-and-factor approach to career counseling, the three core steps are gaining self-understanding, gaining knowledge of the world of work, and:", opts: ["Eliminating sex-typed occupational stereotypes", "Using true reasoning to match personal traits with occupational requirements", "Developing a cohesive life narrative", "Establishing a stable vocational identity in late adolescence"], ans: [1], exp: "Parsons’ three-step model pairs self-assessment and occupational knowledge through **true reasoning** to achieve optimal person-environment fit." },
+      { id: 43, dom: 3, q: "A researcher falsely rejects a true null hypothesis, concluding that a counseling intervention had a significant effect when in reality it did not. This error is a:", opts: ["Type I error (alpha)", "Type II error (beta)", "Sampling error", "Hawthorne effect"], ans: [0], exp: "A **Type I error (alpha)** is a false positive that occurs when a researcher rejects a null hypothesis that is actually true." },
+      { id: 44, dom: 6, q: "According to Carl Rogers’ Person-Centered Therapy, which three therapist core conditions are both necessary and sufficient for constructive personality change?", opts: ["Confrontation, immediacy, and self-disclosure", "Congruence (genuineness), unconditional positive regard, and accurate empathic understanding", "Interpretation, free association, and transference analysis", "Psychoeducation, cognitive restructuring, and behavioral activation"], ans: [1], exp: "Rogers maintained that **congruence, unconditional positive regard, and accurate empathic understanding** create the growth-promoting climate necessary for client change." },
+      { id: 45, dom: 2, q: "A 5-year-old boy believes that the moon follows him whenever he walks down the street at night and that inanimate objects like his stuffed bear have feelings. Piaget termed this preoperational characteristic:", opts: ["Centration", "Animism", "Seriation", "Transitivity"], ans: [1], exp: "**Animism** is the preoperational belief that inanimate objects possess lifelike qualities, feelings, and intentions." },
+      { id: 46, dom: 1, q: "Which group leadership style is characterized by high member autonomy, minimal leader direction, and works best when group members are highly motivated, mature, and skilled?", opts: ["Authoritarian", "Democratic", "Laissez-faire", "Coercive"], ans: [2], exp: "A **laissez-faire** leader acts primarily as a consultant with minimal intervention, which succeeds only when members are self-directed and experienced." },
+      { id: 47, dom: 1, q: "When a client unconsciously redirects feelings and attitudes originally experienced toward a significant early figure (such as a parent) onto the counselor, psychodynamic therapists call this:", opts: ["Countertransference", "Transference", "Projection", "Resistance"], ans: [1], exp: "**Transference** occurs when a client projects unresolved emotions and relational patterns from past relationships onto the therapist." },
+      { id: 48, dom: 4, q: "A T-score has a fixed mean of __________ and a standard deviation of __________.", opts: ["100; 15", "50; 10", "0; 1", "500; 100"], ans: [1], exp: "Standard T-scores (commonly used on the MMPI-3) are normalized to a **mean of 50 and a standard deviation of 10**." },
+      { id: 49, dom: 2, q: "Linda Gottfredson’s theory of career development proposes that young people progressively eliminate unacceptable career options based on gender roles and social prestige through a process called:", opts: ["Career anchoring", "Circumscription and compromise", "Social cognitive self-efficacy", "Planned happenstance"], ans: [1], exp: "Gottfredson explained that children narrow occupational choices through **circumscription and compromise**." },
+      { id: 50, dom: 3, q: "A counselor works at an agency where a colleague regularly falsifies client progress notes to bill Medicaid for missed sessions. After privately discussing the concern with the colleague and receiving no change, what is the counselor’s MOST appropriate next step under the ACA Code of Ethics?", opts: ["Ignore the behavior because reporting a colleague harms professional collegiality.", "Report the colleague to the agency’s supervisor/compliance officer and, if unresolved, to the state licensing board.", "Inform the colleague’s clients directly so they can file lawsuits.", "Post an anonymous warning on a local mental health forum."], ans: [1], exp: "When informal resolution fails to stop ongoing ethical and legal violations such as Medicaid fraud, ACA ethics require **escalating the report through institutional channels and licensing boards**." },
+      { id: 51, dom: 6, q: "During an intake session, a 34-year-old client says, \"Ever since my company downsized six months ago, I feel like a complete failure as a provider, and my wife keeps nagging me to just get over it.\" Which counselor response BEST demonstrates accurate empathic understanding?", opts: ["\"Have you updated your resume and started networking with former colleagues yet?\"", "\"It sounds like losing that job hit your sense of identity hard, and feeling misunderstood at home makes it even heavier.\"", "\"Your wife is probably just worried about finances and doesn't mean to nag you.\"", "\"Many people go through layoffs today, so you shouldn't view yourself as a failure.\""], ans: [1], exp: "**Accurate empathy** reflects both the client’s underlying emotion and personal meaning without offering premature advice, defending others, or minimizing feelings." },
+      { id: 52, dom: 1, q: "Which defense mechanism involves channeling socially unacceptable impulses (such as aggression or sexual urges) into socially constructive activities like competitive sports or artistic creation?", opts: ["Displacement", "Sublimation", "Reaction formation", "Projection"], ans: [1], exp: "**Sublimation** is considered a mature ego defense mechanism that transforms unacceptable drives into socially valued achievements." },
+      { id: 53, dom: 4, q: "A counselor is treating a client who presents with persistent depressed mood, hypersomnia, hyperphagia (increased appetite), leaden paralysis in the limbs, and extreme sensitivity to interpersonal rejection for the past two years. Which DSM-5-TR specifier BEST fits this presentation?", opts: ["With melancholic features", "With atypical features", "With catatonic features", "With peripartum onset"], ans: [1], exp: "Mood reactivity combined with hypersomnia, weight gain/increased appetite, leaden paralysis, and interpersonal rejection sensitivity defines **atypical features**." },
+      { id: 54, dom: 1, q: "In Motivational Interviewing, when a client says, \"I know I should quit vaping, I just don't think I have the willpower to survive exam week without it,\" which response BEST exemplifies \"rolling with resistance\" (softening sustain talk) and supporting self-efficacy?", opts: ["\"If you don't quit now, your lung capacity will continue to deteriorate.\"", "\"You're already juggling a massive workload, so it makes total sense you're hesitant to give up a coping tool right before finals.\"", "\"Willpower is just a mindset—anyone can quit cold turkey if they truly want to.\"", "\"Let's list all the negative health consequences of nicotine so you stay motivated.\""], ans: [1], exp: "Validating the client's fear of losing a coping mechanism during high stress avoids the righting reflex and **preserves collaborative momentum**." },
+      { id: 55, dom: 5, q: "Which of the following is the primary goal of the initial (forming) stage of a counseling group?", opts: ["Working through deep-seated interpersonal conflicts among members", "Establishing safety, trust, group norms, and clear confidentiality expectations", "Challenging the group leader’s authority and testing boundaries", "Reviewing treatment gains and preparing for termination"], ans: [1], exp: "During the initial forming stage, the leader focuses on **establishing safety, trust, group norms, and confidentiality limits**." },
+      { id: 56, dom: 4, q: "A 19-year-old college freshman tells her counselor that she frequently eats large amounts of food in secret within a two-hour period while feeling completely out of control, followed by self-induced vomiting twice a week for the past four months, and maintains a normal body weight. What is the MOST accurate DSM-5-TR diagnosis?", opts: ["Anorexia Nervosa, binge-eating/purging type", "Bulimia Nervosa", "Binge-Eating Disorder", "Avoidant/Restrictive Food Intake Disorder (ARFID)"], ans: [1], exp: "**Bulimia Nervosa** is characterized by recurrent binge eating and compensatory purging at least once weekly for three months without the significantly low body weight required for Anorexia Nervosa." },
+      { id: 57, dom: 4, q: "When selecting a standardized career assessment for a client who is a recent immigrant with limited English proficiency, what is the counselor’s MOST ethical action?", opts: ["Administer the standard English version and add 10 points to compensate for language barriers.", "Select an instrument validated and normed for the client's cultural and linguistic population, or use qualitative career assessment methods.", "Refuse to offer career counseling until the client completes English fluency classes.", "Administer the test orally while translating each item on the spot."], ans: [1], exp: "ACA ethics require counselors to **use assessments normed on populations similar to the client** or use qualitative assessment methods." },
+      { id: 58, dom: 1, q: "In Dialectical Behavior Therapy (DBT), which core skill module teaches clients how to survive acute emotional crises without making the situation worse through impulsive behaviors?", opts: ["Interpersonal Effectiveness", "Distress Tolerance", "Cognitive Restructuring", "Systematic Desensitization"], ans: [1], exp: "**Distress Tolerance** equips clients with crisis-survival strategies (such as TIPP, radical acceptance, and self-soothing) to endure painful emotions without destructive impulsivity." },
+      { id: 59, dom: 2, q: "A correlation coefficient of r = -0.82 between hours spent scrolling social media before bed and total hours of restorative sleep indicates:", opts: ["A weak negative relationship", "A strong negative relationship", "That social media directly causes insomnia", "A strong positive relationship"], ans: [1], exp: "Correlation coefficients closer to -1.00 or +1.00 indicate **strong linear relationships**, and a negative sign shows an inverse association." },
+      { id: 60, dom: 2, q: "According to Bowlby and Ainsworth’s attachment theory, an infant who becomes intensely distressed when the caregiver leaves the room, yet resists comfort and pushes the caregiver away upon reunion, is displaying which attachment style?", opts: ["Secure attachment", "Insecure-avoidant attachment", "Insecure-ambivalent (resistant) attachment", "Disorganized attachment"], ans: [2], exp: "**Insecure-ambivalent (resistant)** infants exhibit extreme separation anxiety coupled with simultaneous seeking and rejection of comfort upon reunion." },
+      { id: 61, dom: 5, q: "A counselor in private practice plans to close their practice and relocate to another state in three months. What is the counselor’s MOST appropriate ethical obligation regarding current clients?", opts: ["Terminate all sessions immediately and mail each client a list of local clinics.", "Discuss termination well in advance, collaborate on transition goals, and provide appropriate referrals to ensure continuity of care.", "Continue seeing all clients via telehealth across state lines regardless of the new state's licensure laws.", "Transfer all client records directly to a colleague without asking the clients first."], ans: [1], exp: "Ethical termination requires **advance notice, collaborative closure, and coordinated referrals** so clients do not experience clinical abandonment." },
+      { id: 62, dom: 1, q: "In Narrative Therapy (Michael White and David Epston), separating the person from the problem—such as asking \"How long has The Anxiety been convincing you to stay home?\"—is known as:", opts: ["Externalizing the problem", "Circular questioning", "Flooding", "Prescribing the symptom"], ans: [0], exp: "**Externalizing the problem** objectifies the problem as an external entity rather than an internal pathology, empowering the client to unite against it." },
+      { id: 63, dom: 4, q: "Which statistical measure indicates the average distance that individual scores in a dataset deviate from the distribution's mean?", opts: ["Range", "Variance", "Standard deviation", "Median"], ans: [2], exp: "**Standard deviation** is the square root of variance and expresses dispersion in the original units of measurement relative to the mean." },
+      { id: 64, dom: 5, q: "A client undergoing treatment for Major Depressive Disorder expresses passive thoughts of wishing they wouldn't wake up, stating, \"I don't have a plan and I would never actually hurt myself because of my kids, I'm just exhausted.\" What is the counselor’s MOST appropriate immediate step?", opts: ["Initiate involuntary psychiatric hospitalization immediately.", "Conduct a thorough suicide risk assessment, collaboratively build a safety plan, and document protective factors and clinical rationale.", "Change the subject so the client does not dwell on negative thoughts.", "Notify the client's employer to request medical leave."], ans: [1], exp: "Passive death wishes without intent or plan call for **structured suicide risk assessment, collaborative safety planning, and ongoing monitoring**." },
+      { id: 65, dom: 1, q: "In Strategic Family Therapy (Jay Haley and Cloe Madanes), instructing a couple who constantly argue about household chores to intentionally schedule a mandatory 30-minute argument every evening at 7:00 PM is an example of:", opts: ["Reframing", "Paradoxical directive (prescribing the symptom)", "Boundary making", "Enactment"], ans: [1], exp: "A **paradoxical directive (prescribing the symptom)** instructs clients to intentionally perform the symptomatic behavior, bringing an involuntary pattern under conscious control." },
+      { id: 66, dom: 2, q: "According to Lev Vygotsky’s sociocultural theory of cognitive development, the gap between what a child can accomplish independently and what they can achieve with guidance from a skilled partner is called:", opts: ["Accommodation", "The Zone of Proximal Development (ZPD)", "Equilibration", "Egocentric speech"], ans: [1], exp: "Vygotsky defined the **Zone of Proximal Development (ZPD)** as the developmental space where scaffolding from a more knowledgeable other enables optimal learning." },
+      { id: 67, dom: 4, q: "Which type of validity evaluates whether the items on a newly created counselor licensure exam adequately sample all domains of the job blueprint without leaving out major content areas?", opts: ["Predictive validity", "Content validity", "Convergent validity", "Face validity"], ans: [1], exp: "**Content validity** examines how thoroughly and representatively test items cover the entire domain of knowledge or skills being measured." },
+      { id: 68, dom: 2, q: "A client diagnosed with Bipolar I Disorder who has been stable on lithium for two years presents to counseling reporting coarse hand tremors, slurred speech, confusion, and severe nausea after starting a low-sodium diet and running in hot weather. What should the counselor do FIRST?", opts: ["Reassure the client that these are normal adjustment side effects that will pass in a week.", "Urge the client to seek immediate medical evaluation for potential lithium toxicity.", "Advise the client to skip their next three doses of lithium.", "Teach the client progressive muscle relaxation for the tremors."], ans: [1], exp: "Dehydration and sodium depletion sharply raise serum lithium levels; coarse tremors, slurred speech, and confusion require **immediate medical evaluation for lithium toxicity**." },
+      { id: 69, dom: 2, q: "In John Krumboltz’s Happenstance Learning Theory, counselors encourage clients to view unexpected events and chance encounters as:", opts: ["Distractions that undermine long-term career planning", "Potential learning and career opportunities to explore through curiosity and action", "Indicators of external locus of control that must be eliminated", "Barriers caused by unresolved childhood trauma"], ans: [1], exp: "Krumboltz argued that unplanned events are inevitable and beneficial when clients treat them as **potential learning and career opportunities**." },
+      { id: 70, dom: 5, q: "When writing a Measurable Treatment Plan objective (SMART format), which statement is BEST written?", opts: ["\"Client will feel less anxious and have better self-esteem.\"", "\"Client will reduce panic attacks from 4 per week to 1 or fewer per week within 60 days using diaphragmatic breathing.\"", "\"Client will understand the root causes of their childhood trauma.\"", "\"Client will stop worrying about work so much.\""], ans: [1], exp: "Effective **SMART treatment plan objectives** specify observable behavior, quantifiable baseline/target metrics, an intervention strategy, and a clear timeframe." },
+      { id: 71, dom: 3, q: "Under HIPAA regulations, \"psychotherapy notes\" (process notes kept separate from the main medical record containing the therapist's private impressions and hypotheses) receive special protection meaning:", opts: ["Insurance companies can demand them automatically before paying any claim.", "They generally require a separate, specific written authorization from the client before disclosure, distinct from a general release for medical records.", "They must be given to any family member who pays for the client's sessions.", "Counselors are legally forbidden from ever destroying them."], ans: [1], exp: "HIPAA grants heightened privacy protection to separate psychotherapy process notes, requiring **a separate, specific written client authorization** before disclosure." },
+      { id: 72, dom: 1, q: "Which counseling theory emphasizes the four \"ultimate concerns\" of human existence: death, freedom, isolation, and meaninglessness?", opts: ["Gestalt Therapy", "Existential Therapy", "Reality Therapy", "Behavioral Therapy"], ans: [1], exp: "Irvin Yalom and **Existential Therapy** identify death, freedom/responsibility, existential isolation, and meaninglessness as the core givens of human existence." },
+      { id: 73, dom: 5, q: "A researcher randomly assigns 100 college students into two groups: one receives a 6-week mindfulness program and the other is placed on a waitlist. Both groups take a stress inventory before and after the 6 weeks. This design is a:", opts: ["Quasi-experimental design", "Pretest-posttest control group experimental design", "Single-subject ABAB withdrawal design", "Ex post facto causal-comparative design"], ans: [1], exp: "Random assignment combined with a treatment group, a control group, and pre/post measurements defines a true **pretest-posttest control group experimental design**." },
+      { id: 74, dom: 4, q: "A 42-year-old combat veteran seeks counseling 4 months after a roadside explosion. He reports intrusive nightmares, avoidance of crowded streets, hypervigilance, exaggerated startle response, and persistent negative beliefs that \"no one can be trusted.\" What is the MOST likely diagnosis?", opts: ["Acute Stress Disorder", "Posttraumatic Stress Disorder (PTSD)", "Adjustment Disorder with anxiety", "Brief Psychotic Disorder"], ans: [1], exp: "Trauma-related intrusion, avoidance, negative cognitive/mood alterations, and hyperarousal persisting for **more than one month** meet criteria for **PTSD**." },
+      { id: 75, dom: 5, q: "In Adlerian therapy, the four phases of counseling occur in which exact sequence?", opts: ["Assessment, Insight, Reorientation, Relationship Building", "Establishing the relationship, Psychological investigation/assessment, Encouraging self-understanding/insight, Reorientation/reeducation", "Catharsis, Confrontation, Interpretation, Termination", "Unfreezing, Changing, Refreezing, Follow-up"], ans: [1], exp: "Adlerian counseling progresses from **establishing the relationship, to lifestyle assessment, to encouraging insight, and finally to reorientation/reeducation**." },
+      { id: 76, dom: 2, q: "Which type of sampling ensures that specific subgroups (such as race, age bracket, or socioeconomic status) are represented in the sample in exact proportion to their presence in the overall population?", opts: ["Convenience sampling", "Snowball sampling", "Stratified random sampling", "Purposive sampling"], ans: [2], exp: "**Stratified random sampling** divides the population into homogeneous strata and draws random samples proportionally from each subgroup." },
+      { id: 77, dom: 1, q: "In Reality Therapy (William Glasser), the \"WDEP\" system used to help clients evaluate their behavior stands for:", opts: ["Wants, Doing, Evaluation, Planning", "Withdrawal, Denial, Empathy, Processing", "Wellness, Development, Exploration, Prevention", "Worth, Direction, Execution, Persistence"], ans: [0], exp: "WDEP stands for exploring the client's **Wants, Doing, self-Evaluation, and concrete Planning**." },
+      { id: 78, dom: 6, q: "A counselor notices that a client from an East Asian background avoids direct eye contact during sessions and defers frequently to her elders' opinions. A culturally competent counselor should FIRST:", opts: ["Diagnose the client with Dependent Personality Disorder.", "Interpret the lack of eye contact as clinical resistance or dishonesty.", "Recognize these behaviors as culturally respectful norms rather than pathology, and explore the client's personal values within her cultural context.", "Train the client in assertive Western eye-contact techniques immediately."], ans: [2], exp: "Culturally responsive counselors **avoid pathologizing culturally normative expressions of respect** and contextualize behavior within the client’s worldview." },
+      { id: 79, dom: 4, q: "If a test has a Cronbach’s alpha (α) of 0.92, what does this statistic tell the counselor?", opts: ["The test has high predictive validity for future job performance.", "The test items demonstrate high internal consistency reliability.", "92% of test-takers passed the cutoff score.", "The test is completely free of cultural bias."], ans: [1], exp: "**Cronbach’s alpha** measures **internal consistency reliability**—how closely related a set of items are in measuring a single construct." },
+      { id: 80, dom: 3, q: "During a couples counseling session, one partner discloses privately to the counselor via email between sessions that they are having an ongoing affair and warns the counselor not to tell their spouse. If the counselor failed to clarify a \"no-secrets\" policy during informed consent, what is the counselor's BEST ethical course of action?", opts: ["Blurt out the affair at the start of the next joint session.", "Review confidentiality boundaries with the disclosing partner, explore how the secret blocks couples therapy, and encourage the partner to disclose it or pause couples work until resolved.", "Pretend the email was never received and continue couples therapy as usual.", "Terminate therapy immediately without explanation."], ans: [1], exp: "Without a prior written no-secrets agreement, the counselor **cannot unilaterally breach individual confidentiality, yet cannot collude in deception** that sabotages couples treatment." },
+      { id: 81, dom: 2, q: "According to Elisabeth Kübler-Ross’s classic five-stage model of grief, the five stages are:", opts: ["Shock, Guilt, Despair, Reorganization, Recovery", "Denial, Anger, Bargaining, Depression, Acceptance", "Protest, Despair, Detachment, Integration, Renewal", "Numbness, Yearning, Disorganization, Rebuilding, Closure"], ans: [1], exp: "Kübler-Ross's five stages (DABDA) are **Denial, Anger, Bargaining, Depression, and Acceptance**." },
+      { id: 82, dom: 1, q: "In Gestalt Therapy (Fritz Perls), an \"introject\" refers to:", opts: ["Projecting one's own disowned traits onto another person", "Uncritically swallowing the beliefs, values, and rules of others without digesting whether they fit oneself", "Turning outward impulses back against oneself", "Avoiding genuine contact through excessive humor or deflection"], ans: [1], exp: "Perls defined **introjection** as passively swallowing external messages (\"shoulds\") whole without critically assimilating them." },
+      { id: 83, dom: 4, q: "Which assessment tool is specifically designed as a brief, 9-item self-report screening measure for depression severity in primary care and counseling settings?", opts: ["Beck Anxiety Inventory (BAI)", "Patient Health Questionnaire-9 (PHQ-9)", "Minnesota Multiphasic Personality Inventory-3 (MMPI-3)", "Strong Interest Inventory (SII)"], ans: [1], exp: "The **PHQ-9** maps directly onto the nine DSM diagnostic criteria for Major Depressive Disorder to screen and track depression severity." },
+      { id: 84, dom: 3, q: "A counselor is providing telehealth services to a client who travels to another state for a three-month summer internship. Before continuing virtual sessions while the client is out of state, the counselor MUST:", opts: ["Do nothing, because telehealth licenses automatically cover all 50 U.S. states.", "Verify the licensing laws and temporary practice regulations of the state where the client is physically located during the session.", "Ask the client to use a VPN so their location appears to be their home state.", "Have the client sign a waiver releasing the counselor from state board jurisdiction."], ans: [1], exp: "Telehealth jurisdiction is governed by **the state where the client is physically located at the time of service**." },
+      { id: 85, dom: 1, q: "In group counseling, when a leader notices a member monopolizing session time with detailed storytelling, which intervention is MOST therapeutic?", opts: ["Publicly reprimand the member for disrespecting the group.", "Gently interrupt, validate the member's underlying feeling, and bridge/invite other members to share how they relate to that theme.", "Allow the member to talk for the entire 90 minutes so they feel heard.", "Ask the group to vote on whether the monopolizer should be removed."], ans: [1], exp: "Effective group leaders protect group time by **gently cutting off storytelling with empathy and linking the underlying emotion to other members**." },
+      { id: 86, dom: 5, q: "Which term describes a research phenomenon in which participants alter their behavior simply because they know they are being observed or studied, rather than because of the experimental treatment itself?", opts: ["Pygmalion effect", "Hawthorne effect", "Halo effect", "Regression toward the mean"], ans: [1], exp: "The **Hawthorne effect** occurs when awareness of being observed temporarily alters participant behavior independent of the treatment." },
+      { id: 87, dom: 1, q: "In Cognitive Behavioral Therapy (CBT), a client who gets one B+ on a graduate paper and concludes, \"I am a total failure and I’m going to flunk out of the entire program,\" is exhibiting which cognitive distortion?", opts: ["Mind reading", "All-or-nothing (dichotomous) thinking and catastrophizing", "Personalization", "Emotional reasoning"], ans: [1], exp: "Viewing performance in black-and-white extremes while jumping to the worst-case outcome exemplifies **all-or-nothing thinking and catastrophizing**." },
+      { id: 88, dom: 2, q: "According to Donald Super’s career development theory, the five major life-career stages in chronological order are:", opts: ["Fantasy, Tentative, Realistic, Crystallization, Specification", "Growth, Exploration, Establishment, Maintenance, Disengagement", "Awareness, Accommodation, Assimilation, Mastery, Retirement", "Orientation, Differentiation, Integration, Stabilization, Decline"], ans: [1], exp: "Super’s five life-span stages are **Growth, Exploration, Establishment, Maintenance, and Disengagement**." },
+      { id: 89, dom: 6, q: "A counselor experiences strong feelings of frustration and protectiveness toward a young adult client who reminds the counselor of their own younger sibling. In psychodynamic terms, this reaction is called:", opts: ["Transference", "Countertransference", "Reaction formation", "Splitting"], ans: [1], exp: "**Countertransference** refers to the counselor's emotional reactions triggered by a client's resemblance to figures in the counselor's personal life." },
+      { id: 90, dom: 4, q: "When interpreting a z-score of -2.0 on a normally distributed assessment, what percentage of the normative sample scored LOWER than this individual?", opts: ["Approximately 2.3%", "Approximately 16%", "Approximately 50%", "Approximately 97.7%"], ans: [0], exp: "On a normal curve, about 95.4% of scores fall within ±2 SD, leaving **approximately 2.3%** in the lower tail below `z = -2.0`." },
+      { id: 91, dom: 3, q: "Which federal law protects the privacy and security of individually identifiable health information held by covered health care providers and health plans?", opts: ["FERPA", "HIPAA (Health Insurance Portability and Accountability Act)", "CAPTA", "Title IX"], ans: [1], exp: "**HIPAA** establishes national standards for safeguarding protected health information (PHI) in clinical and electronic healthcare transactions." },
+      { id: 92, dom: 1, q: "A client with Obsessive-Compulsive Disorder (OCD) spends three hours daily washing his hands due to intrusive fears of contamination. Which evidence-based behavioral intervention specifically targets this cycle?", opts: ["Systematic desensitization with progressive muscle relaxation", "Exposure and Response Prevention (ERP)", "Aversion therapy", "Token economy reinforcement"], ans: [1], exp: "**Exposure and Response Prevention (ERP)** exposes the client to feared contamination triggers while blocking the compulsive ritual so anxiety habituates." },
+      { id: 93, dom: 6, q: "In multicultural counseling, \"microinvalidations\" are a form of microaggression characterized by:", opts: ["Explicit racial slurs and deliberate hate crimes", "Communications that exclude, negate, or nullify the psychological thoughts, feelings, or experiential reality of a person from a marginalized group", "Physical avoidance of diverse neighborhoods", "Subtle behavioral snubs that convey rudeness or insensitivity"], ans: [1], exp: "Derald Wing Sue defined **microinvalidations** as remarks (like \"I don't see color\") that negate or dismiss the lived reality of marginalized individuals." },
+      { id: 94, dom: 2, q: "A researcher conducts a chi-square (χ²) test when both the independent variable and the dependent variable are measured on which scale of measurement?", opts: ["Nominal (categorical) scale", "Interval scale", "Ratio scale", "Continuous normal scale"], ans: [0], exp: "The **chi-square test** is a non-parametric statistic used to compare observed vs. expected frequencies across **nominal (categorical)** variables." },
+      { id: 95, dom: 5, q: "During a crisis intervention immediately following a natural disaster, Psychological First Aid (PFA) prioritizes which sequence of actions?", opts: ["Deep trauma processing, childhood attachment exploration, and dream analysis", "Establishing physical safety, emotional stabilization, connecting with practical resources/social supports, and promoting adaptive coping", "Administering standardized personality tests to diagnose PTSD immediately", "Requiring survivors to recount every graphic detail of the trauma in a mandatory debriefing group"], ans: [1], exp: "**Psychological First Aid (PFA)** prioritizes immediate physical safety, calm stabilization, practical needs, and connecting survivors with social support." },
+      { id: 96, dom: 2, q: "In Bowen’s Family Systems Theory, the ability of an individual to maintain a clear sense of self and emotional objectivity while remaining emotionally connected to an anxious family system is called:", opts: ["Fusion", "Differentiation of self", "Enmeshment", "Emotional cutoff"], ans: [1], exp: "**Differentiation of self** represents the capacity to balance autonomy and emotional connection without being overwhelmed by family anxiety." },
+      { id: 97, dom: 3, q: "Which ethical principle in Kitchener’s model of ethical decision-making refers to the counselor’s duty to \"do no harm\" (avoiding actions that risk injuring the client)?", opts: ["Beneficence", "Nonmaleficence", "Autonomy", "Fidelity"], ans: [1], exp: "**Nonmaleficence** is the foundational ethical duty to **do no harm** (whereas beneficence is actively doing good)." },
+      { id: 98, dom: 2, q: "A 68-year-old retired teacher tells her counselor that she feels deeply fulfilled looking back on her career, family, and community contributions, accepting both her successes and regrets with peace. According to Erikson, she has successfully resolved which psychosocial crisis?", opts: ["Generativity vs. Stagnation", "Ego Integrity vs. Despair", "Intimacy vs. Isolation", "Industry vs. Inferiority"], ans: [1], exp: "**Ego Integrity vs. Despair** is Erikson’s eighth stage in late adulthood, culminating in wisdom and peaceful acceptance of one’s life." },
+      { id: 99, dom: 4, q: "Which career assessment instrument compares a test-taker’s pattern of likes and dislikes across occupations, school subjects, and leisure activities with the empirical interest patterns of people happily employed in specific careers?", opts: ["Myers-Briggs Type Indicator (MBTI)", "Strong Interest Inventory (SII)", "Differential Aptitude Tests (DAT)", "Beck Depression Inventory-II (BDI-II)"], ans: [1], exp: "The **Strong Interest Inventory (SII)** pairs Holland’s RIASEC codes with empirically keyed occupational scales to match interests with satisfied workers." },
+      { id: 100, dom: 5, q: "A counselor is treating a client who is mandated by the court to attend anger management counseling. During the first session, the client crosses his arms and says, \"I'm only here so my probation officer doesn't lock me up; I don't have an anger problem.\" What is the counselor’s MOST effective initial response?", opts: ["Confront the client with his arrest record until he admits he has an anger issue.", "Acknowledge his frustration about being forced to attend, clarify confidentiality/reporting limits transparently, and explore what goals would help him get probation behind him.", "Terminate the session immediately because counseling only works with voluntary clients.", "Promise the client that nothing he says will ever be shared with his probation officer."], ans: [1], exp: "With mandated clients, **empathy for their frustration, transparent reporting limits, and collaborative goal-setting** build initial rapport." },
+      { id: 101, dom: 4, q: "A 31-year-old client seeks counseling for chronic feelings of emptiness, frantic efforts to avoid perceived abandonment, unstable and intense interpersonal relationships alternating between idealization and devaluation, and recurrent impulsive spending. Which DSM-5-TR diagnosis is MOST consistent with these symptoms?", opts: ["Histrionic Personality Disorder", "Borderline Personality Disorder", "Narcissistic Personality Disorder", "Bipolar II Disorder"], ans: [1], exp: "**Borderline Personality Disorder** is defined by instability in relationships, self-image, and affects, marked by abandonment fears, splitting, and impulsivity." },
+      { id: 102, dom: 1, q: "In Aaron Beck’s Cognitive Therapy, the \"cognitive triad\" of depression consists of negative automatic views toward:", opts: ["Parents, peers, and authority figures", "The self, the world/environment, and the future", "Past trauma, present stress, and biological genetics", "Thoughts, behaviors, and physiological arousal"], ans: [1], exp: "Beck's cognitive triad consists of negative views of **the self, the world/environment, and the future**." },
+      { id: 103, dom: 3, q: "A school counselor conducts a small psychoeducational group for 5th-grade students whose parents are going through divorce. Before the group begins, the counselor MUST obtain informed consent from:", opts: ["The school principal only", "The students' parents or legal guardians (along with assent from the minors)", "The local child protective services agency", "No one, because school counseling groups are exempt from consent rules"], ans: [1], exp: "Ethical and legal standards require **parental/guardian informed consent** for minors in counseling groups, paired with **minor assent**." },
+      { id: 104, dom: 2, q: "Which research design allows a researcher to study age-related developmental changes by comparing groups of 10-year-olds, 20-year-olds, and 30-year-olds at a single point in time?", opts: ["Longitudinal design", "Cross-sectional design", "Single-case baseline design", "Solomon four-group design"], ans: [1], exp: "A **cross-sectional design** compares different age cohorts at a single point in time." },
+      { id: 105, dom: 2, q: "In Albert Bandura’s Social Cognitive Theory, a client’s belief in their personal capability to execute the behaviors necessary to produce specific performance outcomes is termed:", opts: ["Locus of control", "Self-efficacy", "Self-actualization", "Reciprocal determinism"], ans: [1], exp: "Bandura defined **self-efficacy** as task-specific confidence in one’s ability to execute actions required to achieve an outcome." },
+      { id: 106, dom: 1, q: "A counselor uses the \"empty chair\" technique in which a client sits facing an unoccupied chair, imagines their estranged father sitting in it, and speaks directly to him in the present tense before switching chairs to respond as the father. This intervention originates from:", opts: ["Psychodrama (Moreno) and Gestalt Therapy (Perls)", "Rational Emotive Behavior Therapy", "Structural Family Therapy", "Reality Therapy"], ans: [0], exp: "The empty chair technique originated in **Moreno’s Psychodrama** and was popularized by **Fritz Perls in Gestalt Therapy**." },
+      { id: 107, dom: 4, q: "Which measure of reliability is MOST appropriate when evaluating the consistency between two independent raters scoring open-ended client intake interviews?", opts: ["Split-half reliability", "Inter-rater reliability (e.g., Cohen’s kappa)", "Parallel-forms reliability", "Kuder-Richardson 20 (KR-20)"], ans: [1], exp: "**Inter-rater reliability** measures the degree of agreement between independent observers or raters scoring the same data." },
+      { id: 108, dom: 2, q: "A client reports drinking alcohol daily for 10 years and abruptly stopped 36 hours ago. He arrives at an outpatient clinic exhibiting coarse hand tremors, profuse sweating, tachycardia, agitation, and visual hallucinations of insects on the walls. What is the counselor’s MOST urgent action?", opts: ["Schedule him for an intensive outpatient relapse-prevention group tomorrow.", "Arrange immediate emergency medical evaluation, as severe alcohol withdrawal (delirium tremens) can be fatal.", "Teach him grounding techniques to manage the visual hallucinations.", "Have him sign a sobriety contract and call his sponsor."], ans: [1], exp: "Severe alcohol withdrawal with autonomic hyperactivity and hallucinations indicates potential **delirium tremens**, a life-threatening emergency requiring **immediate medical evaluation**." },
+      { id: 109, dom: 2, q: "In career counseling, Roe’s Personality Theory of Career Choice emphasizes the influence of:", opts: ["Early childhood parent-child emotional climates (warm vs. cold/avoidant) on person-oriented vs. non-person-oriented career choices", "Genetic intelligence and spatial aptitude testing", "Socioeconomic barriers in the labor market", "Mid-life retirement planning"], ans: [0], exp: "Anne Roe proposed that **early childhood parent-child emotional climates** shape whether adults choose person-oriented vs. non-person-oriented careers." },
+      { id: 110, dom: 4, q: "A test composed strictly of dichotomous items (scored right/wrong or true/false) is best evaluated for internal consistency using which statistical formula?", opts: ["Pearson r", "Kuder-Richardson Formula 20 (KR-20)", "Spearman-Brown prophecy formula", "Analysis of Covariance (ANCOVA)"], ans: [1], exp: "**KR-20** measures internal consistency specifically for tests with **dichotomously scored (right/wrong)** items." },
+      { id: 111, dom: 5, q: "During the termination phase of individual counseling, a client suddenly reports that all their original anxiety symptoms have returned and asks to add ten more sessions. What is the counselor’s MOST clinically appropriate interpretation and response?", opts: ["Assume therapy failed completely and restart from intake.", "Recognize symptom recurrence as a common reaction to termination anxiety, normalize the ambivalence, and review the client’s coping gains and readiness for closure.", "Immediately agree to indefinite weekly sessions so the client feels secure.", "Confront the client for manipulating the therapeutic relationship."], ans: [1], exp: "Symptom recurrence near the end of therapy often reflects **termination anxiety** and should be processed openly while reviewing coping gains." },
+      { id: 112, dom: 2, q: "In Sigmund Freud’s psychosexual stages of development, unresolved conflict during the anal stage (ages 18 months to 3 years) is theorized to result in adult personality traits such as:", opts: ["Excessive dependency, gullibility, or nail-biting", "Extreme orderliness, rigidity, stinginess (anal-retentive) or messiness and impulsivity (anal-expulsive)", "Oedipal rivalry and castration anxiety", "Social withdrawal and academic inferiority"], ans: [1], exp: "Freud linked fixation in the anal stage to **anal-retentive (rigid, orderly, stingy)** or **anal-expulsive (messy, impulsive)** traits." },
+      { id: 113, dom: 3, q: "Which federal law prohibits discrimination on the basis of sex (including sexual harassment and pregnancy) in any education program or activity receiving federal financial assistance?", opts: ["Title VII of the Civil Rights Act", "Title IX of the Education Amendments of 1972", "Section 504 of the Rehabilitation Act", "The Hatch Act"], ans: [1], exp: "**Title IX** prohibits sex-based discrimination across all federally funded schools and educational programs." },
+      { id: 114, dom: 4, q: "A counselor is treating a 9-year-old boy who has exhibited angry, irritable mood, frequent arguing with adults, deliberate defiance of rules, and spitefulness toward classmates for the past 10 months, without severe aggression toward people/animals or destruction of property. Which DSM-5-TR diagnosis is MOST accurate?", opts: ["Conduct Disorder", "Oppositional Defiant Disorder (ODD)", "Intermittent Explosive Disorder", "Disruptive Mood Dysregulation Disorder (DMDD)"], ans: [1], exp: "**Oppositional Defiant Disorder (ODD)** involves at least 6 months of irritable mood, defiant behavior, and vindictiveness without the severe rights violations of Conduct Disorder." },
+      { id: 115, dom: 1, q: "In group counseling, \"blocking\" is a leadership skill used primarily to:", opts: ["Prevent members from expressing anger toward the leader", "Stop counterproductive behaviors such as gossiping, scapegoating, probing, or invading another member's privacy", "End the group session abruptly when silence lasts too long", "Exclude new members from joining an open group"], ans: [1], exp: "**Blocking** protects group safety by stopping harmful behaviors like **scapegoating, gossiping, or invasive probing**." },
+      { id: 116, dom: 5, q: "A researcher obtains a p-value of 0.03 when testing a new counseling intervention with an alpha level set at α = 0.05. What is the correct statistical decision?", opts: ["Fail to reject the null hypothesis because 0.03 is less than 0.05.", "Reject the null hypothesis and conclude the result is statistically significant.", "Accept the null hypothesis as proven true.", "Increase the sample size to eliminate the p-value."], ans: [1], exp: "When `p <= alpha` (`0.03 < 0.05`), **reject the null hypothesis** and conclude the result is statistically significant." },
+      { id: 117, dom: 1, q: "In Solution-Focused Brief Therapy (SFBT), asking a client, \"On a scale from 0 to 10, where 10 means you feel completely confident managing your cravings and 0 is the worst you've ever felt, where are you today?\" is known as:", opts: ["An exception question", "A scaling question", "A coping question", "Circular questioning"], ans: [1], exp: "**Scaling questions** turn abstract feelings and progress into concrete 0-to-10 benchmarks." },
+      { id: 118, dom: 6, q: "According to Howard Gardner’s theory of Multiple Intelligences, a skilled counselor who excels at accurately perceiving others' moods, motivations, and social cues possesses high:", opts: ["Intrapersonal intelligence", "Interpersonal intelligence", "Kinesthetic intelligence", "Spatial intelligence"], ans: [1], exp: "**Interpersonal intelligence** is the ability to understand and interact effectively with others (whereas intrapersonal is self-understanding)." },
+      { id: 119, dom: 4, q: "A client reports experiencing recurrent episodes of binge eating without any compensatory behaviors (such as vomiting, laxatives, or excessive exercise) at least once a week for four months, accompanied by marked distress and guilt. What is the MOST likely diagnosis?", opts: ["Bulimia Nervosa", "Binge-Eating Disorder", "Anorexia Nervosa", "Orthorexia"], ans: [1], exp: "**Binge-Eating Disorder** involves recurrent binge episodes with marked distress in the **absence of compensatory purging**." },
+      { id: 120, dom: 3, q: "Which ethical principle refers to a counselor’s obligation to honor commitments, keep promises, and maintain trustworthiness and loyalty within the therapeutic relationship?", opts: ["Justice", "Fidelity", "Autonomy", "Veracity"], ans: [1], exp: "**Fidelity** entails keeping promises, honoring commitments, and maintaining loyalty and trust." },
+      { id: 121, dom: 1, q: "In operant conditioning, removing an unpleasant stimulus (such as turning off a loud alarm) immediately after a desired behavior occurs—thereby increasing the likelihood of that behavior recurring—is called:", opts: ["Positive reinforcement", "Negative reinforcement", "Positive punishment", "Negative punishment (response cost)"], ans: [1], exp: "**Negative reinforcement** strengthens a behavior by **removing an aversive stimulus** after the desired response." },
+      { id: 122, dom: 6, q: "When working with an LGBTQ+ client who is exploring their sexual orientation and experiencing family rejection, an affirmative counseling approach requires the counselor to:", opts: ["Remain strictly neutral and avoid validating the client's identity until family conflict resolves.", "Validate the client’s identity, explore minority stress, and support the client’s self-determination without imposing heteronormative bias.", "Encourage the client to suppress their identity to preserve family harmony.", "Refer the client to conversion/reparative therapy if the parents request it."], ans: [1], exp: "**Affirmative counseling** validates LGBTQ+ identities, addresses minority stress, and supports client self-determination." },
+      { id: 123, dom: 4, q: "Which type of standardized test score divides a distribution into nine equal-interval units with a mean of 5 and a standard deviation of approximately 2?", opts: ["Percentile rank", "Stanine score", "Grade-equivalent score", "Deviation IQ"], ans: [1], exp: "**Stanine** (\"standard nine\") scores range from 1 to 9 with a **mean of 5 and a standard deviation of 2**." },
+      { id: 124, dom: 1, q: "In Strategic and Milan Systemic Family Therapy, \"circular questioning\" is used primarily to:", opts: ["Force family members to repeat the exact same answer until they agree", "Reveal relational patterns and differences in perception by asking one family member how two other members interact", "Establish a rigid hierarchy where the father speaks first", "Diagnose individual neurochemical imbalances"], ans: [1], exp: "**Circular questioning** asks one member how two other members interact to reveal systemic relational patterns." },
+      { id: 125, dom: 3, q: "A counselor in a community mental health agency is offered an expensive holiday gift (worth $300) by a grateful client who just completed treatment. According to the ACA Code of Ethics, what should the counselor consider FIRST?", opts: ["Accept the gift immediately so the client does not feel rejected.", "Evaluate the therapeutic relationship, cultural meaning of gift-giving, monetary value, and potential for exploitation before deciding whether accepting or declining is clinically appropriate.", "Keep the gift in the office closet without documenting it.", "Ask the client to exchange the gift for cash."], ans: [1], exp: "ACA ethics require evaluating the **therapeutic relationship, cultural context, monetary value, and client motivation** when considering gifts." },
+      { id: 126, dom: 2, q: "According to Jean Piaget, during which stage of cognitive development do children master abstract logic, deductive reasoning, and systematic hypothesis testing (\"what if\" thinking)?", opts: ["Sensorimotor stage", "Preoperational stage", "Concrete operational stage", "Formal operational stage"], ans: [3], exp: "The **formal operational stage** (ages 11+) enables abstract logic and hypothetical-deductive reasoning." },
+      { id: 127, dom: 2, q: "A client who recently survived a house fire reports feeling detached from her body, as though she is watching herself from outside in a dreamlike fog. This dissociative symptom is specifically called:", opts: ["Derealization", "Depersonalization", "Dissociative fugue", "Confabulation"], ans: [1], exp: "**Depersonalization** is detachment from one's own body or self (whereas derealization is detachment from external surroundings)." },
+      { id: 128, dom: 2, q: "In career counseling, John Holland’s \"consistency\" construct refers to:", opts: ["Whether a person stays in the same job for over 20 years", "How closely related a person's top two RIASEC interest codes are on the hexagonal model (adjacent types are more consistent than opposite types)", "Agreement between a parent's career and a child's career", "Test-retest reliability of the Self-Directed Search"], ans: [1], exp: "On Holland’s hexagon, **consistency** refers to how closely adjacent a person's top RIASEC codes are." },
+      { id: 129, dom: 4, q: "Which type of validity refers to the extent to which an instrument appears, on the surface, to measure what it claims to measure from the perspective of test-takers?", opts: ["Construct validity", "Face validity", "Predictive validity", "Incremental validity"], ans: [1], exp: "**Face validity** is whether a test superficially *looks* like it measures what it claims to measure." },
+      { id: 130, dom: 6, q: "A counselor is conducting an intake with a client who speaks very little English, and the client brings her 10-year-old daughter to translate during the session. What is the counselor’s MOST ethical response?", opts: ["Proceed with the intake using the 10-year-old daughter as translator to save agency funds.", "Politely decline using the minor child as an interpreter due to confidentiality, role-reversal, and clinical accuracy concerns, and arrange a qualified professional medical/mental health interpreter.", "Conduct the session using hand gestures and online translation apps only.", "Ask the daughter to wait outside while conducting the session entirely in English."], ans: [1], exp: "Never use a minor child as a clinical interpreter; **arrange a qualified professional interpreter** to protect confidentiality and clinical accuracy." },
+      { id: 131, dom: 1, q: "In Yalom’s group therapy model, \"interpersonal learning\" occurs most powerfully when members use the group as a:", opts: ["Lecture hall for psychoeducational slides", "Social microcosm where their real-world relational patterns emerge in the here-and-now and receive honest feedback", "Debate club to argue political opinions", "Silent meditation retreat"], ans: [1], exp: "Yalom described the group as a **social microcosm** where members' real-world relational patterns play out in the here-and-now." },
+      { id: 132, dom: 2, q: "Which neurotransmitter is MOST directly implicated in the reward pathway, motivation, pleasure, and the pathophysiology of both substance use disorders and Schizophrenia?", opts: ["Gamma-aminobutyric acid (GABA)", "Dopamine", "Acetylcholine", "Histamine"], ans: [1], exp: "**Dopamine** drives the mesolimbic reward pathway in addiction and is central to psychosis in schizophrenia." },
+      { id: 133, dom: 2, q: "A researcher wants to study the effectiveness of a new grief counseling protocol for survivors of a rare aviation accident, where only 15 survivors exist nationwide. Which non-probability sampling method is MOST appropriate?", opts: ["Simple random sampling", "Purposive (judgmental) sampling", "Cluster sampling", "Systematic sampling"], ans: [1], exp: "**Purposive sampling** intentionally selects participants who share a rare, specific characteristic or experience." },
+      { id: 134, dom: 1, q: "In Acceptance and Commitment Therapy (ACT), helping a client observe an anxious thought like \"I am going to fail\" as merely words passing through the mind (\"I am having the thought that I am going to fail\") rather than literal truth is called:", opts: ["Cognitive defusion", "Thought stopping", "Systematic desensitization", "Socratic questioning"], ans: [0], exp: "**Cognitive defusion** in ACT separates the person from literal fusion with their thoughts." },
+      { id: 135, dom: 2, q: "According to Erik Erikson, adults in middle adulthood (ages 40 to 65) face the psychosocial crisis of Generativity vs. Stagnation, where \"generativity\" refers primarily to:", opts: ["Accumulating maximum personal wealth before retirement", "Contributing to the next generation through parenting, mentoring, teaching, or productive community work", "Re-evaluating adolescent identity choices", "Withdrawing from social obligations"], ans: [1], exp: "**Generativity** involves guiding and contributing to the next generation through parenting, mentoring, and community work." },
+      { id: 136, dom: 4, q: "A client presents with persistent difficulty discarding or parting with possessions regardless of their actual value, resulting in living spaces so congested that the kitchen and bed cannot be used, causing severe distress. What is the MOST accurate DSM-5-TR diagnosis?", opts: ["Obsessive-Compulsive Personality Disorder", "Hoarding Disorder", "Generalized Anxiety Disorder", "Delusional Disorder"], ans: [1], exp: "**Hoarding Disorder** is defined by persistent difficulty discarding possessions, resulting in cluttered living spaces and clinically significant distress." },
+      { id: 137, dom: 1, q: "In behavioral counseling, \"shaping\" refers to:", opts: ["Punishing every incorrect response until only the target behavior remains", "Reinforcing successive approximations that come closer and closer to a desired target behavior", "Removing all reinforcement abruptly to extinguish a behavior", "Pairing a conditioned stimulus with an unconditioned stimulus"], ans: [1], exp: "**Shaping** builds a new behavior by **reinforcing successive approximations** toward the target goal." },
+      { id: 138, dom: 4, q: "Which statistical measure describes the degree to which a distribution of scores is asymmetrical (piled up at one end with a long tail at the other)?", opts: ["Kurtosis", "Skewness", "Homoscedasticity", "Variance"], ans: [1], exp: "**Skewness** measures the asymmetry of a distribution (whereas kurtosis measures peakedness)." },
+      { id: 139, dom: 3, q: "A counselor working with a mandated client notices that the client is court-ordered for substance abuse evaluation, and the probation officer calls asking for a full copy of the counselor’s therapy progress notes. What should the counselor do?", opts: ["Fax all therapy notes immediately because the client is on probation.", "Verify a valid signed Release of Information (ROI) compliant with HIPAA and 42 CFR Part 2, and disclose only the minimum necessary information authorized (such as attendance and compliance status).", "Refuse to ever communicate with probation officers under any circumstances.", "Send the client’s entire psychiatric history from childhood."], ans: [1], exp: "Substance use records require a **valid signed ROI compliant with HIPAA and 42 CFR Part 2**, releasing only the **minimum necessary** information." },
+      { id: 140, dom: 1, q: "In Virginia Satir’s Human Validation Process Model of family therapy, which communication stance involves constantly agreeing, apologizing, and trying to keep the peace at the expense of one's own needs?", opts: ["Blamer", "Placater", "Computer (super-reasonable)", "Distracter"], ans: [1], exp: "Satir’s **Placater** stance appeases others, apologizes, and sacrifices self-worth to avoid conflict." },
+      { id: 141, dom: 2, q: "Which career development assessment is based on Carl Jung’s psychological types and categorizes individuals along four dichotomous preferences (Extraversion/Introversion, Sensing/Intuition, Thinking/Feeling, Judging/Perceiving)?", opts: ["Strong Interest Inventory", "Myers-Briggs Type Indicator (MBTI)", "Career Maturity Inventory", "O*NET Interest Profiler"], ans: [1], exp: "The **Myers-Briggs Type Indicator (MBTI)** is built on Carl Jung's psychological types across four dichotomous dimensions." },
+      { id: 142, dom: 6, q: "A counselor notices that when working with clients who struggle with addiction, she feels unusually judgmental and impatient because her own father struggled with alcoholism. What is the counselor’s MOST ethical step?", opts: ["Self-disclose her father’s alcoholism in detail to every client with a substance use disorder.", "Seek clinical supervision and personal consultation to manage her countertransference and ensure client care is not compromised.", "Tell clients with addiction that they simply lack moral willpower.", "Keep working without addressing the feelings because personal history never affects therapy."], ans: [1], exp: "When personal history triggers **countertransference**, ethical counselors seek **clinical supervision and consultation** to protect client care." },
+      { id: 143, dom: 5, q: "In research methodology, \"regression toward the mean\" occurs when:", opts: ["Participants drop out of a longitudinal study over time", "Individuals selected because of extremely high or extremely low pretest scores naturally score closer to the population average upon retesting due to measurement error", "The control group accidentally receives the experimental treatment", "A researcher manipulates the dependent variable directly"], ans: [1], exp: "**Regression toward the mean** occurs when extreme pretest scores naturally move closer to the average upon retesting." },
+      { id: 144, dom: 4, q: "A 26-year-old client reports depressed mood, low energy, poor concentration, and feelings of hopelessness nearly every day for the past 3 years, with no symptom-free period lasting longer than 1 month and no history of mania or hypomania. What is the MOST likely DSM-5-TR diagnosis?", opts: ["Cyclothymic Disorder", "Persistent Depressive Disorder (Dysthymia)", "Bipolar II Disorder", "Adjustment Disorder with depressed mood"], ans: [1], exp: "**Persistent Depressive Disorder (Dysthymia)** requires depressed mood for **at least 2 years** in adults without a symptom-free gap over 2 months." },
+      { id: 145, dom: 5, q: "Which group counseling format has a predetermined number of sessions, a consistent roster of members who start and end together, and focuses on a specific shared theme (such as grief or anger management)?", opts: ["Open-ended process group", "Closed psychoeducational/structured group", "Drop-in support group", "Marathon encounter group"], ans: [1], exp: "A **closed structured group** keeps a fixed roster of members for a set number of sessions." },
+      { id: 146, dom: 1, q: "In Gestalt therapy, \"retroflection\" occurs when an individual:", opts: ["Blames the environment for internal feelings", "Turns inward against themselves what they would like to do or say to someone else (e.g., biting one's lip instead of expressing anger)", "Merges completely with another person's identity without boundaries", "Avoids emotional depth by changing the subject constantly"], ans: [1], exp: "**Retroflection** means turning inward against oneself impulses meant for someone else." },
+      { id: 147, dom: 3, q: "Which ethical principle requires counselors to treat all clients fairly, equitably, and without discrimination in access to services and allocation of resources?", opts: ["Autonomy", "Justice", "Nonmaleficence", "Beneficence"], ans: [1], exp: "**Justice** requires treating all clients fairly, equitably, and without discrimination." },
+      { id: 148, dom: 4, q: "When evaluating a test’s Standard Error of Measurement (SEM), a smaller SEM indicates:", opts: ["Lower test reliability and wider confidence intervals around a client's true score", "Higher test reliability and greater precision in estimating a client's true score", "A larger standard deviation in the norm group", "That the test has no floor or ceiling effects"], ans: [1], exp: "A **smaller SEM** means **higher test reliability** and a narrower error band around the true score." },
+      { id: 149, dom: 1, q: "In Motivational Interviewing, the four core processes—ordered sequentially from initial engagement to action—are:", opts: ["Confronting, Educating, Contracting, Terminating", "Engaging, Focusing, Evoking, Planning", "Assessing, Diagnosing, Treating, Evaluating", "Reflecting, Challenging, Interpreting, Reinforcing"], ans: [1], exp: "The four sequential processes of MI are **Engaging, Focusing, Evoking, and Planning**." },
+      { id: 150, dom: 3, q: "A counselor is asked to conduct a court-ordered child custody evaluation for a family she has been seeing in weekly family therapy for the past year. What is the counselor’s MOST ethical response?", opts: ["Accept the request because she already knows the family dynamics well.", "Decline to perform the forensic custody evaluation due to a conflict of roles between treating clinician and objective forensic evaluator, and refer to an independent evaluator.", "Conduct the evaluation but write recommendations favoring whichever parent pays the therapy bill.", "Testify in court that both parents are equally fit without conducting any assessment."], ans: [1], exp: "ACA ethics prohibit conducting **forensic evaluations on current or former therapy clients** due to role conflict." },
+      { id: 151, dom: 4, q: "A 38-year-old client presents with a 2-week history of elevated, expansive mood, decreased need for sleep (sleeping 2 hours per night and feeling energetic), pressured speech, flight of ideas, and impulsively investing $40,000 in an unverified cryptocurrency scheme, resulting in hospitalization. What is the MOST accurate DSM-5-TR diagnosis?", opts: ["Bipolar II Disorder", "Bipolar I Disorder", "Cyclothymic Disorder", "Hypomanic Episode"], ans: [1], exp: "A manic episode lasting at least 7 days (or requiring hospitalization) defines **Bipolar I Disorder**." },
+      { id: 152, dom: 1, q: "In Psychodynamic Therapy, a client who consciously refuses to discuss a painful childhood memory, repeatedly arrives late to sessions, or changes the subject whenever grief comes up is demonstrating:", opts: ["Catharsis", "Resistance", "Sublimation", "Reaction formation"], ans: [1], exp: "**Resistance** is any client behavior that opposes bringing threatening unconscious or painful material into awareness." },
+      { id: 153, dom: 2, q: "Which sampling method involves dividing a population into naturally occurring geographic clusters (such as school districts or clinics), randomly selecting several clusters, and surveying everyone within those chosen clusters?", opts: ["Stratified random sampling", "Cluster sampling", "Quota sampling", "Convenience sampling"], ans: [1], exp: "**Cluster sampling** randomly selects naturally occurring intact groups (clusters) rather than individuals." },
+      { id: 154, dom: 3, q: "A counselor in a rural community realizes that the only grocery store in town is owned by a current client. According to the ACA Code of Ethics, how should the counselor handle unavoidable incidental community contact?", opts: ["Immediately terminate the client and refer them to a city two hours away.", "Discuss boundary expectations and confidentiality protocols proactively during informed consent so incidental public encounters are handled comfortably and discreetly.", "Greet the client loudly in the store and ask how their panic attacks are doing.", "Avoid buying groceries in town until the client completes therapy."], ans: [1], exp: "In rural areas with unavoidable overlap, **discuss boundary and privacy expectations proactively during informed consent**." },
+      { id: 155, dom: 2, q: "According to Lawrence Kohlberg, a child who obeys rules strictly to avoid physical punishment and gain personal rewards is operating at which level of moral development?", opts: ["Preconventional level", "Conventional level", "Postconventional level", "Autonomous level"], ans: [0], exp: "**Preconventional morality** is driven by avoiding punishment (Stage 1) and seeking personal rewards (Stage 2)." },
+      { id: 156, dom: 1, q: "In Albert Ellis’s Rational Emotive Behavior Therapy (REBT), \"awfulizing\" refers to:", opts: ["Believing that an unpleasant event is 100% catastrophic and the worst thing that could possibly happen", "Refusing to take responsibility for one's own emotions", "Projecting anger onto authority figures", "Minimizing genuine physical danger"], ans: [0], exp: "Ellis used **awfulizing** to describe rating an inconvenient or painful event as 100% catastrophic and unbearable." },
+      { id: 157, dom: 2, q: "Which statistical test is used to examine the relationship between two continuous variables (such as hours of sleep and depression inventory scores) when both are measured on interval or ratio scales?", opts: ["Chi-square test", "Pearson product-moment correlation coefficient (r)", "Mann-Whitney U test", "One-way ANOVA"], ans: [1], exp: "**Pearson's r** measures the linear association between two continuous interval or ratio variables." },
+      { id: 158, dom: 3, q: "A 16-year-old high school student tells her counselor she is pregnant and asks the counselor not to tell her parents. In a state where minors have the legal right to confidential reproductive and mental health counseling, what is the counselor’s MOST ethical approach?", opts: ["Immediately call her parents without her permission.", "Respect her confidentiality within legal bounds while exploring her support system, safety, and options for involving trusted adults.", "Notify the school principal so the student can be transferred to an alternative school.", "Refuse to continue counseling unless she tells her parents within 24 hours."], ans: [1], exp: "When state law grants minors confidential reproductive/mental health rights, **respect confidentiality while exploring safety and family support options**." },
+      { id: 159, dom: 1, q: "In Structural Family Therapy (Salvador Minuchin), a family in which boundaries between members are overly rigid, emotional support is minimal, and members operate in isolation with little sense of belonging is described as:", opts: ["Enmeshed", "Disengaged", "Triangulated", "Pseudomutual"], ans: [1], exp: "Minuchin described families with overly rigid boundaries and emotional isolation as **disengaged** (whereas diffuse boundaries create enmeshment)." },
+      { id: 160, dom: 2, q: "Which career development theorist introduced the \"Social Cognitive Career Theory\" (SCCT), emphasizing the interplay among self-efficacy beliefs, outcome expectations, and personal goals?", opts: ["Robert Lent, Steven Brown, and Gail Hackett", "Frank Parsons", "Eli Ginzberg", "John Crites"], ans: [0], exp: "**Lent, Brown, and Hackett** developed **Social Cognitive Career Theory (SCCT)** based on Bandura's self-efficacy framework." },
+      { id: 161, dom: 2, q: "A client taking an SSRI antidepressant (such as sertraline) also begins taking St. John’s wort and a migraine triptan medication, and soon develops agitation, confusion, rapid heart rate, dilated pupils, muscle rigidity, and profuse sweating. What life-threatening condition should the counselor suspect?", opts: ["Neuroleptic malignant syndrome", "Serotonin syndrome", "Tardive dyskinesia", "Lithium toxicity"], ans: [1], exp: "Combining SSRIs with St. John's wort or triptans can trigger life-threatening **serotonin syndrome**." },
+      { id: 162, dom: 1, q: "In group counseling, \"linking\" is a facilitation technique in which the group leader:", opts: ["Connects common themes, feelings, or experiences shared by different group members to build cohesion and member-to-member interaction", "Pairs up members to date outside of group sessions", "Connects the group’s insurance billing codes to diagnostic manuals", "Summarizes clinical research studies at the end of each session"], ans: [0], exp: "**Linking** connects shared feelings and themes across group members to foster universality and member-to-member cohesion." },
+      { id: 163, dom: 4, q: "When a standardized test consistently yields higher scores for one demographic group than another due to cultural or linguistic bias in the test items rather than true differences in the construct being measured, this is known as:", opts: ["Standard error of estimate", "Test bias (differential item functioning)", "Regression to the mean", "Concurrent validity"], ans: [1], exp: "**Test bias (differential item functioning)** occurs when construct-irrelevant cultural or linguistic factors systematically disadvantage a group." },
+      { id: 164, dom: 1, q: "According to Carl Jung’s Analytical Psychology, the inherited unconscious reservoir of universal human images, symbols, and primordial patterns (such as the Hero, Shadow, and Wise Old Man) is called the:", opts: ["Personal unconscious", "Collective unconscious", "Id", "Ego ideal"], ans: [1], exp: "Jung's **collective unconscious** holds universal ancestral archetypes shared across humanity." },
+      { id: 165, dom: 1, q: "A client states, \"My boss didn't say good morning to me in the hallway today, so I know for a fact she's planning to fire me this Friday.\" Which cognitive distortion is this client demonstrating?", opts: ["Mind reading and fortune telling (jumping to conclusions)", "Labeling", "Magnification", "Should statements"], ans: [0], exp: "Assuming someone's negative thoughts (**mind reading**) and predicting a guaranteed bad outcome (**fortune telling**) are forms of jumping to conclusions." },
+      { id: 166, dom: 5, q: "In single-subject research designs (such as an ABAB reversal design), what does the letter \"A\" represent?", opts: ["The active treatment intervention phase", "The baseline phase before the intervention is introduced or when it is withdrawn", "The follow-up phase one year later", "The random assignment procedure"], ans: [1], exp: "In an ABAB design, **\"A\" is the baseline phase** and **\"B\" is the treatment phase**." },
+      { id: 167, dom: 4, q: "A 52-year-old client reports waking up repeatedly at 3:00 AM unable to fall back asleep, losing 15 pounds unintentionally, experiencing profound loss of pleasure in all activities, and feeling worst in the mornings for the past month. Which DSM-5-TR Major Depressive Disorder specifier BEST applies?", opts: ["With atypical features", "With melancholic features", "With seasonal pattern", "With peripartum onset"], ans: [1], exp: "Anhedonia, early morning awakening, mood worse in the morning, and significant weight loss define **melancholic features**." },
+      { id: 168, dom: 3, q: "Under the Tarasoff duty to protect, which three conditions must generally be present before a counselor breaches confidentiality to warn/protect a third party?", opts: ["Past criminal history, substance use, and family conflict", "A serious threat of physical violence, an identifiable victim (or group of victims), and reasonable foreseeability/imminence of harm", "Verbal anger toward the counselor, missed appointments, and unpaid fees", "Any mention of violent video games or movies"], ans: [1], exp: "Duty to protect requires **a serious threat of physical violence, an identifiable victim, and imminent/foreseeable harm**." },
+      { id: 169, dom: 2, q: "In Donald Super’s theory, \"career maturity\" (or career adaptability in adulthood) refers to:", opts: ["Earning a high salary by age 30", "An individual's readiness and resources to cope effectively with the vocational developmental tasks appropriate to their life stage", "Staying in a single company until retirement", "Choosing a career solely based on parental expectations"], ans: [1], exp: "**Career maturity/adaptability** is readiness to cope with age-appropriate vocational tasks and transitions." },
+      { id: 170, dom: 1, q: "Which behavioral technique is specifically designed to treat phobias by pairing deep muscle relaxation with gradual exposure to a hierarchy of anxiety-provoking stimuli?", opts: ["Flooding", "Systematic desensitization (Joseph Wolpe)", "Aversion therapy", "Shaping"], ans: [1], exp: "Joseph Wolpe’s **systematic desensitization** pairs relaxation with a graduated fear hierarchy (reciprocal inhibition)." },
+      { id: 171, dom: 3, q: "A counselor works at a university counseling center and receives a request from a student’s parent asking whether their 20-year-old son has been attending therapy sessions. The student has not signed a release. What is the counselor’s MOST appropriate response?", opts: ["Confirm that he is a client but withhold session details.", "Neither confirm nor deny that the student is receiving services, citing confidentiality laws.", "Tell the parent that the student came in once but stopped attending.", "Ask the parent to send proof of tuition payment before sharing records."], ans: [1], exp: "Without a signed release from an adult client, **neither confirm nor deny attendance**, as even confirming they are a client breaches confidentiality." },
+      { id: 172, dom: 2, q: "In Erik Erikson’s psychosocial theory, children between ages 6 and 11 (elementary school years) work to resolve which developmental crisis?", opts: ["Initiative vs. Guilt", "Industry vs. Inferiority", "Autonomy vs. Shame and Doubt", "Trust vs. Mistrust"], ans: [1], exp: "Elementary school children (ages 6–11) navigate **Industry vs. Inferiority** by mastering academic and social skills." },
+      { id: 173, dom: 5, q: "A researcher wants to control for the effect of pre-existing IQ differences when comparing the posttest anxiety scores of two counseling groups. Which statistical procedure is MOST appropriate?", opts: ["Analysis of Covariance (ANCOVA)", "Simple linear regression", "Chi-square goodness-of-fit test", "Spearman rank-order correlation"], ans: [0], exp: "**ANCOVA** statistically controls for a pre-existing continuous covariate (such as baseline IQ)." },
+      { id: 174, dom: 1, q: "In Gestalt therapy, \"confluence\" occurs when a person:", opts: ["Blurs the boundary between self and others, agreeing with everyone and avoiding conflict to maintain harmony", "Projects internal anger onto strangers", "Uses sarcasm to deflect emotional intimacy", "Isolates completely from all human relationships"], ans: [0], exp: "**Confluence** is blurring the boundary between self and others by over-agreeing and avoiding conflict." },
+      { id: 175, dom: 4, q: "A client diagnosed with Schizophrenia experiences fixed, false beliefs that federal agents have implanted a tracking microchip in his tooth, despite clear dental X-rays proving otherwise. This symptom is a:", opts: ["Hallucination", "Delusion (persecutory/somatic)", "Loose association", "Illusions"], ans: [1], exp: "A **delusion** is a fixed, false belief held despite clear contrary evidence (whereas a hallucination is a false sensory perception)." },
+      { id: 176, dom: 4, q: "Which type of reliability is assessed by splitting a single test into two equivalent halves (such as odd-numbered items vs. even-numbered items) and correlating the two scores?", opts: ["Test-retest reliability", "Split-half reliability", "Inter-rater reliability", "Parallel-forms reliability"], ans: [1], exp: "**Split-half reliability** correlates two halves of a single test (such as odd vs. even items) to measure internal consistency." },
+      { id: 177, dom: 6, q: "In Feminist Therapy, the core principle \"the personal is political\" emphasizes that:", opts: ["Counselors should campaign for political candidates during sessions", "Many individual psychological symptoms are rooted in systemic oppression, gender-role socialization, and sociocultural power imbalances rather than purely internal pathology", "Clients should avoid discussing family relationships", "Biological genetics are the sole cause of mental illness"], ans: [1], exp: "**\"The personal is political\"** recognizes that personal distress is shaped by systemic oppression and sociocultural power imbalances." },
+      { id: 178, dom: 2, q: "A counselor is administering a career interest inventory and notices that a client’s scores are nearly flat across all six Holland RIASEC codes, with no clear high or low peaks. In Holland’s theory, this profile shows low:", opts: ["Congruence", "Differentiation", "Consistency", "Identity"], ans: [1], exp: "**Differentiation** is the spread between a person's highest and lowest RIASEC scores; a flat profile shows low differentiation." },
+      { id: 179, dom: 2, q: "When working with a client who is actively grieving the sudden death of a spouse two weeks ago, which intervention is MOST appropriate initially?", opts: ["Immediately challenge the client’s denial and push them to donate their spouse’s clothes.", "Provide a compassionate, nonjudgmental presence, normalize acute grief reactions, and support immediate practical and emotional stabilization.", "Diagnose the client with Prolonged Grief Disorder immediately.", "Interpret the grief as unresolved childhood attachment trauma."], ans: [1], exp: "Acute bereavement care prioritizes **compassionate presence, normalizing grief reactions, and immediate stabilization**." },
+      { id: 180, dom: 3, q: "Which federal legislation mandates that employers with 15 or more employees provide reasonable accommodations to qualified individuals with disabilities unless doing so causes undue hardship?", opts: ["Americans with Disabilities Act (ADA)", "Family and Medical Leave Act (FMLA)", "Fair Labor Standards Act (FLSA)", "Occupational Safety and Health Act (OSHA)"], ans: [0], exp: "Title I of the **Americans with Disabilities Act (ADA)** requires reasonable workplace accommodations for qualified employees with disabilities." },
+      { id: 181, dom: 1, q: "In Transactional Analysis (Eric Berne), communication becomes dysfunctional and typically breaks down when two people engage in:", opts: ["Complementary transactions", "Crossed transactions", "Adult-to-Adult transactions", "Autonomous strokes"], ans: [1], exp: "In Transactional Analysis, **crossed transactions** occur when an unintended ego state replies, causing communication breakdown." },
+      { id: 182, dom: 5, q: "A researcher conducts a meta-analysis. What is the primary purpose of a meta-analysis?", opts: ["To interview a single case study participant in extreme depth", "To statistically combine and synthesize quantitative findings (effect sizes) across many independent studies on the same topic", "To replace randomized controlled trials with qualitative focus groups", "To measure the internal consistency of a single questionnaire"], ans: [1], exp: "A **meta-analysis** statistically combines effect sizes across multiple independent studies on the same topic." },
+      { id: 183, dom: 4, q: "A 23-year-old client reports persistent fear and avoidance of social situations—such as speaking in meetings, eating in public, and meeting new people—because he is terrified he will act awkwardly and be humiliated or negatively judged. This presentation BEST describes:", opts: ["Agoraphobia", "Social Anxiety Disorder (Social Phobia)", "Schizoid Personality Disorder", "Panic Disorder"], ans: [1], exp: "**Social Anxiety Disorder** centers on intense fear of scrutiny, embarrassment, or negative evaluation in social or performance settings." },
+      { id: 184, dom: 1, q: "In group counseling, which therapeutic factor described by Irvin Yalom involves members experiencing a boost in self-worth and purpose by offering genuine support, insight, and reassurance to fellow group members?", opts: ["Altruism", "Catharsis", "Recapitulation of the primary family group", "Imitative behavior"], ans: [0], exp: "Yalom's **Altruism** factor describes members gaining self-worth by helping and supporting fellow group members." },
+      { id: 185, dom: 3, q: "A counselor receives a subpoena duces tecum (a subpoena requesting production of documents/records) from a civil litigation attorney. What does duces tecum specifically require?", opts: ["That the counselor immediately testify on the witness stand without bringing any files", "That the counselor produce specified clinical records or documents at a designated time and place (unless quashed or protected by privilege)", "That the client be placed under psychiatric hold", "That the counselor waive all fees for testimony"], ans: [1], exp: "A subpoena **duces tecum** requests the production of specified documents or clinical records." },
+      { id: 186, dom: 2, q: "According to Jean Piaget, \"object permanence\" typically begins to develop during which age range?", opts: ["Birth to 2 years (sensorimotor stage)", "2 to 7 years (preoperational stage)", "7 to 11 years (concrete operational stage)", "11 to 15 years (formal operational stage)"], ans: [0], exp: "**Object permanence** develops during Piaget's **sensorimotor stage (birth to 2 years)**." },
+      { id: 187, dom: 4, q: "In a negatively skewed distribution (where a few outliers pull the tail to the left toward low scores), what is the typical order of the measures of central tendency from lowest to highest?", opts: ["Mean < Median < Mode", "Mode < Median < Mean", "Mean = Median = Mode", "Median < Mean < Mode"], ans: [0], exp: "In a **negatively skewed** distribution, low outliers pull the mean down farthest left: **Mean < Median < Mode**." },
+      { id: 188, dom: 1, q: "Which counseling approach utilizes \"Socratic questioning\" and \"guided discovery\" to help clients examine the evidence for and against their automatic thoughts?", opts: ["Person-Centered Therapy", "Cognitive Therapy (Aaron Beck)", "Psychoanalysis", "Gestalt Therapy"], ans: [1], exp: "Aaron Beck’s **Cognitive Therapy** uses **Socratic questioning and guided discovery** to test automatic thoughts." },
+      { id: 189, dom: 6, q: "A counselor is treating a client from a marginalized racial background who expresses skepticism during the first session, asking, \"How can someone from your background really understand what I deal with every day?\" What is the counselor’s MOST culturally responsive reply?", opts: ["\"I treat everyone exactly the same, so race doesn't matter in this room.\"", "\"That's a very fair question—I won't pretend to have lived your exact experience, and I welcome you sharing how race and culture impact your life so we can work together openly.\"", "\"It sounds like you're being defensive before giving therapy a chance.\"", "\"Let's focus strictly on your personal choices rather than society.\""], ans: [1], exp: "**Cultural humility** means validating the client's concern openly without defensiveness or colorblind dismissal." },
+      { id: 190, dom: 2, q: "In career counseling, the \"O*NET\" database maintained by the U.S. Department of Labor replaced which older occupational reference manual?", opts: ["Diagnostic and Statistical Manual (DSM)", "Dictionary of Occupational Titles (DOT)", "Occupational Outlook Handbook (OOH)", "Strong Interest Manual"], ans: [1], exp: "**O*NET** replaced the print **Dictionary of Occupational Titles (DOT)**." },
+      { id: 191, dom: 2, q: "A child who has experienced severe early neglect or institutional care consistently fails to seek comfort from caregivers when distressed, shows minimal social/emotional responsiveness, and exhibits unexplained irritability or sadness. Which DSM-5-TR diagnosis is MOST consistent with this presentation?", opts: ["Reactive Attachment Disorder (RAD)", "Disinhibited Social Engagement Disorder (DSED)", "Separation Anxiety Disorder", "Autism Spectrum Disorder"], ans: [0], exp: "**Reactive Attachment Disorder (RAD)** features emotionally withdrawn, inhibited behavior toward caregivers following severe neglect." },
+      { id: 192, dom: 5, q: "In group therapy, why is pre-group screening and orientation of prospective members considered an essential ethical practice?", opts: ["To guarantee that every group member has the exact same diagnosis", "To assess member readiness, clarify group norms/confidentiality limits, and ensure compatibility so neither the individual nor the group is harmed", "To collect full payment for the entire year upfront", "To allow members to choose their own therapist"], ans: [1], exp: "**Pre-group screening** assesses member readiness, clarifies confidentiality limits, and protects group compatibility." },
+      { id: 193, dom: 4, q: "A researcher finds a correlation of r = 0.60 between scores on a job aptitude test and supervisor performance ratings. What percentage of the variance in job performance is explained by the aptitude test?", opts: ["6%", "36%", "60%", "80%"], ans: [1], exp: "Square the correlation (`r² = 0.60² = 0.36`) to find the coefficient of determination: **36% of the variance** is explained." },
+      { id: 194, dom: 1, q: "In Adlerian family counseling and parenting education, \"logical consequences\" differ from punishment because logical consequences are:", opts: ["Arbitrarily imposed by an angry parent to assert dominance", "Directly and reasonably related to the child's misbehavior, respectful in tone, and designed to teach accountability", "Completely detached from the child's actions", "Physical penalties used only as a last resort"], ans: [1], exp: "Rudolf Dreikurs emphasized that **logical consequences** are reasonably connected to the behavior and respectful in tone." },
+      { id: 195, dom: 3, q: "A counselor working in private practice dies unexpectedly without leaving a professional will or designated records custodian. According to the ACA Code of Ethics, why is having a formal \"professional will\" (transfer plan) required?", opts: ["To ensure the counselor’s family inherits all client therapy notes", "To protect client confidentiality, ensure timely notification, and facilitate uninterrupted continuity of care and lawful record transfer upon the counselor's death or incapacitation", "To automatically discharge all client balances", "To avoid paying state licensing renewal fees"], ans: [1], exp: "A **professional will (records custodian plan)** protects client confidentiality and continuity of care if a counselor dies or becomes incapacitated." },
+      { id: 196, dom: 2, q: "According to Levinson’s \"Seasons of a Man’s Life\" theory of adult development, the major transition occurring between ages 40 and 45—often involving reappraisal of life achievements, mortality, and priorities—is called the:", opts: ["Early Adult Transition", "Mid-Life Transition", "Age 30 Transition", "Late Adult Transition"], ans: [1], exp: "Levinson identified ages 40–45 as the **Mid-Life Transition**, marked by reappraising life goals and mortality." },
+      { id: 197, dom: 1, q: "In Dialectical Behavior Therapy (DBT), the core dialectic balances which two seemingly opposite strategies?", opts: ["Free association and dream interpretation", "Radical acceptance (validation of the client as they are) and behavioral change", "Medication compliance and hypnosis", "Confrontation and silence"], ans: [1], exp: "DBT's central dialectic balances **radical acceptance/validation** with **behavioral change**." },
+      { id: 198, dom: 4, q: "Which type of validity demonstrates that a psychological test correlates strongly with other measures of the same theoretical construct (convergent validity) and shows low correlation with measures of unrelated constructs (discriminant validity)?", opts: ["Construct validity", "Face validity", "Content validity", "Predictive validity"], ans: [0], exp: "Convergent and discriminant evidence together establish **construct validity**." },
+      { id: 199, dom: 2, q: "A client reports spending excessive hours researching minor bodily sensations online, repeatedly checking her pulse, and seeking frequent medical reassurance despite normal diagnostic tests and physician reassurance, persisting for 8 months with high health anxiety and minimal somatic pain. Which DSM-5-TR diagnosis is MOST accurate?", opts: ["Somatic Symptom Disorder", "Illness Anxiety Disorder", "Conversion Disorder (Functional Neurological Symptom Disorder)", "Factitious Disorder"], ans: [1], exp: "**Illness Anxiety Disorder** involves high health anxiety and preoccupation with illness when physical symptoms are absent or minimal." },
+      { id: 200, dom: 5, q: "During the final session of successful long-term counseling, a client expresses gratitude, reviews specific coping skills mastered, discusses early warning signs of relapse, and identifies concrete steps for maintaining progress independently. This process exemplifies effective:", opts: ["Intake assessment", "Termination and relapse-prevention planning", "Crisis stabilization", "Countertransference disclosure"], ans: [1], exp: "Effective **termination and relapse-prevention planning** consolidates gains and prepares the client to maintain progress independently." }
+    ];
+
+    function shuffleArray(arr) {
+      const copy = [...arr];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    const OFFICIAL_TIME_SECONDS = 225 * 60; // 3 hours 45 minutes (13,500 seconds)
+
+    let questions = shuffleArray(rawQuestions);
+    let examMode = "instant"; // "instant" | "end"
+    let currentQ = 0;
+    let selectedIndices = new Set();
+    let userAnswers = Array(questions.length).fill(null);
+    let completedInstant = new Set();
+    let lastWasCorrect = false;
+    let remainingSeconds = OFFICIAL_TIME_SECONDS;
+    let timerInterval = null;
+    let timeExpired = false;
+
+    const mainEl = document.getElementById("exam-main");
+    const modeModal = document.getElementById("mode-modal");
+    const feedbackModal = document.getElementById("feedback-modal");
+    const feedbackBox = document.getElementById("feedback-box");
+    const feedbackStatus = document.getElementById("feedback-status");
+    const feedbackBody = document.getElementById("feedback-body");
+    const feedbackCloseBtn = document.getElementById("feedback-close-btn");
+
+    document.getElementById("choose-instant").addEventListener("click", () => startMode("instant"));
+    document.getElementById("choose-end").addEventListener("click", () => startMode("end"));
+
+    function formatTime(sec) {
+      const h = Math.floor(sec / 3600);
+      const m = Math.floor((sec % 3600) / 60);
+      const s = sec % 60;
+      return `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+    }
+
+    function updateTimerDisplay() {
+      const el = document.getElementById("exam-timer");
+      if (!el) return;
+      el.textContent = `\u23F1 ${formatTime(remainingSeconds)}`;
+      el.classList.toggle("warning", remainingSeconds <= 1800 && remainingSeconds > 300);
+      el.classList.toggle("danger", remainingSeconds <= 300);
+    }
+
+    function startTimer() {
+      if (timerInterval) clearInterval(timerInterval);
+      remainingSeconds = OFFICIAL_TIME_SECONDS;
+      timeExpired = false;
+      updateTimerDisplay();
+      timerInterval = setInterval(() => {
+        remainingSeconds--;
+        if (remainingSeconds <= 0) {
+          remainingSeconds = 0;
+          clearInterval(timerInterval);
+          timerInterval = null;
+          timeExpired = true;
+          feedbackModal.classList.remove("open");
+          renderEndResults();
+        } else {
+          updateTimerDisplay();
+        }
+      }, 1000);
+    }
+
+    function stopTimer() {
+      if (timerInterval) {
+        clearInterval(timerInterval);
+        timerInterval = null;
+      }
+    }
+
+    function startMode(mode) {
+      examMode = mode;
+      questions = shuffleArray(rawQuestions);
+      currentQ = 0;
+      selectedIndices.clear();
+      userAnswers = Array(questions.length).fill(null);
+      completedInstant.clear();
+      modeModal.classList.remove("open");
+      startTimer();
+      renderQuestion();
+    }
+
+    function formatExp(text) {
+      return text.replace(/\*\*(.*?)\*\*/g, "<strong>$1</strong>").replace(/`(.*?)`/g, "<code>$1</code>");
+    }
+
+    function isQuestionAnswered(idx) {
+      if (examMode === "instant") {
+        return completedInstant.has(idx);
+      }
+      return Array.isArray(userAnswers[idx]) && userAnswers[idx].length > 0;
+    }
+
+    function saveCurrentSelection() {
+      if (examMode === "end") {
+        userAnswers[currentQ] = selectedIndices.size > 0 ? Array.from(selectedIndices).sort((a, b) => a - b) : null;
+      }
+    }
+
+    function loadSelectionForCurrentQ() {
+      selectedIndices.clear();
+      if (examMode === "end" && Array.isArray(userAnswers[currentQ])) {
+        userAnswers[currentQ].forEach(i => selectedIndices.add(i));
+      } else if (examMode === "instant" && completedInstant.has(currentQ)) {
+        questions[currentQ].ans.forEach(i => selectedIndices.add(i));
+      }
+    }
+
+    function renderEndResults() {
+      stopTimer();
+      saveCurrentSelection();
+      let wrongItems = [];
+      let rightCount = 0;
+
+      const domainTotals = { 1: { right: 0, total: 0 }, 2: { right: 0, total: 0 }, 3: { right: 0, total: 0 }, 4: { right: 0, total: 0 }, 5: { right: 0, total: 0 }, 6: { right: 0, total: 0 } };
+
+      questions.forEach((item, idx) => {
+        const expected = [...item.ans].sort((a, b) => a - b);
+        let isCorrect = false;
+        let actual = [];
+
+        if (examMode === "instant") {
+          isCorrect = completedInstant.has(idx);
+          actual = isCorrect ? [...expected] : [];
+        } else {
+          actual = Array.isArray(userAnswers[idx]) ? [...userAnswers[idx]].sort((a, b) => a - b) : [];
+          isCorrect = expected.length === actual.length && expected.every((v, i) => v === actual[i]);
+        }
+
+        domainTotals[item.dom].total++;
+        if (isCorrect) {
+          rightCount++;
+          domainTotals[item.dom].right++;
+        } else {
+          wrongItems.push({ qNum: idx + 1, item, actual });
+        }
+      });
+
+      const wrongCount = wrongItems.length;
+      const pct = Math.round((rightCount / questions.length) * 100);
+      const passed = rightCount >= 150;
+
+      mainEl.innerHTML = `
+        <div>
+          <div class="eyebrow">${timeExpired ? "Time Expired (03:45:00) // Auto-Graded Report" : `Official-Style Score Report // ${examMode === "instant" ? "Instant Mode" : "Graded Mode"}`}</div>
+          <h1 class="hero-headline">FINAL <span class="outline">RESULTS</span></h1>
+
+          <div class="score-grid">
+            <div class="score-box">
+              <div class="score-num ${passed ? "lime" : "rose"}">${passed ? "PASS" : "REVIEW"}</div>
+              <div class="score-label">Target: 150+ (75%)</div>
+            </div>
+            <div class="score-box">
+              <div class="score-num lime">${rightCount} / 200</div>
+              <div class="score-label">Got Right (${pct}%)</div>
+            </div>
+            <div class="score-box">
+              <div class="score-num rose">${wrongCount}</div>
+              <div class="score-label">Got Wrong / Unanswered</div>
+            </div>
+          </div>
+
+          <div class="domain-report">
+            <h3>NBCC Work-Behavior Domain Breakdown</h3>
+            ${Object.keys(domainNames).map(d => {
+              const stat = domainTotals[d];
+              const dPct = stat.total > 0 ? Math.round((stat.right / stat.total) * 100) : 0;
+              return `
+                <div class="domain-row">
+                  <div class="domain-row-top">
+                    <span class="domain-name">${domainNames[d]}</span>
+                    <span class="domain-stats">${stat.right} / ${stat.total} (${dPct}%)</span>
+                  </div>
+                  <div class="domain-bar">
+                    <div class="domain-bar-fill" style="width:${dPct}%"></div>
+                  </div>
+                </div>
+              `;
+            }).join("")}
+          </div>
+
+          <div style="display:flex;gap:0.85rem;flex-wrap:wrap;margin-bottom:2rem;">
+            <button type="button" class="btn-lime" id="retake-mode-btn">New Shuffled Exam / Switch Mode</button>
+            <a href="nce.html" class="btn-ghost">Back to NCE Hub</a>
+          </div>
+
+          ${wrongCount > 0 ? `
+            <div class="eyebrow" style="color:var(--rose);">Missed &amp; Unanswered Questions (${wrongCount})</div>
+            <div class="review-list">
+              ${wrongItems.map(({ qNum, item, actual }) => `
+                <div class="review-item">
+                  <div class="review-q">Q${qNum} [${domainNames[item.dom]}]: ${item.q}</div>
+                  <div class="review-meta">
+                    <p><span class="yours">Your Answer:</span> ${actual.length ? actual.map(i => item.opts[i]).join(", ") : "Unanswered (Marked Wrong)"}</p>
+                    <p><strong>Correct Answer:</strong> ${item.ans.map(i => item.opts[i]).join(", ")}</p>
+                    <p style="margin-top:0.45rem;">${formatExp(item.exp)}</p>
+                  </div>
+                </div>
+              `).join("")}
+            </div>
+          ` : `
+            <div class="hud-panel">
+              <p class="prose" style="color:var(--lime);font-weight:600;">Perfect 200/200 score! You answered every question correctly across all six NBCC domains.</p>
+            </div>
+          `}
+        </div>
+      `;
+
+      document.getElementById("retake-mode-btn").addEventListener("click", () => {
+        modeModal.classList.add("open");
+      });
+    }
+
+    function renderQuestion() {
+      if (currentQ >= questions.length) {
+        renderEndResults();
+        return;
+      }
+
+      loadSelectionForCurrentQ();
+
+      const item = questions[currentQ];
+      const pct = Math.round(((currentQ + 1) / questions.length) * 100);
+
+      let jumpGrid = "";
+      for (let i = 0; i < questions.length; i++) {
+        const isAns = isQuestionAnswered(i);
+        jumpGrid += `<button type="button" class="jump-opt ${isAns ? "answered" : ""} ${i === currentQ ? "current" : ""}" data-q="${i}">Q${i + 1}</button>`;
+      }
+
+      const isLast = currentQ === questions.length - 1;
+      const letters = ["A", "B", "C", "D"];
+
+      mainEl.innerHTML = `
+        <div class="exam-topbar">
+          <a href="nce.html" class="btn-ghost">&larr; NCE Hub</a>
+          <div class="exam-topbar-right">
+            <div class="timer-badge" id="exam-timer">&#9201; ${formatTime(remainingSeconds)}</div>
+            <button type="button" class="btn-ghost" id="switch-mode-btn">Switch Mode</button>
+            <div class="jump-wrapper" id="jump-wrapper">
+              <button type="button" class="jump-trigger" id="jump-trigger" aria-expanded="false">
+                Jump to: Question ${currentQ + 1} &#9662;
+              </button>
+              <div class="jump-menu" id="jump-menu">
+                <div class="jump-legend">
+                  <span class="legend-item"><span class="legend-swatch swatch-current"></span> Current</span>
+                  <span class="legend-item"><span class="legend-swatch swatch-answered"></span> Answered</span>
+                  <span class="legend-item"><span class="legend-swatch swatch-unanswered"></span> Open</span>
+                </div>
+                <div class="jump-grid">${jumpGrid}</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="progress-track">
+          <div class="progress-fill" style="width:${pct}%"></div>
+        </div>
+
+        <div class="q-meta">
+          <span>QUESTION ${currentQ + 1} OF ${questions.length}</span>
+          <span class="q-type-tag">${domainNames[item.dom]}</span>
+          <span class="q-mode-tag">${examMode === "instant" ? "Answers Instantly" : "Answers at the End"}</span>
+        </div>
+
+        <div class="q-text">${item.q}</div>
+
+        <div class="options-list" id="options-list">
+          ${item.opts.map((opt, idx) => `
+            <button type="button" class="option-card ${selectedIndices.has(idx) ? "selected" : ""}" data-idx="${idx}">
+              <span class="option-indicator"></span>
+              <span><strong>${letters[idx]}.</strong> ${opt}</span>
+            </button>
+          `).join("")}
+        </div>
+
+        <div class="exam-actions">
+          ${examMode === "instant"
+            ? `<button type="button" class="btn-lime" id="submit-ans-btn">Submit Answer</button>`
+            : isLast
+              ? `<button type="button" class="btn-lime" id="finish-exam-btn">Finish &amp; Grade Exam</button>`
+              : `<button type="button" class="btn-lime" id="next-end-btn">Next Question &rarr;</button>`
+          }
+          ${currentQ > 0 ? `<button type="button" class="btn-ghost" id="prev-q-btn">&larr; Previous</button>` : ""}
+          ${examMode === "instant" && !isLast ? `<button type="button" class="btn-ghost" id="skip-q-btn">Skip &rarr;</button>` : ""}
+          <button type="button" class="btn-cyan" id="finish-early-btn">End &amp; Grade Now</button>
+        </div>
+      `;
+
+      updateTimerDisplay();
+
+      document.getElementById("switch-mode-btn").addEventListener("click", () => {
+        modeModal.classList.add("open");
+      });
+
+      const jumpTrigger = document.getElementById("jump-trigger");
+      const jumpMenu = document.getElementById("jump-menu");
+      jumpTrigger.addEventListener("click", (e) => {
+        e.stopPropagation();
+        const isOpen = jumpMenu.classList.toggle("open");
+        jumpTrigger.classList.toggle("open", isOpen);
+        jumpTrigger.setAttribute("aria-expanded", String(isOpen));
+      });
+
+      document.querySelectorAll("#jump-menu .jump-opt").forEach(btn => {
+        btn.addEventListener("click", (e) => {
+          e.stopPropagation();
+          saveCurrentSelection();
+          currentQ = parseInt(btn.dataset.q, 10);
+          renderQuestion();
+        });
+      });
+
+      const submitBtn = document.getElementById("submit-ans-btn");
+      if (submitBtn) submitBtn.addEventListener("click", submitAnswer);
+
+      const nextEndBtn = document.getElementById("next-end-btn");
+      if (nextEndBtn) nextEndBtn.addEventListener("click", () => {
+        saveCurrentSelection();
+        currentQ++;
+        renderQuestion();
+      });
+
+      const finishBtn = document.getElementById("finish-exam-btn");
+      if (finishBtn) finishBtn.addEventListener("click", renderEndResults);
+
+      const finishEarlyBtn = document.getElementById("finish-early-btn");
+      if (finishEarlyBtn) finishEarlyBtn.addEventListener("click", renderEndResults);
+
+      const prevBtn = document.getElementById("prev-q-btn");
+      if (prevBtn) prevBtn.addEventListener("click", () => {
+        saveCurrentSelection();
+        currentQ--;
+        renderQuestion();
+      });
+
+      const skipBtn = document.getElementById("skip-q-btn");
+      if (skipBtn) skipBtn.addEventListener("click", () => {
+        currentQ++;
+        selectedIndices.clear();
+        renderQuestion();
+      });
+
+      document.querySelectorAll("#options-list .option-card").forEach(btn => {
+        btn.addEventListener("click", () => toggleOption(parseInt(btn.dataset.idx, 10)));
+      });
+    }
+
+    document.addEventListener("click", () => {
+      const jumpMenu = document.getElementById("jump-menu");
+      const jumpTrigger = document.getElementById("jump-trigger");
+      if (jumpMenu && jumpMenu.classList.contains("open")) {
+        jumpMenu.classList.remove("open");
+        jumpTrigger.classList.remove("open");
+        jumpTrigger.setAttribute("aria-expanded", "false");
+      }
+    });
+
+    function toggleOption(idx) {
+      selectedIndices.clear();
+      selectedIndices.add(idx);
+      saveCurrentSelection();
+      document.querySelectorAll("#options-list .option-card").forEach((card, i) => {
+        card.classList.toggle("selected", selectedIndices.has(i));
+      });
+      const currentGridBtn = document.querySelector(`#jump-menu .jump-opt[data-q="${currentQ}"]`);
+      if (currentGridBtn) {
+        currentGridBtn.classList.toggle("answered", isQuestionAnswered(currentQ));
+      }
+    }
+
+    function submitAnswer() {
+      if (selectedIndices.size === 0) {
+        openFeedback(false, "Please select an answer before submitting.");
+        return;
+      }
+      const item = questions[currentQ];
+      const expected = [...item.ans].sort((a, b) => a - b);
+      const actual = Array.from(selectedIndices).sort((a, b) => a - b);
+      const isCorrect = expected.length === actual.length && expected.every((v, i) => v === actual[i]);
+      if (isCorrect) {
+        completedInstant.add(currentQ);
+        const currentGridBtn = document.querySelector(`#jump-menu .jump-opt[data-q="${currentQ}"]`);
+        if (currentGridBtn) currentGridBtn.classList.add("answered");
+        openFeedback(true, "");
+      } else {
+        openFeedback(false, formatExp(item.exp));
+      }
+    }
+
+    function openFeedback(isCorrect, htmlContent) {
+      lastWasCorrect = isCorrect;
+      feedbackBox.className = "modal-box " + (isCorrect ? "correct" : "wrong");
+      feedbackStatus.textContent = isCorrect ? "Correct!" : "Wrong";
+      feedbackBody.innerHTML = htmlContent;
+      feedbackModal.classList.add("open");
+    }
+
+    function closeFeedback() {
+      feedbackModal.classList.remove("open");
+      if (lastWasCorrect) {
+        currentQ++;
+        selectedIndices.clear();
+        renderQuestion();
+      }
+    }
+
+    feedbackCloseBtn.addEventListener("click", closeFeedback);
+    feedbackModal.addEventListener("click", (e) => { if (e.target === feedbackModal) closeFeedback(); });
+
+    const menuBtn = document.getElementById("mobile-menu-btn");
+    const navDrawer = document.getElementById("nav-drawer");
+    menuBtn.addEventListener("click", () => {
+      const isOpen = navDrawer.classList.toggle("open");
+      menuBtn.setAttribute("aria-expanded", String(isOpen));
+      menuBtn.innerHTML = isOpen ? "Close &#10005;" : "Menu &#9776;";
+    });
+
+    const privacyModal = document.getElementById("privacy-modal");
+    document.getElementById("open-privacy-btn").addEventListener("click", () => privacyModal.classList.add("open"));
+    document.getElementById("privacy-close-btn").addEventListener("click", () => privacyModal.classList.remove("open"));
+    privacyModal.addEventListener("click", (e) => { if (e.target === privacyModal) privacyModal.classList.remove("open"); });
+
+    renderQuestion();
+  </script>
+</body>
+</html>
