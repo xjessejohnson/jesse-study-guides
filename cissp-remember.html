@@ -75,6 +75,7 @@
       font-size: 0.85rem;
       flex-wrap: wrap;
     }
+
     .arcade-stat-badge {
       display: flex;
       align-items: center;
@@ -86,10 +87,12 @@
       color: var(--cyan);
       font-weight: 700;
     }
+
     .arcade-stat-badge.cash {
       color: var(--lime);
       border-color: rgba(52, 211, 153, 0.35);
     }
+
     .arcade-stat-badge.timer {
       color: #fbbf24;
       border-color: rgba(251, 191, 36, 0.35);
@@ -184,7 +187,6 @@
       max-width: 960px;
       margin: 0 auto;
     }
-
     .arcade-screen-box {
       background: rgba(13, 18, 28, 0.9);
       border: 2px solid var(--border-slate);
@@ -193,7 +195,6 @@
       text-align: center;
       position: relative;
     }
-
     .arcade-display-text {
       font-family: 'JetBrains Mono', monospace;
       font-size: 1.15rem;
@@ -209,7 +210,7 @@
       background: #030712;
       border: 2px solid var(--cyan);
       border-radius: 12px;
-      height: 260px;
+      height: 280px;
       overflow: hidden;
       margin: 1rem 0;
       box-shadow: inset 0 0 30px rgba(34, 211, 238, 0.1);
@@ -235,7 +236,7 @@
       align-items: center;
       gap: 0.4rem;
       box-shadow: 0 0 15px rgba(251, 113, 133, 0.4);
-      transition: transform 0.2s ease, border-color 0.2s ease;
+      transition: transform 0.18s ease, border-color 0.18s ease, opacity 0.18s ease;
       animation: floatNode 3s ease-in-out infinite alternate;
       z-index: 5;
     }
@@ -244,49 +245,58 @@
       box-shadow: 0 0 20px rgba(52, 211, 153, 0.6);
       transform: scale(1.1);
     }
+    .blaster-target-node.blasted {
+      animation: none;
+      transform: scale(1.35);
+      border-color: var(--lime);
+      background: rgba(158, 255, 51, 0.25);
+      box-shadow: 0 0 30px var(--lime);
+    }
     @keyframes floatNode {
       0% { transform: translateY(0px) translateX(0px); }
       100% { transform: translateY(-8px) translateX(6px); }
     }
     .cannon-turret {
       position: absolute;
-      bottom: 10px;
+      bottom: 8px;
       left: 50%;
-      transform: translateX(-50%);
-      width: 60px;
-      height: 40px;
-      background: var(--cyan);
-      border-radius: 30px 30px 0 0;
+      width: 56px;
+      height: 56px;
+      margin-left: -28px;
+      background: radial-gradient(circle, #22d3ee 0%, #0e7490 80%);
+      border: 2px solid #fff;
+      border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 0 20px var(--cyan);
+      box-shadow: 0 0 22px var(--cyan);
       z-index: 10;
+      transition: transform 0.12s ease-out;
     }
     .cannon-barrel {
       position: absolute;
-      top: -15px;
+      top: -18px;
+      left: 50%;
+      transform: translateX(-50%);
       width: 12px;
-      height: 20px;
+      height: 26px;
       background: #fff;
+      border: 2px solid var(--cyan);
       border-radius: 4px;
+      box-shadow: 0 0 10px var(--cyan);
     }
     .laser-beam {
       position: absolute;
-      background: var(--lime);
-      width: 4px;
-      height: 120px;
-      bottom: 35px;
+      background: linear-gradient(to top, var(--cyan), var(--lime), #ffffff);
+      width: 5px;
+      bottom: 36px;
       left: 50%;
-      transform: translateX(-50%);
-      box-shadow: 0 0 12px var(--lime);
+      transform-origin: bottom center;
+      box-shadow: 0 0 16px var(--lime), 0 0 6px #fff;
+      border-radius: 999px;
       z-index: 8;
       display: none;
-      animation: shootLaser 0.25s linear forwards;
-    }
-    @keyframes shootLaser {
-      0% { height: 10px; opacity: 1; }
-      100% { height: 200px; opacity: 0; }
+      pointer-events: none;
     }
 
     /* Game 2: Wheel of Fortune Crypto Spinner */
@@ -384,7 +394,6 @@
       box-shadow: none;
       transform: none;
     }
-
     .jeopardy-mc-list {
       display: flex;
       flex-direction: column;
@@ -444,6 +453,154 @@
       transition: all 0.15s;
     }
     .scramble-tile:hover { background: var(--cyan); color: #000; }
+
+    /* Game 5: Real Cloud Tower Defense Arena */
+    .td-battlefield {
+      position: relative;
+      height: 220px;
+      background: linear-gradient(180deg, #040814 0%, #091326 75%, #0f1f38 100%);
+      border: 2px solid var(--cyan);
+      border-radius: 12px;
+      overflow: hidden;
+      margin: 1rem 0;
+      box-shadow: inset 0 0 35px rgba(34, 211, 238, 0.12);
+    }
+    .td-battlefield.hit-shake {
+      border-color: var(--rose);
+      box-shadow: inset 0 0 50px rgba(251, 113, 133, 0.45);
+      animation: tdShake 0.35s ease;
+    }
+    @keyframes tdShake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-8px); }
+      50% { transform: translateX(8px); }
+      75% { transform: translateX(-6px); }
+    }
+    .td-lane-line {
+      position: absolute;
+      bottom: 38px;
+      left: 90px;
+      right: 20px;
+      height: 3px;
+      background: repeating-linear-gradient(90deg, rgba(34,211,238,0.35) 0px, rgba(34,211,238,0.35) 14px, transparent 14px, transparent 26px);
+    }
+    .td-tower-wrap {
+      position: absolute;
+      left: 18px;
+      bottom: 24px;
+      width: 78px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      z-index: 6;
+    }
+    .td-hp-bar-bg {
+      width: 72px;
+      height: 9px;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.25);
+      border-radius: 999px;
+      overflow: hidden;
+      margin-bottom: 6px;
+    }
+    .td-hp-bar-fill {
+      height: 100%;
+      background: var(--lime);
+      transition: width 0.25s ease, background 0.25s ease;
+    }
+    .td-tower-core {
+      width: 62px;
+      height: 108px;
+      background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+      border: 2px solid var(--cyan);
+      border-radius: 10px 10px 4px 4px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 8px 4px;
+      box-shadow: 0 0 22px rgba(34, 211, 238, 0.3);
+      position: relative;
+    }
+    .td-tower-turret {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: var(--cyan);
+      box-shadow: 0 0 14px var(--cyan);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.95rem;
+    }
+    .td-tower-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.62rem;
+      color: var(--cyan);
+      font-weight: 700;
+    }
+    .td-enemy-unit {
+      position: absolute;
+      bottom: 42px;
+      left: 84%;
+      transform: translateX(-50%);
+      background: rgba(24, 10, 20, 0.94);
+      border: 2px solid var(--rose);
+      border-radius: 12px;
+      padding: 0.55rem 0.85rem;
+      min-width: 125px;
+      color: #fff;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 700;
+      box-shadow: 0 0 20px rgba(251, 113, 133, 0.45);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.25rem;
+      z-index: 7;
+      transition: left 0.1s linear;
+    }
+    .td-enemy-sprite {
+      font-size: 1.55rem;
+      line-height: 1;
+      filter: drop-shadow(0 0 8px var(--rose));
+    }
+    .td-laser-shot {
+      position: absolute;
+      left: 80px;
+      bottom: 92px;
+      height: 5px;
+      background: linear-gradient(90deg, #fff, var(--lime), var(--cyan));
+      box-shadow: 0 0 16px var(--lime);
+      border-radius: 999px;
+      z-index: 8;
+      display: none;
+    }
+    .td-turret-controls {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.9rem;
+      margin-top: 0.85rem;
+    }
+    .td-fire-btn {
+      background: rgba(16, 23, 38, 0.95);
+      border: 2px solid var(--cyan);
+      border-radius: 10px;
+      padding: 0.95rem 0.75rem;
+      color: #fff;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+    .td-fire-btn:hover {
+      border-color: var(--lime);
+      background: rgba(158, 255, 51, 0.12);
+      box-shadow: 0 0 18px rgba(158, 255, 51, 0.25);
+      transform: translateY(-2px);
+    }
 
     /* Debrief Summary Report */
     .debrief-container {
@@ -537,13 +694,13 @@
           <button type="button" class="game-selector-card" onclick="launchGame(1)">
             <div class="game-num">Cabinet 01</div>
             <div class="game-title">Port Blaster 9000</div>
-            <div class="game-desc">A retro action arcade radar shooter where incoming port protocol targets float across the tactical display and you must laser-blast the correct one against the countdown clock!</div>
+            <div class="game-desc">A retro action arcade radar shooter where incoming port protocol targets float across the tactical display and your turret aims and laser-blasts the target you click!</div>
           </button>
 
           <button type="button" class="game-selector-card" onclick="launchGame(2)">
             <div class="game-num">Cabinet 02</div>
             <div class="game-title">Crypto Wheel Spinner</div>
-            <div class="game-desc">Spin the professional Wheel of Fortune crypto ticker to win big cash, avoid Bankrupt, and solve hidden security ciphers letter by letter!</div>
+            <div class="game-desc">Spin the Wheel of Fortune crypto ticker to win big cash, avoid Bankrupt, and solve hidden security ciphers letter by letter!</div>
           </button>
 
           <button type="button" class="game-selector-card" onclick="launchGame(3)">
@@ -561,13 +718,13 @@
           <button type="button" class="game-selector-card" onclick="launchGame(5)">
             <div class="game-num">Cabinet 05</div>
             <div class="game-title">Cloud Architecture Tower Defense</div>
-            <div class="game-desc">Deploy incoming cloud components and responsibilities into their correct IaaS, PaaS, or SaaS defensive platforms.</div>
+            <div class="game-desc">Defend your Cloud Bastion Tower against marching workload drones! Fire the right IaaS, PaaS, or SaaS turret to destroy enemies before they hit your tower HP.</div>
           </button>
 
           <button type="button" class="game-selector-card" onclick="launchGame(6)">
             <div class="game-num">Cabinet 06</div>
             <div class="game-title">Incident Response Time Attack</div>
-            <div class="game-desc">Classify NIST Incident Response lifecycle tasks and Certificate Lifecycle operations into their proper operational stage against the countdown clock.</div>
+            <div class="game-desc">Classify NIST Incident Response lifecycle tasks into their proper operational stage against the countdown clock.</div>
           </button>
         </div>
       </main>
@@ -582,19 +739,16 @@
           <div class="game-num" id="arcade-game-subtitle" style="margin:0;">ARCADE CABINET</div>
           <div class="game-title" id="arcade-game-title" style="margin:0; font-size:1.15rem;">Loading Game...</div>
         </div>
-
         <div class="arcade-tracker-hud">
           <div class="arcade-stat-badge cash" id="hud-cash-badge" style="display:none;">💵 Cash Earned: $<span id="hud-cash">0</span></div>
           <div class="arcade-stat-badge timer" id="hud-timer-badge" style="display:none;">⏱️ <span id="hud-timer">25</span>s</div>
           <div class="arcade-stat-badge" id="hud-remaining-badge">🎯 <span id="hud-remaining">0</span> remaining</div>
         </div>
-
         <div class="arcade-nav-controls">
           <button class="arcade-btn-action" onclick="openNewGamePrompt()">New Game</button>
           <button class="arcade-btn-action" style="border-color: rgba(251,113,133,0.4); color: var(--rose);" onclick="quitGameAction()">Quit Game</button>
         </div>
       </div>
-
       <div class="arcade-body" id="arcade-body-content">
         <!-- Dynamic Game Arena -->
       </div>
@@ -707,9 +861,8 @@
       { name: "IPSEC", hint: "Layer 3 VPN protocol suite providing AH integrity and ESP confidentiality", explanation: "IPSec secures IP communications at the Network layer (Layer 3)." }
     ];
 
-    // GAME 3: CYBER JEOPARDY (6 Categories x 5 Values = 30 Questions per board, 5 Multiple Choice Answers each)
+    // GAME 3: CYBER JEOPARDY
     const jeopardyBank = [
-      // CATEGORY 1: CRYPTOGRAPHY
       {
         cat: "CRYPTOGRAPHY", val: 200,
         q: "Which symmetric encryption algorithm is based on Rijndael and supports 128, 192, and 256-bit keys?",
@@ -745,8 +898,6 @@
         answer: "RC4",
         explanation: "RC4 is a stream cipher whose weak IV implementation led to WEP cracking."
       },
-
-      // CATEGORY 2: NETWORKS & PORTS
       {
         cat: "NETWORKS & PORTS", val: 200,
         q: "Which port does LDAP use for standard unencrypted directory queries?",
@@ -782,8 +933,6 @@
         answer: "172.16.0.0 – 172.31.255.255",
         explanation: "Class B private space spans 172.16.0.0/12 (172.16.0.0 through 172.31.255.255)."
       },
-
-      // CATEGORY 3: ATTACKS & THREATS
       {
         cat: "ATTACKS & THREATS", val: 200,
         q: "Which attack floods a server with repeated TCP SYN requests without completing the three-way handshake?",
@@ -801,7 +950,7 @@
       {
         cat: "ATTACKS & THREATS", val: 600,
         q: "What differentiates a computer worm from a Trojan horse?",
-        options: ["Worms self-replicate without a host file", "Trojans self-replicate across subnets", "Worms require user execution", "Trojans only affect BIOS f{irm}ware", "Worms cannot spread over networks"],
+        options: ["Worms self-replicate without a host file", "Trojans self-replicate across subnets", "Worms require user execution", "Trojans only affect BIOS firmware", "Worms cannot spread over networks"],
         answer: "Worms self-replicate without a host file",
         explanation: "Worms autonomously self-replicate across networks; Trojans disguise malware inside seemingly benign software."
       },
@@ -819,8 +968,6 @@
         answer: "Land Attack",
         explanation: "A Land attack tricks a vulnerable host into replying to itself continuously."
       },
-
-      // CATEGORY 4: ACCESS CONTROL
       {
         cat: "ACCESS CONTROL", val: 200,
         q: "Which access control model relies on security clearance labels assigned to subjects and classification labels on objects?",
@@ -856,8 +1003,6 @@
         answer: "Mantrap",
         explanation: "A mantrap isolates a single entrant between two doors until authentication succeeds."
       },
-
-      // CATEGORY 5: PKI & CERTIFICATES
       {
         cat: "PKI & CERTIFICATES", val: 200,
         q: "What is the primary purpose of a digital certificate in a Public Key Infrastructure (PKI)?",
@@ -893,8 +1038,6 @@
         answer: "User A's public key only",
         explanation: "Private keys must never be shared; the applicant submits proof of identity and their public key."
       },
-
-      // CATEGORY 6: GOVERNANCE & BCP/DR
       {
         cat: "GOVERNANCE & DR", val: 200,
         q: "Which calculation represents the expected monetary loss every time a specific risk occurs once?",
@@ -1003,7 +1146,7 @@
       { task: "Rebuilding compromised servers from trusted golden images", phase: "recovery", name: "5. Recovery", explanation: "Rebuilding and restoring verified production workloads is part of Recovery." },
       { task: "Writing the final executive incident report and archiving chain-of-custody logs", phase: "post-incident", name: "6. Post-Incident Activity", explanation: "Formal reporting and evidence retention conclude the IR lifecycle." },
       { task: "Defining escalation contacts and legal notification procedures", phase: "preparation", name: "1. Preparation", explanation: "Communication trees must be established in Preparation." },
-      { task: "Analyzing suspicious memory dumps and file hashes to conf{irm} malware", phase: "detection", name: "2. Detection & Analysis", explanation: "Technical analysis of artifacts conf{irm}s compromise during Detection & Analysis." },
+      { task: "Analyzing suspicious memory dumps and file hashes to confirm malware", phase: "detection", name: "2. Detection & Analysis", explanation: "Technical analysis of artifacts confirms compromise during Detection & Analysis." },
       { task: "Taking a forensic disk snapshot before unplugging an affected workstation", phase: "containment", name: "3. Containment", explanation: "Evidence preservation accompanies short-term Containment actions." },
       { task: "Patching the unpatched web server flaw used for initial entry", phase: "eradication", name: "4. Eradication", explanation: "Remediating the root vulnerability ensures the threat is eradicated." },
       { task: "Monitoring restored systems closely for signs of reinfection", phase: "recovery", name: "5. Recovery", explanation: "Heightened monitoring validates clean Recovery." },
@@ -1031,6 +1174,12 @@
     let jeopardyBoardGrid = {};
     let jeopardyRemainingCount = 0;
     let activeJeopardyCellKey = null;
+
+    // Tower Defense State
+    let tdTowerHp = 100;
+    let tdEnemyX = 84; // percentage from left
+    let tdMoveInterval = null;
+    let tdWaveLocked = false;
 
     // Timer State
     let gameTimerInterval = null;
@@ -1068,6 +1217,10 @@
       if (gameTimerInterval) {
         clearInterval(gameTimerInterval);
         gameTimerInterval = null;
+      }
+      if (tdMoveInterval) {
+        clearInterval(tdMoveInterval);
+        tdMoveInterval = null;
       }
       hudTimerBadge.classList.remove("urgent");
     }
@@ -1163,6 +1316,7 @@
         arcadeTitle.textContent = "Crypto Wheel Spinner";
         activeQueue = shuffleArray(ciphers);
         totalItemsCount = activeQueue.length;
+        wheelTotalCash = 0;
         nextWheelRound();
       } else if (gameId === 3) {
         arcadeSubtitle.textContent = "CABINET 03 // TRIVIA BOARD";
@@ -1176,9 +1330,10 @@
         nextScrambleRound();
       } else if (gameId === 5) {
         arcadeSubtitle.textContent = "CABINET 05 // TOWER DEFENSE";
-        arcadeTitle.textContent = "Cloud Architecture Platform";
+        arcadeTitle.textContent = "Cloud Architecture Bastion";
         activeQueue = shuffleArray(cloudArcade);
         totalItemsCount = activeQueue.length;
+        tdTowerHp = 100;
         nextCloudRound();
       } else if (gameId === 6) {
         arcadeSubtitle.textContent = "CABINET 06 // TIME ATTACK";
@@ -1234,7 +1389,8 @@
 
       let correctCount = sessionLog.filter(s => s.isCorrect).length;
       let wrongCount = sessionLog.filter(s => !s.isCorrect).length;
-      let cashSummaryHtml = activeGameId === 2 ? ` | CASH WON: <span style="color:var(--lime);">$${wheelTotalCash.toLocaleString()}</span>` : (activeGameId === 3 ? ` | CASH EARNED: <span style="color:var(--lime);">$${jeopardyCash.toLocaleString()}</span>` : "");
+
+      let cashSummaryHtml = activeGameId === 2 ? ` | CASH WON: <span style="color:var(--lime);">$${wheelTotalCash.toLocaleString()}</span>` : (activeGameId === 3 ? ` | CASH EARNED: <span style="color:var(--lime);">$${jeopardyCash.toLocaleString()}</span>` : (activeGameId === 5 ? ` | TOWER HP: <span style="color:${tdTowerHp > 0 ? 'var(--lime)' : 'var(--rose)'};">${tdTowerHp}%</span>` : ""));
 
       let debriefHtml = `
         <div style="margin-bottom:0.75rem;">
@@ -1277,10 +1433,13 @@
     }
 
     /* =========================================================================
-       GAME 1: PORT BLASTER 9000 (Visual Radar Shooter with Timer)
+       GAME 1: PORT BLASTER 9000 (Aimed Turret & Laser to Clicked Target)
        ========================================================================= */
+    let blasterFiring = false;
+
     function nextPortBlasterRound() {
       stopGameTimer();
+      blasterFiring = false;
       if (activeQueue.length === 0) {
         showDebriefSummary();
         return;
@@ -1295,12 +1454,11 @@
       }
       choices = shuffleArray(choices);
 
-      // Random floating positions within radar box
       const positions = [
-        { top: "18%", left: "15%" },
-        { top: "22%", left: "70%" },
-        { top: "58%", left: "20%" },
-        { top: "54%", left: "68%" }
+        { top: "16%", left: "14%" },
+        { top: "20%", left: "68%" },
+        { top: "54%", left: "18%" },
+        { top: "50%", left: "66%" }
       ];
       const randomizedPositions = shuffleArray(positions);
 
@@ -1310,31 +1468,65 @@
             <div style="font-size:0.75rem; font-family:'JetBrains Mono',monospace; color:var(--cyan);">TACTICAL RADAR TARGET INTERCEPT</div>
             <div class="arcade-display-text" style="font-size:1.05rem;">Target Service: <span>"${currentItem.use}"</span></div>
             
-            <div class="blaster-radar-screen">
+            <div class="blaster-radar-screen" id="blaster-radar-box">
               <div class="radar-grid-lines"></div>
               ${choices.map((c, idx) => `
-                <button class="blaster-target-node" style="top: ${randomizedPositions[idx].top}; left: ${randomizedPositions[idx].left};" onclick="shootPortTarget(${c}, ${currentItem.num}, '${currentItem.use.replace(/'/g, "\\'")}', '${currentItem.explanation.replace(/'/g, "\\'")}')">
+                <button class="blaster-target-node" style="top: ${randomizedPositions[idx].top}; left: ${randomizedPositions[idx].left};" onclick="shootPortTarget(this, ${c}, ${currentItem.num}, '${currentItem.use.replace(/'/g, "\\'")}', '${currentItem.explanation.replace(/'/g, "\\'")}')">
                   <span>🎯</span> PORT ${c}
                 </button>
               `).join("")}
               <div class="laser-beam" id="laser-effect"></div>
-              <div class="cannon-turret">
+              <div class="cannon-turret" id="cannon-turret">
                 <div class="cannon-barrel"></div>
               </div>
             </div>
-            <div style="font-size:0.78rem; color:var(--text-secondary);">Click the correct drifting port drone to fire your laser cannon!</div>
+            <div style="font-size:0.78rem; color:var(--text-secondary);">Click the correct drifting port drone—your turret will rotate and fire directly at it!</div>
           </div>
         </div>
       `;
 
-      // Start 20-second countdown for Port Blaster
       startGameTimer(20, "blaster");
     }
 
-    function shootPortTarget(selected, correctNum, useName, explanation) {
+    function shootPortTarget(btnEl, selected, correctNum, useName, explanation) {
+      if (blasterFiring) return;
+      blasterFiring = true;
       stopGameTimer();
+
+      const radar = document.getElementById("blaster-radar-box");
+      const turret = document.getElementById("cannon-turret");
       const laser = document.getElementById("laser-effect");
-      if (laser) laser.style.display = "block";
+
+      if (radar && turret && laser && btnEl) {
+        const radarRect = radar.getBoundingClientRect();
+        const btnRect = btnEl.getBoundingClientRect();
+
+        // Turret center origin near bottom-center of radar
+        const originX = radarRect.width / 2;
+        const originY = radarRect.height - 36;
+
+        // Clicked target center relative to radar
+        const targetX = (btnRect.left - radarRect.left) + (btnRect.width / 2);
+        const targetY = (btnRect.top - radarRect.top) + (btnRect.height / 2);
+
+        const dx = targetX - originX;
+        const dy = targetY - originY;
+        const distance = Math.hypot(dx, dy);
+        // Angle in degrees from straight up (0 deg = straight up)
+        const angleDeg = Math.atan2(dx, -dy) * (180 / Math.PI);
+
+        // 1. Aim turret barrel toward target
+        turret.style.transform = `rotate(${angleDeg}deg)`;
+
+        // 2. Fire laser beam at exact angle and distance to target
+        setTimeout(() => {
+          laser.style.display = "block";
+          laser.style.height = `${distance}px`;
+          laser.style.transform = `translateX(-50%) rotate(${angleDeg}deg)`;
+          btnEl.classList.add("blasted");
+          btnEl.innerHTML = `<span>💥</span> PORT ${selected}`;
+        }, 110);
+      }
 
       const isCorrect = (selected === correctNum);
       sessionLog.push({
@@ -1348,11 +1540,11 @@
       setTimeout(() => {
         openFeedback(isCorrect, isCorrect ? "Direct Laser Hit! Port successfully defended." : `Missed target! <strong>${useName}</strong> runs on <strong>Port ${correctNum}</strong>.`);
         nextPortBlasterRound();
-      }, 250);
+      }, 420);
     }
 
     /* =========================================================================
-       GAME 2: WHEEL OF FORTUNE CRYPTO SPINNER
+       GAME 2: WHEEL OF FORTUNE CRYPTO SPINNER (Downward Ticker & Synced Slice)
        ========================================================================= */
     let wheelSecret = "";
     let wheelGuessed = new Set();
@@ -1423,16 +1615,16 @@
               <div style="font-family:'JetBrains Mono',monospace; font-size:0.85rem; color:var(--lime);">Round Cash: $<span id="round-cash-val">${wheelRoundCash}</span></div>
             </div>
 
-            <!-- Professional Wheel Widget -->
+            <!-- Wheel Widget with Downward-Pointing Ticker -->
             <div style="display:flex; flex-direction:column; align-items:center; margin:0.5rem 0 1rem 0; position:relative;">
-              <div style="width:0; height:0; border-left:10px solid transparent; border-right:10px solid transparent; border-bottom:18px solid var(--rose); margin-bottom:-4px; z-index:10; filter:drop-shadow(0 0 6px var(--rose));"></div>
-              <div style="position:relative; width:200px; height:200px; border-radius:50%; border:3px solid var(--cyan); box-shadow:0 0 20px rgba(34,211,238,0.25); overflow:hidden; background:#070b12;">
-                <canvas id="fortune-wheel-canvas" width="200" height="200" style="width:100%; height:100%; transition: transform 3s cubic-bezier(0.15, 0.85, 0.15, 1); transform: rotate(${wheelCurrentAngle}deg);"></canvas>
+              <div style="width:0; height:0; border-left:12px solid transparent; border-right:12px solid transparent; border-top:20px solid var(--rose); margin-bottom:-6px; z-index:10; filter:drop-shadow(0 2px 6px rgba(251,113,133,0.8));"></div>
+              <div style="position:relative; width:210px; height:210px; border-radius:50%; border:3px solid var(--cyan); box-shadow:0 0 20px rgba(34,211,238,0.25); overflow:hidden; background:#070b12;">
+                <canvas id="fortune-wheel-canvas" width="210" height="210" style="width:100%; height:100%; transition: transform 3s cubic-bezier(0.15, 0.85, 0.15, 1); transform: rotate(${wheelCurrentAngle}deg);"></canvas>
                 <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; pointer-events:none;">
                   <button id="spin-wheel-btn" onclick="spinFortuneWheel()" style="pointer-events:auto; background:var(--bg-card); border:2px solid var(--cyan); border-radius:50%; width:54px; height:54px; font-family:'JetBrains Mono',monospace; font-size:0.65rem; font-weight:700; color:#fff; cursor:pointer; box-shadow:0 0 12px rgba(34,211,238,0.4);">SPIN</button>
                 </div>
               </div>
-              <div id="wheel-status-banner" style="font-family:'JetBrains Mono',monospace; font-size:0.82rem; color:var(--cyan); margin-top:0.6rem; min-height:22px;">${currentWheelSlice ? `Landed on: <strong>${currentWheelSlice.text}</strong>` : "Click SPIN to test your luck!"}</div>
+              <div id="wheel-status-banner" style="font-family:'JetBrains Mono',monospace; font-size:0.84rem; color:var(--cyan); margin-top:0.65rem; min-height:22px;">${currentWheelSlice ? `Landed on: <strong style="color:var(--lime);">${currentWheelSlice.text}</strong> — Pick a letter!` : "Click SPIN to test your luck!"}</div>
             </div>
 
             <div class="arcade-display-text" style="font-size:0.95rem; margin:0.5rem 0;">"${currentItem.hint}"</div>
@@ -1454,22 +1646,23 @@
       const ctx = canvas.getContext("2d");
       const numSlices = wheelSlices.length;
       const arc = (2 * Math.PI) / numSlices;
-      const colors = ["#0e7490", "#1e3a8a", "#047857", "#b91c1c", "#b45309", "#4338ca", "#0f766e", "#6d28d9"];
+      const colors = ["#0e7490", "#1e3a8a", "#047857", "#b45309", "#4338ca", "#0f766e", "#6d28d9", "#1d4ed8"];
 
-      ctx.clearRect(0, 0, 200, 200);
+      ctx.clearRect(0, 0, 210, 210);
       ctx.save();
-      ctx.translate(100, 100);
+      ctx.translate(105, 105);
 
       wheelSlices.forEach((slice, i) => {
         const angle = i * arc;
         ctx.beginPath();
         ctx.fillStyle = colors[i % colors.length];
-        if (slice.type === 'bankrupt') ctx.fillStyle = "#7f1d1d";
+        if (slice.type === 'bankrupt') ctx.fillStyle = "#991b1b";
         if (slice.type === 'lose') ctx.fillStyle = "#374151";
         ctx.moveTo(0, 0);
-        ctx.arc(0, 0, 100, angle, angle + arc);
+        ctx.arc(0, 0, 105, angle, angle + arc);
         ctx.lineTo(0, 0);
         ctx.fill();
+        ctx.strokeStyle = "rgba(255,255,255,0.2)";
         ctx.stroke();
 
         ctx.save();
@@ -1477,24 +1670,32 @@
         ctx.textAlign = "right";
         ctx.fillStyle = "#fff";
         ctx.font = "bold 10px 'JetBrains Mono', monospace";
-        ctx.fillText(slice.text, 88, 4);
+        ctx.fillText(slice.text, 94, 4);
         ctx.restore();
       });
+
       ctx.restore();
     }
 
     function spinFortuneWheel() {
       if (wheelIsSpinning) return;
       wheelIsSpinning = true;
+
       const spinBtn = document.getElementById("spin-wheel-btn");
       if (spinBtn) spinBtn.disabled = true;
 
       const randomSliceIdx = Math.floor(Math.random() * wheelSlices.length);
       const sliceAngle = 360 / wheelSlices.length;
-      const extraSpins = 5 * 360;
-      const targetAngle = wheelCurrentAngle + extraSpins + (360 - (randomSliceIdx * sliceAngle + sliceAngle / 2));
-      
-      wheelCurrentAngle = targetAngle;
+      const sliceCenterAngle = randomSliceIdx * sliceAngle + sliceAngle / 2;
+
+      // Top pointer is at 270 degrees (12 o'clock) in standard canvas coordinates (where 0 deg is 3 o'clock).
+      // Align sliceCenterAngle + wheelCurrentAngle === 270 (mod 360)
+      const desiredMod = (270 - sliceCenterAngle + 360) % 360;
+      const currentMod = ((wheelCurrentAngle % 360) + 360) % 360;
+      const delta = (desiredMod - currentMod + 360) % 360;
+
+      wheelCurrentAngle = wheelCurrentAngle + (5 * 360) + delta;
+
       const canvas = document.getElementById("fortune-wheel-canvas");
       if (canvas) {
         canvas.style.transform = `rotate(${wheelCurrentAngle}deg)`;
@@ -1503,12 +1704,13 @@
       setTimeout(() => {
         wheelIsSpinning = false;
         currentWheelSlice = wheelSlices[randomSliceIdx];
-        
+
         if (currentWheelSlice.type === 'bankrupt') {
           wheelRoundCash = 0;
-          openFeedback(false, "<strong>BANKRUPT!</strong> All accumulated round cash wiped out.");
+          openFeedback(false, `Landed on <strong>${currentWheelSlice.text}</strong>! All accumulated round cash wiped out.`);
+          currentWheelSlice = null;
         } else if (currentWheelSlice.type === 'lose') {
-          openFeedback(false, "<strong>LOSE A TURN!</strong> Spin again.");
+          openFeedback(false, `Landed on <strong>${currentWheelSlice.text}</strong>! Spin again.`);
           currentWheelSlice = null;
         }
 
@@ -1527,7 +1729,7 @@
         }
         const earned = currentWheelSlice.val * count;
         wheelRoundCash += earned;
-        currentWheelSlice = null; // Require spin for next guess
+        currentWheelSlice = null;
         renderWheelScreen();
       } else {
         currentWheelSlice = null;
@@ -1537,7 +1739,7 @@
     }
 
     /* =========================================================================
-       GAME 3: CYBER JEOPARDY (6x5 Board, Randomized Categories & Questions, Timer, 5 MC Choices)
+       GAME 3: CYBER JEOPARDY
        ========================================================================= */
     function initJeopardyBoard() {
       jeopardyCash = 0;
@@ -1615,8 +1817,8 @@
     function openJeopardyClue(key) {
       const tile = jeopardyBoardGrid[key];
       if (!tile || tile.answered) return;
-
       activeJeopardyCellKey = key;
+
       const letters = ["A", "B", "C", "D", "E"];
 
       arcadeBody.innerHTML = `
@@ -1672,11 +1874,12 @@
           ? `Correct! You earned <strong>+$${tile.val}</strong>.`
           : `Incorrect! The correct answer was <strong>${tile.answer}</strong>.`
       );
+
       renderJeopardyBoard();
     }
 
     /* =========================================================================
-       GAME 4: SECURITY CONTROL SCRAMBLE (Anagram Builder with Countdown Timer)
+       GAME 4: SECURITY CONTROL SCRAMBLE
        ========================================================================= */
     let scrambleCurrentWord = "";
     let scrambleTiles = [];
@@ -1696,7 +1899,6 @@
       scrambleTiles = shuffleArray(rawChars).map((char, idx) => ({ id: idx, char: char, used: false }));
       userScrambleChoice = [];
       renderScrambleBuilder();
-
       startGameTimer(30, "scramble");
     }
 
@@ -1746,7 +1948,6 @@
       stopGameTimer();
       const word = userScrambleChoice.map(t => t.char).join("");
       const isCorrect = (word === scrambleCurrentWord);
-
       sessionLog.push({
         item: currentItem.hint,
         userChoice: word || "(Blank)",
@@ -1754,51 +1955,176 @@
         isCorrect: isCorrect,
         explanation: currentItem.explanation
       });
-
       openFeedback(isCorrect, isCorrect ? "Anagram solved successfully!" : `Incorrect! The security term was <strong>${scrambleCurrentWord}</strong>.`);
       nextScrambleRound();
     }
 
     /* =========================================================================
-       GAME 5: CLOUD ARCHITECTURE TOWER DEFENSE
+       GAME 5: REAL CLOUD ARCHITECTURE TOWER DEFENSE (Animated Enemy + Tower HP)
        ========================================================================= */
     function nextCloudRound() {
       stopGameTimer();
       hudTimerBadge.style.display = "none";
-      if (activeQueue.length === 0) {
+      tdWaveLocked = false;
+
+      if (tdTowerHp <= 0 || activeQueue.length === 0) {
         showDebriefSummary();
         return;
       }
+
       updateRemainingHud();
       currentItem = activeQueue.pop();
+      tdEnemyX = 84;
+
+      const hpColor = tdTowerHp > 50 ? "var(--lime)" : (tdTowerHp > 25 ? "var(--amber)" : "var(--rose)");
 
       arcadeBody.innerHTML = `
         <div class="arcade-arena">
-          <div class="arcade-screen-box">
-            <div style="font-size:0.75rem; font-family:'JetBrains Mono',monospace; color:var(--cyan);">CLOUD COMPONENT DEPLOYMENT</div>
-            <div class="arcade-display-text">Deploy: <span>"${currentItem.item}"</span></div>
-            <p class="prose" style="font-size:0.85rem;">Select the correct cloud service model platform:</p>
-            <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:1rem; margin-top:1.25rem;">
-              <button class="arcade-btn-action" style="padding:1.2rem;" onclick="processCloudChoice('iaas', '${currentItem.type}', '${currentItem.item.replace(/'/g, "\\'")}', '${currentItem.explanation.replace(/'/g, "\\'")}')">IaaS<br><sub style="color:var(--text-secondary);">Infrastructure</sub></button>
-              <button class="arcade-btn-action" style="padding:1.2rem;" onclick="processCloudChoice('paas', '${currentItem.type}', '${currentItem.item.replace(/'/g, "\\'")}', '${currentItem.explanation.replace(/'/g, "\\'")}')">PaaS<br><sub style="color:var(--text-secondary);">Platform</sub></button>
-              <button class="arcade-btn-action" style="padding:1.2rem;" onclick="processCloudChoice('saas', '${currentItem.type}', '${currentItem.item.replace(/'/g, "\\'")}', '${currentItem.explanation.replace(/'/g, "\\'")}')">SaaS<br><sub style="color:var(--text-secondary);">Software</sub></button>
+          <div class="arcade-screen-box" style="padding:1.25rem;">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
+              <div style="font-size:0.75rem; font-family:'JetBrains Mono',monospace; color:var(--cyan);">CLOUD BASTION TOWER DEFENSE // LIVE WAVE</div>
+              <div style="font-family:'JetBrains Mono',monospace; font-size:0.85rem; color:${hpColor}; font-weight:700;">🏰 TOWER HP: <span id="td-hp-text">${tdTowerHp}</span>%</div>
+            </div>
+
+            <div class="arcade-display-text" style="font-size:1rem; margin:0.65rem 0;">Incoming Workload Drone: <span>"${currentItem.item}"</span></div>
+
+            <div class="td-battlefield" id="td-battlefield">
+              <div class="radar-grid-lines"></div>
+              <div class="td-lane-line"></div>
+
+              <!-- Player Defense Tower -->
+              <div class="td-tower-wrap">
+                <div class="td-hp-bar-bg">
+                  <div class="td-hp-bar-fill" id="td-hp-fill" style="width:${tdTowerHp}%; background:${hpColor};"></div>
+                </div>
+                <div class="td-tower-core">
+                  <div class="td-tower-turret" id="td-turret-head">⚡</div>
+                  <div style="font-size:1.3rem;">🏰</div>
+                  <div class="td-tower-label">BASTION</div>
+                </div>
+              </div>
+
+              <!-- Defense Laser Beam -->
+              <div class="td-laser-shot" id="td-laser-shot"></div>
+
+              <!-- Marching Enemy Workload Drone -->
+              <div class="td-enemy-unit" id="td-enemy-unit" style="left:${tdEnemyX}%;">
+                <div class="td-enemy-sprite" id="td-enemy-sprite">👾</div>
+                <div>CLOUD DRONE</div>
+              </div>
+            </div>
+
+            <div style="font-size:0.78rem; color:var(--text-secondary);">Fire the matching cloud service turret before the enemy drone reaches your tower!</div>
+
+            <div class="td-turret-controls">
+              <button class="td-fire-btn" onclick="fireCloudTurret('iaas', '${currentItem.type}', '${currentItem.item.replace(/'/g, "\\'")}', '${currentItem.explanation.replace(/'/g, "\\'")}')">
+                🔥 FIRE IaaS TURRET<br><span style="font-size:0.72rem; color:var(--text-secondary); font-weight:400;">Infrastructure</span>
+              </button>
+              <button class="td-fire-btn" onclick="fireCloudTurret('paas', '${currentItem.type}', '${currentItem.item.replace(/'/g, "\\'")}', '${currentItem.explanation.replace(/'/g, "\\'")}')">
+                🔥 FIRE PaaS TURRET<br><span style="font-size:0.72rem; color:var(--text-secondary); font-weight:400;">Platform</span>
+              </button>
+              <button class="td-fire-btn" onclick="fireCloudTurret('saas', '${currentItem.type}', '${currentItem.item.replace(/'/g, "\\'")}', '${currentItem.explanation.replace(/'/g, "\\'")}')">
+                🔥 FIRE SaaS TURRET<br><span style="font-size:0.72rem; color:var(--text-secondary); font-weight:400;">Software</span>
+              </button>
             </div>
           </div>
         </div>
       `;
+
+      // March the enemy toward the tower (reaches tower at left = 18%)
+      tdMoveInterval = setInterval(() => {
+        if (tdWaveLocked) return;
+        tdEnemyX -= 0.45;
+        const enemyEl = document.getElementById("td-enemy-unit");
+        if (enemyEl) {
+          enemyEl.style.left = `${tdEnemyX}%`;
+        }
+        if (tdEnemyX <= 19) {
+          clearInterval(tdMoveInterval);
+          tdMoveInterval = null;
+          handleTowerHit("⏱️ Enemy Breached Perimeter", currentItem.type, currentItem.item, currentItem.explanation);
+        }
+      }, 100);
     }
 
-    function processCloudChoice(chosen, correct, itemName, explanation) {
+    function fireCloudTurret(chosen, correct, itemName, explanation) {
+      if (tdWaveLocked) return;
+      tdWaveLocked = true;
+      if (tdMoveInterval) {
+        clearInterval(tdMoveInterval);
+        tdMoveInterval = null;
+      }
+
       const isCorrect = (chosen === correct);
+      const laserEl = document.getElementById("td-laser-shot");
+      const enemyEl = document.getElementById("td-enemy-unit");
+      const spriteEl = document.getElementById("td-enemy-sprite");
+      const battlefield = document.getElementById("td-battlefield");
+
+      if (isCorrect) {
+        // Fire laser from tower to enemy position and destroy enemy
+        if (laserEl && enemyEl && battlefield) {
+          const bfRect = battlefield.getBoundingClientRect();
+          const enRect = enemyEl.getBoundingClientRect();
+          const beamWidth = Math.max(40, (enRect.left - bfRect.left) - 75);
+          laserEl.style.width = `${beamWidth}px`;
+          laserEl.style.display = "block";
+        }
+        if (spriteEl) spriteEl.textContent = "💥";
+        if (enemyEl) {
+          enemyEl.style.borderColor = "var(--lime)";
+          enemyEl.style.boxShadow = "0 0 30px var(--lime)";
+        }
+
+        sessionLog.push({
+          item: itemName,
+          userChoice: chosen.toUpperCase(),
+          correctAnswer: correct.toUpperCase(),
+          isCorrect: true,
+          explanation: explanation
+        });
+
+        setTimeout(() => {
+          openFeedback(true, `Enemy Drone Destroyed! <strong>${itemName}</strong> belongs to <strong>${correct.toUpperCase()}</strong>.`);
+          nextCloudRound();
+        }, 380);
+      } else {
+        handleTowerHit(chosen.toUpperCase(), correct, itemName, explanation);
+      }
+    }
+
+    function handleTowerHit(userChoiceStr, correct, itemName, explanation) {
+      tdWaveLocked = true;
+      tdTowerHp = Math.max(0, tdTowerHp - 20);
+
+      const battlefield = document.getElementById("td-battlefield");
+      const enemyEl = document.getElementById("td-enemy-unit");
+      const hpText = document.getElementById("td-hp-text");
+      const hpFill = document.getElementById("td-hp-fill");
+
+      if (enemyEl) enemyEl.style.left = "18%";
+      if (battlefield) battlefield.classList.add("hit-shake");
+      if (hpText) hpText.textContent = tdTowerHp;
+      if (hpFill) {
+        hpFill.style.width = `${tdTowerHp}%`;
+        hpFill.style.background = tdTowerHp > 50 ? "var(--lime)" : (tdTowerHp > 25 ? "var(--amber)" : "var(--rose)");
+      }
+
       sessionLog.push({
         item: itemName,
-        userChoice: chosen.toUpperCase(),
+        userChoice: userChoiceStr,
         correctAnswer: correct.toUpperCase(),
-        isCorrect: isCorrect,
+        isCorrect: false,
         explanation: explanation
       });
-      openFeedback(isCorrect, isCorrect ? "Cloud component deployed correctly." : `Misalignment! <strong>${itemName}</strong> belongs to <strong>${correct.toUpperCase()}</strong>.`);
-      nextCloudRound();
+
+      setTimeout(() => {
+        const msg = tdTowerHp <= 0
+          ? `<strong>TOWER DESTROYED (0% HP)!</strong><br><br><strong>${itemName}</strong> belongs to <strong>${correct.toUpperCase()}</strong>.`
+          : `<strong>Tower Hit (-20 HP)!</strong> Remaining HP: <strong>${tdTowerHp}%</strong>.<br><br><strong>${itemName}</strong> belongs to <strong>${correct.toUpperCase()}</strong>.`;
+        openFeedback(false, msg);
+        nextCloudRound();
+      }, 380);
     }
 
     /* =========================================================================
