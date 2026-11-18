@@ -4,13 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CISSP Remember Engine | Jesse's Study Guides</title>
-  <meta name="description" content="Immersive tactical mini-games to help you master CISSP ports, ciphers, and mitigations." />
+  <meta name="description" content="Immersive tactical arcade mini-games to help you master CISSP ports, ciphers, and mitigations." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
   <style>
-    /* Full-Screen Immersive Game Arcade Overlay with Blurred Background */
     .arcade-modal-backdrop {
       position: fixed;
       inset: 0;
@@ -36,9 +35,9 @@
       border: 1px solid var(--border-slate);
       border-radius: 16px;
       width: 100%;
-      max-width: 920px;
+      max-width: 960px;
       height: 88vh;
-      max-height: 750px;
+      max-height: 780px;
       display: flex;
       flex-direction: column;
       box-shadow: 0 30px 70px rgba(0, 0, 0, 0.8), 0 0 35px rgba(34, 211, 238, 0.12);
@@ -73,20 +72,19 @@
       display: flex;
       gap: 1.25rem;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.82rem;
+      font-size: 0.85rem;
     }
     .arcade-stat-badge {
       display: flex;
       align-items: center;
-      gap: 0.4rem;
-      padding: 0.3rem 0.75rem;
+      gap: 0.5rem;
+      padding: 0.35rem 0.85rem;
       border-radius: 6px;
       background: rgba(255, 255, 255, 0.03);
       border: 1px solid var(--border-slate);
+      color: var(--cyan);
+      font-weight: 700;
     }
-    .stat-correct { color: var(--lime); font-weight: 700; }
-    .stat-wrong { color: var(--rose); font-weight: 700; }
-    .stat-total { color: var(--cyan); font-weight: 700; }
 
     .arcade-nav-controls {
       display: flex;
@@ -94,19 +92,23 @@
       align-items: center;
     }
 
-    .arcade-game-switcher {
+    .arcade-btn-action {
       background: var(--bg-sidebar);
       color: #fff;
       border: 1px solid var(--border-slate);
       border-radius: 8px;
-      padding: 0.45rem 0.75rem;
+      padding: 0.5rem 0.95rem;
       font-family: 'JetBrains Mono', monospace;
       font-size: 0.82rem;
+      font-weight: 700;
       outline: none;
       cursor: pointer;
+      transition: all 0.2s ease;
     }
-    .arcade-game-switcher:focus { border-color: var(--cyan); }
-    .arcade-game-switcher option { background: var(--bg-sidebar); color: #fff; }
+    .arcade-btn-action:hover {
+      border-color: var(--cyan);
+      background: var(--cyan-dim);
+    }
 
     .arcade-body {
       flex: 1;
@@ -115,7 +117,7 @@
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      background: radial-gradient(circle at top right, rgba(34, 211, 238, 0.03), transparent 50%);
+      background: radial-gradient(circle at top right, rgba(34, 211, 238, 0.04), transparent 50%);
     }
 
     .game-choice-grid {
@@ -160,69 +162,142 @@
       line-height: 1.5;
     }
 
-    /* Action Interactive Elements */
-    .tactical-prompt {
-      font-size: 1.12rem;
-      color: #fff;
-      font-weight: 600;
-      text-align: center;
-      margin: 1rem 0;
-      font-family: 'JetBrains Mono', monospace;
-      padding: 1.15rem;
-      background: rgba(255, 255, 255, 0.02);
-      border: 1px solid var(--border-slate);
-      border-radius: 10px;
-    }
-    .tactical-prompt span { color: var(--cyan); text-shadow: 0 0 10px var(--cyan-dim); display: block; margin-top: 0.35rem; }
-
-    .action-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 0.85rem;
-      margin: 1rem 0;
-    }
-
-    .action-btn {
-      background: rgba(13, 18, 28, 0.92);
-      border: 1px solid var(--border-slate);
-      border-radius: 10px;
-      padding: 1.1rem 1rem;
-      color: var(--text-primary);
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 0.92rem;
-      font-weight: 600;
-      cursor: pointer;
-      text-align: center;
-      transition: all 0.2s ease;
+    /* Unique Arcade Game UI Styles */
+    .arcade-arena {
       display: flex;
       flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 0.35rem;
-    }
-    .action-btn:hover {
-      border-color: var(--cyan);
-      background: var(--cyan-dim);
-      box-shadow: 0 0 18px rgba(34, 211, 238, 0.15);
-      transform: translateY(-2px);
-    }
-    .action-btn sub {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.72rem;
-      color: var(--text-secondary);
+      gap: 1.25rem;
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
     }
 
-    /* Summary Debrief Screen */
+    .arcade-screen-box {
+      background: rgba(13, 18, 28, 0.9);
+      border: 2px solid var(--border-slate);
+      border-radius: 12px;
+      padding: 1.5rem;
+      text-align: center;
+      position: relative;
+    }
+
+    .arcade-display-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.25rem;
+      color: #fff;
+      margin: 1rem 0;
+      line-height: 1.5;
+    }
+    .arcade-display-text span { color: var(--cyan); text-shadow: 0 0 12px var(--cyan-dim); }
+
+    /* Game 1: Blaster Cannon Grid */
+    .blaster-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    /* Game 2: Cipher Wheel */
+    .wheel-slots {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      margin: 1.5rem 0;
+      flex-wrap: wrap;
+    }
+    .wheel-slot {
+      width: 42px;
+      height: 50px;
+      background: rgba(255,255,255,0.03);
+      border: 2px solid var(--border-slate);
+      border-radius: 8px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.4rem;
+      color: var(--lime);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+    }
+    .alphabet-grid {
+      display: grid;
+      grid-template-columns: repeat(9, 1fr);
+      gap: 0.45rem;
+      margin-top: 1rem;
+    }
+    .alpha-key {
+      background: rgba(13,18,28,0.95);
+      border: 1px solid var(--border-slate);
+      border-radius: 6px;
+      padding: 0.6rem 0.2rem;
+      color: #fff;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .alpha-key:hover:not(:disabled) { border-color: var(--cyan); background: var(--cyan-dim); }
+    .alpha-key:disabled { opacity: 0.3; cursor: not-allowed; }
+
+    /* Game 3: Jeopardy Board */
+    .jeopardy-board {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 0.85rem;
+      margin-top: 1rem;
+    }
+    .jeopardy-tile {
+      background: #111827;
+      border: 2px solid var(--cyan);
+      border-radius: 10px;
+      padding: 1.2rem;
+      color: var(--lime);
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 1.25rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      text-align: center;
+      box-shadow: 0 0 15px rgba(34, 211, 238, 0.1);
+    }
+    .jeopardy-tile:hover:not(.disabled) { background: var(--cyan-dim); transform: scale(1.03); }
+    .jeopardy-tile.disabled { opacity: 0.25; border-color: var(--border-slate); color: var(--text-secondary); cursor: not-allowed; }
+
+    /* Game 4: Crypto Scramble Builder */
+    .scramble-slots {
+      display: flex;
+      justify-content: center;
+      gap: 0.5rem;
+      margin: 1.5rem 0;
+      min-height: 55px;
+      flex-wrap: wrap;
+    }
+    .scramble-tile {
+      background: rgba(34, 211, 238, 0.1);
+      border: 1px solid var(--cyan);
+      border-radius: 8px;
+      padding: 0.6rem 1rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.2rem;
+      color: #fff;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s;
+    }
+    .scramble-tile:hover { background: var(--cyan); color: #000; }
+
+    /* Debrief Summary Report */
     .debrief-container {
       display: flex;
       flex-direction: column;
       gap: 1rem;
-      max-height: 440px;
+      max-height: 480px;
       overflow-y: auto;
       padding-right: 0.5rem;
+      text-align: left;
     }
     .debrief-card {
-      background: rgba(13, 18, 28, 0.8);
+      background: rgba(13, 18, 28, 0.85);
       border: 1px solid var(--border-slate);
       border-left: 3px solid var(--cyan);
       padding: 1rem;
@@ -230,18 +305,8 @@
     }
     .debrief-card.correct-item { border-left-color: var(--lime); background: rgba(52, 211, 153, 0.03); }
     .debrief-card.wrong-item { border-left-color: var(--rose); background: rgba(251, 113, 133, 0.04); }
-    .debrief-item-title {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.85rem;
-      font-weight: 700;
-      color: #fff;
-      margin-bottom: 0.25rem;
-    }
-    .debrief-item-detail {
-      font-size: 0.83rem;
-      color: var(--text-secondary);
-      line-height: 1.4;
-    }
+    .debrief-title { font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; font-weight: 700; color: #fff; margin-bottom: 0.25rem; }
+    .debrief-detail { font-size: 0.83rem; color: var(--text-secondary); line-height: 1.4; }
   </style>
 </head>
 <body>
@@ -305,45 +370,45 @@
       </div>
 
       <main class="content-body" id="game-main">
-        <div class="eyebrow">Interactive Remember Engine // active learning</div>
+        <div class="eyebrow">Interactive Remember Engine // arcade edition</div>
         <h1 class="hero-headline">TACTICAL <span class="outline">ARCADE</span></h1>
-        <p class="prose">Choose a gamified cyber training simulator below to reinforce your memory of core ciphers, port mappings, threat mitigations, and security controls.</p>
+        <p class="prose">Select an arcade training cabinet below to test your mastery across 6 distinct interactive gaming formats built for CISSP certification prep.</p>
 
         <div class="game-choice-grid">
           <button type="button" class="game-selector-card" onclick="launchGame(1)">
-            <div class="game-num">Simulator 01</div>
-            <div class="game-title">Port Boundary Defender</div>
-            <div class="game-desc">Unannounced data requests try to breach ports. Block them immediately by selecting the correct active networking port!</div>
+            <div class="game-num">Cabinet 01</div>
+            <div class="game-title">Port Blaster 9000</div>
+            <div class="game-desc">A retro action arcade shooter where incoming protocol queries rush down and you must fire your port cannon instantly!</div>
           </button>
 
           <button type="button" class="game-selector-card" onclick="launchGame(2)">
-            <div class="game-num">Simulator 02</div>
-            <div class="game-title">Cipher Matrix Matcher</div>
-            <div class="game-desc">Sort cryptographic ciphers and algorithms into their proper Symmetric or Asymmetric security matrix.</div>
+            <div class="game-num">Cabinet 02</div>
+            <div class="game-title">Crypto Wheel Spinner</div>
+            <div class="game-desc">Solve hidden cryptographic ciphers and security protocols letter by letter before your tries expire!</div>
           </button>
 
           <button type="button" class="game-selector-card" onclick="launchGame(3)">
-            <div class="game-num">Simulator 03</div>
-            <div class="game-title">Attack Mitigation Decoder</div>
-            <div class="game-desc">Active network compromises require urgent defense. Match each active threat to its proper architectural countermeasure.</div>
+            <div class="game-num">Cabinet 03</div>
+            <div class="game-title">Cyber Jeopardy</div>
+            <div class="game-desc">Choose your point values across domains like Threat Mitigations and Cloud Security to solve the clues.</div>
           </button>
 
           <button type="button" class="game-selector-card" onclick="launchGame(4)">
-            <div class="game-num">Simulator 04</div>
-            <div class="game-title">Security Control Classifier</div>
-            <div class="game-desc">Categorize defense mechanisms correctly into Administrative, Technical, or Physical control domains.</div>
+            <div class="game-num">Cabinet 04</div>
+            <div class="game-title">Security Control Scramble</div>
+            <div class="game-desc">Reconstruct scrambled cybersecurity terms and control concepts tile by tile against the clock.</div>
           </button>
 
           <button type="button" class="game-selector-card" onclick="launchGame(5)">
-            <div class="game-num">Simulator 05</div>
-            <div class="game-title">Cloud Service Model Sorter</div>
-            <div class="game-desc">Sort cloud computing components and responsibilities into IaaS, PaaS, or SaaS architectures.</div>
+            <div class="game-num">Cabinet 05</div>
+            <div class="game-title">Cloud Architecture Tower Defense</div>
+            <div class="game-desc">Deploy incoming cloud components into their correct IaaS, PaaS, or SaaS defensive platforms.</div>
           </button>
 
           <button type="button" class="game-selector-card" onclick="launchGame(6)">
-            <div class="game-num">Simulator 06</div>
-            <div class="game-title">Incident Response Sequencer</div>
-            <div class="game-desc">Master the correct NIST Incident Response lifecycle stages and core containment priorities.</div>
+            <div class="game-num">Cabinet 06</div>
+            <div class="game-title">Incident Response Time Attack</div>
+            <div class="game-desc">Order chaotic NIST Incident Response lifecycle events in lightning-fast sequence.</div>
           </button>
         </div>
       </main>
@@ -355,27 +420,17 @@
     <div class="arcade-modal-window">
       <div class="arcade-header">
         <div class="arcade-title-group">
-          <div class="game-num" id="arcade-game-subtitle" style="margin:0;">TACTICAL SIMULATOR</div>
-          <div class="game-title" id="arcade-game-title" style="margin:0; font-size:1.15rem;">Loading Mission...</div>
+          <div class="game-num" id="arcade-game-subtitle" style="margin:0;">ARCADE CABINET</div>
+          <div class="game-title" id="arcade-game-title" style="margin:0; font-size:1.15rem;">Loading Game...</div>
         </div>
 
         <div class="arcade-tracker-hud">
-          <div class="arcade-stat-badge">✓ <span class="stat-correct" id="hud-correct">0</span></div>
-          <div class="arcade-stat-badge">✕ <span class="stat-wrong" id="hud-wrong">0</span></div>
-          <div class="arcade-stat-badge"># <span class="stat-total" id="hud-progress">0/10</span></div>
+          <div class="arcade-stat-badge" id="hud-remaining-badge">🎯 <span id="hud-remaining">0</span> remaining</div>
         </div>
 
         <div class="arcade-nav-controls">
-          <select class="arcade-game-switcher" id="game-switcher" onchange="switchGameFromDropdown(this.value)">
-            <option value="" disabled selected>-- Switch Game --</option>
-            <option value="1">01. Port Defender</option>
-            <option value="2">02. Cipher Matrix</option>
-            <option value="3">03. Attack Mitigations</option>
-            <option value="4">04. Security Controls</option>
-            <option value="5">05. Cloud Service Model</option>
-            <option value="6">06. Incident Response</option>
-          </select>
-          <button class="btn-ghost" style="padding:0.45rem 0.85rem; font-size:0.8rem;" onclick="quitAndDebrief()">Quit & Debrief</button>
+          <button class="arcade-btn-action" onclick="openNewGamePrompt()">New Game</button>
+          <button class="arcade-btn-action" style="border-color: rgba(251,113,133,0.4); color: var(--rose);" onclick="quitGameAction()">Quit Game</button>
         </div>
       </div>
 
@@ -435,89 +490,60 @@
       { num: 21, use: "FTP (File Transfer Protocol)", explanation: "Port 21 is used for File Transfer Protocol control connections." },
       { num: 22, use: "SSH (Secure Shell)", explanation: "Port 22 provides secure encrypted remote terminal access." },
       { num: 23, use: "Telnet", explanation: "Port 23 is unencrypted cleartext remote terminal access." },
-      { num: 25, use: "SMTP (Simple Mail Transfer Protocol)", explanation: "Port 25 handles mail routing and server-to-server email transfer." },
-      { num: 49, use: "TACACS+", explanation: "Port 49 is used for TACACS+ AAA authentication protocol over TCP." },
-      { num: 53, use: "DNS (Domain Name System)", explanation: "Port 53 resolves domain names to IP addresses (TCP/UDP)." },
-      { num: 67, use: "DHCP Server", explanation: "Port 67 is used by DHCP servers to assign IP configurations." },
-      { num: 68, use: "DHCP Client", explanation: "Port 68 is used by DHCP clients requesting IP leases." },
+      { num: 25, use: "SMTP", explanation: "Port 25 handles mail routing and server-to-server email transfer." },
+      { num: 53, use: "DNS (Domain Name System)", explanation: "Port 53 resolves domain names to IP addresses." },
       { num: 80, use: "HTTP (Web)", explanation: "Port 80 serves unencrypted web traffic." },
-      { num: 110, use: "POP3 (Mail Retrieval)", explanation: "Port 110 retrieves email from a mail server." },
-      { num: 143, use: "IMAP4 (Mail Retrieval)", explanation: "Port 143 accesses and synchronizes mailboxes on a server." },
-      { num: 161, use: "SNMP (Simple Network Management Protocol)", explanation: "Port 161 monitors network devices and routers." },
-      { num: 389, use: "LDAP (Directory Services)", explanation: "Port 389 queries directory services (Lightweight Directory Access Protocol)." },
       { num: 443, use: "HTTPS (Secure Web)", explanation: "Port 443 secures web traffic using TLS/SSL encryption." },
-      { num: 636, use: "LDAPS (Secure Directory)", explanation: "Port 636 queries directory services securely over TLS." },
-      { num: 3389, use: "RDP (Remote Desktop Protocol)", explanation: "Port 3389 enables graphical Windows remote desktop sessions." }
+      { num: 3389, use: "RDP (Remote Desktop)", explanation: "Port 3389 enables graphical Windows remote desktop sessions." }
     ];
 
     const ciphers = [
-      { name: "AES (Rijndael)", type: "symmetric", explanation: "AES is a symmetric block cipher utilizing 128, 192, or 256-bit keys." },
-      { name: "DES / 3DES", type: "symmetric", explanation: "DES/3DES are legacy symmetric ciphers using 56-bit or triple-applied keys." },
-      { name: "Blowfish / Twofish", type: "symmetric", explanation: "Blowfish and Twofish are fast symmetric block ciphers designed by Bruce Schneier." },
-      { name: "RC4 / RC5 / RC6", type: "symmetric", explanation: "RC family algorithms include symmetric stream/block encryption standards." },
-      { name: "IDEA", type: "symmetric", explanation: "IDEA is a symmetric block cipher operating on 64-bit blocks with 128-bit keys." },
-      { name: "Diffie-Hellman", type: "asymmetric", explanation: "Diffie-Hellman is an asymmetric protocol used securely for cryptographic key exchange." },
-      { name: "RSA", type: "asymmetric", explanation: "RSA is an asymmetric algorithm based on the practical difficulty of factoring large prime numbers." },
-      { name: "ECC (Elliptic Curve)", type: "asymmetric", explanation: "ECC provides high-strength asymmetric encryption with significantly smaller key lengths." },
-      { name: "DSA (Digital Signature)", type: "asymmetric", explanation: "DSA is an asymmetric standard used exclusively for digital signatures and authentication." }
+      { name: "AES", hint: "Advanced Encryption Standard (Symmetric Block)", explanation: "AES is a symmetric block cipher utilizing 128, 192, or 256-bit keys." },
+      { name: "RSA", hint: "Public Key Factoring Standard", explanation: "RSA is an asymmetric algorithm based on factoring large prime numbers." },
+      { name: "BLOWFISH", hint: "Symmetric Fast Block Cipher by Bruce Schneier", explanation: "Blowfish is a fast symmetric block cipher created in 1993." },
+      { name: "DIFFIE-HELLMAN", hint: "Secure Key Exchange Protocol", explanation: "Diffie-Hellman allows two parties to establish a shared secret insecurely." }
     ];
 
-    const mitigations = [
-      { threat: "SYN Flood (TCP handshake resource exhaustion)", remedy: "SYN Cookies / Ingress Filtering", explanation: "SYN cookies mitigate resource exhaustion during TCP half-open floods." },
-      { threat: "Teardrop Attack (Overlapping fragmented UDP packets)", remedy: "Upgrade TCP/IP stack Bogus Reassembly", explanation: "Upgrading IP stacks prevents malformed overlapping fragment crashes." },
-      { threat: "Man-In-The-Middle Interception", remedy: "Strong Mutual Authentication & PKI Encryption", explanation: "PKI certificates and mutual auth prevent third-party traffic impersonation." },
-      { threat: "IP Spoofing (Forged origin headers)", remedy: "Ingress & Egress Router Filtering", explanation: "Border routers drop packets with unroutable source IP addresses." },
-      { threat: "Dictionary / Brute Force Password Attacks", remedy: "Account Lockouts & Salted Key Stretching", explanation: "Lockouts and salt/iterations slow down brute-force cracking attempts." },
-      { threat: "Physical Tailgating / Piggybacking", remedy: "Mantrap / Optical Turnstile", explanation: "Mantraps and turnstiles physically restrict entry to one authorized person at a time." }
+    const jeopardyData = [
+      { cat: "PORTS", val: 100, q: "This secure remote login port operates on TCP 22.", answer: "PORT 22", explanation: "Port 22 is SSH." },
+      { cat: "PORTS", val: 200, q: "This directory service query port operates on TCP/UDP 389.", answer: "PORT 389", explanation: "Port 389 is LDAP." },
+      { cat: "CIPHERS", val: 100, q: "This 1993 symmetric block cipher was designed by Bruce Schneier.", answer: "BLOWFISH", explanation: "Blowfish features variable key lengths from 32 to 448 bits." },
+      { cat: "CIPHERS", val: 200, q: "This asymmetric standard relies on discrete logarithms over elliptic curves.", answer: "ECC", explanation: "Elliptic Curve Cryptography provides high security with smaller keys." },
+      { cat: "DEFENSE", val: 100, q: "Physical security gate requiring single-person entry control.", answer: "MANTRAP", explanation: "A mantrap uses two interlocking doors to prevent tailgating." },
+      { cat: "DEFENSE", val: 200, q: "Countermeasure deployed against SYN flood resource exhaustion.", answer: "SYN COOKIES", explanation: "SYN cookies allow servers to avoid state allocation during half-open floods." }
     ];
 
-    const controlsData = [
-      { item: "Security Awareness Training Policy", type: "administrative", name: "Administrative Control", explanation: "Policies, guidelines, and training are administrative/directive controls." },
-      { item: "Annual Background Checks", type: "administrative", name: "Administrative Control", explanation: "Personnel screening policies are administrative management controls." },
-      { item: "Acceptable Use Policy (AUP)", type: "administrative", name: "Administrative Control", explanation: "Rules governing employee system usage are administrative controls." },
-      { item: "Firewalls & IPS Packet Filtering", type: "technical", name: "Technical Control", explanation: "Hardware/software mechanisms protecting networks are technical controls." },
-      { item: "Access Control Lists (ACLs)", type: "technical", name: "Technical Control", explanation: "Logical permission boundaries are technical controls." },
-      { item: "Multi-Factor Authentication (MFA)", type: "technical", name: "Technical Control", explanation: "Cryptographic and logical auth mechanisms are technical controls." },
-      { item: "Biometric Mantraps & Turnstiles", type: "physical", name: "Physical Control", explanation: "Facility gates and locks safeguarding physical spaces are physical controls." },
-      { item: "CCTV Cameras & Motion Sensors", type: "physical", name: "Physical Control", explanation: "Surveillance hardware monitoring physical perimeters are physical controls." },
-      { item: "Server Room Security Guards", type: "physical", name: "Physical Control", explanation: "Human guard presence protecting physical infrastructure is a physical control." }
+    const scrambleData = [
+      { word: "FIREWALL", hint: "Network security system monitoring traffic", explanation: "Firewalls filter incoming and outgoing network traffic based on rules." },
+      { word: "KERBEROS", hint: "Authentication protocol using tickets", explanation: "Kerberos uses symmetric key cryptography and a Key Distribution Center." },
+      { word: "HONEYPOT", hint: "Decoy system to lure attackers", explanation: "Honeypots distract adversaries and gather threat intelligence." },
+      { word: "SALTING", hint: "Adding random data to password hashing", explanation: "Salting defeats precomputed rainbow table attacks." }
     ];
 
-    const cloudData = [
-      { item: "Virtual Machines, VPC Networks, Raw Storage", type: "iaas", name: "IaaS (Infrastructure)", explanation: "IaaS provides fundamental compute, networking, and storage primitives." },
-      { item: "OS & Hypervisor Managed by Cloud Provider", type: "iaas", name: "IaaS (Infrastructure)", explanation: "Infrastructure layer management is handled by the IaaS vendor." },
-      { item: "Databases, Middleware, Application Runtime", type: "paas", name: "PaaS (Platform)", explanation: "PaaS delivers managed development platforms, databases, and runtimes." },
-      { item: "OS & Runtime Handled by Cloud Vendor", type: "paas", name: "PaaS (Platform)", explanation: "Platform providers patch and maintain the underlying OS and runtime environment." },
-      { item: "Complete End-User Software Application", type: "saas", name: "SaaS (Software)", explanation: "SaaS delivers fully functional ready-to-use software applications over the web." },
-      { item: "User Only Manages Data & Access Controls", type: "saas", name: "SaaS (Software)", explanation: "SaaS users manage tenant data and user access while the vendor runs everything else." }
+    const cloudArcade = [
+      { item: "Raw virtual machines and VPC networking", type: "iaas", name: "IaaS", explanation: "IaaS provides raw infrastructure primitives." },
+      { item: "Managed database runtime and middleware", type: "paas", name: "PaaS", explanation: "PaaS provides managed development runtimes." },
+      { item: "End-user ready web application software", type: "saas", name: "SaaS", explanation: "SaaS delivers finished software applications over the web." }
     ];
 
-    const incidentData = [
-      { task: "Establishing incident response policy, team, and training", phase: "preparation", name: "Preparation", explanation: "Preparation involves readiness, policies, tools, and training before incidents occur." },
-      { task: "Triaging alerts, log correlation, and validating compromise", phase: "detection", name: "Detection & Analysis", explanation: "Detection and analysis identifies, conf{irm}s, and scopes security anomalies." },
-      { task: "Isolating infected systems to halt lateral movement", phase: "containment", name: "Containment", explanation: "Containment limits the scope and impact of an active compromise." },
-      { task: "Removing malware artifacts and patching root vulnerabilities", phase: "eradication", name: "Eradication", explanation: "Eradication eliminates root causes and removes threat artifacts." },
-      { task: "Restoring clean systems from verified secure backups", phase: "recovery", name: "Recovery", explanation: "Recovery brings systems back to trusted normal operations securely." },
-      { task: "Conducting post-incident review and lessons learned", phase: "lessons", name: "Lessons Learned", explanation: "Lessons learned analyzes the incident to improve future defenses." }
+    const incidentArcade = [
+      { task: "Establishing policies, team, and readiness", phase: "preparation", name: "Preparation", explanation: "Preparation establishes organizational incident response readiness." },
+      { task: "Triaging alerts and verifying compromise", phase: "detection", name: "Detection", explanation: "Detection identifies and validates security incidents." },
+      { task: "Isolating infected systems to halt lateral movement", phase: "containment", name: "Containment", explanation: "Containment prevents further spread of compromise." }
     ];
 
-    // Session State Tracking
+    // Arcade State
     let activeGameId = null;
-    let scoreCorrect = 0;
-    let scoreWrong = 0;
-    let roundIndex = 0;
-    let activePool = [];
+    let activeQueue = [];
     let currentItem = null;
     let sessionLog = [];
+    let totalItemsCount = 0;
 
     const arcadeModal = document.getElementById("arcade-modal");
     const arcadeTitle = document.getElementById("arcade-game-title");
     const arcadeSubtitle = document.getElementById("arcade-game-subtitle");
     const arcadeBody = document.getElementById("arcade-body-content");
-    const hudCorrect = document.getElementById("hud-correct");
-    const hudWrong = document.getElementById("hud-wrong");
-    const hudProgress = document.getElementById("hud-progress");
-    const gameSwitcher = document.getElementById("game-switcher");
+    const hudRemaining = document.getElementById("hud-remaining");
 
     const feedbackModal = document.getElementById("feedback-modal");
     const feedbackBox = document.getElementById("feedback-box");
@@ -536,72 +562,84 @@
 
     function launchGame(gameId) {
       activeGameId = gameId;
-      scoreCorrect = 0;
-      scoreWrong = 0;
-      roundIndex = 0;
       sessionLog = [];
-      gameSwitcher.value = gameId;
       arcadeModal.classList.add("open");
 
       if (gameId === 1) {
-        arcadeSubtitle.textContent = "SIMULATOR 01";
-        arcadeTitle.textContent = "Port Boundary Defender";
-        activePool = shuffleArray(ports);
-        nextPortRound();
+        arcadeSubtitle.textContent = "CABINET 01 // ACTION SHOOTER";
+        arcadeTitle.textContent = "Port Blaster 9000";
+        activeQueue = shuffleArray(ports);
+        totalItemsCount = activeQueue.length;
+        nextPortBlasterRound();
       } else if (gameId === 2) {
-        arcadeSubtitle.textContent = "SIMULATOR 02";
-        arcadeTitle.textContent = "Cipher Matrix Matcher";
-        activePool = shuffleArray(ciphers);
-        nextCipherRound();
+        arcadeSubtitle.textContent = "CABINET 02 // WORD PUZZLE";
+        arcadeTitle.textContent = "Crypto Wheel Spinner";
+        activeQueue = shuffleArray(ciphers);
+        totalItemsCount = activeQueue.length;
+        nextWheelRound();
       } else if (gameId === 3) {
-        arcadeSubtitle.textContent = "SIMULATOR 03";
-        arcadeTitle.textContent = "Attack Mitigation Decoder";
-        activePool = shuffleArray(mitigations);
-        nextMitigationRound();
+        arcadeSubtitle.textContent = "CABINET 03 // TRIVIA GRID";
+        arcadeTitle.textContent = "Cyber Jeopardy";
+        activeQueue = shuffleArray(jeopardyData);
+        totalItemsCount = activeQueue.length;
+        nextJeopardyRound();
       } else if (gameId === 4) {
-        arcadeSubtitle.textContent = "SIMULATOR 04";
-        arcadeTitle.textContent = "Security Control Classifier";
-        activePool = shuffleArray(controlsData);
-        nextControlRound();
+        arcadeSubtitle.textContent = "CABINET 04 // ANAGRAM BLITZ";
+        arcadeTitle.textContent = "Security Control Scramble";
+        activeQueue = shuffleArray(scrambleData);
+        totalItemsCount = activeQueue.length;
+        nextScrambleRound();
       } else if (gameId === 5) {
-        arcadeSubtitle.textContent = "SIMULATOR 05";
-        arcadeTitle.textContent = "Cloud Service Model Sorter";
-        activePool = shuffleArray(cloudData);
+        arcadeSubtitle.textContent = "CABINET 05 // TOWER DEFENSE";
+        arcadeTitle.textContent = "Cloud Architecture Platform";
+        activeQueue = shuffleArray(cloudArcade);
+        totalItemsCount = activeQueue.length;
         nextCloudRound();
       } else if (gameId === 6) {
-        arcadeSubtitle.textContent = "SIMULATOR 06";
+        arcadeSubtitle.textContent = "CABINET 06 // TIME ATTACK";
         arcadeTitle.textContent = "Incident Response Sequencer";
-        activePool = shuffleArray(incidentData);
+        activeQueue = shuffleArray(incidentArcade);
+        totalItemsCount = activeQueue.length;
         nextIncidentRound();
       }
     }
 
-    function switchGameFromDropdown(val) {
-      if (val) {
-        launchGame(parseInt(val, 10));
-      }
+    function openNewGamePrompt() {
+      arcadeBody.innerHTML = `
+        <div style="text-align:center; padding: 2rem;">
+          <h2 style="color:#fff; font-family:'Archivo Black',sans-serif; margin-bottom:1rem;">SELECT NEW ARCADE CABINET</h2>
+          <div class="game-choice-grid" style="margin-top:1rem;">
+            <button class="game-selector-card" onclick="launchGame(1)"><div class="game-title">01. Port Blaster</div></button>
+            <button class="game-selector-card" onclick="launchGame(2)"><div class="game-title">02. Crypto Wheel</div></button>
+            <button class="game-selector-card" onclick="launchGame(3)"><div class="game-title">03. Cyber Jeopardy</div></button>
+            <button class="game-selector-card" onclick="launchGame(4)"><div class="game-title">04. Scramble Blitz</div></button>
+            <button class="game-selector-card" onclick="launchGame(5)"><div class="game-title">05. Cloud Tower</div></button>
+            <button class="game-selector-card" onclick="launchGame(6)"><div class="game-title">06. Incident Response</div></button>
+          </div>
+        </div>
+      `;
     }
 
-    function updateHud(totalLimit) {
-      hudCorrect.textContent = scoreCorrect;
-      hudWrong.textContent = scoreWrong;
-      hudProgress.textContent = `${roundIndex}/${totalLimit}`;
-    }
-
-    function quitAndDebrief() {
-      // If user quits without answering or mid-way, log remaining unattempted items if needed, then show debrief summary
+    function quitGameAction() {
       showDebriefSummary();
     }
 
+    function updateRemainingHud() {
+      hudRemaining.textContent = activeQueue.length;
+    }
+
     function showDebriefSummary() {
-      arcadeSubtitle.textContent = "MISSION DEBRIEF & SUMMARY";
-      arcadeTitle.textContent = `Completed: ${scoreCorrect} Correct | ${scoreWrong} Wrong`;
+      arcadeSubtitle.textContent = "MISSION DEBRIEF & REPORT";
+      arcadeTitle.textContent = `Completed: ${sessionLog.length} Challenges`;
       arcadeModal.classList.add("open");
+
+      let correctCount = sessionLog.filter(s => s.isCorrect).length;
+      let wrongCount = sessionLog.filter(s => !s.isCorrect).length;
 
       let debriefHtml = `
         <div style="margin-bottom:0.75rem;">
-          <h3 style="color:#fff; font-family:'Archivo Black',sans-serif; margin-bottom:0.2rem;">MISSION REPORT</h3>
-          <p class="prose">Review your answers and detailed tactical explanations below:</p>
+          <h3 style="color:#fff; font-family:'Archivo Black',sans-serif; margin-bottom:0.2rem;">SCORE: ${correctCount} Correct / ${wrongCount} Errors</h3>
+          <p class="prose">Here is your verified tactical debrief with complete explanations:</p>
         </div>
         <div class="debrief-container">
       `;
@@ -609,19 +647,19 @@
       if (sessionLog.length === 0) {
         debriefHtml += `
           <div class="debrief-card">
-            <div class="debrief-item-title">ZERO ATTEMPTS RECORDED</div>
-            <div class="debrief-item-detail">No questions were answered during this session. Score: 0/0. Restart the simulator to test your knowledge!</div>
+            <div class="debrief-title">NO MISSIONS ATTEMPTED</div>
+            <div class="debrief-detail">Quit immediately before engaging targets. Score: 0/0.</div>
           </div>
         `;
       } else {
         sessionLog.forEach(log => {
           const cardClass = log.isCorrect ? "correct-item" : "wrong-item";
-          const statusIcon = log.isCorrect ? "✓ CORRECT" : "✕ INCORRECT";
+          const statusIcon = log.isCorrect ? "✓ SUCCESS" : "✕ TARGET MISSED";
           debriefHtml += `
             <div class="debrief-card ${cardClass}">
-              <div class="debrief-item-title">${statusIcon} — ${log.item}</div>
-              <div class="debrief-item-detail" style="margin-bottom:0.25rem;"><strong>Your choice:</strong> ${log.userChoice} | <strong>Correct standard:</strong> ${log.correctAnswer}</div>
-              <div class="debrief-item-detail" style="color:#fff;"><strong>Explanation:</strong> ${log.explanation}</div>
+              <div class="debrief-title">${statusIcon} — ${log.item}</div>
+              <div class="debrief-detail" style="margin-bottom:0.25rem;"><strong>Your input:</strong> ${log.userChoice} | <strong>Target standard:</strong> ${log.correctAnswer}</div>
+              <div class="debrief-detail" style="color:#fff;"><strong>Tactical Intel:</strong> ${log.explanation}</div>
             </div>
           `;
         });
@@ -629,8 +667,8 @@
 
       debriefHtml += `</div>
         <div style="display:flex; gap:1rem; margin-top:1.25rem;">
-          <button class="btn-lime" onclick="launchGame(${activeGameId})">Restart Simulator</button>
-          <button class="btn-ghost" onclick="arcadeModal.classList.remove('open')">Close & Return to Menu</button>
+          <button class="arcade-btn-action" style="background:var(--lime); color:#000;" onclick="launchGame(${activeGameId})">Play Again</button>
+          <button class="arcade-btn-action" onclick="openNewGamePrompt()">Choose Another Game</button>
         </div>
       `;
 
@@ -638,16 +676,15 @@
     }
 
     /* =========================================================================
-       GAME 01: PORT BOUNDARY DEFENDER
+       GAME 1: PORT BLASTER (Action Shooter / Fast Target Selection)
        ========================================================================= */
-    function nextPortRound() {
-      if (roundIndex >= 10 || roundIndex >= activePool.length) {
+    function nextPortBlasterRound() {
+      if (activeQueue.length === 0) {
         showDebriefSummary();
         return;
       }
-      currentItem = activePool[roundIndex];
-      roundIndex++;
-      updateHud(10);
+      updateRemainingHud();
+      currentItem = activeQueue.pop();
 
       let choices = [currentItem.num];
       while (choices.length < 4) {
@@ -657,248 +694,366 @@
       choices = shuffleArray(choices);
 
       arcadeBody.innerHTML = `
-        <div>
-          <div class="tactical-prompt">Incoming request queries service: <span>"${currentItem.use}"</span></div>
-          <div class="action-grid" style="grid-template-columns: repeat(2, 1fr);">
-            ${choices.map(c => `<button class="action-btn" onclick="checkPort(${c}, ${currentItem.num}, '${currentItem.use.replace(/'/g, "\\'")}', '${currentItem.explanation.replace(/'/g, "\\'")}')">Port ${c} <sub>Authorize Binding</sub></button>`).join("")}
+        <div class="arcade-arena">
+          <div class="arcade-screen-box">
+            <div style="font-size:0.75rem; font-family:'JetBrains Mono',monospace; color:var(--cyan);">INCOMING PROTOCOL PACKET</div>
+            <div class="arcade-display-text">Target Service: <span>"${currentItem.use}"</span></div>
+            <p class="prose" style="font-size:0.85rem;">Blast the correct port binding before time expires!</p>
+            <div class="blaster-grid">
+              ${choices.map(c => `<button class="arcade-btn-action" style="padding:1.1rem; font-size:1.1rem;" onclick="checkPortBlaster(${c}, ${currentItem.num}, '${currentItem.use.replace(/'/g, "\\'")}', '${currentItem.explanation.replace(/'/g, "\\'")}')">PORT ${c}</button>`).join("")}
+            </div>
           </div>
         </div>
-        <div style="font-family:'JetBrains Mono',monospace; font-size:0.75rem; color:var(--text-secondary); text-align:center;">Select the correct network port to block unauthorized sniffing.</div>
       `;
     }
 
-    function checkPort(selected, correctNum, useName, explanation) {
+    function checkPortBlaster(selected, correctNum, useName, explanation) {
       const isCorrect = (selected === correctNum);
-      const userChoiceStr = `Port ${selected}`;
-      const correctStr = `Port ${correctNum} (${useName})`;
-
-      if (isCorrect) {
-        scoreCorrect++;
-        openFeedback(true, "Correct port block deployed successfully.");
-      } else {
-        scoreWrong++;
-        openFeedback(false, `Security Breach! **${useName}** operates on **Port ${correctNum}**.`);
-      }
-
-      sessionLog.push({ item: useName, userChoice: userChoiceStr, correctAnswer: correctStr, isCorrect: isCorrect, explanation: explanation });
-      nextPortRound();
+      sessionLog.push({
+        item: useName,
+        userChoice: `Port ${selected}`,
+        correctAnswer: `Port ${correctNum}`,
+        isCorrect: isCorrect,
+        explanation: explanation
+      });
+      openFeedback(isCorrect, isCorrect ? "Direct Hit! Port successfully defended." : `Missed! **${useName}** runs on **Port ${correctNum}**.`);
+      nextPortBlasterRound();
     }
 
     /* =========================================================================
-       GAME 02: CIPHER MATRIX MATCH CLEAN INTERACTION
+       GAME 2: CRYPTO WHEEL SPINNER (Letter Guessing / Hangman Style)
        ========================================================================= */
-    function nextCipherRound() {
-      if (activePool.length === 0) {
+    let wheelSecret = "";
+    let wheelGuessed = new Set();
+    let wheelErrors = 0;
+
+    function nextWheelRound() {
+      if (activeQueue.length === 0) {
         showDebriefSummary();
         return;
       }
-      currentItem = activePool.pop();
-      roundIndex++;
-      updateHud(ciphers.length);
+      updateRemainingHud();
+      currentItem = activeQueue.pop();
+      wheelSecret = currentItem.name.toUpperCase();
+      wheelGuessed = new Set();
+      wheelErrors = 0;
+      renderWheelScreen();
+    }
+
+    function renderWheelScreen() {
+      let displayString = "";
+      let solved = true;
+      for (let char of wheelSecret) {
+        if (char === " " || char === "-") {
+          displayString += `<div class="wheel-slot" style="background:transparent; border:none; width:20px;">${char}</div>`;
+        } else if (wheelGuessed.has(char)) {
+          displayString += `<div class="wheel-slot">${char}</div>`;
+        } else {
+          displayString += `<div class="wheel-slot">_</div>`;
+          solved = false;
+        }
+      }
+
+      if (solved) {
+        sessionLog.push({ item: currentItem.hint, userChoice: wheelSecret, correctAnswer: wheelSecret, isCorrect: true, explanation: currentItem.explanation });
+        openFeedback(true, `Crypto Puzzle Solved! **${wheelSecret}** decrypted.`);
+        nextWheelRound();
+        return;
+      }
+
+      if (wheelErrors >= 4) {
+        sessionLog.push({ item: currentItem.hint, userChoice: "Failed attempts", correctAnswer: wheelSecret, isCorrect: false, explanation: currentItem.explanation });
+        openFeedback(false, `Cipher Locked! The correct answer was **${wheelSecret}**.`);
+        nextWheelRound();
+        return;
+      }
+
+      const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
       arcadeBody.innerHTML = `
-        <div>
-          <div class="tactical-prompt">Classify Cryptographic Algorithm: <span>${currentItem.name}</span> <br><sub style="font-size:0.8rem; color:var(--text-secondary); margin-top:0.3rem; display:block;">${currentItem.desc}</sub></div>
-          <div class="action-grid">
-            <button class="action-btn" onclick="processCipherSort('symmetric', '${currentItem.name.replace(/'/g, "\\'")}', '${currentItem.type}', '${currentItem.explanation.replace(/'/g, "\\'")}')">Symmetric Matrix <sub>Single Shared Key</sub></button>
-            <button class="action-btn" onclick="processCipherSort('asymmetric', '${currentItem.name.replace(/'/g, "\\'")}', '${currentItem.type}', '${currentItem.explanation.replace(/'/g, "\\'")}')">Asymmetric Matrix <sub>Public / Private Keys</sub></button>
+        <div class="arcade-arena">
+          <div class="arcade-screen-box">
+            <div style="font-size:0.75rem; font-family:'JetBrains Mono',monospace; color:var(--cyan);">CRYPTOGRAPHIC DECRYPTION CLUE</div>
+            <div class="arcade-display-text" style="font-size:1.05rem;">"${currentItem.hint}"</div>
+            <div style="font-size:0.8rem; font-family:'JetBrains Mono',monospace; color:var(--rose);">Errors: ${wheelErrors} / 4 allowed</div>
+            <div class="wheel-slots">${displayString}</div>
+            <div class="alphabet-grid">
+              ${alphabet.map(letter => `<button class="alpha-key" ${wheelGuessed.has(letter) ? 'disabled' : ''} onclick="guessWheelLetter('${letter}')">${letter}</button>`).join("")}
+            </div>
           </div>
         </div>
-        <div style="font-family:'JetBrains Mono',monospace; font-size:0.75rem; color:var(--text-secondary); text-align:center;">Click the correct matrix architecture.</div>
       `;
     }
 
-    function processCipherSort(chosenType, cipherName, correctType, explanation) {
-      const isCorrect = (chosenType === correctType);
-      const userChoiceStr = `${chosenType.toUpperCase()} Matrix`;
-      const correctStr = `${correctType.toUpperCase()} Matrix`;
-
-      if (isCorrect) {
-        scoreCorrect++;
-        openFeedback(true, "System aligned! Key structure matched.");
-      } else {
-        scoreWrong++;
-        openFeedback(false, `Misalignment! **${cipherName}** is a **${correctType.toUpperCase()}** algorithm.`);
+    function guessWheelLetter(letter) {
+      wheelGuessed.add(letter);
+      if (!wheelSecret.includes(letter)) {
+        wheelErrors++;
       }
-
-      sessionLog.push({ item: cipherName, userChoice: userChoiceStr, correctAnswer: correctStr, isCorrect: isCorrect, explanation: explanation });
-      nextCipherRound();
+      renderWheelScreen();
     }
 
     /* =========================================================================
-       GAME 03: ATTACK MITIGATION DECODER
+       GAME 3: CYBER JEOPARDY (Board Grid with Point Values)
        ========================================================================= */
-    function nextMitigationRound() {
-      if (activePool.length === 0) {
+    function nextJeopardyRound() {
+      if (activeQueue.length === 0) {
         showDebriefSummary();
         return;
       }
-      currentItem = activePool.pop();
-      roundIndex++;
-      updateHud(mitigations.length);
-
-      const remedies = shuffleArray(mitigations.map(m => m.remedy));
+      updateRemainingHud();
 
       arcadeBody.innerHTML = `
-        <div>
-          <div class="tactical-prompt" style="font-size:1.05rem;">Active Threat Vector: <span>${currentItem.threat}</span></div>
-          <div style="display:flex; flex-direction:column; gap:0.65rem; margin:1rem 0;">
-            ${remedies.map(r => `<button class="action-btn" style="text-align:left; align-items:flex-start; padding:0.85rem 1rem;" onclick="processMitigationSelect('${r.replace(/'/g, "\\'")}', '${currentItem.remedy.replace(/'/g, "\\'")}', '${currentItem.threat.replace(/'/g, "\\'")}', '${currentItem.explanation.replace(/'/g, "\\'")}')">${r}</button>`).join("")}
+        <div class="arcade-arena">
+          <div class="arcade-screen-box">
+            <div style="font-size:0.8rem; font-family:'JetBrains Mono',monospace; color:var(--cyan); margin-bottom:0.5rem;">SELECT A JEOPARDY CLUE TILE</div>
+            <div class="jeopardy-board">
+              ${activeQueue.map((item, idx) => `<button class="jeopardy-tile" onclick="openJeopardyClue(${idx})">${item.cat}<br><span style="font-size:0.9rem; color:#fff;">$${item.val}</span></button>`).join("")}
+            </div>
           </div>
         </div>
-        <div style="font-family:'JetBrains Mono',monospace; font-size:0.75rem; color:var(--text-secondary); text-align:center;">Select the correct architectural countermeasure.</div>
       `;
     }
 
-    function processMitigationSelect(selectedRemedy, correctRemedy, threatName, explanation) {
-      const isCorrect = (selectedRemedy === correctRemedy);
+    function openJeopardyClue(idx) {
+      const item = activeQueue[idx];
+      arcadeBody.innerHTML = `
+        <div class="arcade-arena">
+          <div class="arcade-screen-box">
+            <div style="font-size:0.75rem; font-family:'JetBrains Mono',monospace; color:var(--cyan);">JEOPARDY CLUE [${item.cat} - $${item.val}]</div>
+            <div class="arcade-display-text">"${item.q}"</div>
+            <div style="display:flex; gap:1rem; justify-content:center; margin-top:1.5rem;">
+              <input type="text" id="jeopardy-input" placeholder="Type answer..." style="background:var(--bg-sidebar); border:1px solid var(--border-slate); color:#fff; padding:0.75rem 1rem; border-radius:8px; font-family:'JetBrains Mono',monospace; width:260px;" />
+              <button class="arcade-btn-action" style="background:var(--lime); color:#000;" onclick="submitJeopardy(${idx})">Buzz In!</button>
+            </div>
+          </div>
+        </div>
+      `;
+      document.getElementById("jeopardy-input").focus();
+    }
 
-      if (isCorrect) {
-        scoreCorrect++;
-        openFeedback(true, "Countermeasure deployed successfully.");
-      } else {
-        scoreWrong++;
-        openFeedback(false, `Defense Failure! Correct mitigation is: **${correctRemedy}**.`);
-      }
+    function submitJeopardy(idx) {
+      const item = activeQueue[idx];
+      const val = document.getElementById("jeopardy-input").value.trim().toUpperCase();
+      const isCorrect = val.includes(item.answer.toUpperCase()) || item.answer.toUpperCase().includes(val);
 
-      sessionLog.push({ item: threatName, userChoice: selectedRemedy, correctAnswer: correctRemedy, isCorrect: isCorrect, explanation: explanation });
-      nextMitigationRound();
+      sessionLog.push({
+        item: `Jeopardy [${item.cat} $${item.val}]`,
+        userChoice: val || "(No input)",
+        correctAnswer: item.answer,
+        isCorrect: isCorrect,
+        explanation: item.explanation
+      });
+
+      activeQueue.splice(idx, 1);
+      openFeedback(isCorrect, isCorrect ? "Correct! Clue solved." : `Incorrect! The answer was **${item.answer}**.`);
+      nextJeopardyRound();
     }
 
     /* =========================================================================
-       GAME 04: SECURITY CONTROL CLASSIFIER
+       GAME 4: SECURITY CONTROL SCRAMBLE (Anagram Builder)
        ========================================================================= */
-    function nextControlRound() {
-      if (activePool.length === 0) {
+    let scrambleCurrentWord = "";
+    let scrambleTiles = [];
+    let userScrambleChoice = [];
+
+    function nextScrambleRound() {
+      if (activeQueue.length === 0) {
         showDebriefSummary();
         return;
       }
-      currentItem = activePool.pop();
-      roundIndex++;
-      updateHud(controlsData.length);
+      updateRemainingHud();
+      currentItem = activeQueue.pop();
+      scrambleCurrentWord = currentItem.word.toUpperCase();
+      scrambleTiles = shuffleArray(scrambleCurrentWord.split(""));
+      userScrambleChoice = [];
+      renderScrambleScreen();
+    }
 
+    function renderScrambleScreen() {
       arcadeBody.innerHTML = `
-        <div>
-          <div class="tactical-prompt">Classify Security Control: <span>${currentItem.item}</span></div>
-          <div class="action-grid" style="grid-template-columns: repeat(3, 1fr);">
-            <button class="action-btn" onclick="processControlSort('administrative', '${currentItem.item.replace(/'/g, "\\'")}', '${currentItem.type}', '${currentItem.name.replace(/'/g, "\\'")}', '${currentItem.explanation.replace(/'/g, "\\'")}')">Administrative <sub>Policies & Procedures</sub></button>
-            <button class="action-btn" onclick="processControlSort('technical', '${currentItem.item.replace(/'/g, "\\'")}', '${currentItem.type}', '${currentItem.name.replace(/'/g, "\\'")}', '${currentItem.explanation.replace(/'/g, "\\'")}')">Technical <sub>Logical / Hardware</sub></button>
-            <button class="action-btn" onclick="processControlSort('physical', '${currentItem.item.replace(/'/g, "\\'")}', '${currentItem.type}', '${currentItem.name.replace(/'/g, "\\'")}', '${currentItem.explanation.replace(/'/g, "\\'")}')">Physical <sub>Perimeter & Facilities</sub></button>
+        <div class="arcade-arena">
+          <div class="arcade-screen-box">
+            <div style="font-size:0.75rem; font-family:'JetBrains Mono',monospace; color:var(--cyan);">SECURITY CONCEPT ANAGRAM</div>
+            <div class="arcade-display-text" style="font-size:1.05rem;">Hint: "${currentItem.hint}"</div>
+            
+            <div style="font-size:0.75rem; color:var(--text-secondary);">Your word builder:</div>
+            <div class="scramble-slots">
+              ${userScrambleChoice.map((t, i) => `<button class="scramble-tile" onclick="removeScrambleTile(${i})">${t.char}</button>`).join("")}
+              ${userScrambleChoice.length === 0 ? '<span style="color:var(--text-secondary); font-size:0.85rem; padding:0.5rem;">Click tiles below to build word</span>' : ''}
+            </div>
+
+            <div style="font-size:0.75rem; color:var(--text-secondary); margin-top:1rem;">Available scramble letters:</div>
+            <div class="scramble-slots">
+              ${scrambleTiles.map((t, i) => t.used ? '' : `<button class="scramble-tile" onclick="addScrambleTile(${i}, '${t.char}')">${t.char}</button>`).join("")}
+            </div>
+
+            <div style="margin-top:1.5rem; display:flex; gap:1rem; justify-content:center;">
+              <button class="arcade-btn-action" style="background:var(--lime); color:#000;" onclick="submitScrambleWord()">Submit Term</button>
+            </div>
           </div>
         </div>
-        <div style="font-family:'JetBrains Mono',monospace; font-size:0.75rem; color:var(--text-secondary); text-align:center;">Select the appropriate NIST control domain.</div>
       `;
     }
 
-    function processControlSort(chosenType, controlItem, correctType, correctName, explanation) {
-      const isCorrect = (chosenType === correctType);
-      const userChoiceStr = `${chosenType.toUpperCase()} Control`;
-      const correctStr = correctName;
-
-      if (isCorrect) {
-        scoreCorrect++;
-        openFeedback(true, "Control classification verified.");
-      } else {
-        scoreWrong++;
-        openFeedback(false, `Misclassification! **${controlItem}** is an **${correctName}**.`);
+    // Map tiles with unique indices
+    function nextScrambleRound() {
+      if (activeQueue.length === 0) {
+        showDebriefSummary();
+        return;
       }
+      updateRemainingHud();
+      currentItem = activeQueue.pop();
+      scrambleCurrentWord = currentItem.word.toUpperCase();
+      let rawChars = scrambleCurrentWord.split("");
+      scrambleTiles = shuffleArray(rawChars).map((char, idx) => ({ id: idx, char: char, used: false }));
+      userScrambleChoice = [];
+      renderScrambleBuilder();
+    }
 
-      sessionLog.push({ item: controlItem, userChoice: userChoiceStr, correctAnswer: correctStr, isCorrect: isCorrect, explanation: explanation });
-      nextControlRound();
+    function renderScrambleBuilder() {
+      arcadeBody.innerHTML = `
+        <div class="arcade-arena">
+          <div class="arcade-screen-box">
+            <div style="font-size:0.75rem; font-family:'JetBrains Mono',monospace; color:var(--cyan);">ANAGRAM PUZZLE BLITZ</div>
+            <div class="arcade-display-text" style="font-size:1rem;">Hint: "${currentItem.hint}"</div>
+            
+            <div class="scramble-slots">
+              ${userScrambleChoice.map(item => `<button class="scramble-tile" onclick="returnTile(${item.id})">${item.char}</button>`).join("")}
+              ${userScrambleChoice.length === 0 ? '<span style="color:var(--text-secondary); font-size:0.85rem;">Click letters below to build word</span>' : ''}
+            </div>
+
+            <div class="scramble-slots" style="margin-top:1.5rem;">
+              ${scrambleTiles.map(item => item.used ? '' : `<button class="scramble-tile" onclick="pickTile(${item.id})">${item.char}</button>`).join("")}
+            </div>
+
+            <div style="margin-top:1.5rem; display:flex; gap:1rem; justify-content:center;">
+              <button class="arcade-btn-action" style="background:var(--lime); color:#000;" onclick="submitScrambleGuess()">Verify Anagram</button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function pickTile(id) {
+      const tile = scrambleTiles.find(t => t.id === id);
+      if (tile) {
+        tile.used = true;
+        userScrambleChoice.push(tile);
+        renderScrambleBuilder();
+      }
+    }
+
+    function returnTile(id) {
+      const idx = userScrambleChoice.findIndex(t => t.id === id);
+      if (idx !== -1) {
+        const tile = userScrambleChoice.splice(idx, 1)[0];
+        tile.used = false;
+        renderScrambleBuilder();
+      }
+    }
+
+    function submitScrambleGuess() {
+      const word = userScrambleChoice.map(t => t.char).join("");
+      const isCorrect = (word === scrambleCurrentWord);
+
+      sessionLog.push({
+        item: currentItem.hint,
+        userChoice: word || "(Blank)",
+        correctAnswer: scrambleCurrentWord,
+        isCorrect: isCorrect,
+        explanation: currentItem.explanation
+      });
+
+      openFeedback(isCorrect, isCorrect ? "Anagram solved successfully!" : `Incorrect! The security term was **${scrambleCurrentWord}**.`);
+      nextScrambleRound();
     }
 
     /* =========================================================================
-       GAME 05: CLOUD SERVICE MODEL SORTER
+       GAME 5: CLOUD ARCHITECTURE TOWER DEFENSE
        ========================================================================= */
     function nextCloudRound() {
-      if (activePool.length === 0) {
+      if (activeQueue.length === 0) {
         showDebriefSummary();
         return;
       }
-      currentItem = activePool.pop();
-      roundIndex++;
-      updateHud(cloudData.length);
+      updateRemainingHud();
+      currentItem = activeQueue.pop();
 
       arcadeBody.innerHTML = `
-        <div>
-          <div class="tactical-prompt">Cloud Responsibility Component: <span>${currentItem.item}</span></div>
-          <div class="action-grid" style="grid-template-columns: repeat(3, 1fr);">
-            <button class="action-btn" onclick="processCloudSort('iaas', '${currentItem.item.replace(/'/g, "\\'")}', '${currentItem.type}', '${currentItem.name.replace(/'/g, "\\'")}', '${currentItem.explanation.replace(/'/g, "\\'")}')">IaaS <sub>Infrastructure</sub></button>
-            <button class="action-btn" onclick="processCloudSort('paas', '${currentItem.item.replace(/'/g, "\\'")}', '${currentItem.type}', '${currentItem.name.replace(/'/g, "\\'")}', '${currentItem.explanation.replace(/'/g, "\\'")}')">PaaS <sub>Platform</sub></button>
-            <button class="action-btn" onclick="processCloudSort('saas', '${currentItem.item.replace(/'/g, "\\'")}', '${currentItem.type}', '${currentItem.name.replace(/'/g, "\\'")}', '${currentItem.explanation.replace(/'/g, "\\'")}')">SaaS <sub>Software</sub></button>
+        <div class="arcade-arena">
+          <div class="arcade-screen-box">
+            <div style="font-size:0.75rem; font-family:'JetBrains Mono',monospace; color:var(--cyan);">CLOUD COMPONENT DEPLOYMENT</div>
+            <div class="arcade-display-text">Deploy: <span>"${currentItem.item}"</span></div>
+            <p class="prose" style="font-size:0.85rem;">Select the correct cloud service model platform:</p>
+            <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:1rem; margin-top:1.25rem;">
+              <button class="arcade-btn-action" style="padding:1.2rem;" onclick="processCloudChoice('iaas', '${currentItem.type}', '${currentItem.item.replace(/'/g, "\\'")}', '${currentItem.explanation.replace(/'/g, "\\'")}')">IaaS<br><sub style="color:var(--text-secondary);">Infrastructure</sub></button>
+              <button class="arcade-btn-action" style="padding:1.2rem;" onclick="processCloudChoice('paas', '${currentItem.type}', '${currentItem.item.replace(/'/g, "\\'")}', '${currentItem.explanation.replace(/'/g, "\\'")}')">PaaS<br><sub style="color:var(--text-secondary);">Platform</sub></button>
+              <button class="arcade-btn-action" style="padding:1.2rem;" onclick="processCloudChoice('saas', '${currentItem.type}', '${currentItem.item.replace(/'/g, "\\'")}', '${currentItem.explanation.replace(/'/g, "\\'")}')">SaaS<br><sub style="color:var(--text-secondary);">Software</sub></button>
+            </div>
           </div>
         </div>
-        <div style="font-family:'JetBrains Mono',monospace; font-size:0.75rem; color:var(--text-secondary); text-align:center;">Select the correct cloud deployment model.</div>
       `;
     }
 
-    function processCloudSort(chosenType, cloudItem, correctType, correctName, explanation) {
-      const isCorrect = (chosenType === correctType);
-      const userChoiceStr = `${chosenType.toUpperCase()} Model`;
-      const correctStr = correctName;
-
-      if (isCorrect) {
-        scoreCorrect++;
-        openFeedback(true, "Cloud architecture component correctly mapped.");
-      } else {
-        scoreWrong++;
-        openFeedback(false, `Misalignment! **${cloudItem}** belongs to **${correctName}**.`);
-      }
-
-      sessionLog.push({ item: cloudItem, userChoice: userChoiceStr, correctAnswer: correctStr, isCorrect: isCorrect, explanation: explanation });
+    function processCloudChoice(chosen, correct, itemName, explanation) {
+      const isCorrect = (chosen === correct);
+      sessionLog.push({
+        item: itemName,
+        userChoice: chosen.toUpperCase(),
+        correctAnswer: correct.toUpperCase(),
+        isCorrect: isCorrect,
+        explanation: explanation
+      });
+      openFeedback(isCorrect, isCorrect ? "Cloud component deployed correctly." : `Misalignment! **${itemName}** is **${correct.toUpperCase()}**.`);
       nextCloudRound();
     }
 
     /* =========================================================================
-       GAME 06: INCIDENT RESPONSE SEQUENCER
+       GAME 6: INCIDENT RESPONSE TIME ATTACK
        ========================================================================= */
     function nextIncidentRound() {
-      if (activePool.length === 0) {
+      if (activeQueue.length === 0) {
         showDebriefSummary();
         return;
       }
-      currentItem = activePool.pop();
-      roundIndex++;
-      updateHud(incidentData.length);
+      updateRemainingHud();
+      currentItem = activeQueue.pop();
 
       const phases = [
         { key: "preparation", label: "1. Preparation" },
         { key: "detection", label: "2. Detection & Analysis" },
-        { key: "containment", label: "3. Containment" },
-        { key: "eradication", label: "4. Eradication" },
-        { key: "recovery", label: "5. Recovery" },
-        { key: "lessons", label: "6. Lessons Learned" }
+        { key: "containment", label: "3. Containment" }
       ];
 
       arcadeBody.innerHTML = `
-        <div>
-          <div class="tactical-prompt" style="font-size:1.05rem;">NIST IR Task: <span>${currentItem.task}</span></div>
-          <div class="action-grid" style="grid-template-columns: repeat(2, 1fr); gap: 0.65rem; margin: 1rem 0;">
-            ${phases.map(p => `<button class="action-btn" style="padding:0.85rem;" onclick="processIncidentSort('${p.key}', '${currentItem.phase}', '${currentItem.task.replace(/'/g, "\\'")}', '${p.label.replace(/'/g, "\\'")}', '${currentItem.name.replace(/'/g, "\\'")}', '${currentItem.explanation.replace(/'/g, "\\'")}')">${p.label}</button>`).join("")}
+        <div class="arcade-arena">
+          <div class="arcade-screen-box">
+            <div style="font-size:0.75rem; font-family:'JetBrains Mono',monospace; color:var(--cyan);">NIST IR LIFECYCLE TIME ATTACK</div>
+            <div class="arcade-display-text" style="font-size:1.05rem;">Task: <span>"${currentItem.task}"</span></div>
+            <div style="display:flex; flex-direction:column; gap:0.75rem; margin-top:1.25rem;">
+              ${phases.map(p => `<button class="arcade-btn-action" style="padding:1rem; text-align:left;" onclick="processIncidentChoice('${p.key}', '${currentItem.phase}', '${currentItem.task.replace(/'/g, "\\'")}', '${currentItem.explanation.replace(/'/g, "\\'")}')">${p.label}</button>`).join("")}
+            </div>
           </div>
         </div>
-        <div style="font-family:'JetBrains Mono',monospace; font-size:0.75rem; color:var(--text-secondary); text-align:center;">Select the NIST Incident Response lifecycle stage.</div>
       `;
     }
 
-    function processIncidentSort(chosenPhase, correctPhase, taskName, phaseLabel, correctName, explanation) {
-      const isCorrect = (chosenPhase === correctPhase);
-      const correctStr = correctName;
-
-      if (isCorrect) {
-        scoreCorrect++;
-        openFeedback(true, "NIST IR lifecycle phase correctly sequenced.");
-      } else {
-        scoreWrong++;
-        openFeedback(false, `Missequenced! This task belongs to **${correctName}**.`);
-      }
-
-      sessionLog.push({ item: taskName, userChoice: phaseLabel, correctAnswer: correctStr, isCorrect: isCorrect, explanation: explanation });
+    function processIncidentChoice(chosen, correct, taskName, explanation) {
+      const isCorrect = (chosen === correct);
+      sessionLog.push({
+        item: taskName,
+        userChoice: chosen.toUpperCase(),
+        correctAnswer: correct.toUpperCase(),
+        isCorrect: isCorrect,
+        explanation: explanation
+      });
+      openFeedback(isCorrect, isCorrect ? "NIST phase correctly sequenced." : `Incorrect phase! Correct NIST lifecycle stage is **${correct.toUpperCase()}**.`);
       nextIncidentRound();
     }
 
     /* =========================================================================
-       FEEDBACK & MODAL UTILITIES
+       FEEDBACK MODAL UTILITIES
        ========================================================================= */
     function openFeedback(isCorrect, htmlContent) {
       feedbackBox.className = "modal-box " + (isCorrect ? "correct" : "wrong");
