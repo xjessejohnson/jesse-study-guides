@@ -4,11 +4,84 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Home | Jesse's Study Guides</title>
-  <meta name="description" content="An independent study portal compiling practice questions, study notes, and reference material across multiple subjects." />
+  <meta name="description" content="An independent study portal compiling practice exams, flashcards, and study notes across cybersecurity, counseling, and more." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
+  <style>
+    .about-trigger-row {
+      margin-top: 1.35rem;
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+    .about-link-btn {
+      background: rgba(34, 211, 238, 0.08);
+      border: 1px solid rgba(34, 211, 238, 0.4);
+      color: var(--cyan);
+      padding: 0.55rem 1.05rem;
+      border-radius: 8px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+    .about-link-btn:hover {
+      background: rgba(34, 211, 238, 0.18);
+      box-shadow: 0 0 18px rgba(34, 211, 238, 0.25);
+      transform: translateY(-1px);
+    }
+    .modal-link {
+      color: var(--cyan);
+      text-decoration: none;
+      border-bottom: 1px dashed rgba(34, 211, 238, 0.6);
+      font-weight: 600;
+      transition: color 0.15s ease;
+    }
+    .modal-link:hover {
+      color: var(--lime);
+      border-bottom-color: var(--lime);
+    }
+    .email-cta-box {
+      margin-top: 1.35rem;
+      padding-top: 1.15rem;
+      border-top: 1px solid var(--border-slate);
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.75rem;
+    }
+    .fancy-mail-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.55rem;
+      padding: 0.72rem 1.3rem;
+      border-radius: 9px;
+      background: linear-gradient(90deg, var(--lime), var(--cyan));
+      color: #05070c;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      text-decoration: none;
+      box-shadow: 0 0 20px rgba(158, 255, 51, 0.25);
+      transition: all 0.2s ease;
+    }
+    .fancy-mail-btn:hover {
+      filter: brightness(1.08);
+      box-shadow: 0 0 28px rgba(34, 211, 238, 0.45);
+      transform: translateY(-1px);
+    }
+  </style>
 </head>
 <body>
 
@@ -48,10 +121,10 @@
 
         <div class="nav-section">
           <div class="nav-label">Psychology</div>
-          <span class="nav-item disabled" aria-disabled="true">
+          <a href="nce.html" class="nav-item">
             <span>NCE</span>
-            <span class="badge">Coming Soon</span>
-          </span>
+            <span class="badge live">Active</span>
+          </a>
         </div>
 
         <div class="nav-section">
@@ -71,9 +144,8 @@
       </div>
 
       <main class="content-body">
-        <div class="eyebrow">Command Hub // Database v1.0</div>
         <h1 class="hero-headline">
-          LEARN FASTER<br />
+          STUDY SMARTER<br />
           MASTER THE<br />
           <span class="outline">MATERIAL</span>
         </h1>
@@ -81,27 +153,51 @@
         <div class="hud-panel">
           <div class="prose">
             <p>
-              Welcome to my personal study portal. When looking for reliable study materials across different subjects, I found it difficult to tell which resources were accurate and worth the time.
+              Welcome to my personal study portal. While preparing for exams across different fields, I noticed how hard it is to find practice material that is accurate, well organized, and worth your time.
             </p>
             <p>
-              To solve that problem, I built this independent site as a personal notebook to organize practice questions, study notes, and key concepts in one place. Feel free to use any of these guides for your own preparation. If you find this site helpful, please consider supporting my work by <a class="inline-link" href="https://www.buymeacoffee.com/xjessejohnson" target="_blank" rel="noopener noreferrer">buying me a coffee</a>.
+              I created this independent site as a digital notebook to bring together practice exams, flashcards, and key concepts in one place. Every guide here is free to use for your own preparation. If this portal helps you on your journey, please consider supporting the project by <a class="inline-link" href="https://www.buymeacoffee.com/xjessejohnson" target="_blank" rel="noopener noreferrer">buying me a coffee</a>.
             </p>
           </div>
-        </div>
 
-        <div class="about-card">
-          <h3>About Me</h3>
-          <p class="prose">
-            I'm a U.S. Army veteran with 19 years of professional experience in Technology. I'm also a lifelong learner who enjoys diving into new subjects. I created this platform to keep my own study materials structured and accessible, and I hope it helps you reach your goals as well.
-          </p>
+          <div class="about-trigger-row">
+            <button type="button" class="about-link-btn" id="open-about-btn">
+              &#9432; About Me
+            </button>
+          </div>
         </div>
 
         <div class="telemetry-strip">
           <div class="telemetry-tag">Access: <strong>Open</strong></div>
-          <div class="telemetry-tag">Active Tracks: <strong>CISSP &amp; CISM</strong></div>
+          <div class="telemetry-tag">Active Tracks: <strong>CISSP, CISM &amp; NCE</strong></div>
           <div class="telemetry-tag">Mode: <strong>Independent Study</strong></div>
         </div>
       </main>
+    </div>
+  </div>
+
+  <!-- About Me Modal -->
+  <div class="modal-backdrop" id="about-modal" role="dialog" aria-modal="true" aria-labelledby="about-title">
+    <div class="modal-box">
+      <div class="modal-top">
+        <div class="modal-title" id="about-title">About Me</div>
+        <button class="modal-close" id="about-close-btn" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body">
+        <p>
+          I am <a class="modal-link" href="https://www.linkedin.com/in/jessejohnsonit/" target="_blank" rel="noopener noreferrer">Jesse Johnson</a>, a U.S. Army Combat Veteran of Operation Iraqi Freedom (2008 to 2009) with 19 years of professional experience in technology. I have served and currently work for the U.S. Department of War and hold the CompTIA Security+ certification.
+        </p>
+        <p>
+          As a lifelong learner, I am an alumnus of <a class="modal-link" href="https://www.snu.edu/" target="_blank" rel="noopener noreferrer">Southern Nazarene University</a> (Class of 2020, Master's in Business) and <a class="modal-link" href="https://www.macu.edu/" target="_blank" rel="noopener noreferrer">Mid-America Christian University</a> (Class of 2027, Master's in Clinical Mental Health Counseling, CMHC). I built this platform to keep my study materials structured and accessible, and I hope it helps you reach your goals as well.
+        </p>
+
+        <div class="email-cta-box">
+          <p>Have ideas, feedback, or suggestions for the site? Send me a message directly:</p>
+          <a class="fancy-mail-btn" href="mailto:xjessejohnson@gmail.com?subject=Idea%20for%20Jesse's%20Study%20Guides">
+            &#9993; Email Me Ideas
+          </a>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -125,7 +221,7 @@
         <p>This website does not use advertising trackers or third-party marketing cookies.</p>
 
         <h4>4. Third-Party Links</h4>
-        <p>This site includes an external link to Buy Me a Coffee for voluntary donations. If you choose to visit or donate through that platform, any information you provide is governed directly by Buy Me a Coffee's own privacy policy and terms of service.</p>
+        <p>This site includes external links to Buy Me a Coffee, LinkedIn, and university websites. If you choose to visit those external platforms, any information you provide is governed by their respective privacy policies and terms of service.</p>
 
         <h4>5. Changes to This Policy</h4>
         <p>This policy may be updated as new features or study modules are added to the site. Questions regarding this notice can be directed to the site owner, Jesse Johnson.</p>
@@ -152,6 +248,16 @@
       const isOpen = navDrawer.classList.toggle("open");
       menuBtn.setAttribute("aria-expanded", String(isOpen));
       menuBtn.innerHTML = isOpen ? "Close &#10005;" : "Menu &#9776;";
+    });
+
+    const aboutModal = document.getElementById("about-modal");
+    const openAboutBtn = document.getElementById("open-about-btn");
+    const closeAboutBtn = document.getElementById("about-close-btn");
+
+    openAboutBtn.addEventListener("click", () => aboutModal.classList.add("open"));
+    closeAboutBtn.addEventListener("click", () => aboutModal.classList.remove("open"));
+    aboutModal.addEventListener("click", (e) => {
+      if (e.target === aboutModal) aboutModal.classList.remove("open");
     });
 
     const privacyModal = document.getElementById("privacy-modal");
