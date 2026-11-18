@@ -10,569 +10,525 @@
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
   <style>
-    .arcade-modal-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(7, 11, 18, 0.85);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      z-index: 9999;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 1.5rem;
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.25s ease;
-    }
-    .arcade-modal-backdrop.open {
-      opacity: 1;
-      pointer-events: auto;
-    }
-
-    .arcade-modal-window {
-      background: var(--bg-card);
-      border: 1px solid var(--border-slate);
-      border-radius: 16px;
-      width: 100%;
-      max-width: 1060px;
-      height: 90vh;
-      max-height: 840px;
-      display: flex;
-      flex-direction: column;
-      box-shadow: 0 30px 70px rgba(0, 0, 0, 0.8), 0 0 35px rgba(34, 211, 238, 0.12);
-      position: relative;
-      overflow: hidden;
-      animation: modalSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-    }
-
-    @keyframes modalSlideUp {
-      from { transform: translateY(20px) scale(0.98); opacity: 0; }
-      to { transform: translateY(0) scale(1); opacity: 1; }
-    }
-
-    .arcade-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 1.1rem 1.75rem;
-      border-bottom: 1px solid var(--border-slate);
-      background: rgba(13, 18, 28, 0.95);
-      flex-wrap: wrap;
-      gap: 1rem;
-    }
-
-    .arcade-title-group {
-      display: flex;
-      flex-direction: column;
-      gap: 0.15rem;
-    }
-
-    .arcade-tracker-hud {
-      display: flex;
-      gap: 0.85rem;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.85rem;
-      flex-wrap: wrap;
-    }
-
-    .arcade-stat-badge {
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-      padding: 0.35rem 0.85rem;
-      border-radius: 6px;
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid var(--border-slate);
-      color: var(--cyan);
-      font-weight: 700;
-    }
-
-    .arcade-stat-badge.cash {
-      color: var(--lime);
-      border-color: rgba(52, 211, 153, 0.35);
-    }
-
-    .arcade-stat-badge.timer {
-      color: #fbbf24;
-      border-color: rgba(251, 191, 36, 0.35);
-    }
-    .arcade-stat-badge.timer.urgent {
-      color: var(--rose);
-      border-color: rgba(251, 113, 133, 0.5);
-    }
-
-    .arcade-nav-controls {
-      display: flex;
-      gap: 0.75rem;
-      align-items: center;
-    }
-
-    .arcade-btn-action {
-      background: var(--bg-sidebar);
-      color: #fff;
-      border: 1px solid var(--border-slate);
-      border-radius: 8px;
-      padding: 0.5rem 0.95rem;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.82rem;
-      font-weight: 700;
-      outline: none;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-    .arcade-btn-action:hover {
-      border-color: var(--cyan);
-      background: var(--cyan-dim);
-    }
-
-    .arcade-body {
-      flex: 1;
-      padding: 1.5rem 2rem;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      background: radial-gradient(circle at top right, rgba(34, 211, 238, 0.04), transparent 50%);
+    /* Hover Transitions & Custom Arcade Styling */
+    .arcade-intro-text {
+      color: var(--text-secondary);
+      line-height: 1.6;
+      font-size: 0.98rem;
+      margin-bottom: 1.5rem;
     }
 
     .game-choice-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1.15rem;
+      gap: 1.25rem;
       margin-top: 1rem;
     }
 
+    /* Distinct Visual Cabinet Identities */
     .game-selector-card {
       background: rgba(13, 18, 28, 0.95);
       border: 1px solid var(--border-slate);
       border-radius: 12px;
       padding: 1.35rem;
       cursor: pointer;
-      transition: all 0.2s ease;
       text-align: left;
+      position: relative;
+      overflow: hidden;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
     }
-    .game-selector-card:hover {
+    .game-selector-card::before {
+      content: "";
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 4px;
+      transition: all 0.3s ease;
+    }
+
+    /* Game 1 Accent: Neon Cyan */
+    #card-g1::before { background: var(--cyan); }
+    #card-g1:hover {
       border-color: var(--cyan);
-      box-shadow: 0 0 24px rgba(34, 211, 238, 0.15);
-      transform: translateY(-2px);
+      box-shadow: 0 0 25px rgba(34, 211, 238, 0.2);
+      transform: translateY(-4px) scale(1.02);
     }
-    .game-num {
+    /* Game 2 Accent: Gold/Amber */
+    #card-g2::before { background: var(--amber); }
+    #card-g2:hover {
+      border-color: var(--amber);
+      box-shadow: 0 0 25px rgba(251, 191, 36, 0.2);
+      transform: translateY(-4px) scale(1.02);
+    }
+    /* Game 3 Accent: Electric Indigo */
+    #card-g3::before { background: var(--indigo); }
+    #card-g3:hover {
+      border-color: var(--indigo);
+      box-shadow: 0 0 25px rgba(129, 140, 248, 0.2);
+      transform: translateY(-4px) scale(1.02);
+    }
+    /* Game 4 Accent: Neon Lime */
+    #card-g4::before { background: var(--lime); }
+    #card-g4:hover {
+      border-color: var(--lime);
+      box-shadow: 0 0 25px rgba(158, 255, 51, 0.2);
+      transform: translateY(-4px) scale(1.02);
+    }
+    /* Game 5 Accent: Rose */
+    #card-g5::before { background: var(--rose); }
+    #card-g5:hover {
+      border-color: var(--rose);
+      box-shadow: 0 0 25px rgba(251, 113, 133, 0.2);
+      transform: translateY(-4px) scale(1.02);
+    }
+    /* Game 6 Accent: White/Slate */
+    #card-g6::before { background: var(--text-secondary); }
+    #card-g6:hover {
+      border-color: #fff;
+      box-shadow: 0 0 25px rgba(255, 255, 255, 0.15);
+      transform: translateY(-4px) scale(1.02);
+    }
+
+    .game-selector-card:hover::before {
+      width: 8px;
+    }
+
+    .game-focus-tag {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.72rem;
-      color: var(--cyan);
+      font-size: 0.65rem;
       text-transform: uppercase;
-      margin-bottom: 0.55rem;
       letter-spacing: 0.08em;
+      color: var(--cyan);
+      margin-bottom: 0.45rem;
     }
+    #card-g2 .game-focus-tag { color: var(--amber); }
+    #card-g3 .game-focus-tag { color: var(--indigo); }
+    #card-g4 .game-focus-tag { color: var(--lime); }
+    #card-g5 .game-focus-tag { color: var(--rose); }
+    #card-g6 .game-focus-tag { color: var(--text-secondary); }
+
     .game-title {
       font-family: 'Archivo Black', sans-serif;
       font-size: 1.05rem;
       color: #fff;
-      margin-bottom: 0.55rem;
+      margin-bottom: 0.45rem;
       text-transform: uppercase;
     }
-    .game-desc {
-      font-size: 0.88rem;
-      color: var(--text-secondary);
-      line-height: 1.5;
-    }
 
-    /* Arcade Arena Styles */
-    .arcade-arena {
+    .game-desc {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      line-height: 1.45;
+    }
+    .game-desc strong { color: #fff; font-weight: 600; }
+
+    /* =========================================================================
+       Locked Viewport-Optimized Overlay Modal
+       ========================================================================= */
+    .arcade-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(4, 6, 12, 0.94);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      z-index: 9999;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+    .arcade-modal-backdrop.open { display: flex; }
+
+    .arcade-modal-window {
+      background: #080c16;
+      border: 1px solid var(--border-slate);
+      border-radius: 16px;
+      width: 100%;
+      max-width: 920px;
+      height: 94vh;
+      max-height: 720px;
       display: flex;
       flex-direction: column;
-      gap: 1.25rem;
-      width: 100%;
-      max-width: 960px;
-      margin: 0 auto;
+      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.85), 0 0 40px rgba(34, 211, 238, 0.15);
+      position: relative;
+      overflow: hidden;
     }
-    .arcade-screen-box {
-      background: rgba(13, 18, 28, 0.9);
-      border: 2px solid var(--border-slate);
-      border-radius: 12px;
-      padding: 1.5rem;
-      text-align: center;
+
+    .arcade-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0.75rem 1.25rem;
+      border-bottom: 1px solid var(--border-slate);
+      background: #0b101c;
+      gap: 0.75rem;
+    }
+
+    .arcade-title-group {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+    .arcade-game-tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.65rem;
+      padding: 0.15rem 0.45rem;
+      border-radius: 4px;
+      background: var(--cyan-dim);
+      border: 1px solid rgba(34, 211, 238, 0.3);
+      color: var(--cyan);
+      text-transform: uppercase;
+      font-weight: 700;
+    }
+
+    .arcade-game-title {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 0.95rem;
+      color: #fff;
+      text-transform: uppercase;
+      letter-spacing: -0.01em;
+    }
+
+    .arcade-tracker-hud {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .arcade-stat-badge {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      font-weight: 700;
+      padding: 0.3rem 0.6rem;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.02);
+      border: 1px solid var(--border-slate);
+    }
+    .arcade-stat-badge.cash { color: var(--lime); border-color: rgba(158, 255, 51, 0.25); }
+    .arcade-stat-badge.timer { color: var(--cyan); border-color: rgba(34, 211, 238, 0.25); }
+    .arcade-stat-badge.timer.urgent { color: var(--rose); border-color: rgba(251, 113, 133, 0.35); }
+
+    .arcade-nav-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+    .btn-hud-control {
+      background: #111827;
+      border: 1px solid var(--border-slate);
+      color: var(--text-secondary);
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.15s ease;
+    }
+    .btn-hud-control:hover {
+      border-color: var(--cyan);
+      color: #fff;
+      background: var(--cyan-dim);
+    }
+
+    .arcade-body {
+      flex: 1;
+      padding: 1rem;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
       position: relative;
     }
-    .arcade-display-text {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 1.15rem;
-      color: #fff;
-      margin: 0.75rem 0;
-      line-height: 1.5;
-    }
-    .arcade-display-text span { color: var(--cyan); text-shadow: 0 0 12px var(--cyan-dim); }
 
-    /* Game 1: Port Blaster Visual Shooting Arena */
+    /* Screen Box Height Lockdown */
+    .arcade-screen-box {
+      background: rgba(10, 15, 28, 0.95);
+      border: 1px solid var(--border-slate);
+      border-radius: 12px;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      justify-content: space-between;
+      overflow: hidden;
+    }
+
+    /* =========================================================================
+       1. LASER BLASTER (Drift-Bounded Radar Shooting Range)
+       ========================================================================= */
     .blaster-radar-screen {
       position: relative;
-      background: #030712;
-      border: 2px solid var(--cyan);
-      border-radius: 12px;
-      height: 280px;
+      background: #03060f;
+      border: 1px solid rgba(34, 211, 238, 0.35);
+      border-radius: 10px;
+      flex: 1;
+      min-height: 180px;
+      max-height: 250px;
       overflow: hidden;
-      margin: 1rem 0;
-      box-shadow: inset 0 0 30px rgba(34, 211, 238, 0.1);
+      box-shadow: inset 0 0 25px rgba(34, 211, 238, 0.15);
     }
     .radar-grid-lines {
       position: absolute;
       inset: 0;
-      background-image: linear-gradient(rgba(34,211,238,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(34,211,238,0.05) 1px, transparent 1px);
-      background-size: 30px 30px;
+      background-image: linear-gradient(rgba(34,211,238,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(34,211,238,0.04) 1px, transparent 1px);
+      background-size: 26px 26px;
     }
     .blaster-target-node {
       position: absolute;
-      background: rgba(13, 18, 28, 0.92);
-      border: 2px solid var(--rose);
-      border-radius: 50px;
-      padding: 0.45rem 1rem;
+      background: rgba(11, 16, 28, 0.94);
+      border: 1.5px solid var(--rose);
+      border-radius: 30px;
+      padding: 0.35rem 0.75rem;
       color: #fff;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.85rem;
+      font-size: 0.76rem;
       font-weight: 700;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 0.4rem;
-      box-shadow: 0 0 15px rgba(251, 113, 133, 0.4);
-      transition: transform 0.18s ease, border-color 0.18s ease, opacity 0.18s ease;
-      animation: floatNode 3s ease-in-out infinite alternate;
+      gap: 0.3rem;
+      box-shadow: 0 0 10px rgba(251, 113, 133, 0.35);
       z-index: 5;
     }
     .blaster-target-node:hover {
       border-color: var(--lime);
-      box-shadow: 0 0 20px rgba(52, 211, 153, 0.6);
-      transform: scale(1.1);
+      box-shadow: 0 0 15px rgba(52, 211, 153, 0.5);
     }
     .blaster-target-node.blasted {
-      animation: none;
-      transform: scale(1.35);
+      transform: scale(1.1);
       border-color: var(--lime);
-      background: rgba(158, 255, 51, 0.25);
-      box-shadow: 0 0 30px var(--lime);
-    }
-    @keyframes floatNode {
-      0% { transform: translateY(0px) translateX(0px); }
-      100% { transform: translateY(-8px) translateX(6px); }
+      background: var(--lime-dim);
+      box-shadow: 0 0 20px var(--lime);
     }
     .cannon-turret {
       position: absolute;
-      bottom: 8px;
+      bottom: -15px;
       left: 50%;
-      width: 56px;
-      height: 56px;
-      margin-left: -28px;
+      width: 48px;
+      height: 48px;
+      margin-left: -24px;
       background: radial-gradient(circle, #22d3ee 0%, #0e7490 80%);
       border: 2px solid #fff;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 0 22px var(--cyan);
+      box-shadow: 0 0 18px var(--cyan);
       z-index: 10;
-      transition: transform 0.12s ease-out;
     }
     .cannon-barrel {
       position: absolute;
-      top: -18px;
+      top: -14px;
       left: 50%;
       transform: translateX(-50%);
-      width: 12px;
-      height: 26px;
+      width: 10px;
+      height: 22px;
       background: #fff;
-      border: 2px solid var(--cyan);
-      border-radius: 4px;
-      box-shadow: 0 0 10px var(--cyan);
+      border: 1.5px solid var(--cyan);
+      border-radius: 3px;
+      box-shadow: 0 0 8px var(--cyan);
     }
     .laser-beam {
       position: absolute;
       background: linear-gradient(to top, var(--cyan), var(--lime), #ffffff);
-      width: 5px;
-      bottom: 36px;
+      width: 4px;
+      bottom: 24px;
       left: 50%;
       transform-origin: bottom center;
-      box-shadow: 0 0 16px var(--lime), 0 0 6px #fff;
+      box-shadow: 0 0 14px var(--lime), 0 0 5px #fff;
       border-radius: 999px;
       z-index: 8;
       display: none;
       pointer-events: none;
     }
 
-    /* Game 2: Wheel of Fortune Crypto Spinner */
-    .wheel-slots {
-      display: flex;
-      justify-content: center;
-      gap: 0.45rem;
-      margin: 1.25rem 0;
-      flex-wrap: wrap;
-    }
-    .wheel-slot {
-      width: 38px;
-      height: 46px;
-      background: rgba(255,255,255,0.03);
-      border: 2px solid var(--border-slate);
-      border-radius: 8px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 1.3rem;
-      color: var(--lime);
+    /* =========================================================================
+       2. WHEEL OF CISSP (Clue + Spinner Stack)
+       ========================================================================= */
+    .wheel-split {
       display: flex;
       align-items: center;
       justify-content: center;
-      font-weight: 700;
+      gap: 1.5rem;
+      flex: 1;
+      overflow: hidden;
     }
-    .alphabet-grid {
-      display: grid;
-      grid-template-columns: repeat(9, 1fr);
-      gap: 0.45rem;
-      margin-top: 1rem;
-    }
-    .alpha-key {
-      background: rgba(13,18,28,0.95);
-      border: 1px solid var(--border-slate);
-      border-radius: 6px;
-      padding: 0.6rem 0.2rem;
-      color: #fff;
-      font-family: 'JetBrains Mono', monospace;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.15s ease;
-    }
-    .alpha-key:hover:not(:disabled) { border-color: var(--cyan); background: var(--cyan-dim); }
-    .alpha-key:disabled { opacity: 0.3; cursor: not-allowed; }
-
-    /* Game 3: Jeopardy Board */
-    .jeopardy-table-wrap {
-      width: 100%;
-      overflow-x: auto;
-    }
-    .jeopardy-grid-6x6 {
-      display: grid;
-      grid-template-columns: repeat(6, minmax(115px, 1fr));
-      gap: 0.55rem;
-      margin-top: 0.75rem;
-    }
-    .jeopardy-cat-header {
-      background: rgba(34, 211, 238, 0.12);
-      border: 1px solid var(--cyan);
-      border-radius: 8px;
-      padding: 0.75rem 0.4rem;
-      color: #fff;
-      font-family: 'Archivo Black', sans-serif;
-      font-size: 0.78rem;
-      text-transform: uppercase;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      min-height: 54px;
-      letter-spacing: 0.03em;
-    }
-    .jeopardy-tile {
-      background: #111827;
-      border: 2px solid var(--cyan);
-      border-radius: 8px;
-      padding: 0.95rem 0.4rem;
-      color: var(--lime);
-      font-family: 'Archivo Black', sans-serif;
-      font-size: 1.15rem;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      text-align: center;
-      box-shadow: 0 0 12px rgba(34, 211, 238, 0.08);
-    }
-    .jeopardy-tile:hover:not(:disabled) {
-      background: var(--cyan-dim);
-      transform: scale(1.03);
-    }
-    .jeopardy-tile:disabled,
-    .jeopardy-tile.answered {
-      opacity: 0.2;
-      border-color: var(--border-slate);
-      color: var(--text-secondary);
-      cursor: not-allowed;
-      box-shadow: none;
-      transform: none;
-    }
-    .jeopardy-mc-list {
+    .wheel-spinner-panel {
       display: flex;
       flex-direction: column;
-      gap: 0.65rem;
-      margin-top: 1.25rem;
-      text-align: left;
-    }
-    .jeopardy-mc-btn {
-      background: rgba(13, 18, 28, 0.95);
-      border: 1px solid var(--border-slate);
-      border-radius: 8px;
-      padding: 0.85rem 1rem;
-      color: #fff;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 0.92rem;
-      cursor: pointer;
-      transition: all 0.15s ease;
-      display: flex;
       align-items: center;
-      gap: 0.75rem;
-      text-align: left;
-    }
-    .jeopardy-mc-btn:hover {
-      border-color: var(--cyan);
-      background: var(--cyan-dim);
-    }
-    .mc-letter {
-      font-family: 'JetBrains Mono', monospace;
-      font-weight: 700;
-      color: var(--cyan);
-      background: rgba(34, 211, 238, 0.12);
-      border: 1px solid rgba(34, 211, 238, 0.35);
-      border-radius: 5px;
-      padding: 0.2rem 0.55rem;
-      font-size: 0.8rem;
-    }
-
-    /* Game 4: Crypto Scramble Builder */
-    .scramble-slots {
-      display: flex;
-      justify-content: center;
       gap: 0.5rem;
-      margin: 1.25rem 0;
-      min-height: 55px;
-      flex-wrap: wrap;
+      flex-shrink: 0;
     }
-    .scramble-tile {
-      background: rgba(34, 211, 238, 0.1);
-      border: 1px solid var(--cyan);
-      border-radius: 8px;
-      padding: 0.6rem 0.95rem;
+    .wheel-stage {
+      position: relative;
+      width: 170px;
+      height: 170px;
+    }
+    .wheel-ticker {
+      position: absolute;
+      top: -8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 0;
+      border-left: 8px solid transparent;
+      border-right: 8px solid transparent;
+      border-top: 15px solid var(--rose);
+      z-index: 10;
+      filter: drop-shadow(0 0 6px var(--rose));
+    }
+    #fortune-wheel-canvas {
+      width: 170px;
+      height: 170px;
+      border-radius: 50%;
+      border: 2px solid var(--cyan);
+      background: #05070c;
+    }
+    .btn-spin-wheel {
+      pointer-events: auto;
+      background: var(--bg-card);
+      border: 2px solid var(--cyan);
+      border-radius: 50%;
+      width: 46px;
+      height: 46px;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 1.15rem;
-      color: #fff;
+      font-size: 0.6rem;
       font-weight: 700;
+      color: #fff;
       cursor: pointer;
-      transition: all 0.15s;
+      box-shadow: 0 0 10px rgba(34, 211, 238, 0.4);
     }
-    .scramble-tile:hover { background: var(--cyan); color: #000; }
+    .wheel-puzzle-pane {
+      flex: 1;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+    }
 
-    /* Game 5: Real Cloud Tower Defense Arena */
+    /* =========================================================================
+       5. CLOUD DEFENSE TOWER (Real Animated Tower Defense)
+       ========================================================================= */
     .td-battlefield {
       position: relative;
-      height: 220px;
+      height: 190px;
       background: linear-gradient(180deg, #040814 0%, #091326 75%, #0f1f38 100%);
-      border: 2px solid var(--cyan);
+      border: 1px solid var(--border-slate);
       border-radius: 12px;
       overflow: hidden;
-      margin: 1rem 0;
-      box-shadow: inset 0 0 35px rgba(34, 211, 238, 0.12);
+      box-shadow: inset 0 0 30px rgba(34, 211, 238, 0.1);
     }
     .td-battlefield.hit-shake {
       border-color: var(--rose);
-      box-shadow: inset 0 0 50px rgba(251, 113, 133, 0.45);
-      animation: tdShake 0.35s ease;
+      box-shadow: inset 0 0 45px rgba(251, 113, 133, 0.4);
+      animation: tdShake 0.3s ease;
     }
     @keyframes tdShake {
       0%, 100% { transform: translateX(0); }
-      25% { transform: translateX(-8px); }
-      50% { transform: translateX(8px); }
-      75% { transform: translateX(-6px); }
+      25% { transform: translateX(-6px); }
+      50% { transform: translateX(6px); }
+      75% { transform: translateX(-4px); }
     }
     .td-lane-line {
       position: absolute;
-      bottom: 38px;
-      left: 90px;
+      bottom: 34px;
+      left: 80px;
       right: 20px;
-      height: 3px;
-      background: repeating-linear-gradient(90deg, rgba(34,211,238,0.35) 0px, rgba(34,211,238,0.35) 14px, transparent 14px, transparent 26px);
+      height: 2px;
+      background: repeating-linear-gradient(90deg, rgba(34,211,238,0.25) 0px, rgba(34,211,238,0.25) 12px, transparent 12px, transparent 24px);
     }
     .td-tower-wrap {
       position: absolute;
-      left: 18px;
-      bottom: 24px;
-      width: 78px;
+      left: 14px;
+      bottom: 20px;
+      width: 68px;
       display: flex;
       flex-direction: column;
       align-items: center;
       z-index: 6;
     }
     .td-hp-bar-bg {
-      width: 72px;
-      height: 9px;
-      background: rgba(255, 255, 255, 0.12);
-      border: 1px solid rgba(255, 255, 255, 0.25);
+      width: 64px;
+      height: 8px;
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 255, 255, 0.2);
       border-radius: 999px;
       overflow: hidden;
-      margin-bottom: 6px;
+      margin-bottom: 5px;
     }
     .td-hp-bar-fill {
       height: 100%;
       background: var(--lime);
-      transition: width 0.25s ease, background 0.25s ease;
+      transition: width 0.2s ease, background 0.2s ease;
     }
     .td-tower-core {
-      width: 62px;
-      height: 108px;
+      width: 54px;
+      height: 94px;
       background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
       border: 2px solid var(--cyan);
-      border-radius: 10px 10px 4px 4px;
+      border-radius: 8px 8px 4px 4px;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: space-between;
-      padding: 8px 4px;
-      box-shadow: 0 0 22px rgba(34, 211, 238, 0.3);
-      position: relative;
+      padding: 6px 3px;
+      box-shadow: 0 0 16px rgba(34, 211, 238, 0.25);
     }
     .td-tower-turret {
-      width: 30px;
-      height: 30px;
+      width: 24px;
+      height: 24px;
       border-radius: 50%;
       background: var(--cyan);
-      box-shadow: 0 0 14px var(--cyan);
+      box-shadow: 0 0 10px var(--cyan);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 0.95rem;
+      font-size: 0.8rem;
     }
     .td-tower-label {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.62rem;
+      font-size: 0.55rem;
       color: var(--cyan);
       font-weight: 700;
     }
     .td-enemy-unit {
       position: absolute;
-      bottom: 42px;
-      left: 84%;
+      bottom: 36px;
+      left: 82%;
       transform: translateX(-50%);
       background: rgba(24, 10, 20, 0.94);
       border: 2px solid var(--rose);
-      border-radius: 12px;
-      padding: 0.55rem 0.85rem;
-      min-width: 125px;
+      border-radius: 10px;
+      padding: 0.45rem 0.75rem;
+      min-width: 110px;
       color: #fff;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       font-weight: 700;
-      box-shadow: 0 0 20px rgba(251, 113, 133, 0.45);
+      box-shadow: 0 0 16px rgba(251, 113, 133, 0.4);
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 0.25rem;
+      gap: 0.2rem;
       z-index: 7;
       transition: left 0.1s linear;
     }
     .td-enemy-sprite {
-      font-size: 1.55rem;
+      font-size: 1.35rem;
       line-height: 1;
-      filter: drop-shadow(0 0 8px var(--rose));
+      filter: drop-shadow(0 0 6px var(--rose));
     }
     .td-laser-shot {
       position: absolute;
-      left: 80px;
-      bottom: 92px;
-      height: 5px;
+      left: 74px;
+      bottom: 84px;
+      height: 4px;
       background: linear-gradient(90deg, #fff, var(--lime), var(--cyan));
-      box-shadow: 0 0 16px var(--lime);
+      box-shadow: 0 0 14px var(--lime);
       border-radius: 999px;
       z-index: 8;
       display: none;
@@ -580,49 +536,45 @@
     .td-turret-controls {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 0.9rem;
-      margin-top: 0.85rem;
+      gap: 0.65rem;
+      margin-top: 0.65rem;
     }
     .td-fire-btn {
       background: rgba(16, 23, 38, 0.95);
-      border: 2px solid var(--cyan);
-      border-radius: 10px;
-      padding: 0.95rem 0.75rem;
+      border: 1.5px solid var(--cyan);
+      border-radius: 8px;
+      padding: 0.75rem 0.45rem;
       color: #fff;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.9rem;
+      font-size: 0.8rem;
       font-weight: 700;
       cursor: pointer;
-      transition: all 0.18s ease;
+      transition: all 0.15s ease;
+      line-height: 1.25;
+      text-align: center;
     }
     .td-fire-btn:hover {
       border-color: var(--lime);
       background: rgba(158, 255, 51, 0.12);
-      box-shadow: 0 0 18px rgba(158, 255, 51, 0.25);
-      transform: translateY(-2px);
+      box-shadow: 0 0 14px rgba(158, 255, 51, 0.2);
+    }
+    .td-fire-btn span {
+      display: block;
+      font-size: 0.62rem;
+      color: var(--text-secondary);
+      font-weight: 400;
+      margin-top: 0.15rem;
     }
 
-    /* Debrief Summary Report */
-    .debrief-container {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      max-height: 460px;
-      overflow-y: auto;
-      padding-right: 0.5rem;
-      text-align: left;
+    /* Mobile Responsive Stack Fixes */
+    @media (max-width: 720px) {
+      .arcade-modal-window { height: 98vh; max-height: none; border-radius: 12px; }
+      .wheel-split { flex-direction: column; overflow-y: auto; gap: 1rem; }
+      .wheel-spinner-panel { order: 1; }
+      .wheel-puzzle-pane { order: 2; width: 100%; }
+      .alphabet-grid { grid-template-columns: repeat(7, 1fr); }
+      .td-turret-controls { grid-template-columns: 1fr; gap: 0.45rem; }
     }
-    .debrief-card {
-      background: rgba(13, 18, 28, 0.85);
-      border: 1px solid var(--border-slate);
-      border-left: 3px solid var(--cyan);
-      padding: 1rem;
-      border-radius: 8px;
-    }
-    .debrief-card.correct-item { border-left-color: var(--lime); background: rgba(52, 211, 153, 0.03); }
-    .debrief-card.wrong-item { border-left-color: var(--rose); background: rgba(251, 113, 133, 0.04); }
-    .debrief-title { font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; font-weight: 700; color: #fff; margin-bottom: 0.25rem; }
-    .debrief-detail { font-size: 0.83rem; color: var(--text-secondary); line-height: 1.4; }
   </style>
 </head>
 <body>
@@ -686,45 +638,51 @@
       </div>
 
       <main class="content-body" id="game-main">
-        <div class="eyebrow">Interactive Remember Engine // arcade edition</div>
-        <h1 class="hero-headline">TACTICAL <span class="outline">ARCADE</span></h1>
-        <p class="prose">Select an arcade training cabinet below to test your mastery across 6 distinct interactive gaming formats built for CISSP certification prep.</p>
+        <div class="eyebrow">Remember key exam details through gaming</div>
+        <h1 class="hero-headline">CISSP <span class="outline">GAMES</span></h1>
+        <p class="arcade-intro-text">CISSP Games developed by Jesse, play until you master them all.</p>
 
         <div class="game-choice-grid">
-          <button type="button" class="game-selector-card" onclick="launchGame(1)">
-            <div class="game-num">Cabinet 01</div>
-            <div class="game-title">Port Blaster 9000</div>
-            <div class="game-desc">A retro action arcade radar shooter where incoming port protocol targets float across the tactical display and your turret aims and laser-blasts the target you click!</div>
+          <!-- Game 1 Card -->
+          <button type="button" class="game-selector-card" id="card-g1" onclick="launchGame(1)">
+            <div class="game-focus-tag">Domain 4 // Network Ports</div>
+            <div class="game-title">Laser Blaster</div>
+            <div class="game-desc">Study <strong>Standard Network Ports</strong> by targeting drifting protocol drones across your radar grid and firing your turret's laser beam to destroy them.</div>
           </button>
 
-          <button type="button" class="game-selector-card" onclick="launchGame(2)">
-            <div class="game-num">Cabinet 02</div>
-            <div class="game-title">Crypto Wheel Spinner</div>
-            <div class="game-desc">Spin the Wheel of Fortune crypto ticker to win big cash, avoid Bankrupt, and solve hidden security ciphers letter by letter!</div>
+          <!-- Game 2 Card -->
+          <button type="button" class="game-selector-card" id="card-g2" onclick="launchGame(2)">
+            <div class="game-focus-tag">Domain 3 // Cryptography</div>
+            <div class="game-title">Wheel of CISSP</div>
+            <div class="game-desc">Study <strong>Ciphers and Hashing</strong> by spinning the downward-facing tactical multiplier wheel, earning cash, and solving cryptographic terms letter by letter.</div>
           </button>
 
-          <button type="button" class="game-selector-card" onclick="launchGame(3)">
-            <div class="game-num">Cabinet 03</div>
-            <div class="game-title">Cyber Jeopardy</div>
-            <div class="game-desc">Choose your point values across 6 randomized domains from $200 to $1000 and answer 5-choice clues before time runs out.</div>
+          <!-- Game 3 Card -->
+          <button type="button" class="game-selector-card" id="card-g3" onclick="launchGame(3)">
+            <div class="game-focus-tag">Domain 1-8 // Multi-Domain</div>
+            <div class="game-title">ISACA Jeopardy</div>
+            <div class="game-desc">Study <strong>Symmetric Ciphers, Attack Vectors, and PKI standards</strong> by picking point cells across a 5x5 board and answering Socratic clues.</div>
           </button>
 
-          <button type="button" class="game-selector-card" onclick="launchGame(4)">
-            <div class="game-num">Cabinet 04</div>
-            <div class="game-title">Security Control Scramble</div>
-            <div class="game-desc">Reconstruct scrambled cybersecurity terms and control concepts tile by tile against the countdown clock.</div>
+          <!-- Game 4 Card -->
+          <button type="button" class="game-selector-card" id="card-g4" onclick="launchGame(4)">
+            <div class="game-focus-tag">Domain 5 &amp; 7 // Operations</div>
+            <div class="game-title">Unscramble Concepts</div>
+            <div class="game-desc">Study <strong>Ego Defense and Operational Security terms</strong> by restructuring mixed letter tiles against a 30-second countdown clock.</div>
           </button>
 
-          <button type="button" class="game-selector-card" onclick="launchGame(5)">
-            <div class="game-num">Cabinet 05</div>
-            <div class="game-title">Cloud Architecture Tower Defense</div>
-            <div class="game-desc">Defend your Cloud Bastion Tower against marching workload drones! Fire the right IaaS, PaaS, or SaaS turret to destroy enemies before they hit your tower HP.</div>
+          <!-- Game 5 Card -->
+          <button type="button" class="game-selector-card" id="card-g5" onclick="launchGame(5)">
+            <div class="game-focus-tag">Domain 3 // Cloud Shared Responsibility</div>
+            <div class="game-title">Tower Defender</div>
+            <div class="game-desc">Study <strong>IaaS, PaaS, and SaaS Architectures</strong> by blasting incoming workload drones using the correct cloud turret before they hit your tower HP.</div>
           </button>
 
-          <button type="button" class="game-selector-card" onclick="launchGame(6)">
-            <div class="game-num">Cabinet 06</div>
-            <div class="game-title">Incident Response Time Attack</div>
-            <div class="game-desc">Classify NIST Incident Response lifecycle tasks into their proper operational stage against the countdown clock.</div>
+          <!-- Game 6 Card -->
+          <button type="button" class="game-selector-card" id="card-g6" onclick="launchGame(6)">
+            <div class="game-focus-tag">Domain 7 // Incident Response</div>
+            <div class="game-title">Beat the Clock</div>
+            <div class="game-desc">Study <strong>NIST SP 800-61 Lifecycle stages</strong> by sorting active security tasks into their correct incident phases against a rapid timer.</div>
           </button>
         </div>
       </main>
@@ -736,17 +694,17 @@
     <div class="arcade-modal-window">
       <div class="arcade-header">
         <div class="arcade-title-group">
-          <div class="game-num" id="arcade-game-subtitle" style="margin:0;">ARCADE CABINET</div>
-          <div class="game-title" id="arcade-game-title" style="margin:0; font-size:1.15rem;">Loading Game...</div>
+          <span class="arcade-game-tag" id="arcade-game-subtitle">TACTICAL ARCADES</span>
+          <span class="arcade-game-title" id="arcade-game-title">Loading Game...</span>
         </div>
         <div class="arcade-tracker-hud">
-          <div class="arcade-stat-badge cash" id="hud-cash-badge" style="display:none;">💵 Cash Earned: $<span id="hud-cash">0</span></div>
+          <div class="arcade-stat-badge cash" id="hud-cash-badge" style="display:none;">💵 Cash: $<span id="hud-cash">0</span></div>
           <div class="arcade-stat-badge timer" id="hud-timer-badge" style="display:none;">⏱️ <span id="hud-timer">25</span>s</div>
           <div class="arcade-stat-badge" id="hud-remaining-badge">🎯 <span id="hud-remaining">0</span> remaining</div>
         </div>
         <div class="arcade-nav-controls">
-          <button class="arcade-btn-action" onclick="openNewGamePrompt()">New Game</button>
-          <button class="arcade-btn-action" style="border-color: rgba(251,113,133,0.4); color: var(--rose);" onclick="quitGameAction()">Quit Game</button>
+          <button class="btn-hud-control" title="New Game / Choose Cabinet" onclick="openNewGamePrompt()">🔄</button>
+          <button class="btn-hud-control" title="Quit Game &amp; See Score" style="border-color: rgba(251,113,133,0.4); color: var(--rose);" onclick="quitGameAction()">❌</button>
         </div>
       </div>
       <div class="arcade-body" id="arcade-body-content">
@@ -805,7 +763,7 @@
        DATA BANKS (24+ ITEMS PER GAME)
        ========================================================================= */
 
-    // GAME 1: PORT BLASTER 9000 (24 Ports)
+    // GAME 1: PORT BLASTER (24 Ports)
     const ports = [
       { num: 20, use: "FTP Data Transfer", explanation: "Port 20 handles active mode FTP data transfers." },
       { num: 21, use: "FTP Control (Usually in DMZ)", explanation: "Port 21 is used for File Transfer Protocol command and control connections." },
@@ -992,7 +950,7 @@
       {
         cat: "ACCESS CONTROL", val: 800,
         q: "In the Bell-LaPadula confidentiality model, what are the two primary rules?",
-        options: ["No Read Up, No Write Down", "No Read Down, No Write Up", "No Read Up, No Write Up", "No Read Down, No Write Down", "Read Any, Write Top Secret"],
+        options: ["No Read Up, No Write Down", "No Read Down, No Write Up", "No Read Up, No Write Up", "No Read Down, No Read Down", "Read Any, Write Top Secret"],
         answer: "No Read Up, No Write Down",
         explanation: "Bell-LaPadula protects confidentiality via Simple Security (No Read Up) and the *-Property (No Write Down)."
       },
@@ -1177,14 +1135,14 @@
 
     // Tower Defense State
     let tdTowerHp = 100;
-    let tdEnemyX = 84; // percentage from left
+    let tdEnemyX = 84;
     let tdMoveInterval = null;
     let tdWaveLocked = false;
 
     // Timer State
     let gameTimerInterval = null;
     let timeLeft = 0;
-    let activeTimerContext = null; // 'blaster' | 'jeopardy' | 'scramble' | 'incident'
+    let activeTimerContext = null;
     let pendingTimeoutAdvance = false;
 
     const arcadeModal = document.getElementById("arcade-modal");
@@ -1203,15 +1161,6 @@
     const feedbackStatus = document.getElementById("feedback-status");
     const feedbackBody = document.getElementById("feedback-body");
     const feedbackCloseBtn = document.getElementById("feedback-close-btn");
-
-    function shuffleArray(arr) {
-      const copy = [...arr];
-      for (let i = copy.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [copy[i], copy[j]] = [copy[j], copy[i]];
-      }
-      return copy;
-    }
 
     function stopGameTimer() {
       if (gameTimerInterval) {
@@ -1307,37 +1256,37 @@
 
       if (gameId === 1) {
         arcadeSubtitle.textContent = "CABINET 01 // ACTION RADAR SHOOTER";
-        arcadeTitle.textContent = "Port Blaster 9000";
+        arcadeTitle.textContent = "Laser Blaster";
         activeQueue = shuffleArray(ports);
         totalItemsCount = activeQueue.length;
         nextPortBlasterRound();
       } else if (gameId === 2) {
         arcadeSubtitle.textContent = "CABINET 02 // WHEEL OF FORTUNE";
-        arcadeTitle.textContent = "Crypto Wheel Spinner";
+        arcadeTitle.textContent = "Wheel of CISSP";
         activeQueue = shuffleArray(ciphers);
         totalItemsCount = activeQueue.length;
         wheelTotalCash = 0;
         nextWheelRound();
       } else if (gameId === 3) {
         arcadeSubtitle.textContent = "CABINET 03 // TRIVIA BOARD";
-        arcadeTitle.textContent = "Cyber Jeopardy";
+        arcadeTitle.textContent = "ISACA Jeopardy";
         initJeopardyBoard();
       } else if (gameId === 4) {
         arcadeSubtitle.textContent = "CABINET 04 // ANAGRAM BLITZ";
-        arcadeTitle.textContent = "Security Control Scramble";
+        arcadeTitle.textContent = "Unscramble Concepts";
         activeQueue = shuffleArray(scrambleData);
         totalItemsCount = activeQueue.length;
         nextScrambleRound();
       } else if (gameId === 5) {
         arcadeSubtitle.textContent = "CABINET 05 // TOWER DEFENSE";
-        arcadeTitle.textContent = "Cloud Architecture Bastion";
+        arcadeTitle.textContent = "Tower Defender";
         activeQueue = shuffleArray(cloudArcade);
         totalItemsCount = activeQueue.length;
         tdTowerHp = 100;
         nextCloudRound();
       } else if (gameId === 6) {
         arcadeSubtitle.textContent = "CABINET 06 // TIME ATTACK";
-        arcadeTitle.textContent = "Incident Response Sequencer";
+        arcadeTitle.textContent = "Beat the Clock";
         activeQueue = shuffleArray(incidentArcade);
         totalItemsCount = activeQueue.length;
         nextIncidentRound();
@@ -1352,12 +1301,12 @@
         <div style="text-align:center; padding: 2rem;">
           <h2 style="color:#fff; font-family:'Archivo Black',sans-serif; margin-bottom:1rem;">SELECT NEW ARCADE CABINET</h2>
           <div class="game-choice-grid" style="margin-top:1rem;">
-            <button class="game-selector-card" onclick="launchGame(1)"><div class="game-title">01. Port Blaster</div></button>
-            <button class="game-selector-card" onclick="launchGame(2)"><div class="game-title">02. Crypto Wheel</div></button>
-            <button class="game-selector-card" onclick="launchGame(3)"><div class="game-title">03. Cyber Jeopardy</div></button>
-            <button class="game-selector-card" onclick="launchGame(4)"><div class="game-title">04. Scramble Blitz</div></button>
-            <button class="game-selector-card" onclick="launchGame(5)"><div class="game-title">05. Cloud Tower</div></button>
-            <button class="game-selector-card" onclick="launchGame(6)"><div class="game-title">06. Incident Response</div></button>
+            <button class="game-selector-card" onclick="launchGame(1)"><div class="game-title">01. Laser Blaster</div></button>
+            <button class="game-selector-card" onclick="launchGame(2)"><div class="game-title">02. Wheel of CISSP</div></button>
+            <button class="game-selector-card" onclick="launchGame(3)"><div class="game-title">03. ISACA Jeopardy</div></button>
+            <button class="game-selector-card" onclick="launchGame(4)"><div class="game-title">04. Unscramble Concepts</div></button>
+            <button class="game-selector-card" onclick="launchGame(5)"><div class="game-title">05. Tower Defender</div></button>
+            <button class="game-selector-card" onclick="launchGame(6)"><div class="game-title">06. Beat the Clock</div></button>
           </div>
         </div>
       `;
@@ -1433,7 +1382,7 @@
     }
 
     /* =========================================================================
-       GAME 1: PORT BLASTER 9000 (Aimed Turret & Laser to Clicked Target)
+       GAME 1: LASER BLASTER (Drift-Bounded Radar Shooting Range)
        ========================================================================= */
     let blasterFiring = false;
 
@@ -1454,19 +1403,20 @@
       }
       choices = shuffleArray(choices);
 
+      // Kept positions locked well inside the canvas boundary box
       const positions = [
-        { top: "16%", left: "14%" },
-        { top: "20%", left: "68%" },
-        { top: "54%", left: "18%" },
-        { top: "50%", left: "66%" }
+        { top: "14%", left: "12%" },
+        { top: "18%", left: "62%" },
+        { top: "48%", left: "15%" },
+        { top: "44%", left: "60%" }
       ];
       const randomizedPositions = shuffleArray(positions);
 
       arcadeBody.innerHTML = `
         <div class="arcade-arena">
-          <div class="arcade-screen-box" style="padding:1.2rem;">
-            <div style="font-size:0.75rem; font-family:'JetBrains Mono',monospace; color:var(--cyan);">TACTICAL RADAR TARGET INTERCEPT</div>
-            <div class="arcade-display-text" style="font-size:1.05rem;">Target Service: <span>"${currentItem.use}"</span></div>
+          <div class="arcade-screen-box" style="padding:1rem;">
+            <div style="font-size:0.7rem; font-family:'JetBrains Mono',monospace; color:var(--cyan); letter-spacing:0.06em;">TACTICAL RADAR TARGET INTERCEPT</div>
+            <div class="arcade-display-text" style="font-size:1.02rem; margin:0.4rem 0;">Target Service: <span>"${currentItem.use}"</span></div>
             
             <div class="blaster-radar-screen" id="blaster-radar-box">
               <div class="radar-grid-lines"></div>
@@ -1480,7 +1430,7 @@
                 <div class="cannon-barrel"></div>
               </div>
             </div>
-            <div style="font-size:0.78rem; color:var(--text-secondary);">Click the correct drifting port drone—your turret will rotate and fire directly at it!</div>
+            <div style="font-size:0.75rem; color:var(--text-secondary); text-align:center;">Click the correct port node to aim and blast the target!</div>
           </div>
         </div>
       `;
@@ -1501,24 +1451,21 @@
         const radarRect = radar.getBoundingClientRect();
         const btnRect = btnEl.getBoundingClientRect();
 
-        // Turret center origin near bottom-center of radar
         const originX = radarRect.width / 2;
         const originY = radarRect.height - 36;
 
-        // Clicked target center relative to radar
         const targetX = (btnRect.left - radarRect.left) + (btnRect.width / 2);
         const targetY = (btnRect.top - radarRect.top) + (btnRect.height / 2);
 
         const dx = targetX - originX;
         const dy = targetY - originY;
         const distance = Math.hypot(dx, dy);
-        // Angle in degrees from straight up (0 deg = straight up)
         const angleDeg = Math.atan2(dx, -dy) * (180 / Math.PI);
 
-        // 1. Aim turret barrel toward target
+        // Rotate Turret
         turret.style.transform = `rotate(${angleDeg}deg)`;
 
-        // 2. Fire laser beam at exact angle and distance to target
+        // Fire Laser
         setTimeout(() => {
           laser.style.display = "block";
           laser.style.height = `${distance}px`;
@@ -1544,31 +1491,8 @@
     }
 
     /* =========================================================================
-       GAME 2: WHEEL OF FORTUNE CRYPTO SPINNER (Downward Ticker & Synced Slice)
+       GAME 2: WHEEL OF CISSP (Clue & Downward Ticker Spinner Stack)
        ========================================================================= */
-    let wheelSecret = "";
-    let wheelGuessed = new Set();
-    let wheelRoundCash = 0;
-    let wheelTotalCash = 0;
-    let currentWheelSlice = null;
-    let wheelIsSpinning = false;
-    let wheelCurrentAngle = 0;
-
-    const wheelSlices = [
-      { text: "$200", val: 200, type: "cash" },
-      { text: "$500", val: 500, type: "cash" },
-      { text: "BANKRUPT", val: 0, type: "bankrupt" },
-      { text: "$300", val: 300, type: "cash" },
-      { text: "$700", val: 700, type: "cash" },
-      { text: "LOSE TURN", val: 0, type: "lose" },
-      { text: "$400", val: 400, type: "cash" },
-      { text: "$1000", val: 1000, type: "cash" },
-      { text: "$250", val: 250, type: "cash" },
-      { text: "BANKRUPT", val: 0, type: "bankrupt" },
-      { text: "$600", val: 600, type: "cash" },
-      { text: "$800", val: 800, type: "cash" }
-    ];
-
     function nextWheelRound() {
       stopGameTimer();
       hudTimerBadge.style.display = "none";
@@ -1590,11 +1514,11 @@
       let solved = true;
       for (let char of wheelSecret) {
         if (char === " " || char === "-") {
-          displayString += `<div class="wheel-slot" style="background:transparent; border:none; width:22px;">${char}</div>`;
+          displayString += `<div class="wheel-slot" style="background:transparent; border:none; width:18px;">${char}</div>`;
         } else if (wheelGuessed.has(char)) {
-          displayString += `<div class="wheel-slot">${char}</div>`;
+          displayString += `<div class="wheel-slot" style="width:30px; height:38px; font-size:1.15rem;">${char}</div>`;
         } else {
-          displayString += `<div class="wheel-slot">_</div>`;
+          displayString += `<div class="wheel-slot" style="width:30px; height:38px; font-size:1.15rem;">_</div>`;
           solved = false;
         }
       }
@@ -1608,30 +1532,32 @@
       }
 
       arcadeBody.innerHTML = `
-        <div class="arcade-arena">
-          <div class="arcade-screen-box" style="padding:1.2rem;">
-            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:0.75rem;">
-              <div style="font-size:0.75rem; font-family:'JetBrains Mono',monospace; color:var(--cyan);">WHEEL OF FORTUNE // CRYPTO SPINNER</div>
-              <div style="font-family:'JetBrains Mono',monospace; font-size:0.85rem; color:var(--lime);">Round Cash: $<span id="round-cash-val">${wheelRoundCash}</span></div>
-            </div>
+        <div class="arcade-arena" style="height:100%;">
+          <div class="arcade-screen-box" style="padding:0.85rem; justify-content:space-between; height:100%;">
+            <div class="wheel-split">
+              <!-- Left panel: Wheel & Spin button (Zero scrolling) -->
+              <div class="wheel-spinner-panel">
+                <div class="wheel-stage">
+                  <div class="wheel-ticker"></div>
+                  <canvas id="fortune-wheel-canvas" width="170" height="170"></canvas>
+                </div>
+                <button type="button" id="spin-wheel-btn" onclick="spinFortuneWheel()" class="btn-spin-wheel" ${wheelIsSpinning || currentWheelSlice ? 'disabled' : ''}>SPIN</button>
+              </div>
 
-            <!-- Wheel Widget with Downward-Pointing Ticker -->
-            <div style="display:flex; flex-direction:column; align-items:center; margin:0.5rem 0 1rem 0; position:relative;">
-              <div style="width:0; height:0; border-left:12px solid transparent; border-right:12px solid transparent; border-top:20px solid var(--rose); margin-bottom:-6px; z-index:10; filter:drop-shadow(0 2px 6px rgba(251,113,133,0.8));"></div>
-              <div style="position:relative; width:210px; height:210px; border-radius:50%; border:3px solid var(--cyan); box-shadow:0 0 20px rgba(34,211,238,0.25); overflow:hidden; background:#070b12;">
-                <canvas id="fortune-wheel-canvas" width="210" height="210" style="width:100%; height:100%; transition: transform 3s cubic-bezier(0.15, 0.85, 0.15, 1); transform: rotate(${wheelCurrentAngle}deg);"></canvas>
-                <div style="position:absolute; inset:0; display:flex; align-items:center; justify-content:center; pointer-events:none;">
-                  <button id="spin-wheel-btn" onclick="spinFortuneWheel()" style="pointer-events:auto; background:var(--bg-card); border:2px solid var(--cyan); border-radius:50%; width:54px; height:54px; font-family:'JetBrains Mono',monospace; font-size:0.65rem; font-weight:700; color:#fff; cursor:pointer; box-shadow:0 0 12px rgba(34,211,238,0.4);">SPIN</button>
+              <!-- Right panel: Puzzle board & Keyboard -->
+              <div class="wheel-puzzle-pane">
+                <div>
+                  <div style="font-family:'JetBrains Mono',monospace; font-size:0.75rem; color:var(--cyan); text-transform:uppercase; margin-bottom:0.25rem;">Clue: "${currentItem.hint}"</div>
+                  <div id="wheel-status-banner" style="font-family:'JetBrains Mono',monospace; font-size:0.78rem; color:var(--lime); margin-bottom:0.5rem; min-height:18px;">
+                    ${currentWheelSlice ? `Landed on: <strong>${currentWheelSlice.text}</strong>` : "Spin the wheel to make a guess!"}
+                  </div>
+                  <div class="wheel-slots">${displayString}</div>
+                </div>
+
+                <div class="alphabet-grid">
+                  ${"ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").map(letter => `<button class="alpha-key" ${wheelGuessed.has(letter) || !currentWheelSlice || currentWheelSlice.type !== 'cash' ? 'disabled' : ''} onclick="guessWheelLetter('${letter}')">${letter}</button>`).join("")}
                 </div>
               </div>
-              <div id="wheel-status-banner" style="font-family:'JetBrains Mono',monospace; font-size:0.84rem; color:var(--cyan); margin-top:0.65rem; min-height:22px;">${currentWheelSlice ? `Landed on: <strong style="color:var(--lime);">${currentWheelSlice.text}</strong> — Pick a letter!` : "Click SPIN to test your luck!"}</div>
-            </div>
-
-            <div class="arcade-display-text" style="font-size:0.95rem; margin:0.5rem 0;">"${currentItem.hint}"</div>
-            <div class="wheel-slots">${displayString}</div>
-            
-            <div class="alphabet-grid" style="margin-top:0.75rem;">
-              ${"ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").map(letter => `<button class="alpha-key" ${wheelGuessed.has(letter) || !currentWheelSlice || currentWheelSlice.type !== 'cash' ? 'disabled' : ''} onclick="guessWheelLetter('${letter}')">${letter}</button>`).join("")}
             </div>
           </div>
         </div>
@@ -1640,106 +1566,8 @@
       drawFortuneWheelCanvas();
     }
 
-    function drawFortuneWheelCanvas() {
-      const canvas = document.getElementById("fortune-wheel-canvas");
-      if (!canvas) return;
-      const ctx = canvas.getContext("2d");
-      const numSlices = wheelSlices.length;
-      const arc = (2 * Math.PI) / numSlices;
-      const colors = ["#0e7490", "#1e3a8a", "#047857", "#b45309", "#4338ca", "#0f766e", "#6d28d9", "#1d4ed8"];
-
-      ctx.clearRect(0, 0, 210, 210);
-      ctx.save();
-      ctx.translate(105, 105);
-
-      wheelSlices.forEach((slice, i) => {
-        const angle = i * arc;
-        ctx.beginPath();
-        ctx.fillStyle = colors[i % colors.length];
-        if (slice.type === 'bankrupt') ctx.fillStyle = "#991b1b";
-        if (slice.type === 'lose') ctx.fillStyle = "#374151";
-        ctx.moveTo(0, 0);
-        ctx.arc(0, 0, 105, angle, angle + arc);
-        ctx.lineTo(0, 0);
-        ctx.fill();
-        ctx.strokeStyle = "rgba(255,255,255,0.2)";
-        ctx.stroke();
-
-        ctx.save();
-        ctx.rotate(angle + arc / 2);
-        ctx.textAlign = "right";
-        ctx.fillStyle = "#fff";
-        ctx.font = "bold 10px 'JetBrains Mono', monospace";
-        ctx.fillText(slice.text, 94, 4);
-        ctx.restore();
-      });
-
-      ctx.restore();
-    }
-
-    function spinFortuneWheel() {
-      if (wheelIsSpinning) return;
-      wheelIsSpinning = true;
-
-      const spinBtn = document.getElementById("spin-wheel-btn");
-      if (spinBtn) spinBtn.disabled = true;
-
-      const randomSliceIdx = Math.floor(Math.random() * wheelSlices.length);
-      const sliceAngle = 360 / wheelSlices.length;
-      const sliceCenterAngle = randomSliceIdx * sliceAngle + sliceAngle / 2;
-
-      // Top pointer is at 270 degrees (12 o'clock) in standard canvas coordinates (where 0 deg is 3 o'clock).
-      // Align sliceCenterAngle + wheelCurrentAngle === 270 (mod 360)
-      const desiredMod = (270 - sliceCenterAngle + 360) % 360;
-      const currentMod = ((wheelCurrentAngle % 360) + 360) % 360;
-      const delta = (desiredMod - currentMod + 360) % 360;
-
-      wheelCurrentAngle = wheelCurrentAngle + (5 * 360) + delta;
-
-      const canvas = document.getElementById("fortune-wheel-canvas");
-      if (canvas) {
-        canvas.style.transform = `rotate(${wheelCurrentAngle}deg)`;
-      }
-
-      setTimeout(() => {
-        wheelIsSpinning = false;
-        currentWheelSlice = wheelSlices[randomSliceIdx];
-
-        if (currentWheelSlice.type === 'bankrupt') {
-          wheelRoundCash = 0;
-          openFeedback(false, `Landed on <strong>${currentWheelSlice.text}</strong>! All accumulated round cash wiped out.`);
-          currentWheelSlice = null;
-        } else if (currentWheelSlice.type === 'lose') {
-          openFeedback(false, `Landed on <strong>${currentWheelSlice.text}</strong>! Spin again.`);
-          currentWheelSlice = null;
-        }
-
-        renderWheelScreen();
-      }, 3100);
-    }
-
-    function guessWheelLetter(letter) {
-      if (!currentWheelSlice || currentWheelSlice.type !== 'cash') return;
-      wheelGuessed.add(letter);
-
-      if (wheelSecret.includes(letter)) {
-        let count = 0;
-        for (let char of wheelSecret) {
-          if (char === letter) count++;
-        }
-        const earned = currentWheelSlice.val * count;
-        wheelRoundCash += earned;
-        currentWheelSlice = null;
-        renderWheelScreen();
-      } else {
-        currentWheelSlice = null;
-        openFeedback(false, `Letter <strong>${letter}</strong> is not in the cipher.`);
-        renderWheelScreen();
-      }
-    }
-
     /* =========================================================================
-       GAME 3: CYBER JEOPARDY
+       GAME 3: ISACA JEOPARDY
        ========================================================================= */
     function initJeopardyBoard() {
       jeopardyCash = 0;
@@ -1803,7 +1631,7 @@
       arcadeBody.innerHTML = `
         <div class="arcade-arena">
           <div class="arcade-screen-box" style="padding:1.15rem;">
-            <div style="font-size:0.78rem; font-family:'JetBrains Mono',monospace; color:var(--cyan);">SELECT A CATEGORY & DOLLAR VALUE</div>
+            <div style="font-size:0.78rem; font-family:'JetBrains Mono',monospace; color:var(--cyan); margin-bottom:0.45rem;">SELECT A CATEGORY & DOLLAR VALUE</div>
             <div class="jeopardy-table-wrap">
               <div class="jeopardy-grid-6x6">
                 ${gridCellsHtml}
@@ -1824,10 +1652,10 @@
       arcadeBody.innerHTML = `
         <div class="arcade-arena">
           <div class="arcade-screen-box">
-            <div style="font-size:0.78rem; font-family:'JetBrains Mono',monospace; color:var(--cyan);">
+            <div style="font-size:0.78rem; font-family:'JetBrains Mono',monospace; color:var(--cyan); margin-bottom:0.45rem;">
               ${tile.cat} // <span style="color:var(--lime);">$${tile.val}</span>
             </div>
-            <div class="arcade-display-text" style="font-size:1.1rem;">"${tile.q}"</div>
+            <div class="arcade-display-text" style="font-size:1.1rem; margin-bottom:1rem;">"${tile.q}"</div>
             <div class="jeopardy-mc-list">
               ${tile.shuffledOptions.map((opt, idx) => `
                 <button class="jeopardy-mc-btn" onclick="submitJeopardyChoice('${key}', ${idx})">
@@ -1879,7 +1707,7 @@
     }
 
     /* =========================================================================
-       GAME 4: SECURITY CONTROL SCRAMBLE
+       GAME 4: SECURITY CONTROL SCRAMBLE (Anagram Builder with Countdown Timer)
        ========================================================================= */
     let scrambleCurrentWord = "";
     let scrambleTiles = [];
@@ -1906,8 +1734,8 @@
       arcadeBody.innerHTML = `
         <div class="arcade-arena">
           <div class="arcade-screen-box">
-            <div style="font-size:0.75rem; font-family:'JetBrains Mono',monospace; color:var(--cyan);">ANAGRAM PUZZLE BLITZ</div>
-            <div class="arcade-display-text" style="font-size:1.05rem;">Hint: "${currentItem.hint}"</div>
+            <div style="font-size:0.75rem; font-family:'JetBrains Mono',monospace; color:var(--cyan); margin-bottom:0.45rem;">ANAGRAM PUZZLE BLITZ</div>
+            <div class="arcade-display-text" style="font-size:1.05rem; margin:0.45rem 0;">Hint: "${currentItem.hint}"</div>
             
             <div class="scramble-slots">
               ${userScrambleChoice.map(item => `<button class="scramble-tile" onclick="returnTile(${item.id})">${item.char}</button>`).join("")}
@@ -1960,7 +1788,7 @@
     }
 
     /* =========================================================================
-       GAME 5: REAL CLOUD ARCHITECTURE TOWER DEFENSE (Animated Enemy + Tower HP)
+       GAME 5: TOWER DEFENDER (Animated Cloud Shared Responsibility)
        ========================================================================= */
     function nextCloudRound() {
       stopGameTimer();
@@ -1980,19 +1808,19 @@
 
       arcadeBody.innerHTML = `
         <div class="arcade-arena">
-          <div class="arcade-screen-box" style="padding:1.25rem;">
-            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem;">
-              <div style="font-size:0.75rem; font-family:'JetBrains Mono',monospace; color:var(--cyan);">CLOUD BASTION TOWER DEFENSE // LIVE WAVE</div>
-              <div style="font-family:'JetBrains Mono',monospace; font-size:0.85rem; color:${hpColor}; font-weight:700;">🏰 TOWER HP: <span id="td-hp-text">${tdTowerHp}</span>%</div>
+          <div class="arcade-screen-box" style="padding:1rem; justify-content:space-between; height:100%;">
+            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.25rem;">
+              <div style="font-size:0.7rem; font-family:'JetBrains Mono',monospace; color:var(--cyan); letter-spacing:0.04em;">CLOUD BASTION TOWER DEFENSE // LIVE WAVE</div>
+              <div style="font-family:'JetBrains Mono',monospace; font-size:0.8rem; color:${hpColor}; font-weight:700;">🏰 TOWER HP: <span id="td-hp-text">${tdTowerHp}</span>%</div>
             </div>
 
-            <div class="arcade-display-text" style="font-size:1rem; margin:0.65rem 0;">Incoming Workload Drone: <span>"${currentItem.item}"</span></div>
+            <div class="arcade-display-text" style="font-size:1rem; margin:0.45rem 0;">Deploy Turret For: <span>"${currentItem.item}"</span></div>
 
             <div class="td-battlefield" id="td-battlefield">
               <div class="radar-grid-lines"></div>
               <div class="td-lane-line"></div>
 
-              <!-- Player Defense Tower -->
+              <!-- Cloud Defense Tower -->
               <div class="td-tower-wrap">
                 <div class="td-hp-bar-bg">
                   <div class="td-hp-bar-fill" id="td-hp-fill" style="width:${tdTowerHp}%; background:${hpColor};"></div>
@@ -2004,37 +1832,35 @@
                 </div>
               </div>
 
-              <!-- Defense Laser Beam -->
+              <!-- Direct Linear Defense Beam -->
               <div class="td-laser-shot" id="td-laser-shot"></div>
 
-              <!-- Marching Enemy Workload Drone -->
+              <!-- Marching Workload Drone -->
               <div class="td-enemy-unit" id="td-enemy-unit" style="left:${tdEnemyX}%;">
                 <div class="td-enemy-sprite" id="td-enemy-sprite">👾</div>
                 <div>CLOUD DRONE</div>
               </div>
             </div>
 
-            <div style="font-size:0.78rem; color:var(--text-secondary);">Fire the matching cloud service turret before the enemy drone reaches your tower!</div>
-
             <div class="td-turret-controls">
               <button class="td-fire-btn" onclick="fireCloudTurret('iaas', '${currentItem.type}', '${currentItem.item.replace(/'/g, "\\'")}', '${currentItem.explanation.replace(/'/g, "\\'")}')">
-                🔥 FIRE IaaS TURRET<br><span style="font-size:0.72rem; color:var(--text-secondary); font-weight:400;">Infrastructure</span>
+                IaaS <span>Infrastructure</span>
               </button>
               <button class="td-fire-btn" onclick="fireCloudTurret('paas', '${currentItem.type}', '${currentItem.item.replace(/'/g, "\\'")}', '${currentItem.explanation.replace(/'/g, "\\'")}')">
-                🔥 FIRE PaaS TURRET<br><span style="font-size:0.72rem; color:var(--text-secondary); font-weight:400;">Platform</span>
+                PaaS <span>Platform</span>
               </button>
               <button class="td-fire-btn" onclick="fireCloudTurret('saas', '${currentItem.type}', '${currentItem.item.replace(/'/g, "\\'")}', '${currentItem.explanation.replace(/'/g, "\\'")}')">
-                🔥 FIRE SaaS TURRET<br><span style="font-size:0.72rem; color:var(--text-secondary); font-weight:400;">Software</span>
+                SaaS <span>Software</span>
               </button>
             </div>
           </div>
         </div>
       `;
 
-      // March the enemy toward the tower (reaches tower at left = 18%)
+      // Game loops for marching enemies
       tdMoveInterval = setInterval(() => {
         if (tdWaveLocked) return;
-        tdEnemyX -= 0.45;
+        tdEnemyX -= 0.55;
         const enemyEl = document.getElementById("td-enemy-unit");
         if (enemyEl) {
           enemyEl.style.left = `${tdEnemyX}%`;
@@ -2062,11 +1888,10 @@
       const battlefield = document.getElementById("td-battlefield");
 
       if (isCorrect) {
-        // Fire laser from tower to enemy position and destroy enemy
         if (laserEl && enemyEl && battlefield) {
           const bfRect = battlefield.getBoundingClientRect();
           const enRect = enemyEl.getBoundingClientRect();
-          const beamWidth = Math.max(40, (enRect.left - bfRect.left) - 75);
+          const beamWidth = Math.max(30, (enRect.left - bfRect.left) - 75);
           laserEl.style.width = `${beamWidth}px`;
           laserEl.style.display = "block";
         }
@@ -2102,7 +1927,7 @@
       const hpText = document.getElementById("td-hp-text");
       const hpFill = document.getElementById("td-hp-fill");
 
-      if (enemyEl) enemyEl.style.left = "18%";
+      if (enemyEl) enemyEl.style.left = "19%";
       if (battlefield) battlefield.classList.add("hit-shake");
       if (hpText) hpText.textContent = tdTowerHp;
       if (hpFill) {
@@ -2128,7 +1953,7 @@
     }
 
     /* =========================================================================
-       GAME 6: INCIDENT RESPONSE TIME ATTACK (With Countdown Timer)
+       GAME 6: BEAT THE CLOCK
        ========================================================================= */
     function nextIncidentRound() {
       stopGameTimer();
@@ -2151,10 +1976,10 @@
       arcadeBody.innerHTML = `
         <div class="arcade-arena">
           <div class="arcade-screen-box">
-            <div style="font-size:0.75rem; font-family:'JetBrains Mono',monospace; color:var(--cyan);">NIST SP 800-61 IR LIFECYCLE TIME ATTACK</div>
-            <div class="arcade-display-text" style="font-size:1.05rem;">Task: <span>"${currentItem.task}"</span></div>
-            <div style="display:grid; grid-template-columns: repeat(2, 1fr); gap:0.75rem; margin-top:1.25rem;">
-              ${phases.map(p => `<button class="arcade-btn-action" style="padding:0.9rem; text-align:left;" onclick="processIncidentChoice('${p.key}', '${currentItem.phase}', '${currentItem.task.replace(/'/g, "\\'")}', '${currentItem.explanation.replace(/'/g, "\\'")}')">${p.label}</button>`).join("")}
+            <div style="font-size:0.75rem; font-family:'JetBrains Mono',monospace; color:var(--cyan); margin-bottom:0.45rem;">NIST SP 800-61 IR LIFECYCLE TIME ATTACK</div>
+            <div class="arcade-display-text" style="font-size:1.02rem; margin:0.4rem 0;">Task: <span>"${currentItem.task}"</span></div>
+            <div style="display:grid; grid-template-columns: repeat(2, 1fr); gap:0.65rem; margin-top:1rem;">
+              ${phases.map(p => `<button class="arcade-btn-action" style="padding:0.75rem 0.55rem; text-align:left; font-size:0.84rem;" onclick="processIncidentChoice('${p.key}', '${currentItem.phase}', '${currentItem.task.replace(/'/g, "\\'")}', '${currentItem.explanation.replace(/'/g, "\\'")}')">${p.label}</button>`).join("")}
             </div>
           </div>
         </div>
