@@ -10,6 +10,48 @@
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
   <style>
+    /* Hero Header Row with Constrained Width */
+    .hero-header-row {
+      display: flex;
+      align-items: flex-end;
+      justify-content: space-between;
+      gap: 1.25rem;
+      max-width: 740px; /* Locked to match the HUD box width below */
+      margin-bottom: 1.35rem;
+    }
+
+    .hero-headline-wrap {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .hero-headline {
+      margin-bottom: 0;
+      font-size: clamp(1.85rem, 3.8vw, 3rem);
+      line-height: 1.02;
+    }
+
+    /* Responsive Cartoon Portrait Container */
+    .hero-avatar-wrap {
+      flex-shrink: 0;
+      width: clamp(100px, 18vw, 155px);
+      aspect-ratio: 896 / 1200;
+      display: flex;
+      align-items: flex-end;
+      justify-content: center;
+    }
+
+    .hero-avatar-img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      border-radius: 12px;
+      border: 1.5px solid rgba(34, 211, 238, 0.45);
+      background: rgba(13, 18, 28, 0.7);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6), 0 0 20px rgba(34, 211, 238, 0.18);
+      display: block;
+    }
+
     .about-trigger-row {
       margin-top: 1.35rem;
       display: flex;
@@ -81,6 +123,15 @@
       box-shadow: 0 0 28px rgba(34, 211, 238, 0.45);
       transform: translateY(-1px);
     }
+
+    @media (max-width: 480px) {
+      .hero-header-row {
+        gap: 0.85rem;
+      }
+      .hero-avatar-wrap {
+        width: 95px;
+      }
+    }
   </style>
 </head>
 <body>
@@ -144,12 +195,21 @@
       </div>
 
       <main class="content-body">
-        <h1 class="hero-headline">
-          STUDY SMARTER<br />
-          MASTER THE<br />
-          <span class="outline">MATERIAL</span>
-        </h1>
+        <!-- Headline & Cartoon Avatar Row -->
+        <div class="hero-header-row">
+          <div class="hero-headline-wrap">
+            <h1 class="hero-headline">
+              STUDY SMARTER<br />
+              MASTER THE<br />
+              <span class="outline">MATERIAL</span>
+            </h1>
+          </div>
+          <div class="hero-avatar-wrap">
+            <img src="jesse-avatar.png" alt="Jesse Johnson Cartoon Avatar" class="hero-avatar-img" />
+          </div>
+        </div>
 
+        <!-- HUD Welcome Panel -->
         <div class="hud-panel">
           <div class="prose">
             <p>
