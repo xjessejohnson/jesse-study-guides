@@ -10,28 +10,140 @@
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
   <style>
-    .arcade-intro-text {
+    /* Base CISSP Hub Layer Underneath */
+    .module-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 1.25rem;
+      margin-top: 1.75rem;
+    }
+    .module-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-slate);
+      border-radius: 12px;
+      padding: 1.45rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 1.25rem;
+      transition: all 0.2s ease;
+    }
+    .module-card.interactive:hover {
+      border-color: var(--lime);
+      background: var(--bg-card-hover);
+      transform: translateY(-2px);
+    }
+    .module-card-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.55rem;
+    }
+    .module-card h3 {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 1.02rem;
+      text-transform: uppercase;
+      color: #fff;
+    }
+    .module-card p {
+      font-size: 0.88rem;
       color: var(--text-secondary);
       line-height: 1.55;
-      font-size: 0.98rem;
-      margin-bottom: 1.4rem;
+    }
+    .btn-lime {
+      padding: 0.75rem 1.25rem;
+      border-radius: 9px;
+      border: none;
+      background: var(--lime);
+      color: #05070c;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.18s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.45rem;
+    }
+    .btn-lime:hover {
+      filter: brightness(1.08);
+      box-shadow: 0 0 22px rgba(158, 255, 51, 0.35);
+      transform: translateY(-1px);
     }
 
     /* =========================================================================
-       CONSOLE GAMING LAUNCHER MENU (6 Distinct Cards + Animated Transitions)
+       TACTICAL ARCADE MENU OVERLAY (Appears Over Previous Menu with ✕ Button)
        ========================================================================= */
+    .launcher-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(3, 6, 12, 0.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      z-index: 9990;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 0.75rem;
+    }
+    .launcher-modal-backdrop.open {
+      display: flex;
+      animation: backdropFade 0.22s ease-out;
+    }
+
+    .launcher-modal-window {
+      background: #080c16;
+      border: 1px solid rgba(34, 211, 238, 0.38);
+      border-radius: 16px;
+      width: 100%;
+      max-width: 940px;
+      max-height: 92dvh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 25px 70px rgba(0, 0, 0, 0.92), 0 0 35px rgba(34, 211, 238, 0.14);
+      overflow: hidden;
+      animation: cabinetZoomIn 0.26s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+
+    .launcher-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 1rem;
+      padding: 1.1rem 1.4rem 0.9rem;
+      border-bottom: 1px solid var(--border-slate);
+      background: #0b111e;
+    }
+
+    .launcher-body {
+      padding: 1.15rem 1.4rem 1.4rem;
+      overflow-y: auto;
+    }
+
+    .arcade-intro-text {
+      color: var(--text-secondary);
+      line-height: 1.45;
+      font-size: 0.94rem;
+      margin-top: 0.25rem;
+    }
+
+    /* 5% Smaller Console Gaming Launcher Cards */
     .game-choice-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(265px, 1fr));
-      gap: 1.15rem;
-      margin-top: 0.75rem;
+      grid-template-columns: repeat(auto-fit, minmax(248px, 1fr));
+      gap: 0.95rem;
       perspective: 1000px;
     }
 
     .game-selector-card {
       position: relative;
-      border-radius: 14px;
-      padding: 1.25rem 1.3rem;
+      border-radius: 13px;
+      padding: 1.08rem 1.15rem;
       cursor: pointer;
       text-align: left;
       overflow: hidden;
@@ -41,11 +153,10 @@
                   border-color 0.25s ease;
       display: flex;
       flex-direction: column;
-      gap: 0.45rem;
+      gap: 0.38rem;
       isolation: isolate;
     }
 
-    /* Animated diagonal light sweep on hover */
     .game-selector-card::after {
       content: "";
       position: absolute;
@@ -68,28 +179,28 @@
     }
 
     .game-icon-badge {
-      width: 40px;
-      height: 40px;
-      border-radius: 10px;
+      width: 36px;
+      height: 36px;
+      border-radius: 9px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 1.25rem;
+      font-size: 1.15rem;
       background: rgba(255, 255, 255, 0.06);
       border: 1px solid rgba(255, 255, 255, 0.14);
       transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
     .game-selector-card:hover .game-icon-badge {
-      transform: scale(1.16) rotate(-6deg);
+      transform: scale(1.15) rotate(-6deg);
     }
 
     .game-play-pill {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.65rem;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 0.66rem;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
-      padding: 0.22rem 0.6rem;
+      letter-spacing: 0.06em;
+      padding: 0.2rem 0.55rem;
       border-radius: 999px;
       background: rgba(255, 255, 255, 0.06);
       color: #fff;
@@ -101,17 +212,18 @@
 
     .game-title {
       font-family: 'Archivo Black', sans-serif;
-      font-size: 1.12rem;
+      font-size: 1.04rem;
       color: #fff;
       text-transform: uppercase;
       letter-spacing: 0.01em;
-      margin-top: 0.2rem;
+      margin-top: 0.15rem;
     }
 
     .game-desc {
+      font-family: Arial, Helvetica, sans-serif;
       font-size: 0.84rem;
       color: #cbd5e1;
-      line-height: 1.45;
+      line-height: 1.42;
     }
     .game-desc strong { color: #fff; }
 
@@ -121,9 +233,9 @@
       border-color: rgba(34, 211, 238, 0.35);
     }
     .card-blaster:hover {
-      transform: translateY(-6px) scale(1.02);
+      transform: translateY(-5px) scale(1.015);
       border-color: var(--cyan);
-      box-shadow: 0 14px 34px rgba(34, 211, 238, 0.25), 0 0 18px rgba(34, 211, 238, 0.2);
+      box-shadow: 0 12px 30px rgba(34, 211, 238, 0.25);
     }
     .card-blaster .game-play-pill { color: var(--cyan); border: 1px solid rgba(34, 211, 238, 0.4); }
 
@@ -132,9 +244,9 @@
       border-color: rgba(251, 191, 36, 0.35);
     }
     .card-wheel:hover {
-      transform: translateY(-6px) scale(1.02);
+      transform: translateY(-5px) scale(1.015);
       border-color: var(--amber);
-      box-shadow: 0 14px 34px rgba(251, 191, 36, 0.22), 0 0 18px rgba(251, 191, 36, 0.2);
+      box-shadow: 0 12px 30px rgba(251, 191, 36, 0.22);
     }
     .card-wheel .game-play-pill { color: var(--amber); border: 1px solid rgba(251, 191, 36, 0.4); }
 
@@ -143,9 +255,9 @@
       border-color: rgba(129, 140, 248, 0.38);
     }
     .card-jeopardy:hover {
-      transform: translateY(-6px) scale(1.02);
+      transform: translateY(-5px) scale(1.015);
       border-color: #818cf8;
-      box-shadow: 0 14px 34px rgba(129, 140, 248, 0.25), 0 0 18px rgba(129, 140, 248, 0.2);
+      box-shadow: 0 12px 30px rgba(129, 140, 248, 0.25);
     }
     .card-jeopardy .game-play-pill { color: #a5b4fc; border: 1px solid rgba(129, 140, 248, 0.45); }
 
@@ -154,9 +266,9 @@
       border-color: rgba(158, 255, 51, 0.35);
     }
     .card-scramble:hover {
-      transform: translateY(-6px) scale(1.02);
+      transform: translateY(-5px) scale(1.015);
       border-color: var(--lime);
-      box-shadow: 0 14px 34px rgba(158, 255, 51, 0.22), 0 0 18px rgba(158, 255, 51, 0.2);
+      box-shadow: 0 12px 30px rgba(158, 255, 51, 0.22);
     }
     .card-scramble .game-play-pill { color: var(--lime); border: 1px solid rgba(158, 255, 51, 0.4); }
 
@@ -165,9 +277,9 @@
       border-color: rgba(251, 113, 133, 0.38);
     }
     .card-tower:hover {
-      transform: translateY(-6px) scale(1.02);
+      transform: translateY(-5px) scale(1.015);
       border-color: var(--rose);
-      box-shadow: 0 14px 34px rgba(251, 113, 133, 0.25), 0 0 18px rgba(251, 113, 133, 0.2);
+      box-shadow: 0 12px 30px rgba(251, 113, 133, 0.25);
     }
     .card-tower .game-play-pill { color: var(--rose); border: 1px solid rgba(251, 113, 133, 0.45); }
 
@@ -176,19 +288,19 @@
       border-color: rgba(52, 211, 153, 0.38);
     }
     .card-clock:hover {
-      transform: translateY(-6px) scale(1.02);
+      transform: translateY(-5px) scale(1.015);
       border-color: #34d399;
-      box-shadow: 0 14px 34px rgba(52, 211, 153, 0.25), 0 0 18px rgba(52, 211, 153, 0.2);
+      box-shadow: 0 12px 30px rgba(52, 211, 153, 0.25);
     }
     .card-clock .game-play-pill { color: #34d399; border: 1px solid rgba(52, 211, 153, 0.45); }
 
     /* =========================================================================
-       ZERO-SCROLL VIEWPORT-LOCKED GAME MODAL (Fits Mobile & Desktop 100%)
+       ACTIVE GAME MODAL (Arial High-Legibility Fonts +5% Larger)
        ========================================================================= */
     .arcade-modal-backdrop {
       position: fixed;
       inset: 0;
-      background: rgba(3, 6, 12, 0.92);
+      background: rgba(3, 6, 12, 0.94);
       backdrop-filter: blur(14px);
       -webkit-backdrop-filter: blur(14px);
       z-index: 9999;
@@ -208,29 +320,29 @@
 
     .arcade-modal-window {
       background: #080c16;
-      border: 1px solid rgba(34, 211, 238, 0.35);
+      border: 1px solid rgba(34, 211, 238, 0.38);
       border-radius: 14px;
       width: 100%;
-      max-width: 920px;
+      max-width: 940px;
       height: calc(100dvh - 1rem);
-      max-height: 680px;
+      max-height: 700px;
       display: flex;
       flex-direction: column;
-      box-shadow: 0 25px 70px rgba(0, 0, 0, 0.9), 0 0 35px rgba(34, 211, 238, 0.14);
+      box-shadow: 0 25px 70px rgba(0, 0, 0, 0.92), 0 0 35px rgba(34, 211, 238, 0.14);
       overflow: hidden;
       animation: cabinetZoomIn 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+      font-family: Arial, Helvetica, sans-serif;
     }
     @keyframes cabinetZoomIn {
       from { transform: scale(0.94) translateY(14px); opacity: 0; }
       to { transform: scale(1) translateY(0); opacity: 1; }
     }
 
-    /* Ultra-Compact Top Bar so it never crowds the screen */
     .arcade-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0.5rem 0.75rem;
+      padding: 0.55rem 0.85rem;
       border-bottom: 1px solid var(--border-slate);
       background: #0b111e;
       gap: 0.4rem;
@@ -239,7 +351,7 @@
 
     .arcade-game-title {
       font-family: 'Archivo Black', sans-serif;
-      font-size: 0.86rem;
+      font-size: 0.92rem;
       color: #fff;
       text-transform: uppercase;
       white-space: nowrap;
@@ -250,15 +362,15 @@
     .arcade-tracker-hud {
       display: flex;
       align-items: center;
-      gap: 0.35rem;
+      gap: 0.4rem;
       flex-shrink: 0;
     }
 
     .arcade-stat-badge {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.7rem;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 0.78rem;
       font-weight: 700;
-      padding: 0.22rem 0.48rem;
+      padding: 0.24rem 0.55rem;
       border-radius: 6px;
       background: rgba(255, 255, 255, 0.04);
       border: 1px solid var(--border-slate);
@@ -272,17 +384,19 @@
     .arcade-nav-controls {
       display: flex;
       align-items: center;
-      gap: 0.35rem;
+      gap: 0.4rem;
       flex-shrink: 0;
     }
     .btn-hud-icon {
       background: #131c31;
       border: 1px solid var(--border-slate);
       color: #fff;
-      width: 30px;
-      height: 30px;
+      width: 32px;
+      height: 32px;
       border-radius: 7px;
-      font-size: 0.82rem;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 0.9rem;
+      font-weight: 700;
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -294,18 +408,17 @@
       background: var(--cyan-dim);
     }
     .btn-hud-icon.close-btn {
-      border-color: rgba(251, 113, 133, 0.45);
+      border-color: rgba(251, 113, 133, 0.5);
       color: var(--rose);
     }
     .btn-hud-icon.close-btn:hover {
-      background: rgba(251, 113, 133, 0.2);
+      background: rgba(251, 113, 133, 0.22);
       color: #fff;
     }
 
-    /* Main Arena Body — Locked to remaining height with no scrolling needed */
     .arcade-body {
       flex: 1;
-      padding: 0.65rem;
+      padding: 0.75rem;
       overflow: hidden;
       display: flex;
       flex-direction: column;
@@ -314,10 +427,10 @@
     }
 
     .stage-screen {
-      background: rgba(11, 17, 30, 0.92);
+      background: rgba(11, 17, 30, 0.94);
       border: 1px solid var(--border-slate);
       border-radius: 11px;
-      padding: 0.7rem;
+      padding: 0.85rem;
       height: 100%;
       display: flex;
       flex-direction: column;
@@ -331,18 +444,36 @@
     }
 
     .prompt-banner {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.84rem;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: clamp(0.95rem, 2.2vw, 1.15rem);
+      font-weight: 700;
       color: #fff;
       text-align: center;
-      line-height: 1.35;
-      padding: 0.25rem 0.4rem;
+      line-height: 1.4;
+      padding: 0.3rem 0.5rem;
       flex-shrink: 0;
     }
-    .prompt-banner span { color: var(--cyan); font-weight: 700; }
+    .prompt-banner span { color: var(--cyan); }
+
+    .arcade-btn-action {
+      background: var(--bg-sidebar);
+      color: #fff;
+      border: 1px solid var(--border-slate);
+      border-radius: 8px;
+      padding: 0.6rem 1.05rem;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 0.92rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.18s ease;
+    }
+    .arcade-btn-action:hover {
+      border-color: var(--cyan);
+      background: var(--cyan-dim);
+    }
 
     /* =========================================================================
-       1. LASER BLASTER (Bounded Radar Arena)
+       1. LASER BLASTER
        ========================================================================= */
     .blaster-radar-screen {
       position: relative;
@@ -363,19 +494,19 @@
     .blaster-target-node {
       position: absolute;
       transform: translate(-50%, -50%);
-      background: rgba(13, 18, 28, 0.95);
-      border: 1.5px solid var(--rose);
+      background: rgba(13, 18, 28, 0.96);
+      border: 2px solid var(--rose);
       border-radius: 999px;
-      padding: 0.38rem 0.72rem;
+      padding: 0.45rem 0.9rem;
       color: #fff;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.76rem;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: clamp(0.86rem, 2vw, 0.98rem);
       font-weight: 700;
       cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 0.3rem;
-      box-shadow: 0 0 12px rgba(251, 113, 133, 0.4);
+      gap: 0.35rem;
+      box-shadow: 0 0 14px rgba(251, 113, 133, 0.4);
       white-space: nowrap;
       z-index: 5;
       animation: gentleBob 2.4s ease-in-out infinite alternate;
@@ -394,9 +525,9 @@
       position: absolute;
       bottom: 8px;
       left: 50%;
-      width: 46px;
-      height: 46px;
-      margin-left: -23px;
+      width: 48px;
+      height: 48px;
+      margin-left: -24px;
       background: radial-gradient(circle, #22d3ee 0%, #0e7490 80%);
       border: 2px solid #fff;
       border-radius: 50%;
@@ -419,7 +550,7 @@
       position: absolute;
       background: linear-gradient(to top, var(--cyan), var(--lime), #ffffff);
       width: 4px;
-      bottom: 31px;
+      bottom: 32px;
       left: 50%;
       transform-origin: bottom center;
       box-shadow: 0 0 14px var(--lime), 0 0 5px #fff;
@@ -430,7 +561,7 @@
     }
 
     /* =========================================================================
-       2. WHEEL OF CISSP (Fits 100% on One Screen Without Scrolling)
+       2. WHEEL OF CISSP (Crisp Arial Letters & +5% Larger Keys)
        ========================================================================= */
     .wheel-arena-layout {
       display: flex;
@@ -438,13 +569,13 @@
       justify-content: space-between;
       align-items: center;
       height: 100%;
-      gap: 0.35rem;
+      gap: 0.45rem;
     }
     .wheel-top-row {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 1rem;
+      gap: 1.1rem;
       width: 100%;
     }
     .wheel-widget {
@@ -457,17 +588,17 @@
     .wheel-pointer-down {
       width: 0;
       height: 0;
-      border-left: 9px solid transparent;
-      border-right: 9px solid transparent;
-      border-top: 15px solid var(--rose);
+      border-left: 10px solid transparent;
+      border-right: 10px solid transparent;
+      border-top: 16px solid var(--rose);
       margin-bottom: -4px;
       z-index: 10;
       filter: drop-shadow(0 2px 4px rgba(251,113,133,0.85));
     }
     .wheel-circle-wrap {
       position: relative;
-      width: 148px;
-      height: 148px;
+      width: 154px;
+      height: 154px;
       border-radius: 50%;
       border: 2.5px solid var(--cyan);
       box-shadow: 0 0 16px rgba(34,211,238,0.22);
@@ -481,10 +612,10 @@
       background: var(--bg-card);
       border: 2px solid var(--cyan);
       border-radius: 50%;
-      width: 44px;
-      height: 44px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.6rem;
+      width: 46px;
+      height: 46px;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 0.72rem;
       font-weight: 700;
       color: #fff;
       cursor: pointer;
@@ -497,26 +628,27 @@
     .wheel-info-col {
       display: flex;
       flex-direction: column;
-      gap: 0.3rem;
+      gap: 0.35rem;
       text-align: left;
       flex: 1;
       min-width: 0;
+      font-family: Arial, Helvetica, sans-serif;
     }
     .wheel-slots {
       display: flex;
       justify-content: center;
-      gap: 0.28rem;
+      gap: 0.35rem;
       flex-wrap: wrap;
       width: 100%;
     }
     .wheel-slot {
-      width: 26px;
-      height: 32px;
-      background: rgba(255,255,255,0.04);
+      width: 30px;
+      height: 36px;
+      background: rgba(255,255,255,0.05);
       border: 1.5px solid var(--border-slate);
       border-radius: 6px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.95rem;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 1.12rem;
       color: var(--lime);
       display: flex;
       align-items: center;
@@ -526,30 +658,31 @@
     .alphabet-grid {
       display: grid;
       grid-template-columns: repeat(9, 1fr);
-      gap: 0.28rem;
+      gap: 0.34rem;
       width: 100%;
     }
     .alpha-key {
-      background: #111827;
-      border: 1px solid var(--border-slate);
-      border-radius: 5px;
-      padding: 0.38rem 0.1rem;
-      color: #fff;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.76rem;
+      background: #131c31;
+      border: 1px solid rgba(148, 163, 184, 0.28);
+      border-radius: 6px;
+      padding: 0.46rem 0.15rem;
+      color: #ffffff;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 0.94rem;
       font-weight: 700;
+      letter-spacing: 0.02em;
       cursor: pointer;
     }
     .alpha-key:hover:not(:disabled) { border-color: var(--cyan); background: var(--cyan-dim); }
     .alpha-key:disabled { opacity: 0.25; cursor: not-allowed; }
 
     /* =========================================================================
-       3. ISACA JEOPARDY (Zero Horizontal or Vertical Scroll)
+       3. ISACA JEOPARDY
        ========================================================================= */
     .jeopardy-grid-6x6 {
       display: grid;
       grid-template-columns: repeat(6, 1fr);
-      gap: 0.32rem;
+      gap: 0.35rem;
       flex: 1;
       align-content: stretch;
     }
@@ -557,26 +690,27 @@
       background: rgba(34, 211, 238, 0.12);
       border: 1px solid var(--cyan);
       border-radius: 6px;
-      padding: 0.3rem 0.15rem;
+      padding: 0.35rem 0.2rem;
       color: #fff;
-      font-family: 'Archivo Black', sans-serif;
-      font-size: clamp(0.48rem, 1.4vw, 0.72rem);
+      font-family: Arial, Helvetica, sans-serif;
+      font-weight: 700;
+      font-size: clamp(0.58rem, 1.5vw, 0.82rem);
       text-transform: uppercase;
       display: flex;
       align-items: center;
       justify-content: center;
       text-align: center;
       line-height: 1.15;
-      word-break: break-word;
     }
     .jeopardy-tile {
       background: #111827;
       border: 1.5px solid var(--cyan);
       border-radius: 6px;
-      padding: 0.35rem 0.1rem;
+      padding: 0.4rem 0.1rem;
       color: var(--lime);
-      font-family: 'Archivo Black', sans-serif;
-      font-size: clamp(0.68rem, 2vw, 1.05rem);
+      font-family: Arial, Helvetica, sans-serif;
+      font-weight: 700;
+      font-size: clamp(0.78rem, 2.2vw, 1.15rem);
       cursor: pointer;
       transition: all 0.15s ease;
     }
@@ -590,7 +724,7 @@
     .jeopardy-mc-list {
       display: flex;
       flex-direction: column;
-      gap: 0.45rem;
+      gap: 0.5rem;
       flex: 1;
       justify-content: center;
     }
@@ -598,26 +732,27 @@
       background: #111827;
       border: 1px solid var(--border-slate);
       border-radius: 8px;
-      padding: 0.58rem 0.75rem;
+      padding: 0.68rem 0.85rem;
       color: #fff;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 0.82rem;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: clamp(0.9rem, 2vw, 1.02rem);
+      font-weight: 600;
       cursor: pointer;
       display: flex;
       align-items: center;
-      gap: 0.6rem;
+      gap: 0.65rem;
       text-align: left;
     }
     .jeopardy-mc-btn:hover { border-color: var(--cyan); background: var(--cyan-dim); }
     .mc-letter {
-      font-family: 'JetBrains Mono', monospace;
+      font-family: Arial, Helvetica, sans-serif;
       font-weight: 700;
       color: var(--cyan);
       background: rgba(34, 211, 238, 0.12);
       border: 1px solid rgba(34, 211, 238, 0.35);
       border-radius: 4px;
-      padding: 0.12rem 0.42rem;
-      font-size: 0.72rem;
+      padding: 0.16rem 0.48rem;
+      font-size: 0.84rem;
       flex-shrink: 0;
     }
 
@@ -627,18 +762,18 @@
     .scramble-slots {
       display: flex;
       justify-content: center;
-      gap: 0.35rem;
-      min-height: 42px;
+      gap: 0.42rem;
+      min-height: 46px;
       flex-wrap: wrap;
       align-items: center;
     }
     .scramble-tile {
-      background: rgba(34, 211, 238, 0.12);
-      border: 1px solid var(--cyan);
+      background: rgba(34, 211, 238, 0.14);
+      border: 1.5px solid var(--cyan);
       border-radius: 7px;
-      padding: 0.45rem 0.75rem;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 1rem;
+      padding: 0.52rem 0.85rem;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 1.12rem;
       color: #fff;
       font-weight: 700;
       cursor: pointer;
@@ -646,7 +781,7 @@
     .scramble-tile:hover { background: var(--cyan); color: #000; }
 
     /* =========================================================================
-       5. TOWER DEFENDER (Real Animated Tower Defense)
+       5. TOWER DEFENDER
        ========================================================================= */
     .td-battlefield {
       position: relative;
@@ -726,8 +861,8 @@
       font-size: 0.72rem;
     }
     .td-tower-label {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.5rem;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 0.56rem;
       color: var(--cyan);
       font-weight: 700;
     }
@@ -741,8 +876,8 @@
       border-radius: 9px;
       padding: 0.35rem 0.6rem;
       color: #fff;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.64rem;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 0.7rem;
       font-weight: 700;
       box-shadow: 0 0 14px rgba(251, 113, 133, 0.4);
       display: flex;
@@ -751,7 +886,7 @@
       z-index: 7;
       white-space: nowrap;
     }
-    .td-enemy-sprite { font-size: 1.2rem; line-height: 1; }
+    .td-enemy-sprite { font-size: 1.25rem; line-height: 1; }
     .td-laser-shot {
       position: absolute;
       left: 62px;
@@ -766,17 +901,17 @@
     .td-turret-controls {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 0.45rem;
+      gap: 0.5rem;
       flex-shrink: 0;
     }
     .td-fire-btn {
       background: #111827;
       border: 1.5px solid var(--cyan);
       border-radius: 8px;
-      padding: 0.55rem 0.3rem;
+      padding: 0.6rem 0.35rem;
       color: #fff;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.76rem;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 0.88rem;
       font-weight: 700;
       cursor: pointer;
       text-align: center;
@@ -784,12 +919,12 @@
     .td-fire-btn:hover { border-color: var(--lime); background: rgba(158, 255, 51, 0.14); }
     .td-fire-btn span {
       display: block;
-      font-size: 0.6rem;
+      font-size: 0.68rem;
       color: var(--text-secondary);
       font-weight: 400;
     }
 
-    /* Debrief & Switcher Lists */
+    /* Debrief List */
     .debrief-container {
       display: flex;
       flex-direction: column;
@@ -803,18 +938,19 @@
       background: rgba(13, 18, 28, 0.85);
       border: 1px solid var(--border-slate);
       border-left: 3px solid var(--cyan);
-      padding: 0.7rem;
+      padding: 0.75rem;
       border-radius: 8px;
+      font-family: Arial, Helvetica, sans-serif;
     }
     .debrief-card.correct-item { border-left-color: var(--lime); }
     .debrief-card.wrong-item { border-left-color: var(--rose); }
-    .debrief-title { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; font-weight: 700; color: #fff; }
-    .debrief-detail { font-size: 0.76rem; color: var(--text-secondary); line-height: 1.35; }
+    .debrief-title { font-size: 0.88rem; font-weight: 700; color: #fff; margin-bottom: 0.2rem; }
+    .debrief-detail { font-size: 0.84rem; color: var(--text-secondary); line-height: 1.4; }
 
     @media (min-width: 720px) {
-      .wheel-circle-wrap { width: 176px; height: 176px; }
-      .wheel-slot { width: 32px; height: 38px; font-size: 1.1rem; }
-      .alpha-key { padding: 0.48rem 0.2rem; font-size: 0.82rem; }
+      .wheel-circle-wrap { width: 184px; height: 184px; }
+      .wheel-slot { width: 35px; height: 42px; font-size: 1.22rem; }
+      .alpha-key { padding: 0.55rem 0.22rem; font-size: 1.02rem; }
     }
   </style>
 </head>
@@ -872,17 +1008,76 @@
       </nav>
     </aside>
 
+    <!-- Underlying CISSP Study Hub Layer -->
     <div class="main-area">
       <div class="topbar">
-        <div class="breadcrumb">JESSE'S STUDY GUIDES / CISSP / <span>REMEMBER GAMES</span></div>
+        <div class="breadcrumb">JESSE'S STUDY GUIDES / <span>CISSP</span></div>
         <div class="status-pill"><span class="status-dot"></span> SYSTEM ONLINE</div>
       </div>
 
-      <main class="content-body" id="game-main">
-        <div class="eyebrow">Remember key exam details through gaming</div>
-        <h1 class="hero-headline">TACTICAL <span class="outline">ARCADE</span></h1>
-        <p class="arcade-intro-text">CISSP Games developed by Jesse, play until you master them all</p>
+      <main class="content-body">
+        <div class="eyebrow">Track 01 // ISC2 CISSP</div>
+        <h1 class="hero-headline">
+          CISSP<br />
+          <span class="outline">STUDY HUB</span>
+        </h1>
+        <p class="prose">Select a training module below to begin your session.</p>
 
+        <div class="module-grid">
+          <div class="module-card interactive">
+            <div>
+              <div class="module-card-head">
+                <h3>Mock Exam</h3>
+                <span class="badge live">100 Qs</span>
+              </div>
+              <p>Mastery-mode practice exam. Incorrect answers trigger immediate memory-aid feedback and require you to retry until mastered.</p>
+            </div>
+            <a href="cissp-exam.html" class="btn-lime">Launch Mock Exam &rarr;</a>
+          </div>
+
+          <div class="module-card interactive">
+            <div>
+              <div class="module-card-head">
+                <h3>Flash Cards</h3>
+                <span class="badge live">100 Cards</span>
+              </div>
+              <p>Active-recall deck covering 100 essential 2026 CISSP exam keywords, definitions, and exam-day purposes.</p>
+            </div>
+            <a href="cissp-flashcards.html" class="btn-lime">Launch Flash Cards &rarr;</a>
+          </div>
+
+          <div class="module-card interactive">
+            <div>
+              <div class="module-card-head">
+                <h3>Things to Remember</h3>
+                <span class="badge live">6 Games</span>
+              </div>
+              <p>Interactive CISSP games developed by Jesse to lock in ports, ciphers, cloud models, and incident response phases.</p>
+            </div>
+            <button type="button" class="btn-lime" onclick="openLauncherMenu()">Launch Arcade &rarr;</button>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- =======================================================================
+       OVERLAY 1: TACTICAL ARCADE MENU (Appears Over Previous Menu with ✕)
+       ======================================================================= -->
+  <div class="launcher-modal-backdrop open" id="launcher-modal" role="dialog" aria-modal="true" aria-labelledby="launcher-title">
+    <div class="launcher-modal-window">
+      <div class="launcher-header">
+        <div>
+          <div class="eyebrow" style="margin-bottom:0.35rem;">Remember key exam details through gaming</div>
+          <h2 class="hero-headline" id="launcher-title" style="font-size:clamp(1.5rem, 3vw, 2.15rem); margin-bottom:0.2rem;">
+            TACTICAL <span class="outline">ARCADE</span>
+          </h2>
+          <p class="arcade-intro-text">CISSP Games developed by Jesse, play until you master them all</p>
+        </div>
+        <button type="button" class="btn-hud-icon close-btn" title="Close Arcade Menu" onclick="closeLauncherMenu()" aria-label="Close Arcade Menu">✕</button>
+      </div>
+
+      <div class="launcher-body">
         <div class="game-choice-grid">
           <button type="button" class="game-selector-card card-blaster" onclick="launchGame(1)">
             <div class="game-card-top">
@@ -938,11 +1133,13 @@
             <div class="game-desc"><strong>Studies: NIST Incident Response Phases.</strong> Rapidly sort real-world breach actions into the 6 IR lifecycle stages.</div>
           </button>
         </div>
-      </main>
+      </div>
     </div>
   </div>
 
-  <!-- Viewport-Locked Game Modal -->
+  <!-- =======================================================================
+       OVERLAY 2: ACTIVE GAME WINDOW (With ✕ Button Returning to Arcade Menu)
+       ======================================================================= -->
   <div class="arcade-modal-backdrop" id="arcade-modal" role="dialog" aria-modal="true">
     <div class="arcade-modal-window">
       <div class="arcade-header">
@@ -953,9 +1150,8 @@
           <div class="arcade-stat-badge" id="hud-remaining-badge">🎯 <span id="hud-remaining">0</span></div>
         </div>
         <div class="arcade-nav-controls">
-          <button type="button" class="btn-hud-icon" title="Switch Game" onclick="openNewGamePrompt()">🎮</button>
           <button type="button" class="btn-hud-icon" title="Score Debrief" onclick="showDebriefSummary()">📊</button>
-          <button type="button" class="btn-hud-icon close-btn" title="Close Game" onclick="closeArcadeModal()">✕</button>
+          <button type="button" class="btn-hud-icon close-btn" title="Close Game to Arcade Menu" onclick="closeGameToLauncher()">✕</button>
         </div>
       </div>
       <div class="arcade-body" id="arcade-body-content"></div>
@@ -964,12 +1160,12 @@
 
   <!-- Answer Feedback / Timeout Modal -->
   <div class="modal-backdrop" id="feedback-modal" role="dialog" aria-modal="true" style="z-index: 10000;">
-    <div class="modal-box" id="feedback-box">
+    <div class="modal-box" id="feedback-box" style="font-family: Arial, Helvetica, sans-serif;">
       <div class="modal-top" style="border-bottom:none;padding-bottom:0;">
         <div class="modal-title" id="feedback-status"></div>
         <button type="button" class="modal-close" id="feedback-close-btn" aria-label="Close">✕</button>
       </div>
-      <div class="modal-body" id="feedback-body"></div>
+      <div class="modal-body" id="feedback-body" style="font-size: 0.98rem;"></div>
     </div>
   </div>
 
@@ -1171,7 +1367,7 @@
     ];
 
     /* =========================================================================
-       STATE & UTILITIES
+       STATE & OVERLAY NAVIGATION
        ========================================================================= */
     let activeGameId = null;
     let activeQueue = [];
@@ -1211,6 +1407,7 @@
     let activeTimerContext = null;
     let pendingTimeoutAdvance = false;
 
+    const launcherModal = document.getElementById("launcher-modal");
     const arcadeModal = document.getElementById("arcade-modal");
     const arcadeTitle = document.getElementById("arcade-game-title");
     const arcadeBody = document.getElementById("arcade-body-content");
@@ -1226,6 +1423,29 @@
     const feedbackStatus = document.getElementById("feedback-status");
     const feedbackBody = document.getElementById("feedback-body");
     const feedbackCloseBtn = document.getElementById("feedback-close-btn");
+
+    function openLauncherMenu() {
+      stopGameTimer();
+      arcadeModal.classList.remove("open");
+      launcherModal.classList.add("open");
+    }
+
+    function closeLauncherMenu() {
+      stopGameTimer();
+      launcherModal.classList.remove("open");
+    }
+
+    function closeGameToLauncher() {
+      stopGameTimer();
+      feedbackModal.classList.remove("open");
+      arcadeModal.classList.remove("open");
+      launcherModal.classList.add("open");
+    }
+
+    // Close Tactical Arcade Menu if clicking backdrop outside window
+    launcherModal.addEventListener("click", (e) => {
+      if (e.target === launcherModal) closeLauncherMenu();
+    });
 
     function shuffleArray(arr) {
       const copy = [...arr];
@@ -1290,12 +1510,6 @@
       }
     }
 
-    function closeArcadeModal() {
-      stopGameTimer();
-      feedbackModal.classList.remove("open");
-      arcadeModal.classList.remove("open");
-    }
-
     function updateRemainingHud() {
       hudRemaining.textContent = activeGameId === 3 ? jeopardyRemainingCount : activeQueue.length;
     }
@@ -1305,6 +1519,7 @@
       pendingTimeoutAdvance = false;
       activeGameId = gameId;
       sessionLog = [];
+      launcherModal.classList.remove("open");
       arcadeModal.classList.add("open");
 
       hudCashBadge.style.display = "none";
@@ -1341,25 +1556,6 @@
       }
     }
 
-    function openNewGamePrompt() {
-      stopGameTimer();
-      hudCashBadge.style.display = "none";
-      hudTimerBadge.style.display = "none";
-      arcadeTitle.textContent = "Switch Game";
-      arcadeBody.innerHTML = `
-        <div class="stage-screen" style="justify-content:center; overflow-y:auto;">
-          <div class="game-choice-grid" style="margin:0;">
-            <button class="game-selector-card card-blaster" style="padding:0.85rem;" onclick="launchGame(1)"><div class="game-title" style="font-size:0.95rem;">🎯 Laser Blaster</div></button>
-            <button class="game-selector-card card-wheel" style="padding:0.85rem;" onclick="launchGame(2)"><div class="game-title" style="font-size:0.95rem;">🎡 Wheel of CISSP</div></button>
-            <button class="game-selector-card card-jeopardy" style="padding:0.85rem;" onclick="launchGame(3)"><div class="game-title" style="font-size:0.95rem;">🏆 ISACA Jeopardy</div></button>
-            <button class="game-selector-card card-scramble" style="padding:0.85rem;" onclick="launchGame(4)"><div class="game-title" style="font-size:0.95rem;">🧩 Unscramble Concepts</div></button>
-            <button class="game-selector-card card-tower" style="padding:0.85rem;" onclick="launchGame(5)"><div class="game-title" style="font-size:0.95rem;">🏰 Tower Defender</div></button>
-            <button class="game-selector-card card-clock" style="padding:0.85rem;" onclick="launchGame(6)"><div class="game-title" style="font-size:0.95rem;">⚡ Beat the Clock</div></button>
-          </div>
-        </div>
-      `;
-    }
-
     function showDebriefSummary() {
       stopGameTimer();
       hudTimerBadge.style.display = "none";
@@ -1383,16 +1579,15 @@
           <div class="prompt-banner">SCORE: <span style="color:var(--lime);">${correctCount} Right</span> / <span style="color:var(--rose);">${wrongCount} Missed</span></div>
           <div class="debrief-container">${listHtml}</div>
           <div style="display:flex; gap:0.5rem; justify-content:center; padding-top:0.5rem;">
-            <button class="arcade-btn-action" style="background:var(--lime); color:#000;" onclick="launchGame(${activeGameId || 1})">Play Again</button>
-            <button class="arcade-btn-action" onclick="openNewGamePrompt()">Switch Game</button>
-            <button class="arcade-btn-action" style="color:var(--rose);" onclick="closeArcadeModal()">Exit</button>
+            <button type="button" class="arcade-btn-action" style="background:var(--lime); color:#000;" onclick="launchGame(${activeGameId || 1})">Play Again</button>
+            <button type="button" class="arcade-btn-action" onclick="closeGameToLauncher()">Arcade Menu</button>
           </div>
         </div>
       `;
     }
 
     /* =========================================================================
-       1. LASER BLASTER (Safe Mobile Bounds + Aimed Laser Turret)
+       1. LASER BLASTER
        ========================================================================= */
     let blasterFiring = false;
 
@@ -1413,7 +1608,6 @@
       }
       choices = shuffleArray(choices);
 
-      // Center-anchored safe coordinates so buttons never clip off mobile screens
       const positions = [
         { top: "22%", left: "26%" },
         { top: "22%", left: "74%" },
@@ -1457,7 +1651,7 @@
         const btnRect = btnEl.getBoundingClientRect();
 
         const originX = radarRect.width / 2;
-        const originY = radarRect.height - 31;
+        const originY = radarRect.height - 32;
         const targetX = (btnRect.left - radarRect.left) + (btnRect.width / 2);
         const targetY = (btnRect.top - radarRect.top) + (btnRect.height / 2);
 
@@ -1487,7 +1681,7 @@
     }
 
     /* =========================================================================
-       2. WHEEL OF CISSP (Zero-Scroll Single Screen + Synced Downward Ticker)
+       2. WHEEL OF CISSP
        ========================================================================= */
     function nextWheelRound() {
       stopGameTimer();
@@ -1510,7 +1704,7 @@
       let solved = true;
       for (let ch of wheelSecret) {
         if (ch === " " || ch === "-") {
-          slotsHtml += `<div class="wheel-slot" style="background:transparent; border:none; width:14px;">${ch}</div>`;
+          slotsHtml += `<div class="wheel-slot" style="background:transparent; border:none; width:16px;">${ch}</div>`;
         } else if (wheelGuessed.has(ch)) {
           slotsHtml += `<div class="wheel-slot">${ch}</div>`;
         } else {
@@ -1535,16 +1729,16 @@
               <div class="wheel-widget">
                 <div class="wheel-pointer-down"></div>
                 <div class="wheel-circle-wrap">
-                  <canvas id="fortune-wheel-canvas" width="176" height="176" style="width:100%; height:100%; transition:transform 2.8s cubic-bezier(0.15, 0.85, 0.15, 1); transform:rotate(${wheelCurrentAngle}deg);"></canvas>
+                  <canvas id="fortune-wheel-canvas" width="184" height="184" style="width:100%; height:100%; transition:transform 2.8s cubic-bezier(0.15, 0.85, 0.15, 1); transform:rotate(${wheelCurrentAngle}deg);"></canvas>
                   <button type="button" class="wheel-spin-center-btn" id="spin-wheel-btn" onclick="spinFortuneWheel()" ${wheelIsSpinning || currentWheelSlice ? "disabled" : ""}>SPIN</button>
                 </div>
               </div>
               <div class="wheel-info-col">
-                <div style="font-family:'JetBrains Mono',monospace; font-size:0.74rem; color:var(--lime);">Round Bank: $${wheelRoundCash}</div>
-                <div style="font-family:'JetBrains Mono',monospace; font-size:0.78rem; color:var(--cyan);">
+                <div style="font-size:0.86rem; font-weight:700; color:var(--lime);">Round Bank: $${wheelRoundCash}</div>
+                <div style="font-size:0.9rem; font-weight:700; color:var(--cyan);">
                   ${currentWheelSlice ? `Landed on: <strong style="color:var(--lime);">${currentWheelSlice.text}</strong>` : "Tap SPIN on the wheel!"}
                 </div>
-                <div style="font-size:0.8rem; color:#e2e8f0; line-height:1.35;">"${currentItem.hint}"</div>
+                <div style="font-size:0.92rem; color:#f1f5f9; line-height:1.4;">"${currentItem.hint}"</div>
               </div>
             </div>
 
@@ -1570,9 +1764,9 @@
       const arc = (2 * Math.PI) / numSlices;
       const colors = ["#0e7490", "#1e3a8a", "#047857", "#b45309", "#4338ca", "#0f766e", "#6d28d9", "#1d4ed8"];
 
-      ctx.clearRect(0, 0, 176, 176);
+      ctx.clearRect(0, 0, 184, 184);
       ctx.save();
-      ctx.translate(88, 88);
+      ctx.translate(92, 92);
 
       wheelSlices.forEach((slice, i) => {
         const angle = i * arc;
@@ -1581,18 +1775,18 @@
         if (slice.type === "bankrupt") ctx.fillStyle = "#991b1b";
         if (slice.type === "lose") ctx.fillStyle = "#374151";
         ctx.moveTo(0, 0);
-        ctx.arc(0, 0, 88, angle, angle + arc);
+        ctx.arc(0, 0, 92, angle, angle + arc);
         ctx.lineTo(0, 0);
         ctx.fill();
-        ctx.strokeStyle = "rgba(255,255,255,0.2)";
+        ctx.strokeStyle = "rgba(255,255,255,0.22)";
         ctx.stroke();
 
         ctx.save();
         ctx.rotate(angle + arc / 2);
         ctx.textAlign = "right";
         ctx.fillStyle = "#fff";
-        ctx.font = "bold 9px 'JetBrains Mono', monospace";
-        ctx.fillText(slice.text, 78, 3);
+        ctx.font = "bold 10px Arial, Helvetica, sans-serif";
+        ctx.fillText(slice.text, 82, 4);
         ctx.restore();
       });
 
@@ -1610,7 +1804,6 @@
       const sliceAngle = 360 / wheelSlices.length;
       const sliceCenterAngle = randomSliceIdx * sliceAngle + sliceAngle / 2;
 
-      // Top downward pointer sits at 270 deg in standard canvas polar coordinates
       const desiredMod = (270 - sliceCenterAngle + 360) % 360;
       const currentMod = ((wheelCurrentAngle % 360) + 360) % 360;
       const delta = (desiredMod - currentMod + 360) % 360;
@@ -1654,7 +1847,7 @@
     }
 
     /* =========================================================================
-       3. ISACA JEOPARDY (Fits 100% Width & Height on Mobile)
+       3. ISACA JEOPARDY
        ========================================================================= */
     function initJeopardyBoard() {
       jeopardyCash = 0;
@@ -1780,7 +1973,7 @@
           <div class="prompt-banner">Unscramble: <span>"${currentItem.hint}"</span></div>
           <div class="scramble-slots">
             ${userScrambleChoice.map(item => `<button type="button" class="scramble-tile" onclick="returnTile(${item.id})">${item.char}</button>`).join("")}
-            ${userScrambleChoice.length === 0 ? '<span style="color:var(--text-secondary); font-size:0.8rem;">Tap letters below to build the word</span>' : ''}
+            ${userScrambleChoice.length === 0 ? '<span style="color:var(--text-secondary); font-size:0.88rem;">Tap letters below to build the word</span>' : ''}
           </div>
           <div class="scramble-slots">
             ${scrambleTiles.map(item => item.used ? '' : `<button type="button" class="scramble-tile" onclick="pickTile(${item.id})">${item.char}</button>`).join("")}
@@ -1820,7 +2013,7 @@
     }
 
     /* =========================================================================
-       5. TOWER DEFENDER (Real Animated Tower Defense)
+       5. TOWER DEFENDER
        ========================================================================= */
     function nextCloudRound() {
       stopGameTimer();
@@ -1971,7 +2164,7 @@
           <div class="prompt-banner">NIST IR Stage For:<br><span>"${currentItem.task}"</span></div>
           <div style="display:grid; grid-template-columns: repeat(2, 1fr); gap:0.55rem;">
             ${phases.map(p => `
-              <button type="button" class="arcade-btn-action" style="padding:0.75rem 0.5rem; text-align:left;"
+              <button type="button" class="arcade-btn-action" style="padding:0.8rem 0.6rem; text-align:left;"
                 onclick="processIncidentChoice('${p.key}', '${currentItem.phase}', '${currentItem.task.replace(/'/g, "\\'")}', '${currentItem.explanation.replace(/'/g, "\\'")}')">
                 ${p.label}
               </button>
