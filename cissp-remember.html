@@ -2,321 +2,407 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>CISSP Remember Engine | Jesse's Study Guides</title>
-  <meta name="description" content="Immersive tactical arcade mini-games to help you master CISSP ports, ciphers, and mitigations." />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>CISSP Games | Jesse's Study Guides</title>
+  <meta name="description" content="CISSP Games developed by Jesse—play Laser Blaster, Wheel of CISSP, ISACA Jeopardy, Unscramble Concepts, Tower Defender, and Beat the Clock." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
   <style>
-    /* Hover Transitions & Custom Arcade Styling */
     .arcade-intro-text {
       color: var(--text-secondary);
-      line-height: 1.6;
+      line-height: 1.55;
       font-size: 0.98rem;
-      margin-bottom: 1.5rem;
+      margin-bottom: 1.4rem;
     }
 
+    /* =========================================================================
+       CONSOLE GAMING LAUNCHER MENU (6 Distinct Cards + Animated Transitions)
+       ========================================================================= */
     .game-choice-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-      gap: 1.25rem;
-      margin-top: 1rem;
+      grid-template-columns: repeat(auto-fit, minmax(265px, 1fr));
+      gap: 1.15rem;
+      margin-top: 0.75rem;
+      perspective: 1000px;
     }
 
-    /* Distinct Visual Cabinet Identities */
     .game-selector-card {
-      background: rgba(13, 18, 28, 0.95);
-      border: 1px solid var(--border-slate);
-      border-radius: 12px;
-      padding: 1.35rem;
+      position: relative;
+      border-radius: 14px;
+      padding: 1.25rem 1.3rem;
       cursor: pointer;
       text-align: left;
-      position: relative;
       overflow: hidden;
-      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1),
+                  box-shadow 0.32s cubic-bezier(0.22, 1, 0.36, 1),
+                  border-color 0.25s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+      isolation: isolate;
     }
-    .game-selector-card::before {
+
+    /* Animated diagonal light sweep on hover */
+    .game-selector-card::after {
       content: "";
       position: absolute;
-      left: 0; top: 0; bottom: 0;
-      width: 4px;
-      transition: all 0.3s ease;
+      inset: -50%;
+      background: linear-gradient(115deg, transparent 40%, rgba(255, 255, 255, 0.12) 50%, transparent 60%);
+      transform: translateX(-100%) rotate(15deg);
+      transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+      pointer-events: none;
+      z-index: 1;
+    }
+    .game-selector-card:hover::after {
+      transform: translateX(100%) rotate(15deg);
     }
 
-    /* Game 1 Accent: Neon Cyan */
-    #card-g1::before { background: var(--cyan); }
-    #card-g1:hover {
-      border-color: var(--cyan);
-      box-shadow: 0 0 25px rgba(34, 211, 238, 0.2);
-      transform: translateY(-4px) scale(1.02);
-    }
-    /* Game 2 Accent: Gold/Amber */
-    #card-g2::before { background: var(--amber); }
-    #card-g2:hover {
-      border-color: var(--amber);
-      box-shadow: 0 0 25px rgba(251, 191, 36, 0.2);
-      transform: translateY(-4px) scale(1.02);
-    }
-    /* Game 3 Accent: Electric Indigo */
-    #card-g3::before { background: var(--indigo); }
-    #card-g3:hover {
-      border-color: var(--indigo);
-      box-shadow: 0 0 25px rgba(129, 140, 248, 0.2);
-      transform: translateY(-4px) scale(1.02);
-    }
-    /* Game 4 Accent: Neon Lime */
-    #card-g4::before { background: var(--lime); }
-    #card-g4:hover {
-      border-color: var(--lime);
-      box-shadow: 0 0 25px rgba(158, 255, 51, 0.2);
-      transform: translateY(-4px) scale(1.02);
-    }
-    /* Game 5 Accent: Rose */
-    #card-g5::before { background: var(--rose); }
-    #card-g5:hover {
-      border-color: var(--rose);
-      box-shadow: 0 0 25px rgba(251, 113, 133, 0.2);
-      transform: translateY(-4px) scale(1.02);
-    }
-    /* Game 6 Accent: White/Slate */
-    #card-g6::before { background: var(--text-secondary); }
-    #card-g6:hover {
-      border-color: #fff;
-      box-shadow: 0 0 25px rgba(255, 255, 255, 0.15);
-      transform: translateY(-4px) scale(1.02);
+    .game-card-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.5rem;
     }
 
-    .game-selector-card:hover::before {
-      width: 8px;
+    .game-icon-badge {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+    .game-selector-card:hover .game-icon-badge {
+      transform: scale(1.16) rotate(-6deg);
     }
 
-    .game-focus-tag {
+    .game-play-pill {
       font-family: 'JetBrains Mono', monospace;
       font-size: 0.65rem;
+      font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.08em;
-      color: var(--cyan);
-      margin-bottom: 0.45rem;
+      padding: 0.22rem 0.6rem;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.06);
+      color: #fff;
+      transition: all 0.25s ease;
     }
-    #card-g2 .game-focus-tag { color: var(--amber); }
-    #card-g3 .game-focus-tag { color: var(--indigo); }
-    #card-g4 .game-focus-tag { color: var(--lime); }
-    #card-g5 .game-focus-tag { color: var(--rose); }
-    #card-g6 .game-focus-tag { color: var(--text-secondary); }
+    .game-selector-card:hover .game-play-pill {
+      transform: translateX(3px);
+    }
 
     .game-title {
       font-family: 'Archivo Black', sans-serif;
-      font-size: 1.05rem;
+      font-size: 1.12rem;
       color: #fff;
-      margin-bottom: 0.45rem;
       text-transform: uppercase;
+      letter-spacing: 0.01em;
+      margin-top: 0.2rem;
     }
 
     .game-desc {
-      font-size: 0.85rem;
-      color: var(--text-secondary);
+      font-size: 0.84rem;
+      color: #cbd5e1;
       line-height: 1.45;
     }
-    .game-desc strong { color: #fff; font-weight: 600; }
+    .game-desc strong { color: #fff; }
+
+    /* 6 Distinct Game Card Themes */
+    .card-blaster {
+      background: radial-gradient(circle at 90% 10%, rgba(34, 211, 238, 0.22), transparent 55%), linear-gradient(145deg, #0b1528 0%, #070b14 100%);
+      border-color: rgba(34, 211, 238, 0.35);
+    }
+    .card-blaster:hover {
+      transform: translateY(-6px) scale(1.02);
+      border-color: var(--cyan);
+      box-shadow: 0 14px 34px rgba(34, 211, 238, 0.25), 0 0 18px rgba(34, 211, 238, 0.2);
+    }
+    .card-blaster .game-play-pill { color: var(--cyan); border: 1px solid rgba(34, 211, 238, 0.4); }
+
+    .card-wheel {
+      background: radial-gradient(circle at 90% 10%, rgba(251, 191, 36, 0.22), transparent 55%), linear-gradient(145deg, #21180b 0%, #090b12 100%);
+      border-color: rgba(251, 191, 36, 0.35);
+    }
+    .card-wheel:hover {
+      transform: translateY(-6px) scale(1.02);
+      border-color: var(--amber);
+      box-shadow: 0 14px 34px rgba(251, 191, 36, 0.22), 0 0 18px rgba(251, 191, 36, 0.2);
+    }
+    .card-wheel .game-play-pill { color: var(--amber); border: 1px solid rgba(251, 191, 36, 0.4); }
+
+    .card-jeopardy {
+      background: radial-gradient(circle at 90% 10%, rgba(129, 140, 248, 0.25), transparent 55%), linear-gradient(145deg, #131633 0%, #080b16 100%);
+      border-color: rgba(129, 140, 248, 0.38);
+    }
+    .card-jeopardy:hover {
+      transform: translateY(-6px) scale(1.02);
+      border-color: #818cf8;
+      box-shadow: 0 14px 34px rgba(129, 140, 248, 0.25), 0 0 18px rgba(129, 140, 248, 0.2);
+    }
+    .card-jeopardy .game-play-pill { color: #a5b4fc; border: 1px solid rgba(129, 140, 248, 0.45); }
+
+    .card-scramble {
+      background: radial-gradient(circle at 90% 10%, rgba(158, 255, 51, 0.2), transparent 55%), linear-gradient(145deg, #112211 0%, #070b12 100%);
+      border-color: rgba(158, 255, 51, 0.35);
+    }
+    .card-scramble:hover {
+      transform: translateY(-6px) scale(1.02);
+      border-color: var(--lime);
+      box-shadow: 0 14px 34px rgba(158, 255, 51, 0.22), 0 0 18px rgba(158, 255, 51, 0.2);
+    }
+    .card-scramble .game-play-pill { color: var(--lime); border: 1px solid rgba(158, 255, 51, 0.4); }
+
+    .card-tower {
+      background: radial-gradient(circle at 90% 10%, rgba(251, 113, 133, 0.22), transparent 55%), linear-gradient(145deg, #261019 0%, #080b12 100%);
+      border-color: rgba(251, 113, 133, 0.38);
+    }
+    .card-tower:hover {
+      transform: translateY(-6px) scale(1.02);
+      border-color: var(--rose);
+      box-shadow: 0 14px 34px rgba(251, 113, 133, 0.25), 0 0 18px rgba(251, 113, 133, 0.2);
+    }
+    .card-tower .game-play-pill { color: var(--rose); border: 1px solid rgba(251, 113, 133, 0.45); }
+
+    .card-clock {
+      background: radial-gradient(circle at 90% 10%, rgba(52, 211, 153, 0.22), transparent 55%), linear-gradient(145deg, #0b2420 0%, #070b12 100%);
+      border-color: rgba(52, 211, 153, 0.38);
+    }
+    .card-clock:hover {
+      transform: translateY(-6px) scale(1.02);
+      border-color: #34d399;
+      box-shadow: 0 14px 34px rgba(52, 211, 153, 0.25), 0 0 18px rgba(52, 211, 153, 0.2);
+    }
+    .card-clock .game-play-pill { color: #34d399; border: 1px solid rgba(52, 211, 153, 0.45); }
 
     /* =========================================================================
-       Locked Viewport-Optimized Overlay Modal
+       ZERO-SCROLL VIEWPORT-LOCKED GAME MODAL (Fits Mobile & Desktop 100%)
        ========================================================================= */
     .arcade-modal-backdrop {
       position: fixed;
       inset: 0;
-      background: rgba(4, 6, 12, 0.94);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
+      background: rgba(3, 6, 12, 0.92);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
       z-index: 9999;
       display: none;
       align-items: center;
       justify-content: center;
-      padding: 1rem;
+      padding: 0.5rem;
     }
-    .arcade-modal-backdrop.open { display: flex; }
+    .arcade-modal-backdrop.open {
+      display: flex;
+      animation: backdropFade 0.22s ease-out;
+    }
+    @keyframes backdropFade {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
 
     .arcade-modal-window {
       background: #080c16;
-      border: 1px solid var(--border-slate);
-      border-radius: 16px;
+      border: 1px solid rgba(34, 211, 238, 0.35);
+      border-radius: 14px;
       width: 100%;
       max-width: 920px;
-      height: 94vh;
-      max-height: 720px;
+      height: calc(100dvh - 1rem);
+      max-height: 680px;
       display: flex;
       flex-direction: column;
-      box-shadow: 0 24px 60px rgba(0, 0, 0, 0.85), 0 0 40px rgba(34, 211, 238, 0.15);
-      position: relative;
+      box-shadow: 0 25px 70px rgba(0, 0, 0, 0.9), 0 0 35px rgba(34, 211, 238, 0.14);
       overflow: hidden;
+      animation: cabinetZoomIn 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    @keyframes cabinetZoomIn {
+      from { transform: scale(0.94) translateY(14px); opacity: 0; }
+      to { transform: scale(1) translateY(0); opacity: 1; }
     }
 
+    /* Ultra-Compact Top Bar so it never crowds the screen */
     .arcade-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
-      padding: 0.75rem 1.25rem;
+      padding: 0.5rem 0.75rem;
       border-bottom: 1px solid var(--border-slate);
-      background: #0b101c;
-      gap: 0.75rem;
-    }
-
-    .arcade-title-group {
-      display: flex;
-      align-items: center;
-      gap: 0.6rem;
-    }
-    .arcade-game-tag {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.65rem;
-      padding: 0.15rem 0.45rem;
-      border-radius: 4px;
-      background: var(--cyan-dim);
-      border: 1px solid rgba(34, 211, 238, 0.3);
-      color: var(--cyan);
-      text-transform: uppercase;
-      font-weight: 700;
+      background: #0b111e;
+      gap: 0.4rem;
+      flex-shrink: 0;
     }
 
     .arcade-game-title {
       font-family: 'Archivo Black', sans-serif;
-      font-size: 0.95rem;
+      font-size: 0.86rem;
       color: #fff;
       text-transform: uppercase;
-      letter-spacing: -0.01em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
     }
 
     .arcade-tracker-hud {
       display: flex;
       align-items: center;
-      gap: 0.5rem;
+      gap: 0.35rem;
+      flex-shrink: 0;
     }
 
     .arcade-stat-badge {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.75rem;
+      font-size: 0.7rem;
       font-weight: 700;
-      padding: 0.3rem 0.6rem;
+      padding: 0.22rem 0.48rem;
       border-radius: 6px;
-      background: rgba(255, 255, 255, 0.02);
+      background: rgba(255, 255, 255, 0.04);
       border: 1px solid var(--border-slate);
+      color: var(--cyan);
+      white-space: nowrap;
     }
-    .arcade-stat-badge.cash { color: var(--lime); border-color: rgba(158, 255, 51, 0.25); }
-    .arcade-stat-badge.timer { color: var(--cyan); border-color: rgba(34, 211, 238, 0.25); }
-    .arcade-stat-badge.timer.urgent { color: var(--rose); border-color: rgba(251, 113, 133, 0.35); }
+    .arcade-stat-badge.cash { color: var(--lime); border-color: rgba(158, 255, 51, 0.3); }
+    .arcade-stat-badge.timer { color: var(--amber); border-color: rgba(251, 191, 36, 0.35); }
+    .arcade-stat-badge.timer.urgent { color: var(--rose); border-color: rgba(251, 113, 133, 0.6); }
 
     .arcade-nav-controls {
       display: flex;
       align-items: center;
-      gap: 0.45rem;
+      gap: 0.35rem;
+      flex-shrink: 0;
     }
-    .btn-hud-control {
-      background: #111827;
+    .btn-hud-icon {
+      background: #131c31;
       border: 1px solid var(--border-slate);
-      color: var(--text-secondary);
-      width: 32px;
-      height: 32px;
-      border-radius: 6px;
-      font-size: 0.85rem;
+      color: #fff;
+      width: 30px;
+      height: 30px;
+      border-radius: 7px;
+      font-size: 0.82rem;
       cursor: pointer;
       display: flex;
       align-items: center;
       justify-content: center;
       transition: all 0.15s ease;
     }
-    .btn-hud-control:hover {
+    .btn-hud-icon:hover {
       border-color: var(--cyan);
-      color: #fff;
       background: var(--cyan-dim);
     }
+    .btn-hud-icon.close-btn {
+      border-color: rgba(251, 113, 133, 0.45);
+      color: var(--rose);
+    }
+    .btn-hud-icon.close-btn:hover {
+      background: rgba(251, 113, 133, 0.2);
+      color: #fff;
+    }
 
+    /* Main Arena Body — Locked to remaining height with no scrolling needed */
     .arcade-body {
       flex: 1;
-      padding: 1rem;
+      padding: 0.65rem;
       overflow: hidden;
       display: flex;
       flex-direction: column;
-      justify-content: center;
+      justify-content: space-between;
       position: relative;
     }
 
-    /* Screen Box Height Lockdown */
-    .arcade-screen-box {
-      background: rgba(10, 15, 28, 0.95);
+    .stage-screen {
+      background: rgba(11, 17, 30, 0.92);
       border: 1px solid var(--border-slate);
-      border-radius: 12px;
-      padding: 1rem;
+      border-radius: 11px;
+      padding: 0.7rem;
+      height: 100%;
       display: flex;
       flex-direction: column;
-      height: 100%;
       justify-content: space-between;
       overflow: hidden;
+      animation: stageSwitch 0.24s cubic-bezier(0.22, 1, 0.36, 1);
+    }
+    @keyframes stageSwitch {
+      from { opacity: 0; transform: translateY(8px) scale(0.99); }
+      to { opacity: 1; transform: translateY(0) scale(1); }
     }
 
+    .prompt-banner {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.84rem;
+      color: #fff;
+      text-align: center;
+      line-height: 1.35;
+      padding: 0.25rem 0.4rem;
+      flex-shrink: 0;
+    }
+    .prompt-banner span { color: var(--cyan); font-weight: 700; }
+
     /* =========================================================================
-       1. LASER BLASTER (Drift-Bounded Radar Shooting Range)
+       1. LASER BLASTER (Bounded Radar Arena)
        ========================================================================= */
     .blaster-radar-screen {
       position: relative;
-      background: #03060f;
-      border: 1px solid rgba(34, 211, 238, 0.35);
+      background: #030712;
+      border: 1.5px solid var(--cyan);
       border-radius: 10px;
       flex: 1;
-      min-height: 180px;
-      max-height: 250px;
+      width: 100%;
       overflow: hidden;
-      box-shadow: inset 0 0 25px rgba(34, 211, 238, 0.15);
+      box-shadow: inset 0 0 25px rgba(34, 211, 238, 0.14);
     }
     .radar-grid-lines {
       position: absolute;
       inset: 0;
-      background-image: linear-gradient(rgba(34,211,238,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(34,211,238,0.04) 1px, transparent 1px);
+      background-image: linear-gradient(rgba(34,211,238,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(34,211,238,0.05) 1px, transparent 1px);
       background-size: 26px 26px;
     }
     .blaster-target-node {
       position: absolute;
-      background: rgba(11, 16, 28, 0.94);
+      transform: translate(-50%, -50%);
+      background: rgba(13, 18, 28, 0.95);
       border: 1.5px solid var(--rose);
-      border-radius: 30px;
-      padding: 0.35rem 0.75rem;
+      border-radius: 999px;
+      padding: 0.38rem 0.72rem;
       color: #fff;
       font-family: 'JetBrains Mono', monospace;
       font-size: 0.76rem;
       font-weight: 700;
       cursor: pointer;
-      display: flex;
+      display: inline-flex;
       align-items: center;
       gap: 0.3rem;
-      box-shadow: 0 0 10px rgba(251, 113, 133, 0.35);
+      box-shadow: 0 0 12px rgba(251, 113, 133, 0.4);
+      white-space: nowrap;
       z-index: 5;
+      animation: gentleBob 2.4s ease-in-out infinite alternate;
     }
-    .blaster-target-node:hover {
-      border-color: var(--lime);
-      box-shadow: 0 0 15px rgba(52, 211, 153, 0.5);
+    @keyframes gentleBob {
+      0% { margin-top: -4px; }
+      100% { margin-top: 4px; }
     }
     .blaster-target-node.blasted {
-      transform: scale(1.1);
+      animation: none;
       border-color: var(--lime);
-      background: var(--lime-dim);
-      box-shadow: 0 0 20px var(--lime);
+      background: rgba(158, 255, 51, 0.25);
+      box-shadow: 0 0 24px var(--lime);
     }
     .cannon-turret {
       position: absolute;
-      bottom: -15px;
+      bottom: 8px;
       left: 50%;
-      width: 48px;
-      height: 48px;
-      margin-left: -24px;
+      width: 46px;
+      height: 46px;
+      margin-left: -23px;
       background: radial-gradient(circle, #22d3ee 0%, #0e7490 80%);
       border: 2px solid #fff;
       border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
       box-shadow: 0 0 18px var(--cyan);
       z-index: 10;
+      transition: transform 0.12s ease-out;
     }
     .cannon-barrel {
       position: absolute;
@@ -324,17 +410,16 @@
       left: 50%;
       transform: translateX(-50%);
       width: 10px;
-      height: 22px;
+      height: 20px;
       background: #fff;
       border: 1.5px solid var(--cyan);
       border-radius: 3px;
-      box-shadow: 0 0 8px var(--cyan);
     }
     .laser-beam {
       position: absolute;
       background: linear-gradient(to top, var(--cyan), var(--lime), #ffffff);
       width: 4px;
-      bottom: 24px;
+      bottom: 31px;
       left: 50%;
       transform-origin: bottom center;
       box-shadow: 0 0 14px var(--lime), 0 0 5px #fff;
@@ -345,86 +430,238 @@
     }
 
     /* =========================================================================
-       2. WHEEL OF CISSP (Clue + Spinner Stack)
+       2. WHEEL OF CISSP (Fits 100% on One Screen Without Scrolling)
        ========================================================================= */
-    .wheel-split {
+    .wheel-arena-layout {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: center;
+      height: 100%;
+      gap: 0.35rem;
+    }
+    .wheel-top-row {
       display: flex;
       align-items: center;
       justify-content: center;
-      gap: 1.5rem;
-      flex: 1;
-      overflow: hidden;
+      gap: 1rem;
+      width: 100%;
     }
-    .wheel-spinner-panel {
+    .wheel-widget {
+      position: relative;
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 0.5rem;
       flex-shrink: 0;
     }
-    .wheel-stage {
-      position: relative;
-      width: 170px;
-      height: 170px;
-    }
-    .wheel-ticker {
-      position: absolute;
-      top: -8px;
-      left: 50%;
-      transform: translateX(-50%);
+    .wheel-pointer-down {
       width: 0;
       height: 0;
-      border-left: 8px solid transparent;
-      border-right: 8px solid transparent;
+      border-left: 9px solid transparent;
+      border-right: 9px solid transparent;
       border-top: 15px solid var(--rose);
+      margin-bottom: -4px;
       z-index: 10;
-      filter: drop-shadow(0 0 6px var(--rose));
+      filter: drop-shadow(0 2px 4px rgba(251,113,133,0.85));
     }
-    #fortune-wheel-canvas {
-      width: 170px;
-      height: 170px;
+    .wheel-circle-wrap {
+      position: relative;
+      width: 148px;
+      height: 148px;
       border-radius: 50%;
-      border: 2px solid var(--cyan);
-      background: #05070c;
+      border: 2.5px solid var(--cyan);
+      box-shadow: 0 0 16px rgba(34,211,238,0.22);
+      overflow: hidden;
+      background: #070b12;
     }
-    .btn-spin-wheel {
-      pointer-events: auto;
+    .wheel-spin-center-btn {
+      position: absolute;
+      inset: 0;
+      margin: auto;
       background: var(--bg-card);
       border: 2px solid var(--cyan);
       border-radius: 50%;
-      width: 46px;
-      height: 46px;
+      width: 44px;
+      height: 44px;
       font-family: 'JetBrains Mono', monospace;
       font-size: 0.6rem;
       font-weight: 700;
       color: #fff;
       cursor: pointer;
-      box-shadow: 0 0 10px rgba(34, 211, 238, 0.4);
+      box-shadow: 0 0 10px rgba(34,211,238,0.45);
     }
-    .wheel-puzzle-pane {
-      flex: 1;
-      min-width: 0;
+    .wheel-spin-center-btn:disabled {
+      opacity: 0.45;
+      cursor: not-allowed;
+    }
+    .wheel-info-col {
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
-      height: 100%;
+      gap: 0.3rem;
+      text-align: left;
+      flex: 1;
+      min-width: 0;
+    }
+    .wheel-slots {
+      display: flex;
+      justify-content: center;
+      gap: 0.28rem;
+      flex-wrap: wrap;
+      width: 100%;
+    }
+    .wheel-slot {
+      width: 26px;
+      height: 32px;
+      background: rgba(255,255,255,0.04);
+      border: 1.5px solid var(--border-slate);
+      border-radius: 6px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.95rem;
+      color: var(--lime);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+    }
+    .alphabet-grid {
+      display: grid;
+      grid-template-columns: repeat(9, 1fr);
+      gap: 0.28rem;
+      width: 100%;
+    }
+    .alpha-key {
+      background: #111827;
+      border: 1px solid var(--border-slate);
+      border-radius: 5px;
+      padding: 0.38rem 0.1rem;
+      color: #fff;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.76rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .alpha-key:hover:not(:disabled) { border-color: var(--cyan); background: var(--cyan-dim); }
+    .alpha-key:disabled { opacity: 0.25; cursor: not-allowed; }
+
+    /* =========================================================================
+       3. ISACA JEOPARDY (Zero Horizontal or Vertical Scroll)
+       ========================================================================= */
+    .jeopardy-grid-6x6 {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 0.32rem;
+      flex: 1;
+      align-content: stretch;
+    }
+    .jeopardy-cat-header {
+      background: rgba(34, 211, 238, 0.12);
+      border: 1px solid var(--cyan);
+      border-radius: 6px;
+      padding: 0.3rem 0.15rem;
+      color: #fff;
+      font-family: 'Archivo Black', sans-serif;
+      font-size: clamp(0.48rem, 1.4vw, 0.72rem);
+      text-transform: uppercase;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      line-height: 1.15;
+      word-break: break-word;
+    }
+    .jeopardy-tile {
+      background: #111827;
+      border: 1.5px solid var(--cyan);
+      border-radius: 6px;
+      padding: 0.35rem 0.1rem;
+      color: var(--lime);
+      font-family: 'Archivo Black', sans-serif;
+      font-size: clamp(0.68rem, 2vw, 1.05rem);
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .jeopardy-tile:hover:not(:disabled) { background: var(--cyan-dim); }
+    .jeopardy-tile:disabled {
+      opacity: 0.2;
+      border-color: var(--border-slate);
+      color: var(--text-secondary);
+      cursor: not-allowed;
+    }
+    .jeopardy-mc-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+      flex: 1;
+      justify-content: center;
+    }
+    .jeopardy-mc-btn {
+      background: #111827;
+      border: 1px solid var(--border-slate);
+      border-radius: 8px;
+      padding: 0.58rem 0.75rem;
+      color: #fff;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.82rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      text-align: left;
+    }
+    .jeopardy-mc-btn:hover { border-color: var(--cyan); background: var(--cyan-dim); }
+    .mc-letter {
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      color: var(--cyan);
+      background: rgba(34, 211, 238, 0.12);
+      border: 1px solid rgba(34, 211, 238, 0.35);
+      border-radius: 4px;
+      padding: 0.12rem 0.42rem;
+      font-size: 0.72rem;
+      flex-shrink: 0;
     }
 
     /* =========================================================================
-       5. CLOUD DEFENSE TOWER (Real Animated Tower Defense)
+       4. UNSCRAMBLE CONCEPTS
+       ========================================================================= */
+    .scramble-slots {
+      display: flex;
+      justify-content: center;
+      gap: 0.35rem;
+      min-height: 42px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .scramble-tile {
+      background: rgba(34, 211, 238, 0.12);
+      border: 1px solid var(--cyan);
+      border-radius: 7px;
+      padding: 0.45rem 0.75rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      color: #fff;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    .scramble-tile:hover { background: var(--cyan); color: #000; }
+
+    /* =========================================================================
+       5. TOWER DEFENDER (Real Animated Tower Defense)
        ========================================================================= */
     .td-battlefield {
       position: relative;
-      height: 190px;
+      flex: 1;
+      min-height: 135px;
+      max-height: 195px;
       background: linear-gradient(180deg, #040814 0%, #091326 75%, #0f1f38 100%);
-      border: 1px solid var(--border-slate);
-      border-radius: 12px;
+      border: 1.5px solid var(--cyan);
+      border-radius: 10px;
       overflow: hidden;
-      box-shadow: inset 0 0 30px rgba(34, 211, 238, 0.1);
+      margin: 0.35rem 0;
     }
     .td-battlefield.hit-shake {
       border-color: var(--rose);
-      box-shadow: inset 0 0 45px rgba(251, 113, 133, 0.4);
+      box-shadow: inset 0 0 40px rgba(251, 113, 133, 0.45);
       animation: tdShake 0.3s ease;
     }
     @keyframes tdShake {
@@ -435,30 +672,30 @@
     }
     .td-lane-line {
       position: absolute;
-      bottom: 34px;
-      left: 80px;
-      right: 20px;
+      bottom: 28px;
+      left: 72px;
+      right: 14px;
       height: 2px;
-      background: repeating-linear-gradient(90deg, rgba(34,211,238,0.25) 0px, rgba(34,211,238,0.25) 12px, transparent 12px, transparent 24px);
+      background: repeating-linear-gradient(90deg, rgba(34,211,238,0.3) 0px, rgba(34,211,238,0.3) 12px, transparent 12px, transparent 22px);
     }
     .td-tower-wrap {
       position: absolute;
-      left: 14px;
-      bottom: 20px;
-      width: 68px;
+      left: 10px;
+      bottom: 14px;
+      width: 60px;
       display: flex;
       flex-direction: column;
       align-items: center;
       z-index: 6;
     }
     .td-hp-bar-bg {
-      width: 64px;
-      height: 8px;
-      background: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      width: 56px;
+      height: 7px;
+      background: rgba(255, 255, 255, 0.12);
+      border: 1px solid rgba(255, 255, 255, 0.22);
       border-radius: 999px;
       overflow: hidden;
-      margin-bottom: 5px;
+      margin-bottom: 4px;
     }
     .td-hp-bar-fill {
       height: 100%;
@@ -466,8 +703,8 @@
       transition: width 0.2s ease, background 0.2s ease;
     }
     .td-tower-core {
-      width: 54px;
-      height: 94px;
+      width: 48px;
+      height: 80px;
       background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
       border: 2px solid var(--cyan);
       border-radius: 8px 8px 4px 4px;
@@ -475,57 +712,50 @@
       flex-direction: column;
       align-items: center;
       justify-content: space-between;
-      padding: 6px 3px;
-      box-shadow: 0 0 16px rgba(34, 211, 238, 0.25);
+      padding: 5px 2px;
+      box-shadow: 0 0 14px rgba(34, 211, 238, 0.28);
     }
     .td-tower-turret {
-      width: 24px;
-      height: 24px;
+      width: 22px;
+      height: 22px;
       border-radius: 50%;
       background: var(--cyan);
-      box-shadow: 0 0 10px var(--cyan);
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 0.8rem;
+      font-size: 0.72rem;
     }
     .td-tower-label {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.55rem;
+      font-size: 0.5rem;
       color: var(--cyan);
       font-weight: 700;
     }
     .td-enemy-unit {
       position: absolute;
-      bottom: 36px;
+      bottom: 28px;
       left: 82%;
       transform: translateX(-50%);
       background: rgba(24, 10, 20, 0.94);
-      border: 2px solid var(--rose);
-      border-radius: 10px;
-      padding: 0.45rem 0.75rem;
-      min-width: 110px;
+      border: 1.5px solid var(--rose);
+      border-radius: 9px;
+      padding: 0.35rem 0.6rem;
       color: #fff;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.7rem;
+      font-size: 0.64rem;
       font-weight: 700;
-      box-shadow: 0 0 16px rgba(251, 113, 133, 0.4);
+      box-shadow: 0 0 14px rgba(251, 113, 133, 0.4);
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 0.2rem;
       z-index: 7;
-      transition: left 0.1s linear;
+      white-space: nowrap;
     }
-    .td-enemy-sprite {
-      font-size: 1.35rem;
-      line-height: 1;
-      filter: drop-shadow(0 0 6px var(--rose));
-    }
+    .td-enemy-sprite { font-size: 1.2rem; line-height: 1; }
     .td-laser-shot {
       position: absolute;
-      left: 74px;
-      bottom: 84px;
+      left: 62px;
+      bottom: 68px;
       height: 4px;
       background: linear-gradient(90deg, #fff, var(--lime), var(--cyan));
       box-shadow: 0 0 14px var(--lime);
@@ -536,44 +766,55 @@
     .td-turret-controls {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 0.65rem;
-      margin-top: 0.65rem;
+      gap: 0.45rem;
+      flex-shrink: 0;
     }
     .td-fire-btn {
-      background: rgba(16, 23, 38, 0.95);
+      background: #111827;
       border: 1.5px solid var(--cyan);
       border-radius: 8px;
-      padding: 0.75rem 0.45rem;
+      padding: 0.55rem 0.3rem;
       color: #fff;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.8rem;
+      font-size: 0.76rem;
       font-weight: 700;
       cursor: pointer;
-      transition: all 0.15s ease;
-      line-height: 1.25;
       text-align: center;
     }
-    .td-fire-btn:hover {
-      border-color: var(--lime);
-      background: rgba(158, 255, 51, 0.12);
-      box-shadow: 0 0 14px rgba(158, 255, 51, 0.2);
-    }
+    .td-fire-btn:hover { border-color: var(--lime); background: rgba(158, 255, 51, 0.14); }
     .td-fire-btn span {
       display: block;
-      font-size: 0.62rem;
+      font-size: 0.6rem;
       color: var(--text-secondary);
       font-weight: 400;
-      margin-top: 0.15rem;
     }
 
-    /* Mobile Responsive Stack Fixes */
-    @media (max-width: 720px) {
-      .arcade-modal-window { height: 98vh; max-height: none; border-radius: 12px; }
-      .wheel-split { flex-direction: column; overflow-y: auto; gap: 1rem; }
-      .wheel-spinner-panel { order: 1; }
-      .wheel-puzzle-pane { order: 2; width: 100%; }
-      .alphabet-grid { grid-template-columns: repeat(7, 1fr); }
-      .td-turret-controls { grid-template-columns: 1fr; gap: 0.45rem; }
+    /* Debrief & Switcher Lists */
+    .debrief-container {
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+      flex: 1;
+      overflow-y: auto;
+      padding-right: 0.25rem;
+      text-align: left;
+    }
+    .debrief-card {
+      background: rgba(13, 18, 28, 0.85);
+      border: 1px solid var(--border-slate);
+      border-left: 3px solid var(--cyan);
+      padding: 0.7rem;
+      border-radius: 8px;
+    }
+    .debrief-card.correct-item { border-left-color: var(--lime); }
+    .debrief-card.wrong-item { border-left-color: var(--rose); }
+    .debrief-title { font-family: 'JetBrains Mono', monospace; font-size: 0.78rem; font-weight: 700; color: #fff; }
+    .debrief-detail { font-size: 0.76rem; color: var(--text-secondary); line-height: 1.35; }
+
+    @media (min-width: 720px) {
+      .wheel-circle-wrap { width: 176px; height: 176px; }
+      .wheel-slot { width: 32px; height: 38px; font-size: 1.1rem; }
+      .alpha-key { padding: 0.48rem 0.2rem; font-size: 0.82rem; }
     }
   </style>
 </head>
@@ -639,77 +880,85 @@
 
       <main class="content-body" id="game-main">
         <div class="eyebrow">Remember key exam details through gaming</div>
-        <h1 class="hero-headline">CISSP <span class="outline">GAMES</span></h1>
-        <p class="arcade-intro-text">CISSP Games developed by Jesse, play until you master them all.</p>
+        <h1 class="hero-headline">TACTICAL <span class="outline">ARCADE</span></h1>
+        <p class="arcade-intro-text">CISSP Games developed by Jesse, play until you master them all</p>
 
         <div class="game-choice-grid">
-          <!-- Game 1 Card -->
-          <button type="button" class="game-selector-card" id="card-g1" onclick="launchGame(1)">
-            <div class="game-focus-tag">Domain 4 // Network Ports</div>
+          <button type="button" class="game-selector-card card-blaster" onclick="launchGame(1)">
+            <div class="game-card-top">
+              <div class="game-icon-badge">🎯</div>
+              <span class="game-play-pill">Play &rarr;</span>
+            </div>
             <div class="game-title">Laser Blaster</div>
-            <div class="game-desc">Study <strong>Standard Network Ports</strong> by targeting drifting protocol drones across your radar grid and firing your turret's laser beam to destroy them.</div>
+            <div class="game-desc"><strong>Studies: Network Ports &amp; Protocols.</strong> Lock onto drifting port targets and fire your laser turret before time runs out.</div>
           </button>
 
-          <!-- Game 2 Card -->
-          <button type="button" class="game-selector-card" id="card-g2" onclick="launchGame(2)">
-            <div class="game-focus-tag">Domain 3 // Cryptography</div>
+          <button type="button" class="game-selector-card card-wheel" onclick="launchGame(2)">
+            <div class="game-card-top">
+              <div class="game-icon-badge">🎡</div>
+              <span class="game-play-pill">Play &rarr;</span>
+            </div>
             <div class="game-title">Wheel of CISSP</div>
-            <div class="game-desc">Study <strong>Ciphers and Hashing</strong> by spinning the downward-facing tactical multiplier wheel, earning cash, and solving cryptographic terms letter by letter.</div>
+            <div class="game-desc"><strong>Studies: Ciphers &amp; Security Terms.</strong> Spin the wheel, rack up cash, and reveal hidden cryptographic algorithms letter by letter.</div>
           </button>
 
-          <!-- Game 3 Card -->
-          <button type="button" class="game-selector-card" id="card-g3" onclick="launchGame(3)">
-            <div class="game-focus-tag">Domain 1-8 // Multi-Domain</div>
+          <button type="button" class="game-selector-card card-jeopardy" onclick="launchGame(3)">
+            <div class="game-card-top">
+              <div class="game-icon-badge">🏆</div>
+              <span class="game-play-pill">Play &rarr;</span>
+            </div>
             <div class="game-title">ISACA Jeopardy</div>
-            <div class="game-desc">Study <strong>Symmetric Ciphers, Attack Vectors, and PKI standards</strong> by picking point cells across a 5x5 board and answering Socratic clues.</div>
+            <div class="game-desc"><strong>Studies: All 8 Security Domains.</strong> Pick dollar tiles across 6 categories and solve 5-option clues against the clock.</div>
           </button>
 
-          <!-- Game 4 Card -->
-          <button type="button" class="game-selector-card" id="card-g4" onclick="launchGame(4)">
-            <div class="game-focus-tag">Domain 5 &amp; 7 // Operations</div>
+          <button type="button" class="game-selector-card card-scramble" onclick="launchGame(4)">
+            <div class="game-card-top">
+              <div class="game-icon-badge">🧩</div>
+              <span class="game-play-pill">Play &rarr;</span>
+            </div>
             <div class="game-title">Unscramble Concepts</div>
-            <div class="game-desc">Study <strong>Ego Defense and Operational Security terms</strong> by restructuring mixed letter tiles against a 30-second countdown clock.</div>
+            <div class="game-desc"><strong>Studies: Core Security Controls &amp; Attacks.</strong> Tap scrambled letter tiles in order to rebuild essential exam definitions.</div>
           </button>
 
-          <!-- Game 5 Card -->
-          <button type="button" class="game-selector-card" id="card-g5" onclick="launchGame(5)">
-            <div class="game-focus-tag">Domain 3 // Cloud Shared Responsibility</div>
+          <button type="button" class="game-selector-card card-tower" onclick="launchGame(5)">
+            <div class="game-card-top">
+              <div class="game-icon-badge">🏰</div>
+              <span class="game-play-pill">Play &rarr;</span>
+            </div>
             <div class="game-title">Tower Defender</div>
-            <div class="game-desc">Study <strong>IaaS, PaaS, and SaaS Architectures</strong> by blasting incoming workload drones using the correct cloud turret before they hit your tower HP.</div>
+            <div class="game-desc"><strong>Studies: IaaS, PaaS &amp; SaaS Cloud Models.</strong> Blast marching workload drones with the right turret before they hit your tower HP.</div>
           </button>
 
-          <!-- Game 6 Card -->
-          <button type="button" class="game-selector-card" id="card-g6" onclick="launchGame(6)">
-            <div class="game-focus-tag">Domain 7 // Incident Response</div>
+          <button type="button" class="game-selector-card card-clock" onclick="launchGame(6)">
+            <div class="game-card-top">
+              <div class="game-icon-badge">⚡</div>
+              <span class="game-play-pill">Play &rarr;</span>
+            </div>
             <div class="game-title">Beat the Clock</div>
-            <div class="game-desc">Study <strong>NIST SP 800-61 Lifecycle stages</strong> by sorting active security tasks into their correct incident phases against a rapid timer.</div>
+            <div class="game-desc"><strong>Studies: NIST Incident Response Phases.</strong> Rapidly sort real-world breach actions into the 6 IR lifecycle stages.</div>
           </button>
         </div>
       </main>
     </div>
   </div>
 
-  <!-- Immersive Arcade Overlay Modal -->
+  <!-- Viewport-Locked Game Modal -->
   <div class="arcade-modal-backdrop" id="arcade-modal" role="dialog" aria-modal="true">
     <div class="arcade-modal-window">
       <div class="arcade-header">
-        <div class="arcade-title-group">
-          <span class="arcade-game-tag" id="arcade-game-subtitle">TACTICAL ARCADES</span>
-          <span class="arcade-game-title" id="arcade-game-title">Loading Game...</span>
-        </div>
+        <div class="arcade-game-title" id="arcade-game-title">Laser Blaster</div>
         <div class="arcade-tracker-hud">
-          <div class="arcade-stat-badge cash" id="hud-cash-badge" style="display:none;">💵 Cash: $<span id="hud-cash">0</span></div>
+          <div class="arcade-stat-badge cash" id="hud-cash-badge" style="display:none;">💵 $<span id="hud-cash">0</span></div>
           <div class="arcade-stat-badge timer" id="hud-timer-badge" style="display:none;">⏱️ <span id="hud-timer">25</span>s</div>
-          <div class="arcade-stat-badge" id="hud-remaining-badge">🎯 <span id="hud-remaining">0</span> remaining</div>
+          <div class="arcade-stat-badge" id="hud-remaining-badge">🎯 <span id="hud-remaining">0</span></div>
         </div>
         <div class="arcade-nav-controls">
-          <button class="btn-hud-control" title="New Game / Choose Cabinet" onclick="openNewGamePrompt()">🔄</button>
-          <button class="btn-hud-control" title="Quit Game &amp; See Score" style="border-color: rgba(251,113,133,0.4); color: var(--rose);" onclick="quitGameAction()">❌</button>
+          <button type="button" class="btn-hud-icon" title="Switch Game" onclick="openNewGamePrompt()">🎮</button>
+          <button type="button" class="btn-hud-icon" title="Score Debrief" onclick="showDebriefSummary()">📊</button>
+          <button type="button" class="btn-hud-icon close-btn" title="Close Game" onclick="closeArcadeModal()">✕</button>
         </div>
       </div>
-      <div class="arcade-body" id="arcade-body-content">
-        <!-- Dynamic Game Arena -->
-      </div>
+      <div class="arcade-body" id="arcade-body-content"></div>
     </div>
   </div>
 
@@ -718,7 +967,7 @@
     <div class="modal-box" id="feedback-box">
       <div class="modal-top" style="border-bottom:none;padding-bottom:0;">
         <div class="modal-title" id="feedback-status"></div>
-        <button class="modal-close" id="feedback-close-btn" aria-label="Close">✕</button>
+        <button type="button" class="modal-close" id="feedback-close-btn" aria-label="Close">✕</button>
       </div>
       <div class="modal-body" id="feedback-body"></div>
     </div>
@@ -729,7 +978,7 @@
     <div class="modal-box">
       <div class="modal-top">
         <div class="modal-title" id="privacy-title">Privacy Policy</div>
-        <button class="modal-close" id="privacy-close-btn" aria-label="Close">✕</button>
+        <button type="button" class="modal-close" id="privacy-close-btn" aria-label="Close">✕</button>
       </div>
       <div class="modal-body">
         <p><strong>Effective Date:</strong> November 17, 2026</p>
@@ -760,386 +1009,203 @@
 
   <script>
     /* =========================================================================
-       DATA BANKS (24+ ITEMS PER GAME)
+       DATA BANKS
        ========================================================================= */
-
-    // GAME 1: PORT BLASTER (24 Ports)
     const ports = [
       { num: 20, use: "FTP Data Transfer", explanation: "Port 20 handles active mode FTP data transfers." },
-      { num: 21, use: "FTP Control (Usually in DMZ)", explanation: "Port 21 is used for File Transfer Protocol command and control connections." },
+      { num: 21, use: "FTP Control (DMZ)", explanation: "Port 21 is used for File Transfer Protocol command and control." },
       { num: 22, use: "SSH / SCP / SFTP", explanation: "Port 22 provides secure encrypted remote shell and file transfers." },
-      { num: 23, use: "Telnet (Unencrypted Remote Login)", explanation: "Port 23 transmits remote terminal sessions in cleartext." },
+      { num: 23, use: "Telnet (Cleartext Login)", explanation: "Port 23 transmits remote terminal sessions in cleartext." },
       { num: 25, use: "SMTP (Mail Routing)", explanation: "Port 25 handles server-to-server email transfer." },
       { num: 49, use: "TACACS / TACACS+", explanation: "Port 49 is used by TACACS+ for centralized AAA access control." },
-      { num: 53, use: "DNS (Domain Name System)", explanation: "Port 53 resolves domain names to IP addresses (and is targeted in Bonk attacks)." },
-      { num: 67, use: "DHCP Server", explanation: "UDP Port 67 receives DHCP client discovery and request broadcasts." },
-      { num: 68, use: "DHCP Client", explanation: "UDP Port 68 receives IP configuration replies from a DHCP server." },
+      { num: 53, use: "DNS (Name Resolution)", explanation: "Port 53 resolves domain names to IP addresses." },
+      { num: 67, use: "DHCP Server", explanation: "UDP Port 67 receives DHCP client discovery broadcasts." },
+      { num: 68, use: "DHCP Client", explanation: "UDP Port 68 receives IP configuration replies from DHCP." },
       { num: 69, use: "TFTP (Trivial FTP)", explanation: "UDP Port 69 provides lightweight unauthenticated file transfers." },
-      { num: 80, use: "HTTP (Unencrypted Web)", explanation: "Port 80 serves standard plaintext Hypertext Transfer Protocol traffic." },
-      { num: 88, use: "Kerberos Authentication", explanation: "Port 88 handles Kerberos ticket-granting and authentication traffic." },
-      { num: 110, use: "POP3 (Post Office Protocol v3)", explanation: "Port 110 retrieves email from a mail server to a local client." },
-      { num: 123, use: "NTP (Network Time Protocol)", explanation: "UDP Port 123 synchronizes system clocks (critical for Kerberos)." },
-      { num: 143, use: "IMAP4 (Internet Message Access Protocol)", explanation: "Port 143 manages and retrieves email folders directly on a mail server." },
-      { num: 161, use: "SNMP (Network Monitoring)", explanation: "UDP Port 161 is used by SNMP managers to query network agents." },
-      { num: 162, use: "SNMP Trap", explanation: "UDP Port 162 receives unsolicited alert traps from SNMP agents." },
-      { num: 389, use: "LDAP (Directory Services)", explanation: "Port 389 queries and modifies X.500-based directory trees." },
+      { num: 80, use: "HTTP (Unencrypted Web)", explanation: "Port 80 serves standard plaintext web traffic." },
+      { num: 88, use: "Kerberos KDC Auth", explanation: "Port 88 handles Kerberos ticket-granting and authentication." },
+      { num: 110, use: "POP3 (Mail Retrieval)", explanation: "Port 110 retrieves email from a mail server." },
+      { num: 123, use: "NTP (Time Sync)", explanation: "UDP Port 123 synchronizes system clocks." },
+      { num: 143, use: "IMAP4 (Mail Folders)", explanation: "Port 143 manages email folders on a mail server." },
+      { num: 161, use: "SNMP Agent Polling", explanation: "UDP Port 161 queries network agents." },
+      { num: 162, use: "SNMP Trap Alerts", explanation: "UDP Port 162 receives alert traps from SNMP agents." },
+      { num: 389, use: "LDAP Directory", explanation: "Port 389 queries X.500-based directory trees." },
       { num: 443, use: "HTTPS / SSL / TLS", explanation: "Port 443 secures web traffic using TLS/SSL encryption." },
-      { num: 445, use: "SMB / CIFS over TCP", explanation: "Port 445 supports Windows file and printer sharing." },
+      { num: 445, use: "SMB / CIFS File Share", explanation: "Port 445 supports Windows file and printer sharing." },
       { num: 636, use: "LDAPS (Secure LDAP)", explanation: "Port 636 secures LDAP directory queries over SSL/TLS." },
-      { num: 1701, use: "L2TP (Layer 2 Tunneling Protocol)", explanation: "UDP Port 1701 encapsulates PPP frames for VPN tunnels (often paired with IPSec)." },
-      { num: 1723, use: "PPTP (Point-to-Point Tunneling)", explanation: "TCP Port 1723 establishes legacy PPTP VPN tunnels over IP." },
-      { num: 3389, use: "RDP (Remote Desktop Protocol)", explanation: "Port 3389 enables graphical Windows remote desktop sessions." }
+      { num: 1701, use: "L2TP VPN Tunneling", explanation: "UDP Port 1701 encapsulates PPP frames for VPN tunnels." },
+      { num: 1723, use: "PPTP VPN Tunneling", explanation: "TCP Port 1723 establishes legacy PPTP VPN tunnels over IP." },
+      { num: 3389, use: "RDP (Remote Desktop)", explanation: "Port 3389 enables graphical Windows remote desktop sessions." }
     ];
 
-    // GAME 2: CRYPTO WHEEL SPINNER (24 Terms)
     const ciphers = [
       { name: "AES", hint: "Symmetric block cipher based on Rijndael (128, 192, or 256 bits)", explanation: "AES replaced DES as the federal symmetric encryption standard." },
-      { name: "RSA", hint: "Asymmetric algorithm based on factoring large prime numbers", explanation: "Rivest-Shamir-Adleman (RSA) is widely used for encryption and digital signatures." },
-      { name: "BLOWFISH", hint: "Fast symmetric block cipher designed by Bruce Schneier (32-448 bit key)", explanation: "Blowfish is an unpatented 64-bit block cipher created in 1993." },
+      { name: "RSA", hint: "Asymmetric algorithm based on factoring large prime numbers", explanation: "Rivest-Shamir-Adleman (RSA) is used for encryption and digital signatures." },
+      { name: "BLOWFISH", hint: "Fast symmetric block cipher designed by Bruce Schneier", explanation: "Blowfish is an unpatented 64-bit block cipher created in 1993." },
       { name: "TWOFISH", hint: "128-bit block cipher finalist to AES created by Bruce Schneier", explanation: "Twofish uses a 16-round Feistel network and supports keys up to 256 bits." },
-      { name: "DIFFIE-HELLMAN", hint: "Key exchange protocol establishing a shared secret over an insecure medium", explanation: "Diffie-Hellman enables secret key agreement without prior shared secrets." },
-      { name: "VERNAM", hint: "One-Time Pad XOR cipher used in WWII", explanation: "The Vernam cipher is mathematically unbreakable when the key is truly random, used once, and as long as the message." },
-      { name: "SCYTALE", hint: "Ancient 400 BC Spartan transposition cipher using a rod", explanation: "Wrapping parchment around a cylinder of specific diameter revealed the transposed message." },
-      { name: "VIGENERE", hint: "Poly-substitution cipher utilizing a keyword and tabula recta", explanation: "Vigenere resists simple frequency analysis by rotating through multiple Caesar alphabets." },
-      { name: "CAESAR", hint: "Classic mono-alphabetic substitution cipher shifting letters", explanation: "Shifting each letter by a fixed offset (such as ROT3) is a mono-substitution cipher." },
-      { name: "SERPENT", hint: "Symmetric block cipher AES finalist known for conservative security margin", explanation: "Serpent uses 32 rounds of substitution-permutation networks." },
-      { name: "IDEA", hint: "International Data Encryption Algorithm used in early PGP", explanation: "IDEA operates on 64-bit blocks using a 128-bit key." },
-      { name: "KERBEROS", hint: "Ticket-based network authentication protocol using a symmetric KDC", explanation: "Kerberos relies on synchronized clocks and Ticket Granting Tickets (TGTs)." },
-      { name: "WHIRLPOOL", hint: "Cryptographic hash function producing a 512-bit message digest", explanation: "Whirlpool is an ISO-standardized hash algorithm based on a modified AES structure." },
-      { name: "ISAKMP", hint: "Protocol used to negotiate Security Associations and authenticated keying material", explanation: "ISAKMP provides the framework for IPSec key exchange (typically via IKE)." },
-      { name: "CHAP", hint: "Challenge-Handshake Authentication Protocol exchanging hashed values", explanation: "CHAP prevents replay attacks by periodically sending random challenges." },
-      { name: "MANTRAP", hint: "Interlocking double-door physical access control preventing tailgating", explanation: "A mantrap traps an unauthorized individual between two doors until verified." },
-      { name: "TEARDROP", hint: "DoS attack sending overlapping fragmented UDP packets", explanation: "Malformed fragment offsets crash vulnerable TCP/IP stacks during reassembly." },
-      { name: "SMURF", hint: "Amplified DoS attack using spoofed ICMP echo requests to a broadcast address", explanation: "Every host on the broadcast network replies to the victim's spoofed IP." },
-      { name: "FRAGGLE", hint: "UDP-based variant of the Smurf broadcast amplification attack", explanation: "Fraggle floods a victim by spoofing UDP packets to network broadcast addresses." },
-      { name: "STEGANOGRAPHY", hint: "Hiding secret messages inside ordinary carrier files like images or audio", explanation: "Steganography conceals the very existence of communication." },
-      { name: "NON-REPUDIATION", hint: "Security goal achieved exclusively through asymmetric digital signatures", explanation: "Prevents a sender from falsely denying having signed and sent a message." },
-      { name: "HONEYPOT", hint: "Decoy system deployed to lure attackers and gather threat intelligence", explanation: "Honeypots distract adversaries away from production assets." },
-      { name: "SALTING", hint: "Adding random data before hashing passwords to defeat rainbow tables", explanation: "Unique salts ensure identical passwords produce completely different hashes." },
-      { name: "IPSEC", hint: "Layer 3 VPN protocol suite providing AH integrity and ESP confidentiality", explanation: "IPSec secures IP communications at the Network layer (Layer 3)." }
+      { name: "DIFFIE-HELLMAN", hint: "Key exchange establishing a shared secret over an insecure medium", explanation: "Diffie-Hellman enables secret key agreement without prior shared secrets." },
+      { name: "VERNAM", hint: "One-Time Pad XOR cipher used in WWII", explanation: "The Vernam cipher is mathematically unbreakable when used properly." },
+      { name: "SCYTALE", hint: "Ancient 400 BC Spartan transposition cipher using a rod", explanation: "Wrapping parchment around a cylinder revealed the transposed message." },
+      { name: "VIGENERE", hint: "Poly-substitution cipher utilizing a keyword", explanation: "Vigenere resists simple frequency analysis by rotating alphabets." },
+      { name: "CAESAR", hint: "Classic mono-alphabetic substitution cipher shifting letters", explanation: "Shifting each letter by a fixed offset is a mono-substitution cipher." },
+      { name: "SERPENT", hint: "Symmetric block cipher AES finalist with 32 rounds", explanation: "Serpent uses 32 rounds of substitution-permutation networks." },
+      { name: "IDEA", hint: "128-bit key block cipher used in early PGP", explanation: "IDEA operates on 64-bit blocks using a 128-bit key." },
+      { name: "KERBEROS", hint: "Ticket-based authentication protocol using a symmetric KDC", explanation: "Kerberos relies on synchronized clocks and Ticket Granting Tickets." },
+      { name: "WHIRLPOOL", hint: "Cryptographic hash function producing a 512-bit digest", explanation: "Whirlpool is an ISO-standardized 512-bit hash algorithm." },
+      { name: "ISAKMP", hint: "Protocol negotiating Security Associations and keying material", explanation: "ISAKMP provides the framework for IPSec key exchange." },
+      { name: "CHAP", hint: "Challenge-Handshake protocol exchanging hashed values", explanation: "CHAP prevents replay attacks by periodically sending random challenges." },
+      { name: "MANTRAP", hint: "Interlocking double-door physical control preventing tailgating", explanation: "A mantrap isolates an entrant between two doors until verified." },
+      { name: "TEARDROP", hint: "DoS attack sending overlapping fragmented UDP packets", explanation: "Malformed fragment offsets crash vulnerable TCP/IP stacks." },
+      { name: "SMURF", hint: "Amplified DoS attack using spoofed ICMP broadcast pings", explanation: "Hosts on the broadcast network reply to the victim's spoofed IP." },
+      { name: "FRAGGLE", hint: "UDP-based variant of the Smurf broadcast attack", explanation: "Fraggle floods a victim by spoofing UDP broadcast traffic." },
+      { name: "STEGANOGRAPHY", hint: "Hiding secret messages inside ordinary image or audio files", explanation: "Steganography conceals the existence of a message." },
+      { name: "NON-REPUDIATION", hint: "Security goal achieved exclusively via digital signatures", explanation: "Prevents a sender from denying having signed a message." },
+      { name: "HONEYPOT", hint: "Decoy system deployed to lure attackers", explanation: "Honeypots distract adversaries away from production assets." },
+      { name: "SALTING", hint: "Adding random data before hashing passwords", explanation: "Unique salts defeat precomputed rainbow tables." },
+      { name: "IPSEC", hint: "Layer 3 VPN suite providing AH integrity and ESP confidentiality", explanation: "IPSec secures IP communications at Network Layer 3." }
     ];
 
-    // GAME 3: CYBER JEOPARDY
     const jeopardyBank = [
-      {
-        cat: "CRYPTOGRAPHY", val: 200,
-        q: "Which symmetric encryption algorithm is based on Rijndael and supports 128, 192, and 256-bit keys?",
-        options: ["AES", "DES", "3DES", "RC4", "Blowfish"],
-        answer: "AES",
-        explanation: "AES (Advanced Encryption Standard) is based on the Rijndael block cipher."
-      },
-      {
-        cat: "CRYPTOGRAPHY", val: 400,
-        q: "What is the primary disadvantage of symmetric key cryptography in large networks?",
-        options: ["Secure key distribution", "Slow encryption speed", "Lack of confidentiality", "High CPU overhead", "Inability to encrypt large files"],
-        answer: "Secure key distribution",
-        explanation: "Both sender and receiver must securely share the same secret key beforehand."
-      },
-      {
-        cat: "CRYPTOGRAPHY", val: 600,
-        q: "Which security goal is achieved exclusively by a digital signature?",
-        options: ["Non-repudiation", "Confidentiality", "Availability", "Key escrow", "Obfuscation"],
-        answer: "Non-repudiation",
-        explanation: "Only asymmetric digital signatures provide non-repudiation by binding the signer's private key to the hash."
-      },
-      {
-        cat: "CRYPTOGRAPHY", val: 800,
-        q: "A 128-bit symmetric key provides roughly equivalent cryptographic strength to what asymmetric key length?",
-        options: ["2304-bit or 3072-bit", "512-bit", "1024-bit", "128-bit", "256-bit"],
-        answer: "2304-bit or 3072-bit",
-        explanation: "128-bit symmetric strength corresponds to 2304-bit (legacy NIST) / 3072-bit asymmetric keys."
-      },
-      {
-        cat: "CRYPTOGRAPHY", val: 1000,
-        q: "Which stream cipher was notoriously used in WEP and early WPA wireless protocols?",
-        options: ["RC4", "IDEA", "CAST", "MARS", "Serpent"],
-        answer: "RC4",
-        explanation: "RC4 is a stream cipher whose weak IV implementation led to WEP cracking."
-      },
-      {
-        cat: "NETWORKS & PORTS", val: 200,
-        q: "Which port does LDAP use for standard unencrypted directory queries?",
-        options: ["389", "636", "161", "445", "143"],
-        answer: "389",
-        explanation: "LDAP uses port 389, whereas LDAPS uses port 636."
-      },
-      {
-        cat: "NETWORKS & PORTS", val: 400,
-        q: "Which router defense is the single best method to prevent IP spoofing attacks entering a network?",
-        options: ["Ingress filtering", "Port knocking", "Split tunneling", "NAT overload", "Banner grabbing"],
-        answer: "Ingress filtering",
-        explanation: "Ingress filtering blocks incoming packets with forged internal source IP addresses."
-      },
-      {
-        cat: "NETWORKS & PORTS", val: 600,
-        q: "Which VPN protocol operates at OSI Layer 3 and uses AH for integrity and ESP for confidentiality?",
-        options: ["IPSec", "PPTP", "L2TP", "SSL/TLS", "SSH"],
-        answer: "IPSec",
-        explanation: "IPSec secures Layer 3 traffic via Authentication Header (AH) and Encapsulating Security Payload (ESP)."
-      },
-      {
-        cat: "NETWORKS & PORTS", val: 800,
-        q: "What is a major security drawback of encrypted VPN tunnels traversing a perimeter firewall?",
-        options: ["The firewall cannot inspect encrypted payload traffic", "VPNs disable NAT", "VPNs broadcast ARP tables", "Firewalls block all UDP ports", "VPNs eliminate authentication"],
-        answer: "The firewall cannot inspect encrypted payload traffic",
-        explanation: "Unless decrypted at a termination point, perimeter firewalls cannot inspect encrypted tunnel contents."
-      },
-      {
-        cat: "NETWORKS & PORTS", val: 1000,
-        q: "Which private IPv4 address range corresponds to Class B private networks?",
-        options: ["172.16.0.0 – 172.31.255.255", "10.0.0.0 – 10.255.255.255", "192.168.0.0 – 192.168.255.255", "169.254.0.0 – 169.254.255.255", "127.0.0.0 – 127.255.255.255"],
-        answer: "172.16.0.0 – 172.31.255.255",
-        explanation: "Class B private space spans 172.16.0.0/12 (172.16.0.0 through 172.31.255.255)."
-      },
-      {
-        cat: "ATTACKS & THREATS", val: 200,
-        q: "Which attack floods a server with repeated TCP SYN requests without completing the three-way handshake?",
-        options: ["SYN Flood", "Smurf Attack", "Teardrop Attack", "Land Attack", "Fraggle Attack"],
-        answer: "SYN Flood",
-        explanation: "A SYN flood exhausts server connection tables with half-open TCP sessions."
-      },
-      {
-        cat: "ATTACKS & THREATS", val: 400,
-        q: "Which attack sends overlapping, fragmented UDP packets that cannot be reassembled properly?",
-        options: ["Teardrop", "Ping of Death", "Smurf", "SYN Flood", "ARP Poisoning"],
-        answer: "Teardrop",
-        explanation: "Teardrop exploits buggy IP fragment reassembly routines using overlapping offset fields."
-      },
-      {
-        cat: "ATTACKS & THREATS", val: 600,
-        q: "What differentiates a computer worm from a Trojan horse?",
-        options: ["Worms self-replicate without a host file", "Trojans self-replicate across subnets", "Worms require user execution", "Trojans only affect BIOS firmware", "Worms cannot spread over networks"],
-        answer: "Worms self-replicate without a host file",
-        explanation: "Worms autonomously self-replicate across networks; Trojans disguise malware inside seemingly benign software."
-      },
-      {
-        cat: "ATTACKS & THREATS", val: 800,
-        q: "Which specific DoS attack targets port 53 using fragmented UDP packets with bogus reassembly information?",
-        options: ["Bonk", "Boink", "Land", "Fraggle", "Smurf"],
-        answer: "Bonk",
-        explanation: "Bonk targets DNS port 53 with malformed UDP fragments; Boink targets multiple ports."
-      },
-      {
-        cat: "ATTACKS & THREATS", val: 1000,
-        q: "Which TCP/IP attack sends a spoofed SYN packet where the source IP and port match the destination IP and port?",
-        options: ["Land Attack", "Teardrop Attack", "Smurf Attack", "FTP Bounce", "Session Hijacking"],
-        answer: "Land Attack",
-        explanation: "A Land attack tricks a vulnerable host into replying to itself continuously."
-      },
-      {
-        cat: "ACCESS CONTROL", val: 200,
-        q: "Which access control model relies on security clearance labels assigned to subjects and classification labels on objects?",
-        options: ["MAC (Mandatory Access Control)", "DAC (Discretionary Access Control)", "RBAC (Role-Based Access Control)", "ABAC (Attribute-Based Access Control)", "Rule-Based Access Control"],
-        answer: "MAC (Mandatory Access Control)",
-        explanation: "MAC enforces lattice-based security labels controlled centrally by administrators."
-      },
-      {
-        cat: "ACCESS CONTROL", val: 400,
-        q: "In which access control model does the data owner have full discretion to grant or revoke permissions to an object?",
-        options: ["DAC (Discretionary Access Control)", "MAC (Mandatory Access Control)", "RBAC (Role-Based Access Control)", "Bell-LaPadula", "Biba Integrity Model"],
-        answer: "DAC (Discretionary Access Control)",
-        explanation: "DAC places access permission control directly in the hands of the object owner."
-      },
-      {
-        cat: "ACCESS CONTROL", val: 600,
-        q: "Which security principle ensures users are granted only the minimum access necessary to perform their job duties?",
-        options: ["Least Privilege", "Separation of Duties", "Job Rotation", "Due Care", "Defense in Depth"],
-        answer: "Least Privilege",
-        explanation: "Least privilege restricts user rights to the bare minimum required for assigned tasks."
-      },
-      {
-        cat: "ACCESS CONTROL", val: 800,
-        q: "In the Bell-LaPadula confidentiality model, what are the two primary rules?",
-        options: ["No Read Up, No Write Down", "No Read Down, No Write Up", "No Read Up, No Write Up", "No Read Down, No Read Down", "Read Any, Write Top Secret"],
-        answer: "No Read Up, No Write Down",
-        explanation: "Bell-LaPadula protects confidentiality via Simple Security (No Read Up) and the *-Property (No Write Down)."
-      },
-      {
-        cat: "ACCESS CONTROL", val: 1000,
-        q: "Which physical access control mechanism uses two interlocking doors to prevent piggybacking and tailgating?",
-        options: ["Mantrap", "Turnstile", "Bollard", "Faraday Cage", "Cipher Lock"],
-        answer: "Mantrap",
-        explanation: "A mantrap isolates a single entrant between two doors until authentication succeeds."
-      },
-      {
-        cat: "PKI & CERTIFICATES", val: 200,
-        q: "What is the primary purpose of a digital certificate in a Public Key Infrastructure (PKI)?",
-        options: ["Bind a public key to an entity's identity", "Encrypt database backups", "Store user passwords in plaintext", "Replace symmetric session keys", "Act as a stateful firewall"],
-        answer: "Bind a public key to an entity's identity",
-        explanation: "A CA signs a digital certificate to attest that a public key belongs to the named subject."
-      },
-      {
-        cat: "PKI & CERTIFICATES", val: 400,
-        q: "Which industry standard defines the format of public key certificates?",
-        options: ["X.509", "X.25", "802.1X", "PKCS #12", "Kerberos v5"],
-        answer: "X.509",
-        explanation: "X.509 defines standard fields including subject, issuer CA, public key, and validity period."
-      },
-      {
-        cat: "PKI & CERTIFICATES", val: 600,
-        q: "Which two mechanisms are commonly used in PKI to check whether a certificate has been revoked before expiration?",
-        options: ["CRL and OCSP", "CHAP and PAP", "SPF and DKIM", "RADIUS and TACACS+", "AH and ESP"],
-        answer: "CRL and OCSP",
-        explanation: "Certificate Revocation Lists (CRL) and Online Certificate Status Protocol (OCSP) verify certificate validity."
-      },
-      {
-        cat: "PKI & CERTIFICATES", val: 800,
-        q: "Which PKI document describes the detailed operational procedures a Certificate Authority follows to issue and manage certificates?",
-        options: ["CPS (Certificate Practice Statement)", "CP (Certificate Policy)", "SLA (Service Level Agreement)", "MOU (Memorandum of Understanding)", "BIA (Business Impact Analysis)"],
-        answer: "CPS (Certificate Practice Statement)",
-        explanation: "The CPS details how the CA implements the high-level rules stated in the Certificate Policy (CP)."
-      },
-      {
-        cat: "PKI & CERTIFICATES", val: 1000,
-        q: "When User A applies to a Certificate Authority for a certificate, what key must User A submit to the CA?",
-        options: ["User A's public key only", "User A's private key only", "Both public and private keys", "User B's public key", "A shared symmetric AES key"],
-        answer: "User A's public key only",
-        explanation: "Private keys must never be shared; the applicant submits proof of identity and their public key."
-      },
-      {
-        cat: "GOVERNANCE & DR", val: 200,
-        q: "Which calculation represents the expected monetary loss every time a specific risk occurs once?",
-        options: ["SLE (Single Loss Expectancy)", "ALE (Annualized Loss Expectancy)", "ARO (Annualized Rate of Occurrence)", "EF (Exposure Factor)", "RTO (Recovery Time Objective)"],
-        answer: "SLE (Single Loss Expectancy)",
-        explanation: "SLE = Asset Value (AV) × Exposure Factor (EF)."
-      },
-      {
-        cat: "GOVERNANCE & DR", val: 400,
-        q: "Which Business Continuity Planning phase obtains formal agreement on Maximum Tolerable Downtime (MTD)?",
-        options: ["Business Impact Analysis (BIA)", "Risk Mitigation", "Penetration Testing", "Change Management", "Configuration Audit"],
-        answer: "Business Impact Analysis (BIA)",
-        explanation: "The BIA identifies critical business functions, MTD, RTO, and RPO."
-      },
-      {
-        cat: "GOVERNANCE & DR", val: 600,
-        q: "Which backup method copies only files modified since the last full backup and clears the archive bit?",
-        options: ["Incremental backup", "Differential backup", "Full backup", "Snapshot mirror", "Cold site replication"],
-        answer: "Incremental backup",
-        explanation: "Differential backups copy all changes since the last full backup without clearing the archive bit; incremental clears it."
-      },
-      {
-        cat: "GOVERNANCE & DR", val: 800,
-        q: "What is the international de facto IT security evaluation criteria standard (ISO/IEC 15408)?",
-        options: ["Common Criteria", "ITSEC", "TCSEC (Orange Book)", "PCI-DSS", "COBIT"],
-        answer: "Common Criteria",
-        explanation: "Common Criteria (Evaluation Assurance Levels EAL1–EAL7) is the international evaluation standard."
-      },
-      {
-        cat: "GOVERNANCE & DR", val: 1000,
-        q: "Which forensic principle requires technicians to tag, bag, and inventory evidence while recording every transfer?",
-        options: ["Chain of Custody", "Due Diligence", "Non-Repudiation", "Data Remanence", "Locard's Exchange Principle"],
-        answer: "Chain of Custody",
-        explanation: "Chain of custody documents who collected, handled, transferred, and stored evidence to preserve admissibility."
-      }
+      { cat: "CRYPTO", val: 200, q: "Which symmetric encryption algorithm is based on Rijndael (128, 192, 256-bit keys)?", options: ["AES", "DES", "3DES", "RC4", "Blowfish"], answer: "AES", explanation: "AES is based on the Rijndael block cipher." },
+      { cat: "CRYPTO", val: 400, q: "What is the primary disadvantage of symmetric key cryptography?", options: ["Secure key distribution", "Slow speed", "Lack of confidentiality", "High CPU overhead", "No block mode"], answer: "Secure key distribution", explanation: "Both parties must securely share the same secret key beforehand." },
+      { cat: "CRYPTO", val: 600, q: "Which security goal is achieved exclusively by a digital signature?", options: ["Non-repudiation", "Confidentiality", "Availability", "Key escrow", "Obfuscation"], answer: "Non-repudiation", explanation: "Only asymmetric digital signatures provide non-repudiation." },
+      { cat: "CRYPTO", val: 800, q: "A 128-bit symmetric key equals roughly what asymmetric key length?", options: ["2304-bit / 3072-bit", "512-bit", "1024-bit", "128-bit", "256-bit"], answer: "2304-bit / 3072-bit", explanation: "128-bit symmetric strength corresponds to 2304-bit / 3072-bit asymmetric keys." },
+      { cat: "CRYPTO", val: 1000, q: "Which stream cipher was used in WEP and early WPA wireless protocols?", options: ["RC4", "IDEA", "CAST", "MARS", "Serpent"], answer: "RC4", explanation: "RC4 is a stream cipher used in WEP and WPA-TKIP." },
+      { cat: "NETWORK", val: 200, q: "Which port does LDAP use for standard unencrypted directory queries?", options: ["389", "636", "161", "445", "143"], answer: "389", explanation: "LDAP uses port 389; LDAPS uses port 636." },
+      { cat: "NETWORK", val: 400, q: "Which router defense is the best method to prevent inbound IP spoofing?", options: ["Ingress filtering", "Port knocking", "Split tunneling", "NAT overload", "Banner grabbing"], answer: "Ingress filtering", explanation: "Ingress filtering blocks incoming packets with forged internal source IPs." },
+      { cat: "NETWORK", val: 600, q: "Which VPN protocol operates at OSI Layer 3 using AH and ESP?", options: ["IPSec", "PPTP", "L2TP", "SSL/TLS", "SSH"], answer: "IPSec", explanation: "IPSec secures Layer 3 traffic via AH and ESP." },
+      { cat: "NETWORK", val: 800, q: "What is a major security drawback of encrypted VPN traffic passing through a firewall?", options: ["Firewall cannot inspect encrypted payloads", "VPNs disable NAT", "VPNs broadcast ARP", "Firewalls block UDP", "No authentication"], answer: "Firewall cannot inspect encrypted payloads", explanation: "Perimeter firewalls cannot inspect encrypted tunnel contents without termination." },
+      { cat: "NETWORK", val: 1000, q: "Which private IPv4 address range corresponds to Class B private networks?", options: ["172.16.0.0 – 172.31.255.255", "10.0.0.0 – 10.255.255.255", "192.168.0.0 – 192.168.255.255", "169.254.0.0/16", "127.0.0.0/8"], answer: "172.16.0.0 – 172.31.255.255", explanation: "Class B private space spans 172.16.0.0 through 172.31.255.255." },
+      { cat: "ATTACKS", val: 200, q: "Which attack floods a server with TCP SYN packets without completing the handshake?", options: ["SYN Flood", "Smurf Attack", "Teardrop Attack", "Land Attack", "Fraggle Attack"], answer: "SYN Flood", explanation: "A SYN flood exhausts connection tables with half-open sessions." },
+      { cat: "ATTACKS", val: 400, q: "Which attack sends overlapping UDP fragments that cannot be reassembled?", options: ["Teardrop", "Ping of Death", "Smurf", "SYN Flood", "ARP Poisoning"], answer: "Teardrop", explanation: "Teardrop exploits IP fragment reassembly routines." },
+      { cat: "ATTACKS", val: 600, q: "What differentiates a computer worm from a Trojan horse?", options: ["Worms self-replicate without a host file", "Trojans self-replicate", "Worms require user clicks", "Trojans only infect BIOS", "Worms cannot use networks"], answer: "Worms self-replicate without a host file", explanation: "Worms autonomously self-replicate across networks." },
+      { cat: "ATTACKS", val: 800, q: "Which DoS attack targets DNS port 53 using fragmented UDP packets?", options: ["Bonk", "Boink", "Land", "Fraggle", "Smurf"], answer: "Bonk", explanation: "Bonk targets port 53 with malformed UDP fragments." },
+      { cat: "ATTACKS", val: 1000, q: "Which attack sends a spoofed SYN packet with identical source and destination IP/port?", options: ["Land Attack", "Teardrop Attack", "Smurf Attack", "FTP Bounce", "Session Hijacking"], answer: "Land Attack", explanation: "A Land attack causes a vulnerable host to reply to itself." },
+      { cat: "ACCESS", val: 200, q: "Which model relies on clearance labels on subjects and classification labels on objects?", options: ["MAC", "DAC", "RBAC", "ABAC", "Rule-Based"], answer: "MAC", explanation: "Mandatory Access Control enforces security labels centrally." },
+      { cat: "ACCESS", val: 400, q: "In which model does the data owner grant or revoke object permissions?", options: ["DAC", "MAC", "RBAC", "Bell-LaPadula", "Biba"], answer: "DAC", explanation: "Discretionary Access Control places permission control with the data owner." },
+      { cat: "ACCESS", val: 600, q: "Which principle grants users only the minimum access needed for their job?", options: ["Least Privilege", "Separation of Duties", "Job Rotation", "Due Care", "Defense in Depth"], answer: "Least Privilege", explanation: "Least privilege restricts user rights to the minimum required." },
+      { cat: "ACCESS", val: 800, q: "In the Bell-LaPadula confidentiality model, what are the two primary rules?", options: ["No Read Up, No Write Down", "No Read Down, No Write Up", "No Read Up, No Write Up", "No Read Down, No Write Down", "Read Any, Write Any"], answer: "No Read Up, No Write Down", explanation: "Bell-LaPadula enforces Simple Security (No Read Up) and *-Property (No Write Down)." },
+      { cat: "ACCESS", val: 1000, q: "Which physical control uses two interlocking doors to prevent piggybacking?", options: ["Mantrap", "Turnstile", "Bollard", "Faraday Cage", "Cipher Lock"], answer: "Mantrap", explanation: "A mantrap isolates a single entrant between two doors." },
+      { cat: "PKI", val: 200, q: "What is the main purpose of a digital certificate in PKI?", options: ["Bind a public key to an entity's identity", "Encrypt database backups", "Store cleartext passwords", "Replace session keys", "Filter packets"], answer: "Bind a public key to an entity's identity", explanation: "A CA signs a certificate to bind a public key to the named subject." },
+      { cat: "PKI", val: 400, q: "Which standard defines the format of public key certificates?", options: ["X.509", "X.25", "802.1X", "PKCS #12", "Kerberos"], answer: "X.509", explanation: "X.509 defines standard public key certificate fields." },
+      { cat: "PKI", val: 600, q: "Which two mechanisms check whether a certificate has been revoked?", options: ["CRL and OCSP", "CHAP and PAP", "SPF and DKIM", "RADIUS and TACACS+", "AH and ESP"], answer: "CRL and OCSP", explanation: "CRLs and OCSP verify certificate revocation status." },
+      { cat: "PKI", val: 800, q: "Which document details the operational procedures a CA follows to issue certs?", options: ["CPS (Certificate Practice Statement)", "CP (Certificate Policy)", "SLA", "MOU", "BIA"], answer: "CPS (Certificate Practice Statement)", explanation: "The CPS details how the CA implements its Certificate Policy." },
+      { cat: "PKI", val: 1000, q: "When User A requests a certificate from a CA, what key does User A submit?", options: ["User A's public key only", "User A's private key", "Both keys", "User B's key", "AES key"], answer: "User A's public key only", explanation: "Private keys are never shared; only the public key is submitted." },
+      { cat: "BCP & DR", val: 200, q: "Which metric represents the expected monetary loss from a single risk event?", options: ["SLE (Single Loss Expectancy)", "ALE", "ARO", "EF", "RTO"], answer: "SLE (Single Loss Expectancy)", explanation: "SLE = Asset Value × Exposure Factor." },
+      { cat: "BCP & DR", val: 400, q: "Which BCP phase obtains formal agreement on Maximum Tolerable Downtime (MTD)?", options: ["Business Impact Analysis (BIA)", "Risk Mitigation", "Pen Testing", "Change Mgmt", "Config Audit"], answer: "Business Impact Analysis (BIA)", explanation: "The BIA identifies critical functions, MTD, RTO, and RPO." },
+      { cat: "BCP & DR", val: 600, q: "Which backup copies modified files since the last full backup WITHOUT clearing the archive bit?", options: ["Differential backup", "Incremental backup", "Full backup", "Snapshot", "Cold backup"], answer: "Differential backup", explanation: "Differential backups copy all changes since the last full backup." },
+      { cat: "BCP & DR", val: 800, q: "What is the international IT security evaluation standard (ISO/IEC 15408)?", options: ["Common Criteria", "ITSEC", "Orange Book", "PCI-DSS", "COBIT"], answer: "Common Criteria", explanation: "Common Criteria (EAL1–EAL7) is the international standard." },
+      { cat: "BCP & DR", val: 1000, q: "Which forensic rule requires tagging, bagging, and logging every evidence transfer?", options: ["Chain of Custody", "Due Diligence", "Non-Repudiation", "Data Remanence", "Order of Volatility"], answer: "Chain of Custody", explanation: "Chain of custody documents evidence handling to preserve admissibility." }
     ];
 
-    // GAME 4: SECURITY CONTROL SCRAMBLE (24 Terms)
     const scrambleData = [
-      { word: "FIREWALL", hint: "Network security system filtering traffic based on rules", explanation: "Firewalls inspect packets, states, or application traffic at network boundaries." },
-      { word: "KERBEROS", hint: "Authentication protocol using tickets and a KDC", explanation: "Kerberos uses symmetric key cryptography and time-stamped tickets." },
+      { word: "FIREWALL", hint: "Network security device filtering traffic by rules", explanation: "Firewalls inspect packets, states, or application traffic." },
+      { word: "KERBEROS", hint: "Authentication protocol using tickets and a KDC", explanation: "Kerberos uses symmetric keys and time-stamped tickets." },
       { word: "HONEYPOT", hint: "Decoy system deployed to lure and study attackers", explanation: "Honeypots distract adversaries and capture threat intelligence." },
-      { word: "SALTING", hint: "Adding random data to passwords prior to hashing", explanation: "Salting defeats precomputed rainbow table password attacks." },
+      { word: "SALTING", hint: "Adding random data to passwords prior to hashing", explanation: "Salting defeats precomputed rainbow table attacks." },
       { word: "MANTRAP", hint: "Interlocking double-door physical entry control", explanation: "Mantraps prevent unauthorized piggybacking and tailgating." },
-      { word: "CHECKSUM", hint: "Calculated value used to verify data integrity", explanation: "Checksums detect accidental or unauthorized alterations in transit." },
-      { word: "BIOMETRICS", hint: "Authentication based on physical or behavioral traits", explanation: "Type 3 authentication ('something you are'), such as fingerprints or iris scans." },
-      { word: "ENCRYPTION", hint: "Transforming plaintext into unreadable ciphertext", explanation: "Encryption protects data confidentiality at rest and in transit." },
-      { word: "INGRESS", hint: "Router filtering direction that blocks spoofed inbound IPs", explanation: "Ingress filtering drops external packets claiming internal source addresses." },
-      { word: "EXTRANET", hint: "Controlled private network extension allowing B2B partner access", explanation: "Extranets securely connect external business partners to specific internal resources." },
-      { word: "SPOOFING", hint: "Falsifying source identity to impersonate a trusted system", explanation: "Attackers spoof IP addresses, MAC addresses, or email headers." },
-      { word: "BACKDOOR", hint: "Hidden access method bypassing normal authentication (e.g., NetBus)", explanation: "Backdoors allow unauthorized remote access into compromised systems." },
-      { word: "SMURF", hint: "ICMP broadcast amplification Denial of Service attack", explanation: "Smurf attacks bounce spoofed ICMP echo requests off a broadcast network." },
-      { word: "TEARDROP", hint: "Overlapping IP/UDP fragment reassembly crash attack", explanation: "Teardrop crashes systems unable to handle overlapping fragment offsets." },
+      { word: "CHECKSUM", hint: "Calculated value used to verify data integrity", explanation: "Checksums detect accidental or unauthorized alterations." },
+      { word: "BIOMETRICS", hint: "Authentication based on physical or behavioral traits", explanation: "Type 3 authentication ('something you are')." },
+      { word: "ENCRYPTION", hint: "Transforming plaintext into unreadable ciphertext", explanation: "Encryption protects data confidentiality." },
+      { word: "INGRESS", hint: "Router filtering direction that blocks spoofed inbound IPs", explanation: "Ingress filtering drops external packets claiming internal source IPs." },
+      { word: "EXTRANET", hint: "Controlled private network extension for B2B partners", explanation: "Extranets securely connect external partners to specific resources." },
+      { word: "SPOOFING", hint: "Falsifying source identity to impersonate a trusted host", explanation: "Attackers spoof IP addresses, MAC addresses, or emails." },
+      { word: "BACKDOOR", hint: "Hidden access method bypassing normal authentication", explanation: "Backdoors allow unauthorized remote access." },
+      { word: "SMURF", hint: "ICMP broadcast amplification DoS attack", explanation: "Smurf attacks bounce spoofed ICMP requests off a broadcast network." },
+      { word: "TEARDROP", hint: "Overlapping IP/UDP fragment reassembly crash attack", explanation: "Teardrop crashes systems unable to handle overlapping fragments." },
       { word: "TOKEN", hint: "Physical or digital possession factor for authentication", explanation: "Type 2 authentication ('something you have')." },
-      { word: "AUDITLOG", hint: "Chronological record of logins, file access, and system events", explanation: "Audit logs support accountability, forensics, and intrusion detection." },
-      { word: "KEYSPACE", hint: "Total number of possible keys in a cryptographic algorithm", explanation: "A larger keyspace increases resistance against brute-force attacks." },
-      { word: "SNIFFING", hint: "Capturing and inspecting network packets on the wire", explanation: "Unencrypted protocols like Telnet and HTTP are vulnerable to packet sniffing." },
-      { word: "OVERFLOW", hint: "Buffer vulnerability caused by writing more data than allocated", explanation: "Buffer overflows can corrupt memory or execute arbitrary shellcode." },
-      { word: "ROOTKIT", hint: "Stealth malware designed to hide processes and maintain privileged access", explanation: "Rootkits modify OS kernels or system binaries to conceal compromise." },
-      { word: "PHISHING", hint: "Social engineering via fraudulent emails to steal credentials", explanation: "Phishing manipulates human trust rather than technical software flaws." },
-      { word: "SANDBOX", hint: "Isolated execution environment for safely analyzing untrusted code", explanation: "Sandboxing prevents suspicious programs from affecting the host OS." },
-      { word: "BASELINE", hint: "Minimum documented security configuration standard for systems", explanation: "Security baselines establish consistent hardening across servers and endpoints." },
-      { word: "FAILSAFE", hint: "System state that defaults to maximum security upon failure", explanation: "Fail-safe/fail-secure designs deny unauthorized access if a control crashes." }
+      { word: "AUDITLOG", hint: "Chronological record of logins and system events", explanation: "Audit logs support accountability and forensics." },
+      { word: "KEYSPACE", hint: "Total number of possible keys in a cipher", explanation: "A larger keyspace increases resistance against brute force." },
+      { word: "SNIFFING", hint: "Capturing and inspecting network packets on the wire", explanation: "Unencrypted protocols like Telnet are vulnerable to sniffing." },
+      { word: "OVERFLOW", hint: "Buffer vulnerability from writing more data than allocated", explanation: "Buffer overflows corrupt memory or execute shellcode." },
+      { word: "ROOTKIT", hint: "Stealth malware hiding processes and privileged access", explanation: "Rootkits modify OS kernels to conceal compromise." },
+      { word: "PHISHING", hint: "Social engineering via fraudulent emails", explanation: "Phishing manipulates human trust to steal credentials." },
+      { word: "SANDBOX", hint: "Isolated environment for safely running untrusted code", explanation: "Sandboxing prevents suspicious code from affecting the host." },
+      { word: "BASELINE", hint: "Minimum documented security configuration standard", explanation: "Baselines establish consistent hardening across systems." },
+      { word: "FAILSAFE", hint: "System state that defaults to safety/security on failure", explanation: "Fail-safe designs protect assets when a control crashes." }
     ];
 
-    // GAME 5: CLOUD ARCHITECTURE TOWER DEFENSE (24 Tasks across IaaS / PaaS / SaaS)
     const cloudArcade = [
       { item: "Raw virtual machines (EC2 / Azure VMs) and VPC networking", type: "iaas", name: "IaaS", explanation: "IaaS delivers virtualized compute, storage, and networking primitives." },
-      { item: "Managed database runtime and application middleware", type: "paas", name: "PaaS", explanation: "PaaS provides managed OS, runtime, and middleware so developers focus on code." },
-      { item: "End-user ready web email and CRM application software", type: "saas", name: "SaaS", explanation: "SaaS delivers complete, ready-to-use software over the browser." },
-      { item: "Customer patches the guest operating system on cloud servers", type: "iaas", name: "IaaS", explanation: "In IaaS, the customer owns and patches the guest OS and everything above it." },
-      { item: "Provider manages OS patching while customer deploys custom code", type: "paas", name: "PaaS", explanation: "In PaaS, the cloud provider patches the underlying OS and runtime environment." },
-      { item: "Provider manages application code, runtime, OS, and hardware", type: "saas", name: "SaaS", explanation: "In SaaS, the vendor manages the full stack while the customer manages user access and data." },
-      { item: "Virtual block storage volumes and software-defined firewalls", type: "iaas", name: "IaaS", explanation: "Virtual storage volumes and virtual network appliances are core IaaS resources." },
-      { item: "Hosted web application container execution environment", type: "paas", name: "PaaS", explanation: "Managed app execution platforms abstract servers away from developers." },
-      { item: "Cloud-based office productivity suite (e.g., Google Workspace / M365)", type: "saas", name: "SaaS", explanation: "Browser-accessible productivity suites are classic SaaS offerings." },
-      { item: "Customer configures virtual network subnets and routing tables", type: "iaas", name: "IaaS", explanation: "Virtual network topology design is a primary customer responsibility in IaaS." },
-      { item: "Serverless function execution platform with provider-managed scaling", type: "paas", name: "PaaS", explanation: "Function/application platforms manage infrastructure scaling automatically." },
-      { item: "Cloud-hosted video conferencing and team chat platform", type: "saas", name: "SaaS", explanation: "Turnkey collaboration software is delivered as SaaS." },
-      { item: "Bare-metal cloud hypervisor host provisioning", type: "iaas", name: "IaaS", explanation: "Provisioning compute hosts and hypervisors belongs to IaaS." },
-      { item: "Managed CI/CD build pipelines and staging runtimes", type: "paas", name: "PaaS", explanation: "Developer build, test, and deployment platforms fall under PaaS." },
-      { item: "Cloud-based HR payroll and accounting portal", type: "saas", name: "SaaS", explanation: "Enterprise business portals consumed directly by end users are SaaS." },
-      { item: "Customer installs custom database engines onto virtual cloud disks", type: "iaas", name: "IaaS", explanation: "Installing and maintaining self-hosted databases on VMs is an IaaS pattern." },
-      { item: "Database-as-a-Service (DBaaS) with automated backups and engine updates", type: "paas", name: "PaaS", explanation: "Managed DBaaS relieves the customer from OS and DB engine maintenance." },
-      { item: "Multi-tenant cloud ticketing and helpdesk application", type: "saas", name: "SaaS", explanation: "Turnkey helpdesk platforms operate as multi-tenant SaaS." },
-      { item: "Virtual load balancers and elastic IP address allocation", type: "iaas", name: "IaaS", explanation: "Network traffic routing primitives are provisioned within IaaS." },
-      { item: "API Gateway and managed microservices orchestration platform", type: "paas", name: "PaaS", explanation: "Managed middleware and API platforms support application development in PaaS." },
-      { item: "Cloud-based file sync and share service for end users", type: "saas", name: "SaaS", explanation: "End-user cloud storage apps (like Dropbox or Box) are SaaS." },
-      { item: "Customer responsible for host-based intrusion detection on virtual servers", type: "iaas", name: "IaaS", explanation: "Guest OS security agents are managed by the customer in IaaS." },
-      { item: "Customer uploads WAR/JAR or Python source packages directly to run", type: "paas", name: "PaaS", explanation: "Uploading application packages without managing VMs defines PaaS." },
-      { item: "Customer configures SSO and role permissions inside a vendor web portal", type: "saas", name: "SaaS", explanation: "In SaaS, customer control centers on identity, access, and data governance." }
+      { item: "Managed database runtime and application middleware", type: "paas", name: "PaaS", explanation: "PaaS provides managed OS, runtime, and middleware for developers." },
+      { item: "End-user ready web email and CRM application software", type: "saas", name: "SaaS", explanation: "SaaS delivers complete software over the browser." },
+      { item: "Customer patches the guest operating system on cloud servers", type: "iaas", name: "IaaS", explanation: "In IaaS, the customer patches the guest OS and above." },
+      { item: "Provider manages OS patching while customer deploys custom code", type: "paas", name: "PaaS", explanation: "In PaaS, the provider patches the underlying OS and runtime." },
+      { item: "Provider manages application code, runtime, OS, and hardware", type: "saas", name: "SaaS", explanation: "In SaaS, the vendor manages the full stack." },
+      { item: "Virtual block storage volumes and software-defined firewalls", type: "iaas", name: "IaaS", explanation: "Virtual storage and network appliances are core IaaS resources." },
+      { item: "Hosted web application container execution environment", type: "paas", name: "PaaS", explanation: "Managed app execution platforms abstract servers away." },
+      { item: "Cloud office productivity suite (Google Workspace / M365)", type: "saas", name: "SaaS", explanation: "Browser-accessible productivity suites are SaaS." },
+      { item: "Customer configures virtual network subnets and routing tables", type: "iaas", name: "IaaS", explanation: "Virtual network topology is a customer responsibility in IaaS." },
+      { item: "Serverless function platform with provider-managed scaling", type: "paas", name: "PaaS", explanation: "Application platforms manage infrastructure scaling automatically." },
+      { item: "Cloud-hosted video conferencing and team chat app", type: "saas", name: "SaaS", explanation: "Turnkey collaboration software is delivered as SaaS." }
     ];
 
-    // GAME 6: INCIDENT RESPONSE & LIFECYCLE TIME ATTACK (24 Tasks)
     const incidentArcade = [
-      { task: "Establishing IR policies, response team, and playbooks before an attack", phase: "preparation", name: "1. Preparation", explanation: "Preparation establishes readiness, tools, training, and policies prior to incidents." },
-      { task: "Triaging SIEM alerts and validating whether a security event is a true incident", phase: "detection", name: "2. Detection & Analysis", explanation: "Detection & Analysis determines scope, IOCs, and validity of alerts." },
-      { task: "Isolating an infected host VLAN to halt ransomware lateral movement", phase: "containment", name: "3. Containment", explanation: "Containment limits damage and stops the spread of compromise." },
-      { task: "Removing malware artifacts, rootkits, and closing exploited vulnerabilities", phase: "eradication", name: "4. Eradication", explanation: "Eradication eliminates the root cause and malicious presence from systems." },
-      { task: "Restoring clean backups and validating production systems return to normal", phase: "recovery", name: "5. Recovery", explanation: "Recovery safely returns hardened systems back into production operations." },
-      { task: "Conducting a post-incident 'lessons learned' meeting and updating controls", phase: "post-incident", name: "6. Post-Incident Activity", explanation: "Post-incident review improves future response and documents evidence." },
+      { task: "Establishing IR policies, response team, and playbooks before an attack", phase: "preparation", name: "1. Preparation", explanation: "Preparation establishes readiness, tools, and policies prior to incidents." },
+      { task: "Triaging SIEM alerts to validate if an event is a true incident", phase: "detection", name: "2. Detection & Analysis", explanation: "Detection & Analysis determines scope, IOCs, and validity of alerts." },
+      { task: "Isolating an infected host VLAN to halt ransomware spread", phase: "containment", name: "3. Containment", explanation: "Containment limits damage and stops lateral movement." },
+      { task: "Removing malware artifacts, rootkits, and closing vulnerabilities", phase: "eradication", name: "4. Eradication", explanation: "Eradication eliminates the root cause and malicious presence." },
+      { task: "Restoring clean backups and validating production systems", phase: "recovery", name: "5. Recovery", explanation: "Recovery safely returns hardened systems back into production." },
+      { task: "Conducting a 'lessons learned' meeting and updating controls", phase: "post-incident", name: "6. Post-Incident Activity", explanation: "Post-incident review improves future response." },
       { task: "Conducting tabletop exercises and building forensic jump bags", phase: "preparation", name: "1. Preparation", explanation: "Tabletop drills and jump kits are core Preparation activities." },
-      { task: "Correlating firewall logs and IDS signatures to identify patient zero", phase: "detection", name: "2. Detection & Analysis", explanation: "Log correlation and initial scoping occur during Detection & Analysis." },
-      { task: "Applying emergency firewall block rules against command-and-control IPs", phase: "containment", name: "3. Containment", explanation: "Blocking C2 traffic stops active attacker control during Containment." },
-      { task: "Disabling compromised user accounts and deleting attacker backdoors", phase: "eradication", name: "4. Eradication", explanation: "Purging attacker persistence mechanisms belongs to Eradication." },
-      { task: "Rebuilding compromised servers from trusted golden images", phase: "recovery", name: "5. Recovery", explanation: "Rebuilding and restoring verified production workloads is part of Recovery." },
-      { task: "Writing the final executive incident report and archiving chain-of-custody logs", phase: "post-incident", name: "6. Post-Incident Activity", explanation: "Formal reporting and evidence retention conclude the IR lifecycle." },
-      { task: "Defining escalation contacts and legal notification procedures", phase: "preparation", name: "1. Preparation", explanation: "Communication trees must be established in Preparation." },
-      { task: "Analyzing suspicious memory dumps and file hashes to confirm malware", phase: "detection", name: "2. Detection & Analysis", explanation: "Technical analysis of artifacts confirms compromise during Detection & Analysis." },
-      { task: "Taking a forensic disk snapshot before unplugging an affected workstation", phase: "containment", name: "3. Containment", explanation: "Evidence preservation accompanies short-term Containment actions." },
-      { task: "Patching the unpatched web server flaw used for initial entry", phase: "eradication", name: "4. Eradication", explanation: "Remediating the root vulnerability ensures the threat is eradicated." },
-      { task: "Monitoring restored systems closely for signs of reinfection", phase: "recovery", name: "5. Recovery", explanation: "Heightened monitoring validates clean Recovery." },
-      { task: "Updating IDS signatures and firewall baselines based on attack findings", phase: "post-incident", name: "6. Post-Incident Activity", explanation: "Feeding lessons learned back into security controls strengthens defenses." },
-      { task: "Deploying endpoint detection sensors and central log collection", phase: "preparation", name: "1. Preparation", explanation: "Visibility tooling is deployed proactively during Preparation." },
-      { task: "Distinguishing a false positive alert from an active intrusion", phase: "detection", name: "2. Detection & Analysis", explanation: "Alert validation prevents wasted effort on false positives." },
-      { task: "Revoking compromised API tokens and forcing emergency password resets", phase: "containment", name: "3. Containment", explanation: "Cutting off compromised credentials stops ongoing unauthorized access." },
-      { task: "Wiping infected drives prior to re-imaging", phase: "eradication", name: "4. Eradication", explanation: "Complete removal of malicious code occurs in Eradication." },
-      { task: "Reconnecting segmented business units after verification testing", phase: "recovery", name: "5. Recovery", explanation: "Phased reconnection restores normal business availability." },
-      { task: "Calculating total incident cost and reviewing SLA compliance", phase: "post-incident", name: "6. Post-Incident Activity", explanation: "Post-incident metrics quantify business impact and response effectiveness." }
+      { task: "Correlating firewall logs and IDS signatures to find patient zero", phase: "detection", name: "2. Detection & Analysis", explanation: "Log correlation and initial scoping occur during Detection & Analysis." },
+      { task: "Applying emergency firewall block rules against C2 IPs", phase: "containment", name: "3. Containment", explanation: "Blocking C2 traffic stops active attacker control during Containment." },
+      { task: "Disabling compromised accounts and deleting attacker backdoors", phase: "eradication", name: "4. Eradication", explanation: "Purging attacker persistence belongs to Eradication." },
+      { task: "Rebuilding compromised servers from trusted golden images", phase: "recovery", name: "5. Recovery", explanation: "Rebuilding and restoring verified workloads is part of Recovery." },
+      { task: "Writing the final executive incident report and archiving logs", phase: "post-incident", name: "6. Post-Incident Activity", explanation: "Formal reporting concludes the IR lifecycle." }
+    ];
+
+    const wheelSlices = [
+      { text: "$200", val: 200, type: "cash" },
+      { text: "$500", val: 500, type: "cash" },
+      { text: "BANKRUPT", val: 0, type: "bankrupt" },
+      { text: "$300", val: 300, type: "cash" },
+      { text: "$700", val: 700, type: "cash" },
+      { text: "LOSE TURN", val: 0, type: "lose" },
+      { text: "$400", val: 400, type: "cash" },
+      { text: "$1000", val: 1000, type: "cash" },
+      { text: "$250", val: 250, type: "cash" },
+      { text: "BANKRUPT", val: 0, type: "bankrupt" },
+      { text: "$600", val: 600, type: "cash" },
+      { text: "$800", val: 800, type: "cash" }
     ];
 
     /* =========================================================================
-       ARCADE STATE & TIMERS
+       STATE & UTILITIES
        ========================================================================= */
     let activeGameId = null;
     let activeQueue = [];
     let currentItem = null;
     let sessionLog = [];
-    let totalItemsCount = 0;
 
-    // Jeopardy State
+    // Wheel state
+    let wheelSecret = "";
+    let wheelGuessed = new Set();
+    let wheelRoundCash = 0;
+    let wheelTotalCash = 0;
+    let currentWheelSlice = null;
+    let wheelIsSpinning = false;
+    let wheelCurrentAngle = 0;
+
+    // Jeopardy state
     let jeopardyCash = 0;
     let jeopardyBoardCategories = [];
     let jeopardyBoardGrid = {};
     let jeopardyRemainingCount = 0;
     let activeJeopardyCellKey = null;
 
-    // Tower Defense State
+    // Scramble state
+    let scrambleCurrentWord = "";
+    let scrambleTiles = [];
+    let userScrambleChoice = [];
+
+    // Tower Defense state
     let tdTowerHp = 100;
-    let tdEnemyX = 84;
+    let tdEnemyX = 82;
     let tdMoveInterval = null;
     let tdWaveLocked = false;
 
-    // Timer State
+    // Timer state
     let gameTimerInterval = null;
     let timeLeft = 0;
     let activeTimerContext = null;
@@ -1147,7 +1213,6 @@
 
     const arcadeModal = document.getElementById("arcade-modal");
     const arcadeTitle = document.getElementById("arcade-game-title");
-    const arcadeSubtitle = document.getElementById("arcade-game-subtitle");
     const arcadeBody = document.getElementById("arcade-body-content");
     const hudRemaining = document.getElementById("hud-remaining");
     const hudRemainingBadge = document.getElementById("hud-remaining-badge");
@@ -1161,6 +1226,15 @@
     const feedbackStatus = document.getElementById("feedback-status");
     const feedbackBody = document.getElementById("feedback-body");
     const feedbackCloseBtn = document.getElementById("feedback-close-btn");
+
+    function shuffleArray(arr) {
+      const copy = [...arr];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
 
     function stopGameTimer() {
       if (gameTimerInterval) {
@@ -1184,9 +1258,7 @@
       gameTimerInterval = setInterval(() => {
         timeLeft--;
         hudTimer.textContent = Math.max(0, timeLeft);
-        if (timeLeft <= 5) {
-          hudTimerBadge.classList.add("urgent");
-        }
+        if (timeLeft <= 5) hudTimerBadge.classList.add("urgent");
         if (timeLeft <= 0) {
           stopGameTimer();
           handleTimerExpired();
@@ -1196,51 +1268,36 @@
 
     function handleTimerExpired() {
       pendingTimeoutAdvance = true;
-
       if (activeTimerContext === "blaster" && currentItem) {
-        sessionLog.push({
-          item: currentItem.use,
-          userChoice: "⏱️ Ran out of time",
-          correctAnswer: `Port ${currentItem.num}`,
-          isCorrect: false,
-          explanation: currentItem.explanation
-        });
-        openFeedback(false, `<strong>Uh-oh you ran out of time!</strong><br><br>Target service <strong>${currentItem.use}</strong> runs on <strong>Port ${currentItem.num}</strong>.`);
+        sessionLog.push({ item: currentItem.use, userChoice: "⏱️ Timeout", correctAnswer: `Port ${currentItem.num}`, isCorrect: false, explanation: currentItem.explanation });
+        openFeedback(false, `<strong>Time's Up!</strong><br>${currentItem.use} uses <strong>Port ${currentItem.num}</strong>.`);
       } else if (activeTimerContext === "jeopardy" && activeJeopardyCellKey) {
         const cellObj = jeopardyBoardGrid[activeJeopardyCellKey];
         if (cellObj && !cellObj.answered) {
           cellObj.answered = true;
           jeopardyRemainingCount--;
           updateRemainingHud();
-          sessionLog.push({
-            item: `Jeopardy [${cellObj.cat} $${cellObj.val}]`,
-            userChoice: "⏱️ Ran out of time",
-            correctAnswer: cellObj.answer,
-            isCorrect: false,
-            explanation: cellObj.explanation
-          });
+          sessionLog.push({ item: `${cellObj.cat} $${cellObj.val}`, userChoice: "⏱️ Timeout", correctAnswer: cellObj.answer, isCorrect: false, explanation: cellObj.explanation });
         }
         activeJeopardyCellKey = null;
-        openFeedback(false, `<strong>Uh-oh you ran out of time!</strong><br><br>The correct answer was <strong>${cellObj ? cellObj.answer : ""}</strong>.`);
+        openFeedback(false, `<strong>Time's Up!</strong><br>Correct answer: <strong>${cellObj ? cellObj.answer : ""}</strong>.`);
       } else if (activeTimerContext === "scramble" && currentItem) {
-        sessionLog.push({
-          item: currentItem.hint,
-          userChoice: "⏱️ Ran out of time",
-          correctAnswer: scrambleCurrentWord,
-          isCorrect: false,
-          explanation: currentItem.explanation
-        });
-        openFeedback(false, `<strong>Uh-oh you ran out of time!</strong><br><br>The correct security term was <strong>${scrambleCurrentWord}</strong>.`);
+        sessionLog.push({ item: currentItem.hint, userChoice: "⏱️ Timeout", correctAnswer: scrambleCurrentWord, isCorrect: false, explanation: currentItem.explanation });
+        openFeedback(false, `<strong>Time's Up!</strong><br>Correct term: <strong>${scrambleCurrentWord}</strong>.`);
       } else if (activeTimerContext === "incident" && currentItem) {
-        sessionLog.push({
-          item: currentItem.task,
-          userChoice: "⏱️ Ran out of time",
-          correctAnswer: currentItem.phase.toUpperCase(),
-          isCorrect: false,
-          explanation: currentItem.explanation
-        });
-        openFeedback(false, `<strong>Uh-oh you ran out of time!</strong><br><br>The correct NIST phase was <strong>${currentItem.phase.toUpperCase()}</strong>.`);
+        sessionLog.push({ item: currentItem.task, userChoice: "⏱️ Timeout", correctAnswer: currentItem.name, isCorrect: false, explanation: currentItem.explanation });
+        openFeedback(false, `<strong>Time's Up!</strong><br>Correct phase: <strong>${currentItem.name}</strong>.`);
       }
+    }
+
+    function closeArcadeModal() {
+      stopGameTimer();
+      feedbackModal.classList.remove("open");
+      arcadeModal.classList.remove("open");
+    }
+
+    function updateRemainingHud() {
+      hudRemaining.textContent = activeGameId === 3 ? jeopardyRemainingCount : activeQueue.length;
     }
 
     function launchGame(gameId) {
@@ -1255,40 +1312,31 @@
       hudRemainingBadge.style.display = "flex";
 
       if (gameId === 1) {
-        arcadeSubtitle.textContent = "CABINET 01 // ACTION RADAR SHOOTER";
         arcadeTitle.textContent = "Laser Blaster";
         activeQueue = shuffleArray(ports);
-        totalItemsCount = activeQueue.length;
         nextPortBlasterRound();
       } else if (gameId === 2) {
-        arcadeSubtitle.textContent = "CABINET 02 // WHEEL OF FORTUNE";
         arcadeTitle.textContent = "Wheel of CISSP";
         activeQueue = shuffleArray(ciphers);
-        totalItemsCount = activeQueue.length;
         wheelTotalCash = 0;
+        hudCash.textContent = "0";
+        hudCashBadge.style.display = "flex";
         nextWheelRound();
       } else if (gameId === 3) {
-        arcadeSubtitle.textContent = "CABINET 03 // TRIVIA BOARD";
         arcadeTitle.textContent = "ISACA Jeopardy";
         initJeopardyBoard();
       } else if (gameId === 4) {
-        arcadeSubtitle.textContent = "CABINET 04 // ANAGRAM BLITZ";
         arcadeTitle.textContent = "Unscramble Concepts";
         activeQueue = shuffleArray(scrambleData);
-        totalItemsCount = activeQueue.length;
         nextScrambleRound();
       } else if (gameId === 5) {
-        arcadeSubtitle.textContent = "CABINET 05 // TOWER DEFENSE";
         arcadeTitle.textContent = "Tower Defender";
         activeQueue = shuffleArray(cloudArcade);
-        totalItemsCount = activeQueue.length;
         tdTowerHp = 100;
         nextCloudRound();
       } else if (gameId === 6) {
-        arcadeSubtitle.textContent = "CABINET 06 // TIME ATTACK";
         arcadeTitle.textContent = "Beat the Clock";
         activeQueue = shuffleArray(incidentArcade);
-        totalItemsCount = activeQueue.length;
         nextIncidentRound();
       }
     }
@@ -1297,92 +1345,54 @@
       stopGameTimer();
       hudCashBadge.style.display = "none";
       hudTimerBadge.style.display = "none";
+      arcadeTitle.textContent = "Switch Game";
       arcadeBody.innerHTML = `
-        <div style="text-align:center; padding: 2rem;">
-          <h2 style="color:#fff; font-family:'Archivo Black',sans-serif; margin-bottom:1rem;">SELECT NEW ARCADE CABINET</h2>
-          <div class="game-choice-grid" style="margin-top:1rem;">
-            <button class="game-selector-card" onclick="launchGame(1)"><div class="game-title">01. Laser Blaster</div></button>
-            <button class="game-selector-card" onclick="launchGame(2)"><div class="game-title">02. Wheel of CISSP</div></button>
-            <button class="game-selector-card" onclick="launchGame(3)"><div class="game-title">03. ISACA Jeopardy</div></button>
-            <button class="game-selector-card" onclick="launchGame(4)"><div class="game-title">04. Unscramble Concepts</div></button>
-            <button class="game-selector-card" onclick="launchGame(5)"><div class="game-title">05. Tower Defender</div></button>
-            <button class="game-selector-card" onclick="launchGame(6)"><div class="game-title">06. Beat the Clock</div></button>
+        <div class="stage-screen" style="justify-content:center; overflow-y:auto;">
+          <div class="game-choice-grid" style="margin:0;">
+            <button class="game-selector-card card-blaster" style="padding:0.85rem;" onclick="launchGame(1)"><div class="game-title" style="font-size:0.95rem;">🎯 Laser Blaster</div></button>
+            <button class="game-selector-card card-wheel" style="padding:0.85rem;" onclick="launchGame(2)"><div class="game-title" style="font-size:0.95rem;">🎡 Wheel of CISSP</div></button>
+            <button class="game-selector-card card-jeopardy" style="padding:0.85rem;" onclick="launchGame(3)"><div class="game-title" style="font-size:0.95rem;">🏆 ISACA Jeopardy</div></button>
+            <button class="game-selector-card card-scramble" style="padding:0.85rem;" onclick="launchGame(4)"><div class="game-title" style="font-size:0.95rem;">🧩 Unscramble Concepts</div></button>
+            <button class="game-selector-card card-tower" style="padding:0.85rem;" onclick="launchGame(5)"><div class="game-title" style="font-size:0.95rem;">🏰 Tower Defender</div></button>
+            <button class="game-selector-card card-clock" style="padding:0.85rem;" onclick="launchGame(6)"><div class="game-title" style="font-size:0.95rem;">⚡ Beat the Clock</div></button>
           </div>
         </div>
       `;
-    }
-
-    function quitGameAction() {
-      stopGameTimer();
-      if (arcadeSubtitle.textContent === "MISSION DEBRIEF & REPORT") {
-        arcadeModal.classList.remove("open");
-        return;
-      }
-      showDebriefSummary();
-    }
-
-    function updateRemainingHud() {
-      if (activeGameId === 3) {
-        hudRemaining.textContent = jeopardyRemainingCount;
-      } else {
-        hudRemaining.textContent = activeQueue.length;
-      }
     }
 
     function showDebriefSummary() {
       stopGameTimer();
       hudTimerBadge.style.display = "none";
-      arcadeSubtitle.textContent = "MISSION DEBRIEF & REPORT";
-      arcadeTitle.textContent = `Completed: ${sessionLog.length} Challenges`;
-      arcadeModal.classList.add("open");
+      arcadeTitle.textContent = `Debrief (${sessionLog.length} Played)`;
 
-      let correctCount = sessionLog.filter(s => s.isCorrect).length;
-      let wrongCount = sessionLog.filter(s => !s.isCorrect).length;
+      const correctCount = sessionLog.filter(s => s.isCorrect).length;
+      const wrongCount = sessionLog.filter(s => !s.isCorrect).length;
 
-      let cashSummaryHtml = activeGameId === 2 ? ` | CASH WON: <span style="color:var(--lime);">$${wheelTotalCash.toLocaleString()}</span>` : (activeGameId === 3 ? ` | CASH EARNED: <span style="color:var(--lime);">$${jeopardyCash.toLocaleString()}</span>` : (activeGameId === 5 ? ` | TOWER HP: <span style="color:${tdTowerHp > 0 ? 'var(--lime)' : 'var(--rose)'};">${tdTowerHp}%</span>` : ""));
-
-      let debriefHtml = `
-        <div style="margin-bottom:0.75rem;">
-          <h3 style="color:#fff; font-family:'Archivo Black',sans-serif; margin-bottom:0.2rem;">SCORE: ${correctCount} Correct / ${wrongCount} Errors${cashSummaryHtml}</h3>
-          <p class="prose">Here is your verified tactical debrief with complete explanations (click <strong>Exit to Arcade Menu</strong> to return to the Tactical Arcade):</p>
-        </div>
-        <div class="debrief-container">
-      `;
-
-      if (sessionLog.length === 0) {
-        debriefHtml += `
-          <div class="debrief-card">
-            <div class="debrief-title">NO MISSIONS ATTEMPTED</div>
-            <div class="debrief-detail">Quit immediately before engaging targets. Score: 0/0.</div>
-          </div>
-        `;
-      } else {
-        sessionLog.forEach(log => {
-          const cardClass = log.isCorrect ? "correct-item" : "wrong-item";
-          const statusIcon = log.isCorrect ? "✓ SUCCESS" : "✕ TARGET MISSED";
-          debriefHtml += `
-            <div class="debrief-card ${cardClass}">
-              <div class="debrief-title">${statusIcon} — ${log.item}</div>
-              <div class="debrief-detail" style="margin-bottom:0.25rem;"><strong>Your input:</strong> ${log.userChoice} | <strong>Target standard:</strong> ${log.correctAnswer}</div>
-              <div class="debrief-detail" style="color:#fff;"><strong>Tactical Intel:</strong> ${log.explanation}</div>
+      let listHtml = sessionLog.length === 0
+        ? `<div class="debrief-card"><div class="debrief-title">No rounds completed yet.</div></div>`
+        : sessionLog.map(log => `
+            <div class="debrief-card ${log.isCorrect ? "correct-item" : "wrong-item"}">
+              <div class="debrief-title">${log.isCorrect ? "✓" : "✕"} ${log.item}</div>
+              <div class="debrief-detail"><strong>Yours:</strong> ${log.userChoice} | <strong>Answer:</strong> ${log.correctAnswer}</div>
+              <div class="debrief-detail" style="color:#fff;">${log.explanation}</div>
             </div>
-          `;
-        });
-      }
+          `).join("");
 
-      debriefHtml += `</div>
-        <div style="display:flex; gap:1rem; margin-top:1.25rem; flex-wrap:wrap;">
-          <button class="arcade-btn-action" style="background:var(--lime); color:#000;" onclick="launchGame(${activeGameId})">Play Again</button>
-          <button class="arcade-btn-action" onclick="openNewGamePrompt()">Choose Another Game</button>
-          <button class="arcade-btn-action" style="border-color: rgba(251,113,133,0.4); color: var(--rose);" onclick="quitGameAction()">Exit to Arcade Menu</button>
+      arcadeBody.innerHTML = `
+        <div class="stage-screen">
+          <div class="prompt-banner">SCORE: <span style="color:var(--lime);">${correctCount} Right</span> / <span style="color:var(--rose);">${wrongCount} Missed</span></div>
+          <div class="debrief-container">${listHtml}</div>
+          <div style="display:flex; gap:0.5rem; justify-content:center; padding-top:0.5rem;">
+            <button class="arcade-btn-action" style="background:var(--lime); color:#000;" onclick="launchGame(${activeGameId || 1})">Play Again</button>
+            <button class="arcade-btn-action" onclick="openNewGamePrompt()">Switch Game</button>
+            <button class="arcade-btn-action" style="color:var(--rose);" onclick="closeArcadeModal()">Exit</button>
+          </div>
         </div>
       `;
-
-      arcadeBody.innerHTML = debriefHtml;
     }
 
     /* =========================================================================
-       GAME 1: LASER BLASTER (Drift-Bounded Radar Shooting Range)
+       1. LASER BLASTER (Safe Mobile Bounds + Aimed Laser Turret)
        ========================================================================= */
     let blasterFiring = false;
 
@@ -1403,34 +1413,29 @@
       }
       choices = shuffleArray(choices);
 
-      // Kept positions locked well inside the canvas boundary box
+      // Center-anchored safe coordinates so buttons never clip off mobile screens
       const positions = [
-        { top: "14%", left: "12%" },
-        { top: "18%", left: "62%" },
-        { top: "48%", left: "15%" },
-        { top: "44%", left: "60%" }
+        { top: "22%", left: "26%" },
+        { top: "22%", left: "74%" },
+        { top: "54%", left: "26%" },
+        { top: "54%", left: "74%" }
       ];
-      const randomizedPositions = shuffleArray(positions);
 
       arcadeBody.innerHTML = `
-        <div class="arcade-arena">
-          <div class="arcade-screen-box" style="padding:1rem;">
-            <div style="font-size:0.7rem; font-family:'JetBrains Mono',monospace; color:var(--cyan); letter-spacing:0.06em;">TACTICAL RADAR TARGET INTERCEPT</div>
-            <div class="arcade-display-text" style="font-size:1.02rem; margin:0.4rem 0;">Target Service: <span>"${currentItem.use}"</span></div>
-            
-            <div class="blaster-radar-screen" id="blaster-radar-box">
-              <div class="radar-grid-lines"></div>
-              ${choices.map((c, idx) => `
-                <button class="blaster-target-node" style="top: ${randomizedPositions[idx].top}; left: ${randomizedPositions[idx].left};" onclick="shootPortTarget(this, ${c}, ${currentItem.num}, '${currentItem.use.replace(/'/g, "\\'")}', '${currentItem.explanation.replace(/'/g, "\\'")}')">
-                  <span>🎯</span> PORT ${c}
-                </button>
-              `).join("")}
-              <div class="laser-beam" id="laser-effect"></div>
-              <div class="cannon-turret" id="cannon-turret">
-                <div class="cannon-barrel"></div>
-              </div>
+        <div class="stage-screen">
+          <div class="prompt-banner">Blast Port For: <span>${currentItem.use}</span></div>
+          <div class="blaster-radar-screen" id="blaster-radar-box">
+            <div class="radar-grid-lines"></div>
+            ${choices.map((c, idx) => `
+              <button type="button" class="blaster-target-node" style="top:${positions[idx].top}; left:${positions[idx].left};"
+                onclick="shootPortTarget(this, ${c}, ${currentItem.num}, '${currentItem.use.replace(/'/g, "\\'")}', '${currentItem.explanation.replace(/'/g, "\\'")}')">
+                🎯 PORT ${c}
+              </button>
+            `).join("")}
+            <div class="laser-beam" id="laser-effect"></div>
+            <div class="cannon-turret" id="cannon-turret">
+              <div class="cannon-barrel"></div>
             </div>
-            <div style="font-size:0.75rem; color:var(--text-secondary); text-align:center;">Click the correct port node to aim and blast the target!</div>
           </div>
         </div>
       `;
@@ -1452,8 +1457,7 @@
         const btnRect = btnEl.getBoundingClientRect();
 
         const originX = radarRect.width / 2;
-        const originY = radarRect.height - 36;
-
+        const originY = radarRect.height - 31;
         const targetX = (btnRect.left - radarRect.left) + (btnRect.width / 2);
         const targetY = (btnRect.top - radarRect.top) + (btnRect.height / 2);
 
@@ -1462,36 +1466,28 @@
         const distance = Math.hypot(dx, dy);
         const angleDeg = Math.atan2(dx, -dy) * (180 / Math.PI);
 
-        // Rotate Turret
         turret.style.transform = `rotate(${angleDeg}deg)`;
 
-        // Fire Laser
         setTimeout(() => {
           laser.style.display = "block";
           laser.style.height = `${distance}px`;
           laser.style.transform = `translateX(-50%) rotate(${angleDeg}deg)`;
           btnEl.classList.add("blasted");
-          btnEl.innerHTML = `<span>💥</span> PORT ${selected}`;
+          btnEl.innerHTML = `💥 PORT ${selected}`;
         }, 110);
       }
 
       const isCorrect = (selected === correctNum);
-      sessionLog.push({
-        item: useName,
-        userChoice: `Port ${selected}`,
-        correctAnswer: `Port ${correctNum}`,
-        isCorrect: isCorrect,
-        explanation: explanation
-      });
+      sessionLog.push({ item: useName, userChoice: `Port ${selected}`, correctAnswer: `Port ${correctNum}`, isCorrect, explanation });
 
       setTimeout(() => {
-        openFeedback(isCorrect, isCorrect ? "Direct Laser Hit! Port successfully defended." : `Missed target! <strong>${useName}</strong> runs on <strong>Port ${correctNum}</strong>.`);
+        openFeedback(isCorrect, isCorrect ? "Direct Hit!" : `Missed! <strong>${useName}</strong> uses <strong>Port ${correctNum}</strong>.`);
         nextPortBlasterRound();
-      }, 420);
+      }, 400);
     }
 
     /* =========================================================================
-       GAME 2: WHEEL OF CISSP (Clue & Downward Ticker Spinner Stack)
+       2. WHEEL OF CISSP (Zero-Scroll Single Screen + Synced Downward Ticker)
        ========================================================================= */
     function nextWheelRound() {
       stopGameTimer();
@@ -1510,54 +1506,54 @@
     }
 
     function renderWheelScreen() {
-      let displayString = "";
+      let slotsHtml = "";
       let solved = true;
-      for (let char of wheelSecret) {
-        if (char === " " || char === "-") {
-          displayString += `<div class="wheel-slot" style="background:transparent; border:none; width:18px;">${char}</div>`;
-        } else if (wheelGuessed.has(char)) {
-          displayString += `<div class="wheel-slot" style="width:30px; height:38px; font-size:1.15rem;">${char}</div>`;
+      for (let ch of wheelSecret) {
+        if (ch === " " || ch === "-") {
+          slotsHtml += `<div class="wheel-slot" style="background:transparent; border:none; width:14px;">${ch}</div>`;
+        } else if (wheelGuessed.has(ch)) {
+          slotsHtml += `<div class="wheel-slot">${ch}</div>`;
         } else {
-          displayString += `<div class="wheel-slot" style="width:30px; height:38px; font-size:1.15rem;">_</div>`;
+          slotsHtml += `<div class="wheel-slot">_</div>`;
           solved = false;
         }
       }
 
       if (solved) {
         wheelTotalCash += wheelRoundCash;
+        hudCash.textContent = wheelTotalCash.toLocaleString();
         sessionLog.push({ item: currentItem.hint, userChoice: `${wheelSecret} ($${wheelRoundCash})`, correctAnswer: wheelSecret, isCorrect: true, explanation: currentItem.explanation });
-        openFeedback(true, `Crypto Puzzle Solved! <strong>${wheelSecret}</strong> decrypted. Earned +$${wheelRoundCash}!`);
+        openFeedback(true, `Solved <strong>${wheelSecret}</strong>! +$${wheelRoundCash}`);
         nextWheelRound();
         return;
       }
 
       arcadeBody.innerHTML = `
-        <div class="arcade-arena" style="height:100%;">
-          <div class="arcade-screen-box" style="padding:0.85rem; justify-content:space-between; height:100%;">
-            <div class="wheel-split">
-              <!-- Left panel: Wheel & Spin button (Zero scrolling) -->
-              <div class="wheel-spinner-panel">
-                <div class="wheel-stage">
-                  <div class="wheel-ticker"></div>
-                  <canvas id="fortune-wheel-canvas" width="170" height="170"></canvas>
-                </div>
-                <button type="button" id="spin-wheel-btn" onclick="spinFortuneWheel()" class="btn-spin-wheel" ${wheelIsSpinning || currentWheelSlice ? 'disabled' : ''}>SPIN</button>
-              </div>
-
-              <!-- Right panel: Puzzle board & Keyboard -->
-              <div class="wheel-puzzle-pane">
-                <div>
-                  <div style="font-family:'JetBrains Mono',monospace; font-size:0.75rem; color:var(--cyan); text-transform:uppercase; margin-bottom:0.25rem;">Clue: "${currentItem.hint}"</div>
-                  <div id="wheel-status-banner" style="font-family:'JetBrains Mono',monospace; font-size:0.78rem; color:var(--lime); margin-bottom:0.5rem; min-height:18px;">
-                    ${currentWheelSlice ? `Landed on: <strong>${currentWheelSlice.text}</strong>` : "Spin the wheel to make a guess!"}
-                  </div>
-                  <div class="wheel-slots">${displayString}</div>
-                </div>
-
-                <div class="alphabet-grid">
-                  ${"ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").map(letter => `<button class="alpha-key" ${wheelGuessed.has(letter) || !currentWheelSlice || currentWheelSlice.type !== 'cash' ? 'disabled' : ''} onclick="guessWheelLetter('${letter}')">${letter}</button>`).join("")}
+        <div class="stage-screen">
+          <div class="wheel-arena-layout">
+            <div class="wheel-top-row">
+              <div class="wheel-widget">
+                <div class="wheel-pointer-down"></div>
+                <div class="wheel-circle-wrap">
+                  <canvas id="fortune-wheel-canvas" width="176" height="176" style="width:100%; height:100%; transition:transform 2.8s cubic-bezier(0.15, 0.85, 0.15, 1); transform:rotate(${wheelCurrentAngle}deg);"></canvas>
+                  <button type="button" class="wheel-spin-center-btn" id="spin-wheel-btn" onclick="spinFortuneWheel()" ${wheelIsSpinning || currentWheelSlice ? "disabled" : ""}>SPIN</button>
                 </div>
               </div>
+              <div class="wheel-info-col">
+                <div style="font-family:'JetBrains Mono',monospace; font-size:0.74rem; color:var(--lime);">Round Bank: $${wheelRoundCash}</div>
+                <div style="font-family:'JetBrains Mono',monospace; font-size:0.78rem; color:var(--cyan);">
+                  ${currentWheelSlice ? `Landed on: <strong style="color:var(--lime);">${currentWheelSlice.text}</strong>` : "Tap SPIN on the wheel!"}
+                </div>
+                <div style="font-size:0.8rem; color:#e2e8f0; line-height:1.35;">"${currentItem.hint}"</div>
+              </div>
+            </div>
+
+            <div class="wheel-slots">${slotsHtml}</div>
+
+            <div class="alphabet-grid">
+              ${"ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("").map(letter => `
+                <button type="button" class="alpha-key" ${wheelGuessed.has(letter) || !currentWheelSlice || currentWheelSlice.type !== "cash" ? "disabled" : ""} onclick="guessWheelLetter('${letter}')">${letter}</button>
+              `).join("")}
             </div>
           </div>
         </div>
@@ -1566,8 +1562,99 @@
       drawFortuneWheelCanvas();
     }
 
+    function drawFortuneWheelCanvas() {
+      const canvas = document.getElementById("fortune-wheel-canvas");
+      if (!canvas) return;
+      const ctx = canvas.getContext("2d");
+      const numSlices = wheelSlices.length;
+      const arc = (2 * Math.PI) / numSlices;
+      const colors = ["#0e7490", "#1e3a8a", "#047857", "#b45309", "#4338ca", "#0f766e", "#6d28d9", "#1d4ed8"];
+
+      ctx.clearRect(0, 0, 176, 176);
+      ctx.save();
+      ctx.translate(88, 88);
+
+      wheelSlices.forEach((slice, i) => {
+        const angle = i * arc;
+        ctx.beginPath();
+        ctx.fillStyle = colors[i % colors.length];
+        if (slice.type === "bankrupt") ctx.fillStyle = "#991b1b";
+        if (slice.type === "lose") ctx.fillStyle = "#374151";
+        ctx.moveTo(0, 0);
+        ctx.arc(0, 0, 88, angle, angle + arc);
+        ctx.lineTo(0, 0);
+        ctx.fill();
+        ctx.strokeStyle = "rgba(255,255,255,0.2)";
+        ctx.stroke();
+
+        ctx.save();
+        ctx.rotate(angle + arc / 2);
+        ctx.textAlign = "right";
+        ctx.fillStyle = "#fff";
+        ctx.font = "bold 9px 'JetBrains Mono', monospace";
+        ctx.fillText(slice.text, 78, 3);
+        ctx.restore();
+      });
+
+      ctx.restore();
+    }
+
+    function spinFortuneWheel() {
+      if (wheelIsSpinning) return;
+      wheelIsSpinning = true;
+
+      const spinBtn = document.getElementById("spin-wheel-btn");
+      if (spinBtn) spinBtn.disabled = true;
+
+      const randomSliceIdx = Math.floor(Math.random() * wheelSlices.length);
+      const sliceAngle = 360 / wheelSlices.length;
+      const sliceCenterAngle = randomSliceIdx * sliceAngle + sliceAngle / 2;
+
+      // Top downward pointer sits at 270 deg in standard canvas polar coordinates
+      const desiredMod = (270 - sliceCenterAngle + 360) % 360;
+      const currentMod = ((wheelCurrentAngle % 360) + 360) % 360;
+      const delta = (desiredMod - currentMod + 360) % 360;
+
+      wheelCurrentAngle = wheelCurrentAngle + (5 * 360) + delta;
+
+      const canvas = document.getElementById("fortune-wheel-canvas");
+      if (canvas) canvas.style.transform = `rotate(${wheelCurrentAngle}deg)`;
+
+      setTimeout(() => {
+        wheelIsSpinning = false;
+        currentWheelSlice = wheelSlices[randomSliceIdx];
+
+        if (currentWheelSlice.type === "bankrupt") {
+          wheelRoundCash = 0;
+          openFeedback(false, `Landed on <strong>${currentWheelSlice.text}</strong>! Round cash reset.`);
+          currentWheelSlice = null;
+        } else if (currentWheelSlice.type === "lose") {
+          openFeedback(false, `Landed on <strong>${currentWheelSlice.text}</strong>! Spin again.`);
+          currentWheelSlice = null;
+        }
+        renderWheelScreen();
+      }, 2850);
+    }
+
+    function guessWheelLetter(letter) {
+      if (!currentWheelSlice || currentWheelSlice.type !== "cash") return;
+      wheelGuessed.add(letter);
+
+      if (wheelSecret.includes(letter)) {
+        let count = 0;
+        for (let ch of wheelSecret) if (ch === letter) count++;
+        wheelRoundCash += currentWheelSlice.val * count;
+        currentWheelSlice = null;
+        renderWheelScreen();
+      } else {
+        currentWheelSlice = null;
+        openFeedback(false, `No <strong>${letter}</strong> in this term. Spin again!`);
+        renderWheelScreen();
+      }
+    }
+
     /* =========================================================================
-       GAME 3: ISACA JEOPARDY
+       3. ISACA JEOPARDY (Fits 100% Width & Height on Mobile)
        ========================================================================= */
     function initJeopardyBoard() {
       jeopardyCash = 0;
@@ -1587,11 +1674,7 @@
           const matchingPool = jeopardyBank.filter(q => q.cat === cat && q.val === val);
           const chosen = shuffleArray(matchingPool)[0];
           const key = `${colIdx}_${val}`;
-          jeopardyBoardGrid[key] = {
-            ...chosen,
-            shuffledOptions: shuffleArray(chosen.options),
-            answered: false
-          };
+          jeopardyBoardGrid[key] = { ...chosen, shuffledOptions: shuffleArray(chosen.options), answered: false };
           jeopardyRemainingCount++;
         });
       });
@@ -1610,34 +1693,21 @@
       }
 
       const dollarRows = [200, 400, 600, 800, 1000];
-      let gridCellsHtml = "";
-
-      jeopardyBoardCategories.forEach(cat => {
-        gridCellsHtml += `<div class="jeopardy-cat-header">${cat}</div>`;
-      });
+      let gridCellsHtml = jeopardyBoardCategories.map(cat => `<div class="jeopardy-cat-header">${cat}</div>`).join("");
 
       dollarRows.forEach(val => {
         jeopardyBoardCategories.forEach((cat, colIdx) => {
           const key = `${colIdx}_${val}`;
           const tile = jeopardyBoardGrid[key];
-          if (tile.answered) {
-            gridCellsHtml += `<button class="jeopardy-tile answered" disabled>—</button>`;
-          } else {
-            gridCellsHtml += `<button class="jeopardy-tile" onclick="openJeopardyClue('${key}')">$${val}</button>`;
-          }
+          gridCellsHtml += tile.answered
+            ? `<button type="button" class="jeopardy-tile" disabled>—</button>`
+            : `<button type="button" class="jeopardy-tile" onclick="openJeopardyClue('${key}')">$${val}</button>`;
         });
       });
 
       arcadeBody.innerHTML = `
-        <div class="arcade-arena">
-          <div class="arcade-screen-box" style="padding:1.15rem;">
-            <div style="font-size:0.78rem; font-family:'JetBrains Mono',monospace; color:var(--cyan); margin-bottom:0.45rem;">SELECT A CATEGORY & DOLLAR VALUE</div>
-            <div class="jeopardy-table-wrap">
-              <div class="jeopardy-grid-6x6">
-                ${gridCellsHtml}
-              </div>
-            </div>
-          </div>
+        <div class="stage-screen">
+          <div class="jeopardy-grid-6x6">${gridCellsHtml}</div>
         </div>
       `;
     }
@@ -1646,24 +1716,18 @@
       const tile = jeopardyBoardGrid[key];
       if (!tile || tile.answered) return;
       activeJeopardyCellKey = key;
-
       const letters = ["A", "B", "C", "D", "E"];
 
       arcadeBody.innerHTML = `
-        <div class="arcade-arena">
-          <div class="arcade-screen-box">
-            <div style="font-size:0.78rem; font-family:'JetBrains Mono',monospace; color:var(--cyan); margin-bottom:0.45rem;">
-              ${tile.cat} // <span style="color:var(--lime);">$${tile.val}</span>
-            </div>
-            <div class="arcade-display-text" style="font-size:1.1rem; margin-bottom:1rem;">"${tile.q}"</div>
-            <div class="jeopardy-mc-list">
-              ${tile.shuffledOptions.map((opt, idx) => `
-                <button class="jeopardy-mc-btn" onclick="submitJeopardyChoice('${key}', ${idx})">
-                  <span class="mc-letter">${letters[idx]}</span>
-                  <span>${opt}</span>
-                </button>
-              `).join("")}
-            </div>
+        <div class="stage-screen">
+          <div class="prompt-banner">${tile.cat} // <span>$${tile.val}</span><br>${tile.q}</div>
+          <div class="jeopardy-mc-list">
+            ${tile.shuffledOptions.map((opt, idx) => `
+              <button type="button" class="jeopardy-mc-btn" onclick="submitJeopardyChoice('${key}', ${idx})">
+                <span class="mc-letter">${letters[idx]}</span>
+                <span>${opt}</span>
+              </button>
+            `).join("")}
           </div>
         </div>
       `;
@@ -1678,7 +1742,6 @@
 
       const selectedAnswer = tile.shuffledOptions[optionIdx];
       const isCorrect = (selectedAnswer === tile.answer);
-
       tile.answered = true;
       jeopardyRemainingCount--;
       activeJeopardyCellKey = null;
@@ -1688,43 +1751,24 @@
         hudCash.textContent = jeopardyCash.toLocaleString();
       }
 
-      sessionLog.push({
-        item: `Jeopardy [${tile.cat} $${tile.val}]`,
-        userChoice: selectedAnswer,
-        correctAnswer: tile.answer,
-        isCorrect: isCorrect,
-        explanation: tile.explanation
-      });
-
-      openFeedback(
-        isCorrect,
-        isCorrect
-          ? `Correct! You earned <strong>+$${tile.val}</strong>.`
-          : `Incorrect! The correct answer was <strong>${tile.answer}</strong>.`
-      );
-
+      sessionLog.push({ item: `${tile.cat} $${tile.val}`, userChoice: selectedAnswer, correctAnswer: tile.answer, isCorrect, explanation: tile.explanation });
+      openFeedback(isCorrect, isCorrect ? `Correct! +$${tile.val}` : `Incorrect! Answer: <strong>${tile.answer}</strong>.`);
       renderJeopardyBoard();
     }
 
     /* =========================================================================
-       GAME 4: SECURITY CONTROL SCRAMBLE (Anagram Builder with Countdown Timer)
+       4. UNSCRAMBLE CONCEPTS
        ========================================================================= */
-    let scrambleCurrentWord = "";
-    let scrambleTiles = [];
-    let userScrambleChoice = [];
-
     function nextScrambleRound() {
       stopGameTimer();
       if (activeQueue.length === 0) {
-        hudTimerBadge.style.display = "none";
         showDebriefSummary();
         return;
       }
       updateRemainingHud();
       currentItem = activeQueue.pop();
       scrambleCurrentWord = currentItem.word.toUpperCase();
-      let rawChars = scrambleCurrentWord.split("");
-      scrambleTiles = shuffleArray(rawChars).map((char, idx) => ({ id: idx, char: char, used: false }));
+      scrambleTiles = shuffleArray(scrambleCurrentWord.split("")).map((char, idx) => ({ id: idx, char, used: false }));
       userScrambleChoice = [];
       renderScrambleBuilder();
       startGameTimer(30, "scramble");
@@ -1732,23 +1776,17 @@
 
     function renderScrambleBuilder() {
       arcadeBody.innerHTML = `
-        <div class="arcade-arena">
-          <div class="arcade-screen-box">
-            <div style="font-size:0.75rem; font-family:'JetBrains Mono',monospace; color:var(--cyan); margin-bottom:0.45rem;">ANAGRAM PUZZLE BLITZ</div>
-            <div class="arcade-display-text" style="font-size:1.05rem; margin:0.45rem 0;">Hint: "${currentItem.hint}"</div>
-            
-            <div class="scramble-slots">
-              ${userScrambleChoice.map(item => `<button class="scramble-tile" onclick="returnTile(${item.id})">${item.char}</button>`).join("")}
-              ${userScrambleChoice.length === 0 ? '<span style="color:var(--text-secondary); font-size:0.85rem;">Click letters below to build word</span>' : ''}
-            </div>
-
-            <div class="scramble-slots" style="margin-top:1.5rem;">
-              ${scrambleTiles.map(item => item.used ? '' : `<button class="scramble-tile" onclick="pickTile(${item.id})">${item.char}</button>`).join("")}
-            </div>
-
-            <div style="margin-top:1.5rem; display:flex; gap:1rem; justify-content:center;">
-              <button class="arcade-btn-action" style="background:var(--lime); color:#000;" onclick="submitScrambleGuess()">Verify Anagram</button>
-            </div>
+        <div class="stage-screen" style="justify-content:space-around;">
+          <div class="prompt-banner">Unscramble: <span>"${currentItem.hint}"</span></div>
+          <div class="scramble-slots">
+            ${userScrambleChoice.map(item => `<button type="button" class="scramble-tile" onclick="returnTile(${item.id})">${item.char}</button>`).join("")}
+            ${userScrambleChoice.length === 0 ? '<span style="color:var(--text-secondary); font-size:0.8rem;">Tap letters below to build the word</span>' : ''}
+          </div>
+          <div class="scramble-slots">
+            ${scrambleTiles.map(item => item.used ? '' : `<button type="button" class="scramble-tile" onclick="pickTile(${item.id})">${item.char}</button>`).join("")}
+          </div>
+          <div style="text-align:center;">
+            <button type="button" class="arcade-btn-action" style="background:var(--lime); color:#000;" onclick="submitScrambleGuess()">Submit Word</button>
           </div>
         </div>
       `;
@@ -1776,19 +1814,13 @@
       stopGameTimer();
       const word = userScrambleChoice.map(t => t.char).join("");
       const isCorrect = (word === scrambleCurrentWord);
-      sessionLog.push({
-        item: currentItem.hint,
-        userChoice: word || "(Blank)",
-        correctAnswer: scrambleCurrentWord,
-        isCorrect: isCorrect,
-        explanation: currentItem.explanation
-      });
-      openFeedback(isCorrect, isCorrect ? "Anagram solved successfully!" : `Incorrect! The security term was <strong>${scrambleCurrentWord}</strong>.`);
+      sessionLog.push({ item: currentItem.hint, userChoice: word || "(Blank)", correctAnswer: scrambleCurrentWord, isCorrect, explanation: currentItem.explanation });
+      openFeedback(isCorrect, isCorrect ? "Unscrambled!" : `Incorrect! Term was <strong>${scrambleCurrentWord}</strong>.`);
       nextScrambleRound();
     }
 
     /* =========================================================================
-       GAME 5: TOWER DEFENDER (Animated Cloud Shared Responsibility)
+       5. TOWER DEFENDER (Real Animated Tower Defense)
        ========================================================================= */
     function nextCloudRound() {
       stopGameTimer();
@@ -1802,73 +1834,61 @@
 
       updateRemainingHud();
       currentItem = activeQueue.pop();
-      tdEnemyX = 84;
-
+      tdEnemyX = 82;
       const hpColor = tdTowerHp > 50 ? "var(--lime)" : (tdTowerHp > 25 ? "var(--amber)" : "var(--rose)");
 
       arcadeBody.innerHTML = `
-        <div class="arcade-arena">
-          <div class="arcade-screen-box" style="padding:1rem; justify-content:space-between; height:100%;">
-            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:0.5rem; margin-bottom:0.25rem;">
-              <div style="font-size:0.7rem; font-family:'JetBrains Mono',monospace; color:var(--cyan); letter-spacing:0.04em;">CLOUD BASTION TOWER DEFENSE // LIVE WAVE</div>
-              <div style="font-family:'JetBrains Mono',monospace; font-size:0.8rem; color:${hpColor}; font-weight:700;">🏰 TOWER HP: <span id="td-hp-text">${tdTowerHp}</span>%</div>
-            </div>
+        <div class="stage-screen">
+          <div class="prompt-banner">
+            🏰 HP: <span style="color:${hpColor};" id="td-hp-text">${tdTowerHp}%</span> — Incoming: <span>"${currentItem.item}"</span>
+          </div>
 
-            <div class="arcade-display-text" style="font-size:1rem; margin:0.45rem 0;">Deploy Turret For: <span>"${currentItem.item}"</span></div>
+          <div class="td-battlefield" id="td-battlefield">
+            <div class="radar-grid-lines"></div>
+            <div class="td-lane-line"></div>
 
-            <div class="td-battlefield" id="td-battlefield">
-              <div class="radar-grid-lines"></div>
-              <div class="td-lane-line"></div>
-
-              <!-- Cloud Defense Tower -->
-              <div class="td-tower-wrap">
-                <div class="td-hp-bar-bg">
-                  <div class="td-hp-bar-fill" id="td-hp-fill" style="width:${tdTowerHp}%; background:${hpColor};"></div>
-                </div>
-                <div class="td-tower-core">
-                  <div class="td-tower-turret" id="td-turret-head">⚡</div>
-                  <div style="font-size:1.3rem;">🏰</div>
-                  <div class="td-tower-label">BASTION</div>
-                </div>
+            <div class="td-tower-wrap">
+              <div class="td-hp-bar-bg">
+                <div class="td-hp-bar-fill" id="td-hp-fill" style="width:${tdTowerHp}%; background:${hpColor};"></div>
               </div>
-
-              <!-- Direct Linear Defense Beam -->
-              <div class="td-laser-shot" id="td-laser-shot"></div>
-
-              <!-- Marching Workload Drone -->
-              <div class="td-enemy-unit" id="td-enemy-unit" style="left:${tdEnemyX}%;">
-                <div class="td-enemy-sprite" id="td-enemy-sprite">👾</div>
-                <div>CLOUD DRONE</div>
+              <div class="td-tower-core">
+                <div class="td-tower-turret">⚡</div>
+                <div style="font-size:1.1rem;">🏰</div>
+                <div class="td-tower-label">TOWER</div>
               </div>
             </div>
 
-            <div class="td-turret-controls">
-              <button class="td-fire-btn" onclick="fireCloudTurret('iaas', '${currentItem.type}', '${currentItem.item.replace(/'/g, "\\'")}', '${currentItem.explanation.replace(/'/g, "\\'")}')">
-                IaaS <span>Infrastructure</span>
-              </button>
-              <button class="td-fire-btn" onclick="fireCloudTurret('paas', '${currentItem.type}', '${currentItem.item.replace(/'/g, "\\'")}', '${currentItem.explanation.replace(/'/g, "\\'")}')">
-                PaaS <span>Platform</span>
-              </button>
-              <button class="td-fire-btn" onclick="fireCloudTurret('saas', '${currentItem.type}', '${currentItem.item.replace(/'/g, "\\'")}', '${currentItem.explanation.replace(/'/g, "\\'")}')">
-                SaaS <span>Software</span>
-              </button>
+            <div class="td-laser-shot" id="td-laser-shot"></div>
+
+            <div class="td-enemy-unit" id="td-enemy-unit" style="left:${tdEnemyX}%;">
+              <div class="td-enemy-sprite" id="td-enemy-sprite">👾</div>
+              <div>DRONE</div>
             </div>
+          </div>
+
+          <div class="td-turret-controls">
+            <button type="button" class="td-fire-btn" onclick="fireCloudTurret('iaas', '${currentItem.type}', '${currentItem.item.replace(/'/g, "\\'")}', '${currentItem.explanation.replace(/'/g, "\\'")}')">
+              🔥 IaaS<span>Infrastructure</span>
+            </button>
+            <button type="button" class="td-fire-btn" onclick="fireCloudTurret('paas', '${currentItem.type}', '${currentItem.item.replace(/'/g, "\\'")}', '${currentItem.explanation.replace(/'/g, "\\'")}')">
+              🔥 PaaS<span>Platform</span>
+            </button>
+            <button type="button" class="td-fire-btn" onclick="fireCloudTurret('saas', '${currentItem.type}', '${currentItem.item.replace(/'/g, "\\'")}', '${currentItem.explanation.replace(/'/g, "\\'")}')">
+              🔥 SaaS<span>Software</span>
+            </button>
           </div>
         </div>
       `;
 
-      // Game loops for marching enemies
       tdMoveInterval = setInterval(() => {
         if (tdWaveLocked) return;
-        tdEnemyX -= 0.55;
+        tdEnemyX -= 0.5;
         const enemyEl = document.getElementById("td-enemy-unit");
-        if (enemyEl) {
-          enemyEl.style.left = `${tdEnemyX}%`;
-        }
-        if (tdEnemyX <= 19) {
+        if (enemyEl) enemyEl.style.left = `${tdEnemyX}%`;
+        if (tdEnemyX <= 18) {
           clearInterval(tdMoveInterval);
           tdMoveInterval = null;
-          handleTowerHit("⏱️ Enemy Breached Perimeter", currentItem.type, currentItem.item, currentItem.explanation);
+          handleTowerHit("⏱️ Breached", currentItem.type, currentItem.item, currentItem.explanation);
         }
       }, 100);
     }
@@ -1891,28 +1911,15 @@
         if (laserEl && enemyEl && battlefield) {
           const bfRect = battlefield.getBoundingClientRect();
           const enRect = enemyEl.getBoundingClientRect();
-          const beamWidth = Math.max(30, (enRect.left - bfRect.left) - 75);
-          laserEl.style.width = `${beamWidth}px`;
+          laserEl.style.width = `${Math.max(30, (enRect.left - bfRect.left) - 62)}px`;
           laserEl.style.display = "block";
         }
         if (spriteEl) spriteEl.textContent = "💥";
-        if (enemyEl) {
-          enemyEl.style.borderColor = "var(--lime)";
-          enemyEl.style.boxShadow = "0 0 30px var(--lime)";
-        }
-
-        sessionLog.push({
-          item: itemName,
-          userChoice: chosen.toUpperCase(),
-          correctAnswer: correct.toUpperCase(),
-          isCorrect: true,
-          explanation: explanation
-        });
-
+        sessionLog.push({ item: itemName, userChoice: chosen.toUpperCase(), correctAnswer: correct.toUpperCase(), isCorrect: true, explanation });
         setTimeout(() => {
-          openFeedback(true, `Enemy Drone Destroyed! <strong>${itemName}</strong> belongs to <strong>${correct.toUpperCase()}</strong>.`);
+          openFeedback(true, `Enemy Destroyed! (${correct.toUpperCase()})`);
           nextCloudRound();
-        }, 380);
+        }, 350);
       } else {
         handleTowerHit(chosen.toUpperCase(), correct, itemName, explanation);
       }
@@ -1923,37 +1930,23 @@
       tdTowerHp = Math.max(0, tdTowerHp - 20);
 
       const battlefield = document.getElementById("td-battlefield");
-      const enemyEl = document.getElementById("td-enemy-unit");
       const hpText = document.getElementById("td-hp-text");
       const hpFill = document.getElementById("td-hp-fill");
 
-      if (enemyEl) enemyEl.style.left = "19%";
       if (battlefield) battlefield.classList.add("hit-shake");
-      if (hpText) hpText.textContent = tdTowerHp;
-      if (hpFill) {
-        hpFill.style.width = `${tdTowerHp}%`;
-        hpFill.style.background = tdTowerHp > 50 ? "var(--lime)" : (tdTowerHp > 25 ? "var(--amber)" : "var(--rose)");
-      }
+      if (hpText) hpText.textContent = `${tdTowerHp}%`;
+      if (hpFill) hpFill.style.width = `${tdTowerHp}%`;
 
-      sessionLog.push({
-        item: itemName,
-        userChoice: userChoiceStr,
-        correctAnswer: correct.toUpperCase(),
-        isCorrect: false,
-        explanation: explanation
-      });
+      sessionLog.push({ item: itemName, userChoice: userChoiceStr, correctAnswer: correct.toUpperCase(), isCorrect: false, explanation });
 
       setTimeout(() => {
-        const msg = tdTowerHp <= 0
-          ? `<strong>TOWER DESTROYED (0% HP)!</strong><br><br><strong>${itemName}</strong> belongs to <strong>${correct.toUpperCase()}</strong>.`
-          : `<strong>Tower Hit (-20 HP)!</strong> Remaining HP: <strong>${tdTowerHp}%</strong>.<br><br><strong>${itemName}</strong> belongs to <strong>${correct.toUpperCase()}</strong>.`;
-        openFeedback(false, msg);
+        openFeedback(false, `Tower Hit (-20 HP)! Belongs to <strong>${correct.toUpperCase()}</strong>.`);
         nextCloudRound();
-      }, 380);
+      }, 350);
     }
 
     /* =========================================================================
-       GAME 6: BEAT THE CLOCK
+       6. BEAT THE CLOCK
        ========================================================================= */
     function nextIncidentRound() {
       stopGameTimer();
@@ -1970,17 +1963,19 @@
         { key: "containment", label: "3. Containment" },
         { key: "eradication", label: "4. Eradication" },
         { key: "recovery", label: "5. Recovery" },
-        { key: "post-incident", label: "6. Post-Incident Activity" }
+        { key: "post-incident", label: "6. Post-Incident" }
       ];
 
       arcadeBody.innerHTML = `
-        <div class="arcade-arena">
-          <div class="arcade-screen-box">
-            <div style="font-size:0.75rem; font-family:'JetBrains Mono',monospace; color:var(--cyan); margin-bottom:0.45rem;">NIST SP 800-61 IR LIFECYCLE TIME ATTACK</div>
-            <div class="arcade-display-text" style="font-size:1.02rem; margin:0.4rem 0;">Task: <span>"${currentItem.task}"</span></div>
-            <div style="display:grid; grid-template-columns: repeat(2, 1fr); gap:0.65rem; margin-top:1rem;">
-              ${phases.map(p => `<button class="arcade-btn-action" style="padding:0.75rem 0.55rem; text-align:left; font-size:0.84rem;" onclick="processIncidentChoice('${p.key}', '${currentItem.phase}', '${currentItem.task.replace(/'/g, "\\'")}', '${currentItem.explanation.replace(/'/g, "\\'")}')">${p.label}</button>`).join("")}
-            </div>
+        <div class="stage-screen" style="justify-content:space-around;">
+          <div class="prompt-banner">NIST IR Stage For:<br><span>"${currentItem.task}"</span></div>
+          <div style="display:grid; grid-template-columns: repeat(2, 1fr); gap:0.55rem;">
+            ${phases.map(p => `
+              <button type="button" class="arcade-btn-action" style="padding:0.75rem 0.5rem; text-align:left;"
+                onclick="processIncidentChoice('${p.key}', '${currentItem.phase}', '${currentItem.task.replace(/'/g, "\\'")}', '${currentItem.explanation.replace(/'/g, "\\'")}')">
+                ${p.label}
+              </button>
+            `).join("")}
           </div>
         </div>
       `;
@@ -1991,23 +1986,17 @@
     function processIncidentChoice(chosen, correct, taskName, explanation) {
       stopGameTimer();
       const isCorrect = (chosen === correct);
-      sessionLog.push({
-        item: taskName,
-        userChoice: chosen.toUpperCase(),
-        correctAnswer: correct.toUpperCase(),
-        isCorrect: isCorrect,
-        explanation: explanation
-      });
-      openFeedback(isCorrect, isCorrect ? "NIST phase correctly identified." : `Incorrect phase! Correct NIST lifecycle stage is <strong>${correct.toUpperCase()}</strong>.`);
+      sessionLog.push({ item: taskName, userChoice: chosen.toUpperCase(), correctAnswer: correct.toUpperCase(), isCorrect, explanation });
+      openFeedback(isCorrect, isCorrect ? "Correct Stage!" : `Incorrect! Stage is <strong>${correct.toUpperCase()}</strong>.`);
       nextIncidentRound();
     }
 
     /* =========================================================================
-       FEEDBACK MODAL UTILITIES
+       FEEDBACK & NAVIGATION LISTENERS
        ========================================================================= */
     function openFeedback(isCorrect, htmlContent) {
       feedbackBox.className = "modal-box " + (isCorrect ? "correct" : "wrong");
-      feedbackStatus.textContent = isCorrect ? "Correct!" : "System Alert";
+      feedbackStatus.textContent = isCorrect ? "Correct!" : "Alert";
       feedbackBody.innerHTML = htmlContent;
       feedbackModal.classList.add("open");
     }
@@ -2016,24 +2005,16 @@
       feedbackModal.classList.remove("open");
       if (pendingTimeoutAdvance) {
         pendingTimeoutAdvance = false;
-        if (activeGameId === 1) {
-          nextPortBlasterRound();
-        } else if (activeGameId === 3) {
-          renderJeopardyBoard();
-        } else if (activeGameId === 4) {
-          nextScrambleRound();
-        } else if (activeGameId === 6) {
-          nextIncidentRound();
-        }
+        if (activeGameId === 1) nextPortBlasterRound();
+        else if (activeGameId === 3) renderJeopardyBoard();
+        else if (activeGameId === 4) nextScrambleRound();
+        else if (activeGameId === 6) nextIncidentRound();
       }
     }
 
     feedbackCloseBtn.addEventListener("click", closeFeedbackModal);
-    feedbackModal.addEventListener("click", (e) => {
-      if (e.target === feedbackModal) closeFeedbackModal();
-    });
+    feedbackModal.addEventListener("click", (e) => { if (e.target === feedbackModal) closeFeedbackModal(); });
 
-    // Mobile menu toggle
     const menuBtn = document.getElementById("mobile-menu-btn");
     const navDrawer = document.getElementById("nav-drawer");
     if (menuBtn && navDrawer) {
