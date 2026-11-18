@@ -10,17 +10,96 @@
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
   <style>
-    .remember-container {
+    /* Full-Screen Immersive Game Arcade Overlay */
+    .arcade-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(7, 11, 18, 0.88);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.25s ease;
+    }
+    .arcade-modal-backdrop.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .arcade-modal-window {
       background: var(--bg-card);
       border: 1px solid var(--border-slate);
-      border-radius: 14px;
-      padding: 1.5rem;
-      margin-top: 1rem;
-      min-height: 480px;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 900px;
+      height: 85vh;
+      max-height: 720px;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7), 0 0 30px rgba(34, 211, 238, 0.1);
+      position: relative;
+      overflow: hidden;
+      animation: modalSlideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes modalSlideUp {
+      from { transform: translateY(20px) scale(0.98); opacity: 0; }
+      to { transform: translateY(0) scale(1); opacity: 1; }
+    }
+
+    .arcade-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.25rem 1.75rem;
+      border-bottom: 1px solid var(--border-slate);
+      background: rgba(13, 18, 28, 0.95);
+    }
+
+    .arcade-title-group {
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+    }
+
+    .arcade-tracker-hud {
+      display: flex;
+      gap: 1.5rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.82rem;
+    }
+    .arcade-stat-badge {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      padding: 0.3rem 0.75rem;
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.03);
+      border: 1px solid var(--border-slate);
+    }
+    .stat-correct { color: var(--lime); font-weight: 700; }
+    .stat-wrong { color: var(--rose); font-weight: 700; }
+    .stat-total { color: var(--cyan); font-weight: 700; }
+
+    .arcade-nav-controls {
+      display: flex;
+      gap: 0.75rem;
+      align-items: center;
+    }
+
+    .arcade-body {
+      flex: 1;
+      padding: 2rem;
+      overflow-y: auto;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
-      position: relative;
+      background: radial-gradient(circle at top right, rgba(34, 211, 238, 0.03), transparent 50%);
     }
 
     .game-choice-grid {
@@ -65,159 +144,96 @@
       line-height: 1.5;
     }
 
-    /* Game HUD */
-    .p-hud {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding-bottom: 0.85rem;
-      border-bottom: 1px solid var(--border-slate);
-      margin-bottom: 1.25rem;
+    /* Action Interactive Elements */
+    .tactical-prompt {
+      font-size: 1.15rem;
+      color: #fff;
+      font-weight: 600;
+      text-align: center;
+      margin: 1.2rem 0;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.85rem;
-    }
-    .p-score span { color: var(--lime); font-weight: 700; }
-    .p-threat { font-size: 1.15rem; color: #fff; font-weight: 600; text-align: center; margin: 1.5rem 0; }
-    .p-threat span { color: var(--cyan); font-family: 'JetBrains Mono', monospace; font-size: 1.35rem; font-weight: 700; text-shadow: 0 0 10px var(--cyan); }
-    .p-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
-      gap: 0.65rem;
-      margin-bottom: 1.5rem;
-    }
-    .p-btn {
+      padding: 1rem;
       background: rgba(255, 255, 255, 0.02);
       border: 1px solid var(--border-slate);
-      border-radius: 8px;
-      padding: 0.85rem 0.45rem;
-      color: var(--text-primary);
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.95rem;
-      font-weight: 700;
-      cursor: pointer;
-      text-align: center;
-      transition: all 0.15s ease;
+      border-radius: 10px;
     }
-    .p-btn:hover {
-      border-color: var(--cyan);
-      background: var(--cyan-dim);
+    .tactical-prompt span { color: var(--cyan); text-shadow: 0 0 10px var(--cyan-dim); }
+
+    .action-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 0.85rem;
+      margin: 1rem 0;
     }
 
-    /* Matrix Workspace for Drag & Drop / Click Sorting */
-    .matrix-workspace {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 1.25rem;
-      margin: 1.25rem 0;
-    }
-    .matrix-bin {
-      background: rgba(13, 18, 28, 0.7);
-      border: 2px dashed var(--border-slate);
-      border-radius: 12px;
-      padding: 1rem;
-      min-height: 200px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      gap: 0.55rem;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-    .matrix-bin:hover { border-color: var(--cyan); background: rgba(34, 211, 238, 0.04); }
-    .matrix-bin.active { border-color: var(--cyan); background: rgba(34, 211, 238, 0.1); }
-    .matrix-bin h4 {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.76rem;
-      text-transform: uppercase;
-      color: var(--text-secondary);
-      margin-bottom: 0.45rem;
-      text-align: center;
-    }
-    
-    .matrix-word {
-      background: #111827;
-      border: 1px solid var(--cyan);
-      border-radius: 8px;
-      padding: 0.85rem 1.25rem;
-      color: #fff;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 1.1rem;
-      font-weight: 700;
-      cursor: grab;
-      text-align: center;
-      margin: 1rem auto;
-      display: inline-block;
-      box-shadow: 0 0 16px var(--cyan-dim);
-      user-select: none;
-    }
-    .matrix-word:active { cursor: grabbing; }
-
-    /* Matcher Workspace */
-    .matcher-workspace {
-      display: flex;
-      flex-direction: column;
-      gap: 1rem;
-      margin: 1.5rem 0;
-      max-height: 380px;
-      overflow-y: auto;
-      padding-right: 0.5rem;
-    }
-    .match-row {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-      align-items: center;
-    }
-    @media(max-width: 768px) {
-      .match-row { grid-template-columns: 1fr; }
-    }
-    .match-threat {
-      background: rgba(251, 113, 133, 0.08);
-      border: 1px solid rgba(251, 113, 133, 0.35);
-      border-left: 3px solid var(--rose);
-      color: #fff;
-      padding: 0.9rem;
-      border-radius: 8px;
-      font-size: 0.88rem;
-      line-height: 1.45;
-    }
-    .match-threat strong { color: var(--rose); font-family: 'JetBrains Mono', monospace; }
-    .match-select {
-      background: var(--bg-sidebar);
-      color: #fff;
+    .action-btn {
+      background: rgba(13, 18, 28, 0.9);
       border: 1px solid var(--border-slate);
-      border-radius: 8px;
-      padding: 0.75rem;
+      border-radius: 10px;
+      padding: 1.15rem 1rem;
+      color: var(--text-primary);
       font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 0.88rem;
-      outline: none;
+      font-size: 0.92rem;
+      font-weight: 600;
       cursor: pointer;
-      width: 100%;
-    }
-    .match-select:focus { border-color: var(--cyan); }
-    .match-select option { background: var(--bg-sidebar); color: #fff; }
-
-    /* Results overlay */
-    .game-over-screen {
-      position: absolute;
-      inset: 0;
-      background: rgba(13, 18, 28, 0.96);
-      border-radius: 14px;
+      text-align: center;
+      transition: all 0.2s ease;
       display: flex;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      padding: 2rem;
-      text-align: center;
-      gap: 1rem;
-      z-index: 10;
+      gap: 0.35rem;
+    }
+    .action-btn:hover {
+      border-color: var(--cyan);
+      background: var(--cyan-dim);
+      box-shadow: 0 0 15px rgba(34, 211, 238, 0.1);
+      transform: translateY(-2px);
+    }
+    .action-btn sub {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--text-secondary);
+    }
+
+    /* Summary Debrief Screen */
+    .debrief-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1.25rem;
+      max-height: 480px;
+      overflow-y: auto;
+      padding-right: 0.5rem;
+    }
+    .debrief-item {
+      background: rgba(251, 113, 133, 0.05);
+      border: 1px solid rgba(251, 113, 133, 0.3);
+      border-left: 3px solid var(--rose);
+      padding: 1rem;
+      border-radius: 8px;
+    }
+    .debrief-item.success {
+      background: rgba(52, 211, 153, 0.05);
+      border-color: rgba(52, 211, 153, 0.3);
+      border-left-color: var(--lime);
+    }
+    .debrief-title {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 0.35rem;
+    }
+    .debrief-detail {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      line-height: 1.4;
     }
   </style>
 </head>
 <body>
 
-  <div class="frame-wrapper">
+  <div class="frame-wrapper" id="site-wrapper">
     <aside>
       <div class="brand-block">
         <div class="brand-row">
@@ -281,45 +297,69 @@
         <p class="prose">Choose a gamified cyber training simulator below to reinforce your memory of core ciphers, port mappings, threat mitigations, and security controls.</p>
 
         <div class="game-choice-grid">
-          <button type="button" class="game-selector-card" id="btn-game1">
+          <button type="button" class="game-selector-card" onclick="launchGame(1)">
             <div class="game-num">Simulator 01</div>
             <div class="game-title">Port Boundary Defender</div>
             <div class="game-desc">Unannounced data requests try to breach ports. Block them immediately by selecting the correct active networking port!</div>
           </button>
 
-          <button type="button" class="game-selector-card" id="btn-game2">
+          <button type="button" class="game-selector-card" onclick="launchGame(2)">
             <div class="game-num">Simulator 02</div>
             <div class="game-title">Cipher Matrix Matcher</div>
             <div class="game-desc">Sort cryptographic ciphers and algorithms into their proper Symmetric or Asymmetric security matrix.</div>
           </button>
 
-          <button type="button" class="game-selector-card" id="btn-game3">
+          <button type="button" class="game-selector-card" onclick="launchGame(3)">
             <div class="game-num">Simulator 03</div>
             <div class="game-title">Attack Mitigation Decoder</div>
             <div class="game-desc">Active network compromises require urgent defense. Match each active threat to its proper architectural countermeasure.</div>
           </button>
 
-          <button type="button" class="game-selector-card" id="btn-game4">
+          <button type="button" class="game-selector-card" onclick="launchGame(4)">
             <div class="game-num">Simulator 04</div>
             <div class="game-title">Security Control Classifier</div>
             <div class="game-desc">Categorize defense mechanisms correctly into Administrative, Technical, or Physical control domains.</div>
           </button>
 
-          <button type="button" class="game-selector-card" id="btn-game5">
+          <button type="button" class="game-selector-card" onclick="launchGame(5)">
             <div class="game-num">Simulator 05</div>
             <div class="game-title">Cloud Service Model Sorter</div>
             <div class="game-desc">Sort cloud computing components and responsibilities into IaaS, PaaS, or SaaS architectures.</div>
           </button>
 
-          <button type="button" class="game-selector-card" id="btn-game6">
+          <button type="button" class="game-selector-card" onclick="launchGame(6)">
             <div class="game-num">Simulator 06</div>
             <div class="game-title">Incident Response Sequencer</div>
             <div class="game-desc">Master the correct NIST Incident Response lifecycle stages and core containment priorities.</div>
           </button>
         </div>
-
-        <div class="remember-container" id="remember-container" style="display:none; margin-top:2rem;"></div>
       </main>
+    </div>
+  </div>
+
+  <!-- Immersive Arcade Overlay Modal -->
+  <div class="arcade-modal-backdrop" id="arcade-modal" role="dialog" aria-modal="true">
+    <div class="arcade-modal-window">
+      <div class="arcade-header">
+        <div class="arcade-title-group">
+          <div class="game-num" id="arcade-game-subtitle" style="margin:0;">TACTICAL SIMULATOR</div>
+          <div class="game-title" id="arcade-game-title" style="margin:0; font-size:1.15rem;">Loading Mission...</div>
+        </div>
+        
+        <div class="arcade-tracker-hud">
+          <div class="arcade-stat-badge">✓ <span class="stat-correct" id="hud-correct">0</span></div>
+          <div class="arcade-stat-badge">✕ <span class="stat-wrong" id="hud-wrong">0</span></div>
+          <div class="arcade-stat-badge"># <span class="stat-total" id="hud-progress">0/10</span></div>
+        </div>
+
+        <div class="arcade-nav-controls">
+          <button class="btn-ghost" style="padding:0.45rem 0.85rem; font-size:0.8rem;" onclick="closeArcadeModal()">Quit & Debrief</button>
+        </div>
+      </div>
+
+      <div class="arcade-body" id="arcade-body-content">
+        <!-- Dynamic Game Arena -->
+      </div>
     </div>
   </div>
 
@@ -389,77 +429,78 @@
     ];
 
     const ciphers = [
-      { name: "AES (Rijndael)", type: "symmetric" },
-      { name: "DES / 3DES", type: "symmetric" },
-      { name: "Blowfish / Twofish", type: "symmetric" },
-      { name: "RC4 / RC5 / RC6", type: "symmetric" },
-      { name: "IDEA", type: "symmetric" },
-      { name: "CAST", type: "symmetric" },
-      { name: "Diffie-Hellman", type: "asymmetric" },
-      { name: "RSA", type: "asymmetric" },
-      { name: "ECC (Elliptic Curve)", type: "asymmetric" },
-      { name: "DSA (Digital Signature)", type: "asymmetric" },
-      { name: "El Gamal", type: "asymmetric" }
+      { name: "AES (Rijndael)", type: "symmetric", desc: "Symmetric Block Cipher (Single Shared Key)" },
+      { name: "DES / 3DES", type: "symmetric", desc: "Legacy Symmetric Encryption Standard" },
+      { name: "Blowfish / Twofish", type: "symmetric", desc: "Symmetric Fast Block Ciphers" },
+      { name: "RC4 / RC5 / RC6", type: "symmetric", desc: "Rivest Cipher Family (Stream/Block)" },
+      { name: "IDEA", type: "symmetric", desc: "International Data Encryption Algorithm" },
+      { name: "Diffie-Hellman", type: "asymmetric", desc: "Key Exchange Protocol (Asymmetric)" },
+      { name: "RSA", type: "asymmetric", desc: "Public/Private Key Encryption Standard" },
+      { name: "ECC (Elliptic Curve)", type: "asymmetric", desc: "High-Efficiency Public Key Cryptography" },
+      { name: "DSA (Digital Signature)", type: "asymmetric", desc: "Digital Signature Algorithm" }
     ];
 
     const mitigations = [
-      { threat: "SYN Flood (Misusing TCP handshake to overflow servers)", remedy: "SYN Cookies / Ingress Filtering" },
+      { threat: "SYN Flood (TCP handshake resource exhaustion)", remedy: "SYN Cookies / Ingress Filtering" },
       { threat: "Teardrop Attack (Overlapping fragmented UDP packets)", remedy: "Upgrade TCP/IP stack Bogus Reassembly" },
-      { threat: "Man-In-The-Middle Attack (Interception between hosts)", remedy: "Strong mutual authentication & encryption (PKI)" },
-      { threat: "IP Spoofing (Forged origin header packets)", remedy: "Ingress & Egress Router Filtering" },
-      { threat: "Dictionary / Brute Force Password attacks", remedy: "Greater keyspace complexity & lockouts" },
-      { threat: "Physical piggybacking / Tailgating", remedy: "Mantrap / Turnstile" }
+      { threat: "Man-In-The-Middle Interception", remedy: "Strong Mutual Authentication & PKI Encryption" },
+      { threat: "IP Spoofing (Forged origin headers)", remedy: "Ingress & Egress Router Filtering" },
+      { threat: "Dictionary / Brute Force Password Attacks", remedy: "Account Lockouts & Salted Key Stretching" },
+      { threat: "Physical Tailgating / Piggybacking", remedy: "Mantrap / Optical Turnstile" }
     ];
 
     const controlsData = [
-      { item: "Security Awareness Training Policy", type: "administrative" },
-      { item: "Annual Background Checks", type: "administrative" },
-      { item: "Acceptable Use Policy (AUP)", type: "administrative" },
-      { item: "Firewalls & Intrusion Prevention Systems", type: "technical" },
-      { item: "Access Control Lists (ACLs)", type: "technical" },
-      { item: "Multi-Factor Authentication (MFA)", type: "technical" },
-      { item: "Biometric Turnstiles & Mantraps", type: "physical" },
-      { item: "CCTV Cameras & Motion Detectors", type: "physical" },
-      { item: "Server Room Security Guards & Locks", type: "physical" }
+      { item: "Security Awareness Training Policy", type: "administrative", name: "Administrative Control" },
+      { item: "Annual Background Checks", type: "administrative", name: "Administrative Control" },
+      { item: "Acceptable Use Policy (AUP)", type: "administrative", name: "Administrative Control" },
+      { item: "Firewalls & IPS Packet Filtering", type: "technical", name: "Technical Control" },
+      { item: "Access Control Lists (ACLs)", type: "technical", name: "Technical Control" },
+      { item: "Multi-Factor Authentication (MFA)", type: "technical", name: "Technical Control" },
+      { item: "Biometric Mantraps & Turnstiles", type: "physical", name: "Physical Control" },
+      { item: "CCTV Cameras & Motion Sensors", type: "physical", name: "Physical Control" },
+      { item: "Server Room Security Guards", type: "physical", name: "Physical Control" }
     ];
 
     const cloudData = [
-      { item: "Virtual Machines, VPC Networks, Raw Storage", type: "iaas" },
-      { item: "OS management & Hypervisor managed by provider", type: "iaas" },
-      { item: "Databases, Middleware, Development Runtime", type: "paas" },
-      { item: "OS & Runtime managed by cloud vendor", type: "paas" },
-      { item: "Complete End-User Software Application", type: "saas" },
-      { item: "User only configures access control and data", type: "saas" }
+      { item: "Virtual Machines, VPC Networks, Raw Storage", type: "iaas", name: "IaaS (Infrastructure)" },
+      { item: "OS & Hypervisor Managed by Cloud Provider", type: "iaas", name: "IaaS (Infrastructure)" },
+      { item: "Databases, Middleware, Application Runtime", type: "paas", name: "PaaS (Platform)" },
+      { item: "OS & Runtime Handled by Cloud Vendor", type: "paas", name: "PaaS (Platform)" },
+      { item: "Complete End-User Software Application", type: "saas", name: "SaaS (Software)" },
+      { item: "User Only Manages Data & Access Controls", type: "saas", name: "SaaS (Software)" }
     ];
 
     const incidentData = [
-      { task: "Establishing incident response policy, team, and training", phase: "preparation" },
-      { task: "Triaging alerts, log analysis, and validating compromise", phase: "detection" },
-      { task: "Isolating infected systems to prevent lateral movement", phase: "containment" },
-      { task: "Removing malware artifacts and closing vulnerabilities", phase: "eradication" },
-      { task: "Restoring systems from verified backups to production", phase: "recovery" },
-      { task: "Conducting post-incident review and lessons learned", phase: "lessons" }
+      { task: "Establishing incident response policy, team, and training", phase: "preparation", name: "Preparation" },
+      { task: "Triaging alerts, log correlation, and validating compromise", phase: "detection", name: "Detection & Analysis" },
+      { task: "Isolating infected systems to halt lateral movement", phase: "containment", name: "Containment" },
+      { task: "Removing malware artifacts and patching root vulnerabilities", phase: "eradication", name: "Eradication" },
+      { task: "Restoring clean systems from verified secure backups", phase: "recovery", name: "Recovery" },
+      { task: "Conducting post-incident review and lessons learned", phase: "lessons", name: "Lessons Learned" }
     ];
 
-    const gameContainer = document.getElementById("remember-container");
+    // Session State Tracking
+    let activeGameId = null;
+    let scoreCorrect = 0;
+    let scoreWrong = 0;
+    let roundIndex = 0;
+    let activePool = [];
+    let currentItem = null;
+    let mistakeLog = [];
+
+    const arcadeModal = document.getElementById("arcade-modal");
+    const arcadeTitle = document.getElementById("arcade-game-title");
+    const arcadeSubtitle = document.getElementById("arcade-game-subtitle");
+    const arcadeBody = document.getElementById("arcade-body-content");
+    const hudCorrect = document.getElementById("hud-correct");
+    const hudWrong = document.getElementById("hud-wrong");
+    const hudProgress = document.getElementById("hud-progress");
+
     const feedbackModal = document.getElementById("feedback-modal");
     const feedbackBox = document.getElementById("feedback-box");
     const feedbackStatus = document.getElementById("feedback-status");
     const feedbackBody = document.getElementById("feedback-body");
     const feedbackCloseBtn = document.getElementById("feedback-close-btn");
-
-    let activeGameSession = null;
-    let currentScore = 0;
-    let roundIndex = 0;
-    let activeItem = null;
-    let shuffledPool = [];
-
-    document.getElementById("btn-game1").addEventListener("click", startPortGame);
-    document.getElementById("btn-game2").addEventListener("click", startCipherGame);
-    document.getElementById("btn-game3").addEventListener("click", startMitigationGame);
-    document.getElementById("btn-game4").addEventListener("click", startControlsGame);
-    document.getElementById("btn-game5").addEventListener("click", startCloudGame);
-    document.getElementById("btn-game6").addEventListener("click", startIncidentGame);
 
     function shuffleArray(arr) {
       const copy = [...arr];
@@ -470,388 +511,342 @@
       return copy;
     }
 
-    /* =========================================================================
-       GAME 01: PORT DEFENDER (Randomized)
-       ========================================================================= */
-    function startPortGame() {
-      gameContainer.style.display = "flex";
-      activeGameSession = 1;
-      currentScore = 0;
+    function launchGame(gameId) {
+      activeGameId = gameId;
+      scoreCorrect = 0;
+      scoreWrong = 0;
       roundIndex = 0;
-      shuffledPool = shuffleArray(ports);
-      nextPortRound();
+      mistakeLog = [];
+      arcadeModal.classList.add("open");
+
+      if (gameId === 1) {
+        arcadeSubtitle.textContent = "SIMULATOR 01";
+        arcadeTitle.textContent = "Port Boundary Defender";
+        activePool = shuffleArray(ports);
+        nextPortRound();
+      } else if (gameId === 2) {
+        arcadeSubtitle.textContent = "SIMULATOR 02";
+        arcadeTitle.textContent = "Cipher Matrix Matcher";
+        activePool = shuffleArray(ciphers);
+        nextCipherRound();
+      } else if (gameId === 3) {
+        arcadeSubtitle.textContent = "SIMULATOR 03";
+        arcadeTitle.textContent = "Attack Mitigation Decoder";
+        activePool = shuffleArray(mitigations);
+        nextMitigationRound();
+      } else if (gameId === 4) {
+        arcadeSubtitle.textContent = "SIMULATOR 04";
+        arcadeTitle.textContent = "Security Control Classifier";
+        activePool = shuffleArray(controlsData);
+        nextControlRound();
+      } else if (gameId === 5) {
+        arcadeSubtitle.textContent = "SIMULATOR 05";
+        arcadeTitle.textContent = "Cloud Service Model Sorter";
+        activePool = shuffleArray(cloudData);
+        nextCloudRound();
+      } else if (gameId === 6) {
+        arcadeSubtitle.textContent = "SIMULATOR 06";
+        arcadeTitle.textContent = "Incident Response Sequencer";
+        activePool = shuffleArray(incidentData);
+        nextIncidentRound();
+      }
     }
 
+    function updateHud(totalLimit) {
+      hudCorrect.textContent = scoreCorrect;
+      hudWrong.textContent = scoreWrong;
+      hudProgress.textContent = `${roundIndex}/${totalLimit}`;
+    }
+
+    function closeArcadeModal() {
+      arcadeModal.classList.remove("open");
+      if (scoreCorrect + scoreWrong > 0) {
+        showDebriefSummary();
+      }
+    }
+
+    function showDebriefSummary() {
+      arcadeSubtitle.textContent = "MISSION DEBRIEF";
+      arcadeTitle.textContent = "Tactical Performance Summary";
+      arcadeModal.classList.add("open");
+
+      let debriefHtml = `
+        <div style="margin-bottom:1rem;">
+          <h3 style="color:#fff; font-family:'Archivo Black',sans-serif; margin-bottom:0.3rem;">SIMULATION TERMINATED</h3>
+          <p class="prose">Here is your verified performance tally across completed objectives:</p>
+        </div>
+        <div class="debrief-container">
+      `;
+
+      if (mistakeLog.length === 0) {
+        debriefHtml += `
+          <div class="debrief-item success">
+            <div class="debrief-title">FLAWLESS EXECUTION (0 MISTAKES)</div>
+            <div class="debrief-detail">All tactical decisions were authenticated correctly without a single protocol breach.</div>
+          </div>
+        `;
+      } else {
+        mistakeLog.forEach(err => {
+          debriefHtml += `
+            <div class="debrief-item">
+              <div class="debrief-title">MISALIGNMENT: ${err.item}</div>
+              <div class="debrief-detail"><strong>You chose:</strong> ${err.userChoice} <br><strong>Correct standard:</strong> ${err.correctAnswer}</div>
+            </div>
+          `;
+        });
+      }
+
+      debriefHtml += `</div>
+        <div style="display:flex; gap:1rem; margin-top:1.5rem;">
+          <button class="btn-lime" onclick="launchGame(${activeGameId})">Restart Simulator</button>
+          <button class="btn-ghost" onclick="arcadeModal.classList.remove('open')">Return to Arcade Menu</button>
+        </div>
+      `;
+
+      arcadeBody.innerHTML = debriefHtml;
+    }
+
+    /* =========================================================================
+       GAME 01: PORT BOUNDARY DEFENDER
+       ========================================================================= */
     function nextPortRound() {
-      if (roundIndex >= 10 || roundIndex >= shuffledPool.length) {
-        endGame(1, `Port Defense Completed! Score: ${currentScore} / 10`);
+      if (roundIndex >= 10 || roundIndex >= activePool.length) {
+        showDebriefSummary();
         return;
       }
-      const currentPort = shuffledPool[roundIndex];
+      currentItem = activePool[roundIndex];
       roundIndex++;
+      updateHud(10);
 
-      let choices = [currentPort.num];
+      let choices = [currentItem.num];
       while (choices.length < 4) {
         const decoy = ports[Math.floor(Math.random() * ports.length)].num;
         if (!choices.includes(decoy)) choices.push(decoy);
       }
       choices = shuffleArray(choices);
 
-      gameContainer.innerHTML = `
+      arcadeBody.innerHTML = `
         <div>
-          <div class="p-hud">
-            <div>STATUS: DEFENDING BROADCAST</div>
-            <div class="p-score">SUCCESSFUL BLOCKS: <span>${currentScore} / 10</span></div>
-          </div>
-          <p class="prose" style="text-align:center;">Incoming request packet query matches description:</p>
-          <div class="p-threat">"Establish connection to <span>${currentPort.use}</span>"</div>
-          <div class="p-grid">
-            ${choices.map(c => `<button class="p-btn" onclick="checkPort(${c}, ${currentPort.num}, '${currentPort.use}')">Port ${c}</button>`).join("")}
+          <div class="tactical-prompt">Incoming request queries service: <br><span>"${currentItem.use}"</span></div>
+          <div class="action-grid" style="grid-template-columns: repeat(2, 1fr);">
+            ${choices.map(c => `<button class="action-btn" onclick="checkPort(${c}, ${currentItem.num}, '${currentItem.use}')">Port ${c} <sub>Authorize Binding</sub></button>`).join("")}
           </div>
         </div>
-        <button class="btn-ghost" onclick="quitGame()">&larr; Quit Simulator</button>
+        <div style="font-family:'JetBrains Mono',monospace; font-size:0.75rem; color:var(--text-secondary); text-align:center;">Select the correct network port to block unauthorized sniffing.</div>
       `;
     }
 
     function checkPort(selected, correctNum, useName) {
       if (selected === correctNum) {
-        currentScore++;
-        openFeedback(true, "Correct port block deployed!");
+        scoreCorrect++;
+        openFeedback(true, "Correct port block deployed successfully.");
+        nextPortRound();
       } else {
-        openFeedback(false, `Alert! Breach detected. **${useName}** operates on **Port ${correctNum}**.`);
+        scoreWrong++;
+        mistakeLog.push({ item: useName, userChoice: `Port ${selected}`, correctAnswer: `Port ${correctNum}` });
+        openFeedback(false, `Security Breach! **${useName}** operates on **Port ${correctNum}**.`);
+        nextPortRound();
       }
-      nextPortRound();
     }
 
     /* =========================================================================
-       GAME 02: CIPHER MATRIX SORTER (Drag & Drop + Click Fallback)
+       GAME 02: CIPHER MATRIX MATCH CLEAN INTERACTION
        ========================================================================= */
-    function startCipherGame() {
-      gameContainer.style.display = "flex";
-      activeGameSession = 2;
-      currentScore = 0;
-      shuffledPool = shuffleArray(ciphers);
-      nextCipherRound();
-    }
-
     function nextCipherRound() {
-      if (shuffledPool.length === 0) {
-        endGame(2, `Matrix Cleared! You correctly sorted all ${ciphers.length} cryptographic ciphers.`);
+      if (activePool.length === 0) {
+        showDebriefSummary();
         return;
       }
-      activeItem = shuffledPool.pop();
+      currentItem = activePool.pop();
+      roundIndex++;
+      updateHud(ciphers.length);
 
-      gameContainer.innerHTML = `
+      arcadeBody.innerHTML = `
         <div>
-          <div class="p-hud">
-            <div>STATUS: SORTING SYSTEM DATA</div>
-            <div class="p-score">SORTED: <span>${currentScore} / ${ciphers.length}</span></div>
-          </div>
-          <p class="prose" style="text-align:center;">Drag the cipher block OR click your target architectural matrix below:</p>
-          
-          <div style="text-align:center;">
-            <div class="matrix-word" draggable="true" id="drag-cipher">${activeItem.name}</div>
-          </div>
-
-          <div class="matrix-workspace">
-            <div class="matrix-bin" id="bin-symmetric" onclick="processCipherSort('symmetric')">
-              <h4>Symmetric Matrix<br><span style="font-size:0.65rem; color:var(--lime);">Single Shared Key</span></h4>
-            </div>
-            <div class="matrix-bin" id="bin-asymmetric" onclick="processCipherSort('asymmetric')">
-              <h4>Asymmetric Matrix<br><span style="font-size:0.65rem; color:var(--cyan);">Public / Private Keys</span></h4>
-            </div>
+          <div class="tactical-prompt">Classify Cryptographic Algorithm: <br><span>${currentItem.name}</span> <br><sub style="font-size:0.75rem; color:var(--text-secondary);">${currentItem.desc}</sub></div>
+          <div class="action-grid">
+            <button class="action-btn" onclick="processCipherSort('symmetric')">Symmetric Matrix <sub>Single Shared Key</sub></button>
+            <button class="action-btn" onclick="processCipherSort('asymmetric')">Asymmetric Matrix <sub>Public / Private Keys</sub></button>
           </div>
         </div>
-        <button class="btn-ghost" onclick="quitGame()">&larr; Quit Simulator</button>
+        <div style="font-family:'JetBrains Mono',monospace; font-size:0.75rem; color:var(--text-secondary); text-align:center;">Click the correct matrix architecture.</div>
       `;
-
-      const dWord = document.getElementById("drag-cipher");
-      dWord.addEventListener("dragstart", (e) => {
-        e.dataTransfer.setData("text/plain", activeItem.type);
-      });
-
-      ["symmetric", "asymmetric"].forEach(type => {
-        const bin = document.getElementById(`bin-${type}`);
-        bin.addEventListener("dragover", (e) => e.preventDefault());
-        bin.addEventListener("dragenter", () => bin.classList.add("active"));
-        bin.addEventListener("dragleave", () => bin.classList.remove("active"));
-        bin.addEventListener("drop", (e) => {
-          e.preventDefault();
-          bin.classList.remove("active");
-          const droppedType = e.dataTransfer.getData("text/plain");
-          processCipherSort(droppedType);
-        });
-      });
     }
 
     function processCipherSort(chosenType) {
-      if (chosenType === activeItem.type) {
-        currentScore++;
+      if (chosenType === currentItem.type) {
+        scoreCorrect++;
         openFeedback(true, "System aligned! Key structure matched.");
+        nextCipherRound();
       } else {
-        openFeedback(false, `Error: Misalignment! **${activeItem.name}** is an **${activeItem.type}** algorithm.`);
-      }
-      nextCipherRound();
-    }
-
-    /* =========================================================================
-       GAME 03: ATTACK MITIGATION DECODER (Dropdowns)
-       ========================================================================= */
-    function startMitigationGame() {
-      gameContainer.style.display = "flex";
-      activeGameSession = 3;
-      
-      const randomizedThreats = shuffleArray(mitigations);
-      const remedies = shuffleArray(mitigations.map(m => m.remedy));
-
-      gameContainer.innerHTML = `
-        <div>
-          <div class="p-hud">
-            <div>STATUS: DECODING MITIGATION MATRICES</div>
-          </div>
-          <p class="prose" style="margin-bottom:1.25rem;">Deploy the correct architectural countermeasure for each randomized system threat:</p>
-          
-          <div class="matcher-workspace">
-            ${randomizedThreats.map((item, idx) => `
-              <div class="match-row" data-remedy="${item.remedy}">
-                <div class="match-threat"><strong>THREAT:</strong> ${item.threat}</div>
-                <select class="match-select" id="remedy-select-${idx}">
-                  <option value="">-- Select Countermeasure --</option>
-                  ${remedies.map(r => `<option value="${r}">${r}</option>`).join("")}
-                </select>
-              </div>
-            `).join("")}
-          </div>
-
-          <div style="text-align:center; margin-top:1.5rem;">
-            <button class="btn-lime" onclick="gradeMitigations()">Deploy All Mitigations</button>
-          </div>
-        </div>
-        <button class="btn-ghost" onclick="quitGame()">&larr; Quit Simulator</button>
-      `;
-    }
-
-    function gradeMitigations() {
-      const rows = document.querySelectorAll(".match-row");
-      let correct = 0;
-      let reviewHTML = "";
-
-      rows.forEach((row, idx) => {
-        const correctRemedy = row.getAttribute("data-remedy");
-        const sel = document.getElementById(`remedy-select-${idx}`).value;
-        const threatText = row.querySelector(".match-threat").textContent;
-        if (sel === correctRemedy) {
-          correct++;
-        } else {
-          reviewHTML += `<p style="margin-bottom:0.45rem;">&bull; For ${threatText}, correct mitigation is **${correctRemedy}**.</p>`;
-        }
-      });
-
-      if (correct === rows.length) {
-        endGame(3, "Perfect Defense! All network exploits successfully mitigated.");
-      } else {
-        openFeedback(false, `Review details below: <br/><br/>${reviewHTML}`);
-        startMitigationGame();
+        scoreWrong++;
+        mistakeLog.push({ item: currentItem.name, userChoice: chosenType.toUpperCase(), correctAnswer: currentItem.type.toUpperCase() });
+        openFeedback(false, `Misalignment! **${currentItem.name}** is a **${currentItem.type.toUpperCase()}** algorithm.`);
+        nextCipherRound();
       }
     }
 
     /* =========================================================================
-       GAME 04: SECURITY CONTROL CLASSIFIER (Drag & Drop / Click Sorter)
+       GAME 03: ATTACK MITIGATION DECODER
        ========================================================================= */
-    function startControlsGame() {
-      gameContainer.style.display = "flex";
-      activeGameSession = 4;
-      currentScore = 0;
-      shuffledPool = shuffleArray(controlsData);
-      nextControlRound();
-    }
-
-    function nextControlRound() {
-      if (shuffledPool.length === 0) {
-        endGame(4, `Audit Complete! All security controls successfully classified.`);
+    function nextMitigationRound() {
+      if (activePool.length === 0) {
+        showDebriefSummary();
         return;
       }
-      activeItem = shuffledPool.pop();
+      currentItem = activePool.pop();
+      roundIndex++;
+      updateHud(mitigations.length);
 
-      gameContainer.innerHTML = `
+      const remedies = shuffleArray(mitigations.map(m => m.remedy));
+
+      arcadeBody.innerHTML = `
         <div>
-          <div class="p-hud">
-            <div>STATUS: CLASSIFYING SECURITY CONTROLS</div>
-            <div class="p-score">CLASSIFIED: <span>${currentScore} / ${controlsData.length}</span></div>
-          </div>
-          <p class="prose" style="text-align:center;">Drag or click to assign this security control to its proper domain:</p>
-          
-          <div style="text-align:center;">
-            <div class="matrix-word" draggable="true" id="drag-control">${activeItem.item}</div>
-          </div>
-
-          <div class="matrix-workspace" style="grid-template-columns: repeat(3, 1fr);">
-            <div class="matrix-bin" onclick="processControlSort('administrative')">
-              <h4>Administrative<br><span style="font-size:0.65rem; color:var(--cyan);">Policies & Procedures</span></h4>
-            </div>
-            <div class="matrix-bin" onclick="processControlSort('technical')">
-              <h4>Technical (Logical)<br><span style="font-size:0.65rem; color:var(--lime);">Hardware & Software</span></h4>
-            </div>
-            <div class="matrix-bin" onclick="processControlSort('physical')">
-              <h4>Physical<br><span style="font-size:0.65rem; color:var(--rose);">Facilities & Perimeters</span></h4>
-            </div>
+          <div class="tactical-prompt" style="font-size:1.05rem;">Active Threat Vector: <br><span>${currentItem.threat}</span></div>
+          <div style="display:flex; flex-direction:column; gap:0.75rem; margin:1.2rem 0;">
+            ${remedies.map(r => `<button class="action-btn" style="text-align:left; align-items:flex-start; padding:0.85rem 1rem;" onclick="processMitigationSelect('${r.replace(/'/g, "\\'")}', '${currentItem.remedy.replace(/'/g, "\\'")}', '${currentItem.threat.replace(/'/g, "\\'")}')">${r}</button>`).join("")}
           </div>
         </div>
-        <button class="btn-ghost" onclick="quitGame()">&larr; Quit Simulator</button>
+        <div style="font-family:'JetBrains Mono',monospace; font-size:0.75rem; color:var(--text-secondary); text-align:center;">Select the correct architectural countermeasure.</div>
       `;
+    }
 
-      const dWord = document.getElementById("drag-control");
-      dWord.addEventListener("dragstart", (e) => {
-        e.dataTransfer.setData("text/plain", activeItem.type);
-      });
+    function processMitigationSelect(selectedRemedy, correctRemedy, threatName) {
+      if (selectedRemedy === correctRemedy) {
+        scoreCorrect++;
+        openFeedback(true, "Countermeasure deployed successfully.");
+        nextMitigationRound();
+      } else {
+        scoreWrong++;
+        mistakeLog.push({ item: threatName, userChoice: selectedRemedy, correctAnswer: correctRemedy });
+        openFeedback(false, `Defense Failure! Correct mitigation is: **${correctRemedy}**.`);
+        nextMitigationRound();
+      }
+    }
 
-      document.querySelectorAll(".matrix-bin").forEach((bin, idx) => {
-        const typeMap = ["administrative", "technical", "physical"][idx];
-        bin.addEventListener("dragover", (e) => e.preventDefault());
-        bin.addEventListener("drop", (e) => {
-          e.preventDefault();
-          const droppedType = e.dataTransfer.getData("text/plain");
-          processControlSort(droppedType);
-        });
-      });
+    /* =========================================================================
+       GAME 04: SECURITY CONTROL CLASSIFIER
+       ========================================================================= */
+    function nextControlRound() {
+      if (activePool.length === 0) {
+        showDebriefSummary();
+        return;
+      }
+      currentItem = activePool.pop();
+      roundIndex++;
+      updateHud(controlsData.length);
+
+      arcadeBody.innerHTML = `
+        <div>
+          <div class="tactical-prompt">Classify Security Control: <br><span>${currentItem.item}</span></div>
+          <div class="action-grid" style="grid-template-columns: repeat(3, 1fr);">
+            <button class="action-btn" onclick="processControlSort('administrative')">Administrative <sub>Policies & Procedures</sub></button>
+            <button class="action-btn" onclick="processControlSort('technical')">Technical <sub>Logical / Hardware</sub></button>
+            <button class="action-btn" onclick="processControlSort('physical')">Physical <sub>Perimeter & Facilities</sub></button>
+          </div>
+        </div>
+        <div style="font-family:'JetBrains Mono',monospace; font-size:0.75rem; color:var(--text-secondary); text-align:center;">Select the appropriate NIST control domain.</div>
+      `;
     }
 
     function processControlSort(chosenType) {
-      if (chosenType === activeItem.type) {
-        currentScore++;
-        openFeedback(true, "Control domain correctly classified!");
+      if (chosenType === currentItem.type) {
+        scoreCorrect++;
+        openFeedback(true, "Control classification verified.");
+        nextControlRound();
       } else {
-        openFeedback(false, `Misclassification! **${activeItem.item}** is an **${activeItem.type}** control.`);
+        scoreWrong++;
+        mistakeLog.push({ item: currentItem.item, userChoice: chosenType.toUpperCase(), correctAnswer: currentItem.name });
+        openFeedback(false, `Misclassification! **${currentItem.item}** is an **${currentItem.name}**.`);
+        nextControlRound();
       }
-      nextControlRound();
     }
 
     /* =========================================================================
-       GAME 05: CLOUD SERVICE MODEL SORTER
+       GAME 05: CLOUD SERVICE MODEL SORTER (Clean Interactive Buttons)
        ========================================================================= */
-    function startCloudGame() {
-      gameContainer.style.display = "flex";
-      activeGameSession = 5;
-      currentScore = 0;
-      shuffledPool = shuffleArray(cloudData);
-      nextCloudRound();
-    }
-
     function nextCloudRound() {
-      if (shuffledPool.length === 0) {
-        endGame(5, `Cloud Architect Certified! All cloud responsibility components sorted.`);
+      if (activePool.length === 0) {
+        showDebriefSummary();
         return;
       }
-      activeItem = shuffledPool.pop();
+      currentItem = activePool.pop();
+      roundIndex++;
+      updateHud(cloudData.length);
 
-      gameContainer.innerHTML = `
+      arcadeBody.innerHTML = `
         <div>
-          <div class="p-hud">
-            <div>STATUS: CLOUD ARCHITECTURE MAPPING</div>
-            <div class="p-score">SORTED: <span>${currentScore} / ${cloudData.length}</span></div>
-          </div>
-          <p class="prose" style="text-align:center;">Assign this cloud component to its correct service model:</p>
-          
-          <div style="text-align:center;">
-            <div class="matrix-word" draggable="true" id="drag-cloud">${activeItem.item}</div>
-          </div>
-
-          <div class="matrix-workspace" style="grid-template-columns: repeat(3, 1fr);">
-            <div class="matrix-bin" onclick="processCloudSort('iaas')">
-              <h4>IaaS<br><span style="font-size:0.65rem; color:var(--cyan);">Infrastructure as a Service</span></h4>
-            </div>
-            <div class="matrix-bin" onclick="processCloudSort('paas')">
-              <h4>PaaS<br><span style="font-size:0.65rem; color:var(--lime);">Platform as a Service</span></h4>
-            </div>
-            <div class="matrix-bin" onclick="processCloudSort('saas')">
-              <h4>SaaS<br><span style="font-size:0.65rem; color:var(--rose);">Software as a Service</span></h4>
-            </div>
+          <div class="tactical-prompt">Cloud Responsibility Component: <br><span>${currentItem.item}</span></div>
+          <div class="action-grid" style="grid-template-columns: repeat(3, 1fr);">
+            <button class="action-btn" onclick="processCloudSort('iaas')">IaaS <sub>Infrastructure</sub></button>
+            <button class="action-btn" onclick="processCloudSort('paas')">PaaS <sub>Platform</sub></button>
+            <button class="action-btn" onclick="processCloudSort('saas')">SaaS <sub>Software</sub></button>
           </div>
         </div>
-        <button class="btn-ghost" onclick="quitGame()">&larr; Quit Simulator</button>
+        <div style="font-family:'JetBrains Mono',monospace; font-size:0.75rem; color:var(--text-secondary); text-align:center;">Select the correct cloud deployment model.</div>
       `;
-
-      const dWord = document.getElementById("drag-cloud");
-      dWord.addEventListener("dragstart", (e) => {
-        e.dataTransfer.setData("text/plain", activeItem.type);
-      });
-
-      document.querySelectorAll(".matrix-bin").forEach((bin, idx) => {
-        const typeMap = ["iaas", "paas", "saas"][idx];
-        bin.addEventListener("dragover", (e) => e.preventDefault());
-        bin.addEventListener("drop", (e) => {
-          e.preventDefault();
-          const droppedType = e.dataTransfer.getData("text/plain");
-          processCloudSort(droppedType);
-        });
-      });
     }
 
     function processCloudSort(chosenType) {
-      if (chosenType === activeItem.type) {
-        currentScore++;
-        openFeedback(true, "Cloud component correctly sorted!");
+      if (chosenType === currentItem.type) {
+        scoreCorrect++;
+        openFeedback(true, "Cloud architecture component correctly mapped.");
+        nextCloudRound();
       } else {
-        openFeedback(false, `Incorrect! **${activeItem.item}** belongs to **${activeItem.type.toUpperCase()}**.`);
+        scoreWrong++;
+        mistakeLog.push({ item: currentItem.item, userChoice: chosenType.toUpperCase(), correctAnswer: currentItem.name });
+        openFeedback(false, `Misalignment! **${currentItem.item}** belongs to **${currentItem.name}**.`);
+        nextCloudRound();
       }
-      nextCloudRound();
     }
 
     /* =========================================================================
        GAME 06: INCIDENT RESPONSE SEQUENCER
        ========================================================================= */
-    function startIncidentGame() {
-      gameContainer.style.display = "flex";
-      activeGameSession = 6;
-      currentScore = 0;
-      shuffledPool = shuffleArray(incidentData);
-      nextIncidentRound();
-    }
-
     function nextIncidentRound() {
-      if (shuffledPool.length === 0) {
-        endGame(6, `Incident Handler Certified! All NIST IR phases correctly sequenced.`);
+      if (activePool.length === 0) {
+        showDebriefSummary();
         return;
       }
-      activeItem = shuffledPool.pop();
+      currentItem = activePool.pop();
+      roundIndex++;
+      updateHud(incidentData.length);
 
-      gameContainer.innerHTML = `
+      const phases = [
+        { key: "preparation", label: "1. Preparation" },
+        { key: "detection", label: "2. Detection & Analysis" },
+        { key: "containment", label: "3. Containment" },
+        { key: "eradication", label: "4. Eradication" },
+        { key: "recovery", label: "5. Recovery" },
+        { key: "lessons", label: "6. Lessons Learned" }
+      ];
+
+      arcadeBody.innerHTML = `
         <div>
-          <div class="p-hud">
-            <div>STATUS: NIST INCIDENT RESPONSE LIFECYCLE</div>
-            <div class="p-score">SORTED: <span>${currentScore} / ${incidentData.length}</span></div>
-          </div>
-          <p class="prose" style="text-align:center;">Match this IR task to its correct NIST lifecycle phase:</p>
-          
-          <div style="text-align:center;">
-            <div class="matrix-word" style="font-size:0.95rem; max-width: 90%;">${activeItem.task}</div>
-          </div>
-
-          <div class="matrix-workspace" style="grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));">
-            <div class="matrix-bin" onclick="processIncidentSort('preparation')"><h4>1. Preparation</h4></div>
-            <div class="matrix-bin" onclick="processIncidentSort('detection')"><h4>2. Detection & Analysis</h4></div>
-            <div class="matrix-bin" onclick="processIncidentSort('containment')"><h4>3. Containment</h4></div>
-            <div class="matrix-bin" onclick="processIncidentSort('eradication')"><h4>4. Eradication</h4></div>
-            <div class="matrix-bin" onclick="processIncidentSort('recovery')"><h4>5. Recovery</h4></div>
-            <div class="matrix-bin" onclick="processIncidentSort('lessons')"><h4>6. Lessons Learned</h4></div>
+          <div class="tactical-prompt" style="font-size:1.05rem;">NIST IR Task: <br><span>${currentItem.task}</span></div>
+          <div class="action-grid" style="grid-template-columns: repeat(2, 1fr); gap: 0.65rem; margin: 1rem 0;">
+            ${phases.map(p => `<button class="action-btn" style="padding:0.85rem;" onclick="processIncidentSort('${p.key}', '${currentItem.phase}', '${currentItem.task.replace(/'/g, "\\'")}', '${p.label}')">${p.label}</button>`).join("")}
           </div>
         </div>
-        <button class="btn-ghost" onclick="quitGame()">&larr; Quit Simulator</button>
+        <div style="font-family:'JetBrains Mono',monospace; font-size:0.75rem; color:var(--text-secondary); text-align:center;">Select the NIST Incident Response lifecycle stage.</div>
       `;
     }
 
-    function processIncidentSort(chosenType) {
-      if (chosenType === activeItem.phase) {
-        currentScore++;
-        openFeedback(true, "NIST IR lifecycle task correctly mapped!");
+    function processIncidentSort(chosenPhase, correctPhase, taskName, phaseLabel) {
+      if (chosenPhase === correctPhase) {
+        scoreCorrect++;
+        openFeedback(true, "NIST IR lifecycle phase correctly sequenced.");
+        nextIncidentRound();
       } else {
-        openFeedback(false, `Incorrect! This task belongs to the **${activeItem.phase.toUpperCase()}** phase.`);
+        scoreWrong++;
+        mistakeLog.push({ item: taskName, userChoice: phaseLabel, correctAnswer: currentItem.name });
+        openFeedback(false, `Missequenced! This task belongs to **${currentItem.name}**.`);
+        nextIncidentRound();
       }
-      nextIncidentRound();
     }
 
     /* =========================================================================
-       CORE UTILITIES & FEEDBACK
+       FEEDBACK & MODAL UTILITIES
        ========================================================================= */
     function openFeedback(isCorrect, htmlContent) {
       feedbackBox.className = "modal-box " + (isCorrect ? "correct" : "wrong");
@@ -865,34 +860,7 @@
       if (e.target === feedbackModal) feedbackModal.classList.remove("open");
     });
 
-    function endGame(gId, msg) {
-      gameContainer.innerHTML = `
-        <div class="game-over-screen">
-          <div class="eyebrow">Simulator Finished</div>
-          <h1 class="hero-headline" style="color:var(--lime);">MISSION <span class="outline">ACCOMPLISHED</span></h1>
-          <p class="prose">${msg}</p>
-          <div style="display:flex;gap:1rem;margin-top:1rem;">
-            <button class="btn-lime" onclick="restartSelectedGame(${gId})">Restart Game</button>
-            <button class="btn-ghost" onclick="quitGame()">Select Another Game</button>
-          </div>
-        </div>
-      `;
-    }
-
-    function restartSelectedGame(gId) {
-      if (gId === 1) startPortGame();
-      else if (gId === 2) startCipherGame();
-      else if (gId === 3) startMitigationGame();
-      else if (gId === 4) startControlsGame();
-      else if (gId === 5) startCloudGame();
-      else if (gId === 6) startIncidentGame();
-    }
-
-    function quitGame() {
-      gameContainer.style.display = "none";
-    }
-
-    // Toggle mobile menu
+    // Mobile menu toggle
     const menuBtn = document.getElementById("mobile-menu-btn");
     const navDrawer = document.getElementById("nav-drawer");
     if (menuBtn && navDrawer) {
