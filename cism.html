@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>CISM | Jesse's Study Guides</title>
-  <meta name="description" content="CISM study hub featuring an interactive 145-question mock exam across Governance, Risk, Program, and Incident Management." />
+  <meta name="description" content="CISM study hub featuring an interactive 145-question mock exam, 100 flashcards, and the CISM Tactical Arcade." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -74,11 +74,6 @@
       box-shadow: 0 0 22px rgba(158, 255, 51, 0.35);
       transform: translateY(-1px);
     }
-    .btn-lime.disabled {
-      background: rgba(148, 163, 184, 0.14);
-      color: var(--text-muted);
-      cursor: not-allowed;
-    }
   </style>
 </head>
 <body>
@@ -119,10 +114,10 @@
 
         <div class="nav-section">
           <div class="nav-label">Psychology</div>
-          <span class="nav-item disabled" aria-disabled="true">
+          <a href="nce.html" class="nav-item">
             <span>NCE</span>
-            <span class="badge">Coming Soon</span>
-          </span>
+            <span class="badge live">Active</span>
+          </a>
         </div>
 
         <div class="nav-section">
@@ -167,20 +162,20 @@
                 <h3>Flash Cards</h3>
                 <span class="badge live">100 Cards</span>
               </div>
-              <p>Reordered active-recall deck covering 100 essential CISM terms, regulatory frameworks, metrics, and risk strategies.</p>
+              <p>Active-recall deck covering 100 essential CISM terms, regulatory frameworks, metrics, and risk strategies.</p>
             </div>
             <a href="cism-flashcards.html" class="btn-lime">Launch Flash Cards &rarr;</a>
           </div>
 
-          <div class="module-card">
+          <div class="module-card interactive">
             <div>
               <div class="module-card-head">
                 <h3>Things to Remember</h3>
-                <span class="badge">Coming Soon</span>
+                <span class="badge live">Arcade</span>
               </div>
-              <p>ISACA mindset rules, business alignment principles, and exam-day prioritization guides.</p>
+              <p>Interactive CISM games including the 10x10 Concentration Memory Grid to master all 50 governance and risk pairs.</p>
             </div>
-            <button type="button" class="btn-lime disabled" disabled>Coming Soon</button>
+            <a href="cism-remember.html" class="btn-lime">Launch Arcade &rarr;</a>
           </div>
         </div>
       </main>
