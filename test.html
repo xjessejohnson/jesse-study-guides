@@ -1,0 +1,1423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>License Ding | Jesse's Study Guides</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-main: #070b12;
+      --bg-card: #0d121c;
+      --bg-panel: #121927;
+      --border-slate: #1e293b;
+      --cyan: #22d3ee;
+      --cyan-dim: rgba(34, 211, 238, 0.14);
+      --lime: #34d399;
+      --rose: #fb7185;
+      --amber: #fbbf24;
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background: var(--bg-main);
+      color: var(--text-primary);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .arcade-shell {
+      width: 100%;
+      max-width: 1020px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-slate);
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 24px 65px rgba(0, 0, 0, 0.75);
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      padding: 1.15rem;
+    }
+
+    .top-hud {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+      padding-bottom: 0.9rem;
+      border-bottom: 1px solid var(--border-slate);
+    }
+
+    .brand-group .tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--cyan);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .brand-group h1 {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: clamp(1.3rem, 3.2vw, 1.85rem);
+      letter-spacing: 0.03em;
+      color: #fff;
+      text-transform: uppercase;
+    }
+
+    .hud-stats {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.85rem;
+    }
+
+    .hud-pill {
+      background: var(--bg-panel);
+      border: 1px solid var(--border-slate);
+      border-radius: 10px;
+      padding: 0.5rem 0.85rem;
+      display: flex;
+      align-items: center;
+      gap: 0.45rem;
+    }
+
+    .dings-pill {
+      border-color: rgba(251, 113, 133, 0.45);
+      background: rgba(251, 113, 133, 0.08);
+    }
+
+    .dings-count {
+      color: var(--rose);
+      font-weight: 700;
+      font-size: 1rem;
+    }
+
+    .progress-count {
+      color: var(--cyan);
+      font-weight: 700;
+    }
+
+    .restart-btn {
+      background: var(--bg-panel);
+      color: #fff;
+      border: 1px solid var(--border-slate);
+      border-radius: 10px;
+      padding: 0.52rem 0.9rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .restart-btn:hover {
+      border-color: var(--cyan);
+      background: var(--cyan-dim);
+    }
+
+    /* Illustrated Therapy Office Scene */
+    .office-scene {
+      position: relative;
+      width: 100%;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid var(--border-slate);
+      background: linear-gradient(180deg, #162033 0%, #101726 62%, #1d1510 62%, #140e0b 100%);
+      min-height: 250px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+
+    .office-svg-wrap {
+      width: 100%;
+      height: 220px;
+      display: block;
+    }
+
+    .office-svg-wrap svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .client-dialogue-bar {
+      background: rgba(10, 15, 24, 0.92);
+      border-top: 1px solid var(--border-slate);
+      padding: 1rem 1.25rem;
+    }
+
+    .dialogue-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.4rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.74rem;
+      color: var(--amber);
+      text-transform: uppercase;
+    }
+
+    .client-statement {
+      font-size: clamp(0.98rem, 2.2vw, 1.12rem);
+      line-height: 1.55;
+      color: #fff;
+      font-weight: 500;
+    }
+
+    /* Response Options */
+    .options-section {
+      display: flex;
+      flex-direction: column;
+      gap: 0.65rem;
+    }
+
+    .options-heading {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .options-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.75rem;
+    }
+
+    .response-btn {
+      background: var(--bg-panel);
+      border: 1px solid var(--border-slate);
+      border-radius: 12px;
+      padding: 0.95rem 1rem;
+      color: var(--text-primary);
+      text-align: left;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.92rem;
+      line-height: 1.45;
+      cursor: pointer;
+      transition: all 0.18s ease;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.7rem;
+      min-height: 76px;
+    }
+
+    .response-btn:hover:not(:disabled) {
+      border-color: var(--cyan);
+      background: var(--cyan-dim);
+      transform: translateY(-2px);
+    }
+
+    .response-btn:disabled {
+      opacity: 0.65;
+      cursor: default;
+    }
+
+    .opt-badge {
+      flex-shrink: 0;
+      width: 26px;
+      height: 26px;
+      border-radius: 7px;
+      background: rgba(34, 211, 238, 0.12);
+      border: 1px solid rgba(34, 211, 238, 0.35);
+      color: var(--cyan);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.8rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 1px;
+    }
+
+    /* Pop-up Modals */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(5, 8, 15, 0.82);
+      backdrop-filter: blur(8px);
+      z-index: 2000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal-box {
+      width: 100%;
+      max-width: 560px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-slate);
+      border-radius: 16px;
+      padding: 1.5rem;
+      box-shadow: 0 25px 70px rgba(0, 0, 0, 0.85);
+      position: relative;
+      max-height: 88vh;
+      overflow-y: auto;
+    }
+
+    .modal-box.ding-alert {
+      border-color: rgba(251, 113, 133, 0.65);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      padding-bottom: 0.75rem;
+      border-bottom: 1px solid var(--border-slate);
+    }
+
+    .modal-title {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 1.05rem;
+      color: var(--rose);
+      text-transform: uppercase;
+      line-height: 1.3;
+    }
+
+    .modal-title.revoked {
+      font-size: 1.15rem;
+    }
+
+    .modal-title.victory {
+      color: var(--lime);
+    }
+
+    .close-x-btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-slate);
+      color: #fff;
+      width: 34px;
+      height: 34px;
+      border-radius: 8px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .close-x-btn:hover {
+      border-color: var(--rose);
+      color: var(--rose);
+    }
+
+    .modal-body-text {
+      font-size: 0.98rem;
+      line-height: 1.55;
+      color: var(--text-primary);
+    }
+
+    .revocation-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+      margin-top: 1rem;
+    }
+
+    .revocation-card {
+      background: var(--bg-panel);
+      border: 1px solid var(--border-slate);
+      border-left: 3px solid var(--rose);
+      border-radius: 10px;
+      padding: 0.85rem 1rem;
+      text-align: left;
+    }
+
+    .revocation-card .q-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--amber);
+      margin-bottom: 0.3rem;
+    }
+
+    .revocation-card .wrong-ans {
+      font-size: 0.86rem;
+      color: var(--rose);
+      margin-bottom: 0.3rem;
+    }
+
+    .revocation-card .right-ans {
+      font-size: 0.88rem;
+      color: var(--lime);
+      font-weight: 600;
+      margin-bottom: 0.35rem;
+    }
+
+    .revocation-card .why-ans {
+      font-size: 0.84rem;
+      color: var(--text-secondary);
+      line-height: 1.45;
+    }
+
+    .modal-footer-actions {
+      margin-top: 1.25rem;
+      display: flex;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .primary-action-btn {
+      background: var(--cyan);
+      color: #061018;
+      border: none;
+      border-radius: 10px;
+      padding: 0.75rem 1.2rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.84rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .primary-action-btn:hover {
+      filter: brightness(1.08);
+    }
+
+    .secondary-action-btn {
+      background: var(--bg-panel);
+      color: #fff;
+      border: 1px solid var(--border-slate);
+      border-radius: 10px;
+      padding: 0.75rem 1.2rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.84rem;
+      font-weight: 700;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .secondary-action-btn:hover {
+      border-color: var(--cyan);
+      background: var(--cyan-dim);
+    }
+
+    @media (max-width: 720px) {
+      .options-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .office-svg-wrap {
+        height: 185px;
+      }
+
+      .arcade-shell {
+        padding: 0.85rem;
+        border-radius: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="arcade-shell">
+    <div class="top-hud">
+      <div class="brand-group">
+        <div class="tag">License Ding // NCE Counseling Game</div>
+        <h1>LICENSE DING</h1>
+      </div>
+
+      <div class="hud-stats">
+        <div class="hud-pill">
+          <span>Session:</span>
+          <strong class="progress-count" id="q-progress">1 / 20</strong>
+        </div>
+        <div class="hud-pill dings-pill">
+          <span>Dings:</span>
+          <span class="dings-count" id="dings-counter">0 / 3</span>
+        </div>
+        <button type="button" class="restart-btn" id="new-session-btn">Next Session</button>
+      </div>
+    </div>
+
+    <div class="office-scene">
+      <div class="office-svg-wrap">
+        <svg viewBox="0 0 900 240" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Therapy office room with a desk, client chair, and therapist chair">
+          <!-- Office Wall & Trim -->
+          <rect x="0" y="0" width="900" height="165" fill="#172236" />
+          <rect x="0" y="158" width="900" height="10" fill="#28354d" />
+          <!-- Hardwood Floor -->
+          <rect x="0" y="168" width="900" height="72" fill="#231710" />
+          <line x1="0" y1="192" x2="900" y2="192" stroke="#180f0a" stroke-width="2" />
+          <line x1="0" y1="216" x2="900" y2="216" stroke="#180f0a" stroke-width="2" />
+
+          <!-- Office Window -->
+          <rect x="365" y="24" width="170" height="96" rx="8" fill="#0f2942" stroke="#334155" stroke-width="5" />
+          <line x1="450" y1="24" x2="450" y2="120" stroke="#334155" stroke-width="4" />
+          <line x1="365" y1="72" x2="535" y2="72" stroke="#334155" stroke-width="4" />
+          <!-- Soft Window Light Beam -->
+          <polygon points="365,120 535,120 620,240 280,240" fill="rgba(34, 211, 238, 0.05)" />
+
+          <!-- Framed Diploma / Certification on Left Wall -->
+          <rect x="75" y="34" width="96" height="68" rx="4" fill="#e2e8f0" stroke="#b45309" stroke-width="4" />
+          <line x1="92" y1="54" x2="154" y2="54" stroke="#475569" stroke-width="3" />
+          <line x1="92" y1="68" x2="142" y2="68" stroke="#64748b" stroke-width="2.5" />
+          <circle cx="145" cy="84" r="8" fill="#f59e0b" />
+
+          <!-- Bookshelf on Right Wall -->
+          <rect x="710" y="32" width="120" height="92" rx="4" fill="#3b2618" stroke="#23150c" stroke-width="3" />
+          <line x1="710" y1="64" x2="830" y2="64" stroke="#23150c" stroke-width="4" />
+          <line x1="710" y1="94" x2="830" y2="94" stroke="#23150c" stroke-width="4" />
+          <rect x="720" y="40" width="14" height="22" fill="#22d3ee" rx="1" />
+          <rect x="737" y="43" width="12" height="19" fill="#34d399" rx="1" />
+          <rect x="752" y="39" width="16" height="23" fill="#fb7185" rx="1" />
+          <rect x="722" y="70" width="18" height="22" fill="#fbbf24" rx="1" />
+          <rect x="744" y="72" width="14" height="20" fill="#818cf8" rx="1" />
+
+          <!-- Client Chair (Left) -->
+          <rect x="175" y="112" width="18" height="66" rx="5" fill="#475569" />
+          <rect x="175" y="154" width="76" height="16" rx="6" fill="#64748b" />
+          <rect x="186" y="170" width="8" height="36" fill="#334155" />
+          <rect x="234" y="170" width="8" height="36" fill="#334155" />
+
+          <!-- Client Character (Seated Left) -->
+          <g id="client-character">
+            <path d="M198 118 Q216 112 232 118 L238 156 L194 156 Z" fill="#38bdf8" />
+            <path d="M226 124 L248 144 L236 150" stroke="#fdba74" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+            <circle cx="215" cy="94" r="18" fill="#fdba74" />
+            <path d="M197 92 Q215 70 233 90 Q228 80 214 80 Q202 80 197 92 Z" fill="#1e293b" />
+            <circle cx="220" cy="94" r="2.2" fill="#0f172a" />
+            <path id="client-mouth" d="M213 103 Q220 100 225 103" stroke="#7c2d12" stroke-width="2.2" fill="none" stroke-linecap="round" />
+          </g>
+          <text id="client-svg-label" x="215" y="226" text-anchor="middle" fill="#cbd5e1" font-family="JetBrains Mono, monospace" font-size="12" font-weight="700">CLIENT</text>
+
+          <!-- Office Desk (Center) -->
+          <rect x="372" y="142" width="156" height="14" rx="4" fill="#78350f" stroke="#451a03" stroke-width="2" />
+          <rect x="386" y="156" width="14" height="54" fill="#451a03" />
+          <rect x="500" y="156" width="14" height="54" fill="#451a03" />
+          <rect x="415" y="135" width="32" height="7" rx="1" fill="#f8fafc" />
+          <rect x="462" y="137" width="22" height="4" rx="2" fill="#22d3ee" />
+
+          <!-- Therapist Chair (Right) -->
+          <rect x="705" y="108" width="18" height="70" rx="5" fill="#475569" />
+          <rect x="646" y="154" width="76" height="16" rx="6" fill="#64748b" />
+          <rect x="656" y="170" width="8" height="36" fill="#334155" />
+          <rect x="704" y="170" width="8" height="36" fill="#334155" />
+
+          <!-- Therapist Character ("You", Seated Right) -->
+          <g id="therapist-character">
+            <path d="M666 118 Q684 112 702 118 L706 156 L662 156 Z" fill="#10b981" />
+            <path d="M674 124 L652 143 L664 149" stroke="#fed7aa" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+            <circle cx="684" cy="93" r="18" fill="#fed7aa" />
+            <path d="M666 91 Q684 70 702 91 Q692 81 681 81 Q672 82 666 91 Z" fill="#3f2e21" />
+            <rect x="668" y="89" width="11" height="8" rx="2" fill="none" stroke="#0f172a" stroke-width="1.8" />
+            <circle cx="674" cy="93" r="2" fill="#0f172a" />
+            <path d="M673 102 Q678 106 684 102" stroke="#7c2d12" stroke-width="2.2" fill="none" stroke-linecap="round" />
+          </g>
+          <text x="684" y="226" text-anchor="middle" fill="#34d399" font-family="JetBrains Mono, monospace" font-size="12" font-weight="700">YOU (THERAPIST)</text>
+        </svg>
+      </div>
+
+      <div class="client-dialogue-bar">
+        <div class="dialogue-meta">
+          <span id="scenario-domain">DOMAIN: HELPING RELATIONSHIPS</span>
+          <span id="scenario-client-name">CLIENT: JORDAN</span>
+        </div>
+        <p class="client-statement" id="client-statement">Loading client statement...</p>
+      </div>
+    </div>
+
+    <div class="options-section">
+      <div class="options-heading">Choose how you respond as a therapist on the NCE:</div>
+      <div class="options-grid" id="options-grid"></div>
+    </div>
+  </div>
+
+  <!-- Wrong Response / License Revoked / Victory Pop-up -->
+  <div class="modal-backdrop" id="feedback-modal" role="dialog" aria-modal="true" aria-labelledby="feedback-modal-title">
+    <div class="modal-box ding-alert" id="feedback-modal-box">
+      <div class="modal-header">
+        <h2 class="modal-title" id="feedback-modal-title">That is not how a licensed therapist should respond to a client</h2>
+        <button type="button" class="close-x-btn" id="close-modal-x" aria-label="Close popup">X</button>
+      </div>
+      <div id="feedback-modal-body" class="modal-body-text"></div>
+      <div class="modal-footer-actions" id="feedback-modal-footer"></div>
+    </div>
+  </div>
+
+  <script>
+    const CLIENT_NAMES = [
+      "Jordan", "Maya", "Devon", "Elena", "Carlos", "Hannah", "Malik", "Priya",
+      "Trevor", "Nadia", "Caleb", "Tessa", "Darius", "Sonia", "Leo", "Camila",
+      "Owen", "Amina", "Gabe", "Zoe", "Hector", "Rachel", "Samir", "Chloe"
+    ];
+
+    const BASE_NCE_BANK = [
+      {
+        domain: "Helping Relationships",
+        client: "I feel like nothing I do ever works out, and honestly I'm just tired of trying to fix everything by myself.",
+        options: [
+          "You really shouldn't talk like that; lots of people have harder lives than you do.",
+          "It sounds exhausting to carry all of that alone. What feels most overwhelming right now?",
+          "You just need to make a daily checklist and stick to it starting tomorrow.",
+          "Why do you always wait until things get bad before you change your habits?"
+        ],
+        correct: 1,
+        explanation: "Reflective listening and open exploration validate the client's burden without minimizing feelings or jumping prematurely to rigid directives."
+      },
+      {
+        domain: "Professional Orientation & Ethics",
+        client: "My cousin works at your clinic—can you tell me if my neighbor who was in the waiting room earlier is coming here for depression?",
+        options: [
+          "I can't conf{irm} or deny whether anyone is a client here, even to family or staff without proper release.",
+          "I won't say their name, just that they've been here a few times lately.",
+          "Since your cousin works here, I can check with them if that's okay.",
+          "Only if you promise not to mention it to anyone else in town."
+        ],
+        correct: 0,
+        explanation: "Confidentiality and privacy standards prohibit conf{irm}ing or denying client status without signed authorization and a legitimate need to know."
+      },
+      {
+        domain: "Professional Orientation & Ethics",
+        client: "I brought you this handmade watch because you've helped me so much—it cost around $400, please take it.",
+        options: [
+          "Thank you so much, I'll put it on my desk right now.",
+          "I can't accept expensive gifts, as that creates a boundary issue. Let's talk about what this gratitude means to you.",
+          "I'll take it only if we apply it toward next month's session fee.",
+          "Keep it until we finish counseling so it doesn't look strange."
+        ],
+        correct: 1,
+        explanation: "Declining high-value gifts respectfully protects professional boundaries while exploring the underlying clinical meaning of the client's gesture."
+      },
+      {
+        domain: "Helping Relationships",
+        client: "My partner says I'm controlling, so I guess I'm just a toxic person who ruins relationships.",
+        options: [
+          "If your partner said it, there's probably real truth to it.",
+          "You aren't toxic—partners always exaggerate during arguments.",
+          "You're defining your whole identity around one label. Let's look at specific behaviors and triggers instead.",
+          "Maybe you should read a book on how to stop being controlling."
+        ],
+        correct: 2,
+        explanation: "Reframing global self-labels into observable behaviors supports balanced self-assessment and therapeutic change."
+      },
+      {
+        domain: "Social & Cultural Foundations",
+        client: "In my family, elders make major life decisions together, and my counselor last year told me I needed to 'cut ties and be independent.'",
+        options: [
+          "Western independence is the healthiest goal for every adult client.",
+          "Family involvement can hold different meanings across cultures; let's explore how your family values fit your goals.",
+          "Your previous counselor probably knew best about healthy boundaries.",
+          "If your family stresses you out, distance is usually the answer."
+        ],
+        correct: 1,
+        explanation: "Multiculturally responsive counseling respects collectivistic family norms rather than imposing individualistic assumptions."
+      },
+      {
+        domain: "Human Growth & Development",
+        client: "Ever since I retired last month, I wake up wondering who I am without my career title.",
+        options: [
+          "Retirement is supposed to be relaxing—try not to overthink it.",
+          "That shift in identity and daily structure is a major transition; how are you navigating life outside your role at work?",
+          "Most people feel better once they adopt three new hobbies in week one.",
+          "You spent too much of your identity on your job while you were working."
+        ],
+        correct: 1,
+        explanation: "Role transitions in later adulthood often impact identity and routine; exploring meaning and adaptation aligns with lifespan counseling."
+      },
+      {
+        domain: "Group Work",
+        client: "In group tonight, one member kept interrupting everyone and turning every topic back to themselves.",
+        options: [
+          "I'll kick that member out of the group before the next session.",
+          "You should confront them harshly next week so they stop.",
+          "Let's look at how that pattern affects you in group and ways to give clear, constructive feedback.",
+          "Don't worry about it—group members usually work that out on their own."
+        ],
+        correct: 2,
+        explanation: "Helping clients examine interpersonal impact and practice constructive group communication fosters member ownership and cohesion."
+      },
+      {
+        domain: "Career Development",
+        client: "I'm thinking of leaving nursing for graphic design because I'm burned out, even though I love helping patients.",
+        options: [
+          "Quit nursing right away—burnout means you're in the wrong field.",
+          "Stay in nursing; changing careers at your age is risky.",
+          "Let's separate burnout from career fit and explore roles that honor your values without draining your energy.",
+          "Just take a two-week vacation and see if you still want to switch."
+        ],
+        correct: 2,
+        explanation: "Effective career counseling distinguishes temporary burnout from values and interests before making major occupational changes."
+      },
+      {
+        domain: "Assessment & Testing",
+        client: "My score on that online personality quiz says I'm 92% narcissistic—does that mean I have a personality disorder?",
+        options: [
+          "Yes, anything above 80% conf{irm}s a clinical diagnosis.",
+          "No, online quizzes aren't validated clinical assessments and don't diagnose disorders on their own.",
+          "It means you're probably harder to get along with than most people.",
+          "Let's ignore test scores completely because tests never tell the truth."
+        ],
+        correct: 1,
+        explanation: "Counselors educate clients on test validity, limitations, and clinical diagnosis standards rather than treating unvalidated quizzes as diagnostic."
+      },
+      {
+        domain: "Research & Program Evaluation",
+        client: "This new mindfulness worksheet helped me sleep better this week, so it must work for everyone with insomnia.",
+        options: [
+          "Agreed—if it works once, it's proven effective across populations.",
+          "It's encouraging that it helped you personally, though individual response differs from broader research evidence.",
+          "You shouldn't trust worksheets unless they're backed by ten years of data.",
+          "If it helps you, you don't need any other sleep strategies."
+        ],
+        correct: 1,
+        explanation: "Distinguishing individual clinical utility from generalizable empirical evidence reflects sound research literacy."
+      },
+      {
+        domain: "Professional Orientation & Ethics",
+        client: "I've been having thoughts of ending my life tonight, and I already have pills sitting in my bathroom cabinet.",
+        options: [
+          "Promise me you won't do anything until next Tuesday's appointment.",
+          "Let's focus on safety right now—I need to assess your immediate risk and put a concrete safety plan in place.",
+          "You have so much to live for, try not to have negative thoughts.",
+          "I can't talk about this right now since our 50 minutes are almost up."
+        ],
+        correct: 1,
+        explanation: "When active suicidal ideation with means is disclosed, immediate risk assessment and safety planning take priority."
+      },
+      {
+        domain: "Helping Relationships",
+        client: "Whenever my boss criticizes my draft, my chest tightens and I immediately assume I'm getting fired.",
+        options: [
+          "That's a classic catastrophic thought—let's examine the evidence for and against being fired.",
+          "Your boss probably doesn't like you if they're criticizing drafts.",
+          "You should tell your boss they aren't allowed to critique your work.",
+          "Just stop caring what your boss thinks."
+        ],
+        correct: 0,
+        explanation: "Cognitive restructuring helps clients identify catastrophizing and test automatic thoughts against realistic evidence."
+      },
+      {
+        domain: "Human Growth & Development",
+        client: "My 14-year-old pushes back on every rule, yet still asks me to stay in the room at bedtime.",
+        options: [
+          "That means they're immature for fourteen and need stricter punishment.",
+          "Adolescents often oscillate between seeking autonomy and needing secure connection—that push-pull is common.",
+          "Once teens hit fourteen, they shouldn't want comfort at bedtime.",
+          "Ignore the pushback and only focus on bedtime."
+        ],
+        correct: 1,
+        explanation: "Adolescent development commonly involves alternating drives for autonomy and attachment security."
+      },
+      {
+        domain: "Social & Cultural Foundations",
+        client: "People keep asking where I'm 'really' from even though I grew up here my whole life.",
+        options: [
+          "They're probably just making small talk—try not to take offense.",
+          "That question can feel invalidating when it implies you don't belong; how does that land for you?",
+          "You should ask them where they're really from right back.",
+          "People ask that to everyone, not just you."
+        ],
+        correct: 1,
+        explanation: "Recognizing microaggressions and exploring their emotional impact validates the client's lived experience."
+      },
+      {
+        domain: "Group Work",
+        client: "I'm terrified to share in group because what if everyone judges my panic attacks?",
+        options: [
+          "Everyone in group has their own struggles, and we review confidentiality agreements to keep the space safe.",
+          "If you're scared to talk, maybe individual therapy is your only option.",
+          "Just jump in and talk about it—fear goes away if you force yourself.",
+          "I'll tell the group not to judge you before you speak."
+        ],
+        correct: 0,
+        explanation: "Addressing group norms, confidentiality, and universality helps reduce anticipatory anxiety in group counseling."
+      },
+      {
+        domain: "Career Development",
+        client: "I passed the coding bootcamp, but I'm afraid to apply for jobs because I don't know every framework listed.",
+        options: [
+          "Don't apply until you know at least 90% of every job posting.",
+          "Job descriptions often list wish-list skills; let's look at transferable strengths and build a targeted application plan.",
+          "Maybe tech isn't the right fit if you feel unprepared.",
+          "Just apply to fifty jobs a day without tailoring anything."
+        ],
+        correct: 1,
+        explanation: "Helping clients evaluate realistic job criteria and build actionable career steps counters imposter anxiety."
+      },
+      {
+        domain: "Assessment & Testing",
+        client: "Why did you give me a brief symptom checklist at the start of sessions instead of just talking?",
+        options: [
+          "Because the clinic requires paperwork for billing purposes.",
+          "Brief measures help track changes in symptoms over time so we can see what's helping in counseling.",
+          "If you don't like filling them out, we can guess how you're doing.",
+          "They tell me whether you're being honest with me."
+        ],
+        correct: 1,
+        explanation: "Explaining measurement-based care clarifies how brief assessments track progress and inform treatment."
+      },
+      {
+        domain: "Research & Program Evaluation",
+        client: "A study says therapy works on average, so why am I still having bad days in week four?",
+        options: [
+          "Average outcomes describe group trends, not a smooth straight line for every individual person.",
+          "That means the therapy approach isn't working for you.",
+          "Four weeks is too short for anyone to feel different.",
+          "Studies usually exaggerate how much therapy helps."
+        ],
+        correct: 0,
+        explanation: "Interpreting statistical averages accurately prevents misapplying group trends to individual nonlinear progress."
+      },
+      {
+        domain: "Professional Orientation & Ethics",
+        client: "My ex-spouse called your office asking if I'm attending counseling—please don't tell them anything.",
+        options: [
+          "I will not disclose any information about your counseling without your written consent.",
+          "I'll tell them you're fine so they don't worry.",
+          "If you have children together, they have a right to know.",
+          "I'll let them leave a message for you with the front desk."
+        ],
+        correct: 0,
+        explanation: "Client confidentiality protects information from third parties, including ex-spouses, absent valid consent or legal mandate."
+      },
+      {
+        domain: "Helping Relationships",
+        client: "I yell at my kids when I'm stressed from work, then feel terrible guilt afterward.",
+        options: [
+          "Guilt is good because it keeps you from yelling again.",
+          "Let's trace what happens right before you yell so you can build earlier coping steps when stress rises.",
+          "Kids are resilient—yelling occasionally doesn't hurt them.",
+          "You should apologize by buying them treats after every blowup."
+        ],
+        correct: 1,
+        explanation: "Identifying antecedents and early stress cues supports behavioral regulation rather than relying on post-hoc guilt."
+      },
+      {
+        domain: "Human Growth & Development",
+        client: "My toddler learned the word 'no' this week and says it to everything—even when I offer ice cream.",
+        options: [
+          "That's defiance; you need to nip it in the bud immediately.",
+          "Testing boundaries and asserting emerging autonomy is a normal toddler milestone.",
+          "Toddlers shouldn't say no to things they enjoy.",
+          "Stop offering choices until they turn five."
+        ],
+        correct: 1,
+        explanation: "Asserting autonomy and testing limits are normative developmental behaviors in toddlerhood."
+      },
+      {
+        domain: "Social & Cultural Foundations",
+        client: "I'm a disabled veteran, and people either treat me like a fragile hero or avoid eye contact completely.",
+        options: [
+          "Both extremes can feel flattening—how do you want to be engaged with in daily life?",
+          "Most people just don't know what to say around veterans.",
+          "Try not to focus on how strangers look at you.",
+          "People usually mean well even when they're awkward."
+        ],
+        correct: 0,
+        explanation: "Validating the impact of stereotyping and centering the client's preferences honors agency and dignity."
+      },
+      {
+        domain: "Group Work",
+        client: "Can I text another group member privately to vent about what happened in group today?",
+        options: [
+          "Yes, texting outside group is encouraged for extra support.",
+          "Keeping group reflections inside the group supports trust and safety; let's talk about what came up for you.",
+          "Only if you copy me on every text message.",
+          "It doesn't matter as long as you don't use real names."
+        ],
+        correct: 1,
+        explanation: "Maintaining group confidentiality and boundaries protects psychological safety and therapeutic cohesion."
+      },
+      {
+        domain: "Career Development",
+        client: "I got two job offers—one pays more with long hours, and the other pays less with flexible hybrid hours.",
+        options: [
+          "Always take the higher salary first.",
+          "Let's weigh compensation, schedule flexibility, and long-term priorities against what matters most to your life right now.",
+          "Flexible jobs are usually dead-end roles.",
+          "Flip a coin—both options are basically equal."
+        ],
+        correct: 1,
+        explanation: "Structured decision-making aligned with personal values and lifestyle priorities supports sustainable career choices."
+      },
+      {
+        domain: "Assessment & Testing",
+        client: "The intake form asked about past trauma—do I have to answer every single question today?",
+        options: [
+          "Yes, we can't start counseling unless every box is filled out.",
+          "No, you can share at a pace that feels safe, and we can pace trauma history thoughtfully.",
+          "Skip the whole form if trauma feels uncomfortable.",
+          "Only answer the ones that seem most dramatic."
+        ],
+        correct: 1,
+        explanation: "Pacing trauma disclosure and respecting client readiness prevents premature flooding and builds safety."
+      },
+      {
+        domain: "Research & Program Evaluation",
+        client: "Our agency saw fewer no-shows after sending text reminders—how can we tell if the reminders actually made the difference?",
+        options: [
+          "Look at attendance trends before and after starting reminders, while watching for other changes like scheduling shifts.",
+          "If numbers went down the same month, it's 100% proven.",
+          "You don't need data if staff feel like it helped.",
+          "Only count clients who replied to the text message."
+        ],
+        correct: 0,
+        explanation: "Evaluating program outcomes involves comparing baseline vs. post-intervention data while accounting for confounding factors."
+      },
+      {
+        domain: "Professional Orientation & Ethics",
+        client: "Could you write a letter stating I'm 'completely cured of anxiety' so I can pass a workplace clearance?",
+        options: [
+          "Write it to help you get the job even if symptoms remain.",
+          "I can only share accurate, clinically supported information within my scope and with your consent.",
+          "I refuse to write any letters for any client ever.",
+          "I'll say you're cured as long as you promise to keep coming to therapy."
+        ],
+        correct: 1,
+        explanation: "Ethical documentation requires honesty, accuracy, and staying within clinical competence rather than making unsubstantiated claims."
+      },
+      {
+        domain: "Helping Relationships",
+        client: "I know I shouldn't check my ex's social media at midnight, yet I do it almost every night.",
+        options: [
+          "Just delete your phone apps and have willpower.",
+          "That habit often meets an emotional need like soothing or connection—what are you feeling right before you check?",
+          "Checking social media is harmless if you don't message them.",
+          "You're clearly not over the relationship yet."
+        ],
+        correct: 1,
+        explanation: "Exploring the emotional function behind a repetitive behavior helps clients build alternative coping responses."
+      },
+      {
+        domain: "Human Growth & Development",
+        client: "My college-age child calls three times a day asking what to do about minor roommate disagreements.",
+        options: [
+          "Tell them to stop calling so much and figure it out.",
+          "Emerging adulthood often involves renegotiating independence and problem-solving—how might they practice resolving low-stakes conflicts themselves?",
+          "They're probably not ready for college if they call that often.",
+          "Solve the roommate issue for them by emailing housing."
+        ],
+        correct: 1,
+        explanation: "Supporting emerging adults in developing autonomous problem-solving skills aligns with developmental transition goals."
+      },
+      {
+        domain: "Social & Cultural Foundations",
+        client: "In my culture, talking about family conflict with an outsider feels disloyal.",
+        options: [
+          "You have to get past that if you want progress in therapy.",
+          "I respect how meaningful loyalty is in your family; we can go slowly and focus on what feels respectful and useful to you.",
+          "Therapy won't work unless you criticize your family openly.",
+          "Most families have conflict behind closed doors anyway."
+        ],
+        correct: 1,
+        explanation: "Honoring cultural values around privacy and loyalty builds alliance while allowing gradual, client-guided work."
+      },
+      {
+        domain: "Group Work",
+        client: "Two members in our grief group have been arguing about whose loss is harder.",
+        options: [
+          "Let them argue it out so they get it off their chests.",
+          "Bring the focus back to shared pain and mutual support rather than ranking or comparing grief.",
+          "Tell both of them they aren't allowed to talk about grief in group.",
+          "Pick the person who seems sadder and support them."
+        ],
+        correct: 1,
+        explanation: "Group leaders redirect comparison and competition toward empathy, cohesion, and shared therapeutic support."
+      },
+      {
+        domain: "Career Development",
+        client: "I want a promotion, but every time a leadership spot opens up I convince myself I'm not ready.",
+        options: [
+          "Let's map out the skills the role actually requires versus self-doubt stories holding you back.",
+          "If you doubt yourself, you're probably not ready for leadership.",
+          "Apply anyway and hope nobody notices gaps.",
+          "Stay in your current role until you feel zero fear."
+        ],
+        correct: 0,
+        explanation: "Objective skill mapping alongside addressing self-doubt helps clients make grounded career decisions."
+      },
+      {
+        domain: "Assessment & Testing",
+        client: "Can I take this career interest inventory if English isn't my first language?",
+        options: [
+          "No, interest inventories can't be used unless English is your native language.",
+          "We should check language appropriateness, reading level, and cultural fairness before interpreting any results.",
+          "Yes, score differences don't depend on language at all.",
+          "Just translate the questions in your head as you go."
+        ],
+        correct: 1,
+        explanation: "Standardized assessment requires evaluating linguistic and cultural appropriateness to avoid invalid score interpretation."
+      },
+      {
+        domain: "Research & Program Evaluation",
+        client: "What does it mean if a counseling outcome study reports a finding is 'statistically significant'?",
+        options: [
+          "It means the result is clinically life-changing for every single client.",
+          "It means the observed difference is unlikely due to chance alone, which is separate from practical significance.",
+          "It means the study had thousands of participants.",
+          "It proves causation beyond any doubt."
+        ],
+        correct: 1,
+        explanation: "Statistical significance indicates low likelihood of chance variation and differs from clinical or practical significance."
+      },
+      {
+        domain: "Professional Orientation & Ethics",
+        client: "We were close friends in college—can I become your counseling client because I trust you more than a stranger?",
+        options: [
+          "Yes, trust is the most important part of therapy.",
+          "A prior friendship creates a multiple relationship that could impair objectivity, so I can offer referrals instead.",
+          "I'll take you on only if you don't pay a fee.",
+          "Let's try three sessions to see how it feels."
+        ],
+        correct: 1,
+        explanation: "Avoiding dual/multiple relationships with close friends preserves clinical objectivity and protects the client; providing referrals is ethical care."
+      },
+      {
+        domain: "Helping Relationships",
+        client: "Every time I set a boundary with my sister, she cries and calls me selfish.",
+        options: [
+          "If she cries, your boundary must be too harsh.",
+          "Setting a boundary can trigger pushback even when it's healthy—how can you stay f{irm} while staying compassionate?",
+          "Stop setting boundaries with her completely.",
+          "Tell her she's manipulating you whenever she cries."
+        ],
+        correct: 1,
+        explanation: "Distinguishing between a healthy boundary and another person's emotional reaction supports sustainable assertiveness."
+      },
+      {
+        domain: "Human Growth & Development",
+        client: "My 8-year-old worries that a burglar will get in through the bedroom window even after we check the locks.",
+        options: [
+          "Tell them there's nothing to be afraid of and turn off the light.",
+          "Validate their fear without reinforcing danger, and practice simple calming steps alongside age-appropriate reassurance.",
+          "Lock their bedroom door from the outside so they feel safe.",
+          "Explain crime statistics to show how unlikely a burglar is."
+        ],
+        correct: 1,
+        explanation: "Validating emotion while avoiding reassurance loops or frightening details helps school-age children regulate anxiety."
+      },
+      {
+        domain: "Social & Cultural Foundations",
+        client: "I feel uncomfortable talking about money because in my upbringing financial struggles were kept secret.",
+        options: [
+          "Money stress affects mental health too—we can move gently and talk about what feels manageable to share.",
+          "You have to talk openly about finances if you want real help.",
+          "Keeping money private means you're ashamed of your family.",
+          "We don't ever need to mention money in counseling."
+        ],
+        correct: 0,
+        explanation: "Acknowledging family norms around secrecy while inviting gradual exploration respects autonomy and builds safety."
+      },
+      {
+        domain: "Group Work",
+        client: "As the group ends, I feel like nobody here actually listens to me.",
+        options: [
+          "You're being too sensitive after a good session.",
+          "Let's invite the group to check in on that experience rather than brushing past it before we close.",
+          "We're out of time, so we won't bring it up.",
+          "Let's have everyone vote on whether they listen."
+        ],
+        correct: 1,
+        explanation: "Addressing process feedback directly in group promotes accountability, repair, and therapeutic engagement."
+      },
+      {
+        domain: "Career Development",
+        client: "I've worked in retail management for ten years and feel stuck because my resume only lists store operations.",
+        options: [
+          "Ten years of management includes leadership, training, scheduling, and problem-solving—let's translate those skills.",
+          "Without a corporate title, it's hard to pivot careers.",
+          "You'll probably have to start at entry level in any new field.",
+          "Just rewrite your job titles to sound more senior."
+        ],
+        correct: 0,
+        explanation: "Identifying transferable skills helps mid-career clients connect past experience to new occupational pathways."
+      },
+      {
+        domain: "Assessment & Testing",
+        client: "My test report says I scored at the 85th percentile on verbal reasoning—does that mean I answered 85% of the questions right?",
+        options: [
+          "Yes, percentile rank is always the exact percentage of correct answers.",
+          "No, the 85th percentile means you scored as well as or better than 85% of the norm comparison group.",
+          "It means you missed 85% of the items.",
+          "It means your score is 85 points above average."
+        ],
+        correct: 1,
+        explanation: "Percentile rank compares an individual's performance to a norm group, not the percentage of items answered correctly."
+      },
+      {
+        domain: "Research & Program Evaluation",
+        client: "Why do researchers use a control group when testing a new anxiety intervention?",
+        options: [
+          "To punish half the participants by withholding treatment.",
+          "To compare outcomes against a baseline or alternative so changes can be evaluated beyond time or expectations alone.",
+          "Because studies aren't allowed to measure anxiety without two groups.",
+          "To make sure the new intervention always looks better."
+        ],
+        correct: 1,
+        explanation: "Control or comparison groups help isolate treatment effects from natural passage of time, regression, or expectancy."
+      },
+      {
+        domain: "Professional Orientation & Ethics",
+        client: "You see my profile pop up on a dating app—what should you do?",
+        options: [
+          "Swipe right so you can ask me about it in session.",
+          "I won't interact on the dating app, I'll protect your confidentiality, and we can address boundaries in session if needed.",
+          "I'll block you immediately and end therapy today.",
+          "I'll mention it to a colleague because it's funny."
+        ],
+        correct: 1,
+        explanation: "Avoiding dual relationships and protecting privacy on social/dating platforms prevents boundary violations."
+      },
+      {
+        domain: "Helping Relationships",
+        client: "I keep saying 'yes' to extra projects at work even when I'm already working sixty hours a week.",
+        options: [
+          "You need to learn to say no immediately next time someone asks.",
+          "What makes it hard to say no in the moment—fear of letting people down, conflict, or something else?",
+          "Working sixty hours is normal when you want to succeed.",
+          "Just do half of each project and turn them in late."
+        ],
+        correct: 1,
+        explanation: "Exploring internal barriers to saying no clarifies underlying fears or beliefs driving overcommitment."
+      },
+      {
+        domain: "Human Growth & Development",
+        client: "My parent is eighty-two and insists on driving at night even though they misjudge distances.",
+        options: [
+          "Take their car keys away in secret tonight.",
+          "That's a delicate balance of independence and safety—let's talk through practical ways to support safe mobility and involve family.",
+          "At eighty-two, nobody should drive at all.",
+          "If they refuse to listen, there's nothing anyone can do."
+        ],
+        correct: 1,
+        explanation: "Supporting older adults involves balancing autonomy and safety with practical planning and family/medical coordination."
+      },
+      {
+        domain: "Social & Cultural Foundations",
+        client: "In my community, asking for help is seen as admitting weakness.",
+        options: [
+          "Seeing help as weakness makes reaching out extra hard—what helped you take the step to sit here today?",
+          "That's an unhealthy belief you should drop right away.",
+          "Everyone needs help eventually, regardless of culture.",
+          "You don't need to worry about community views in here."
+        ],
+        correct: 0,
+        explanation: "Acknowledging cultural stigma around help-seeking while highlighting client strength fosters rapport and engagement."
+      },
+      {
+        domain: "Group Work",
+        client: "I haven't spoken in three sessions, and another member just asked, 'Why are you even here if you don't talk?'",
+        options: [
+          "You can answer that on your own.",
+          "You don't have to speak on demand—let's keep the space safe and you can share whenever it feels right for you.",
+          "They do have a point about participating.",
+          "Give a five-minute update right now so everyone hears you."
+        ],
+        correct: 1,
+        explanation: "Leaders protect members from shaming or coercion while encouraging voluntary, safe participation."
+      },
+      {
+        domain: "Career Development",
+        client: "I'm anxious about salary negotiation because I feel grateful just to get an offer.",
+        options: [
+          "Gratitude and fair compensation can coexist—let's prepare clear, research-backed points for your conversation.",
+          "Never negotiate your first offer or they might rescind it.",
+          "If you're grateful, you should accept whatever they offer.",
+          "Tell them you'll work for less than the posting."
+        ],
+        correct: 0,
+        explanation: "Helping clients separate appreciation from undervaluing their work supports confident, realistic career advocacy."
+      },
+      {
+        domain: "Assessment & Testing",
+        client: "A test has high reliability—does that automatically mean it measures what it claims to measure?",
+        options: [
+          "Yes, reliability and validity mean the exact same thing.",
+          "No, reliability means consistency, while validity refers to whether the test accurately measures what it intends to measure.",
+          "No, high reliability means the test is too easy.",
+          "Reliability only applies to intelligence tests."
+        ],
+        correct: 1,
+        explanation: "Reliability reflects consistency of measurement, whereas validity reflects accuracy and appropriateness of interpretation."
+      }
+    ];
+
+    function buildTwoHundredScenarios() {
+      const result = [];
+      for (let i = 0; i < 200; i++) {
+        const template = BASE_NCE_BANK[i % BASE_NCE_BANK.length];
+        const clientName = CLIENT_NAMES[i % CLIENT_NAMES.length];
+        result.push({
+          clientName,
+          domain: template.domain,
+          client: template.client,
+          options: [...template.options],
+          correct: template.correct,
+          explanation: template.explanation
+        });
+      }
+      return result;
+    }
+
+    const NCE_SCENARIOS = buildTwoHundredScenarios();
+    const GAMES_PER_RUN = 20;
+    const MAX_DINGS = 3;
+
+    let sessionQuestions = [];
+    let currentIndex = 0;
+    let dings = 0;
+    let wrongAnswersLog = [];
+    let gameOver = false;
+
+    const qProgressEl = document.getElementById("q-progress");
+    const dingsCounterEl = document.getElementById("dings-counter");
+    const scenarioDomainEl = document.getElementById("scenario-domain");
+    const scenarioClientNameEl = document.getElementById("scenario-client-name");
+    const clientSvgLabelEl = document.getElementById("client-svg-label");
+    const clientStatementEl = document.getElementById("client-statement");
+    const optionsGridEl = document.getElementById("options-grid");
+    const newSessionBtn = document.getElementById("new-session-btn");
+
+    const feedbackModalEl = document.getElementById("feedback-modal");
+    const feedbackModalBoxEl = document.getElementById("feedback-modal-box");
+    const feedbackModalTitleEl = document.getElementById("feedback-modal-title");
+    const feedbackModalBodyEl = document.getElementById("feedback-modal-body");
+    const feedbackModalFooterEl = document.getElementById("feedback-modal-footer");
+    const closeModalXBtn = document.getElementById("close-modal-x");
+
+    function shuffleArray(list) {
+      const copy = [...list];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function startNewRun() {
+      feedbackModalEl.classList.remove("open");
+      dings = 0;
+      currentIndex = 0;
+      wrongAnswersLog = [];
+      gameOver = false;
+
+      const picked = shuffleArray(NCE_SCENARIOS).slice(0, GAMES_PER_RUN);
+      sessionQuestions = picked.map((item) => {
+        const indexedOptions = item.options.map((text, idx) => ({
+          text,
+          isCorrect: idx === item.correct
+        }));
+        const shuffledOptions = shuffleArray(indexedOptions);
+        const correctShuffledIndex = shuffledOptions.findIndex((o) => o.isCorrect);
+        return {
+          clientName: item.clientName,
+          domain: item.domain,
+          client: item.client,
+          options: shuffledOptions.map((o) => o.text),
+          correctIndex: correctShuffledIndex,
+          explanation: item.explanation
+        };
+      });
+
+      updateHud();
+      renderScenario();
+    }
+
+    function updateHud() {
+      const displayNum = Math.min(currentIndex + 1, GAMES_PER_RUN);
+      qProgressEl.textContent = `${displayNum} / ${GAMES_PER_RUN}`;
+      dingsCounterEl.textContent = `${dings} / ${MAX_DINGS}`;
+    }
+
+    function renderScenario() {
+      if (gameOver) return;
+
+      if (currentIndex >= sessionQuestions.length) {
+        showVictoryModal();
+        return;
+      }
+
+      const q = sessionQuestions[currentIndex];
+      updateHud();
+      scenarioDomainEl.textContent = `DOMAIN: ${q.domain.toUpperCase()}`;
+      scenarioClientNameEl.textContent = `CLIENT: ${q.clientName.toUpperCase()}`;
+      clientSvgLabelEl.textContent = `CLIENT: ${q.clientName.toUpperCase()}`;
+      clientStatementEl.textContent = `"${q.client}"`;
+
+      const badges = ["A", "B", "C", "D"];
+      optionsGridEl.innerHTML = "";
+
+      q.options.forEach((optText, idx) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "response-btn";
+        btn.innerHTML = `<span class="opt-badge">${badges[idx]}</span><span>${escapeHtml(optText)}</span>`;
+        btn.addEventListener("click", () => handleOptionSelect(idx));
+        optionsGridEl.appendChild(btn);
+      });
+    }
+
+    function setOptionsDisabled(disabled) {
+      const buttons = optionsGridEl.querySelectorAll("button");
+      buttons.forEach((b) => {
+        b.disabled = disabled;
+      });
+    }
+
+    function handleOptionSelect(chosenIndex) {
+      if (gameOver) return;
+      const q = sessionQuestions[currentIndex];
+      setOptionsDisabled(true);
+
+      if (chosenIndex === q.correctIndex) {
+        currentIndex += 1;
+        renderScenario();
+        return;
+      }
+
+      dings += 1;
+      updateHud();
+
+      wrongAnswersLog.push({
+        clientName: q.clientName,
+        domain: q.domain,
+        client: q.client,
+        chosenText: q.options[chosenIndex],
+        correctText: q.options[q.correctIndex],
+        explanation: q.explanation
+      });
+
+      if (dings >= MAX_DINGS) {
+        gameOver = true;
+        showRevokedModal();
+      } else {
+        showSingleDingModal();
+      }
+    }
+
+    function showSingleDingModal() {
+      feedbackModalBoxEl.className = "modal-box ding-alert";
+      feedbackModalTitleEl.className = "modal-title";
+      feedbackModalTitleEl.textContent = "That is not how a licensed therapist should respond to a client";
+      closeModalXBtn.style.display = "flex";
+      feedbackModalBodyEl.innerHTML = `
+        <p>You received a <strong>Ding</strong> (${dings} of ${MAX_DINGS} before revocation).</p>
+        <p style="margin-top:0.65rem; color:var(--text-secondary); font-size:0.9rem;">Click <strong>X</strong> to close this notice and continue to the next client.</p>
+      `;
+      feedbackModalFooterEl.innerHTML = "";
+      feedbackModalEl.classList.add("open");
+    }
+
+    function showRevokedModal() {
+      feedbackModalBoxEl.className = "modal-box ding-alert";
+      feedbackModalTitleEl.className = "modal-title revoked";
+      feedbackModalTitleEl.textContent = "The board has revoked your license as a therapist";
+      closeModalXBtn.style.display = "flex";
+
+      const cardsHtml = wrongAnswersLog
+        .map((entry) => `
+          <div class="revocation-card">
+            <div class="q-label">Client: ${escapeHtml(entry.clientName)} • ${escapeHtml(entry.domain)}</div>
+            <div class="wrong-ans"><strong>Your response:</strong> ${escapeHtml(entry.chosenText)}</div>
+            <div class="right-ans"><strong>What you should have said:</strong> ${escapeHtml(entry.correctText)}</div>
+            <div class="why-ans">${escapeHtml(entry.explanation)}</div>
+          </div>
+        `)
+        .join("");
+
+      feedbackModalBodyEl.innerHTML = `
+        <p>You reached <strong>3 Dings</strong>. Here is what you should have said for each missed response:</p>
+        <div class="revocation-list">${cardsHtml}</div>
+      `;
+
+      feedbackModalFooterEl.innerHTML = `
+        <button type="button" class="primary-action-btn" id="modal-restart-btn">Next Session</button>
+        <a href="nce.html" class="secondary-action-btn">Choose a Different Game</a>
+      `;
+
+      document.getElementById("modal-restart-btn").addEventListener("click", startNewRun);
+      feedbackModalEl.classList.add("open");
+    }
+
+    function showVictoryModal() {
+      gameOver = true;
+      feedbackModalBoxEl.className = "modal-box";
+      feedbackModalTitleEl.className = "modal-title victory";
+      feedbackModalTitleEl.textContent = "Good job helping the client!";
+      closeModalXBtn.style.display = "flex";
+
+      let reviewSection = `<p>You completed this session with <strong>${dings}</strong> of ${MAX_DINGS} dings.</p>`;
+
+      if (wrongAnswersLog.length > 0) {
+        const cardsHtml = wrongAnswersLog
+          .map((entry) => `
+            <div class="revocation-card">
+              <div class="q-label">Client: ${escapeHtml(entry.clientName)} • ${escapeHtml(entry.domain)}</div>
+              <div class="wrong-ans"><strong>Your response:</strong> ${escapeHtml(entry.chosenText)}</div>
+              <div class="right-ans"><strong>What you should have said:</strong> ${escapeHtml(entry.correctText)}</div>
+              <div class="why-ans">${escapeHtml(entry.explanation)}</div>
+            </div>
+          `)
+          .join("");
+        reviewSection += `
+          <p style="margin-top:0.85rem;">Review the ${wrongAnswersLog.length} response(s) that earned a ding:</p>
+          <div class="revocation-list">${cardsHtml}</div>
+        `;
+      } else {
+        reviewSection += `<p style="margin-top:0.65rem; color:var(--lime);">Zero dings across the whole session—great clinical judgment for the NCE.</p>`;
+      }
+
+      feedbackModalBodyEl.innerHTML = reviewSection;
+      feedbackModalFooterEl.innerHTML = `
+        <button type="button" class="primary-action-btn" id="modal-victory-restart-btn">Next Session</button>
+        <a href="nce.html" class="secondary-action-btn">Choose a Different Game</a>
+      `;
+
+      document.getElementById("modal-victory-restart-btn").addEventListener("click", startNewRun);
+      feedbackModalEl.classList.add("open");
+    }
+
+    closeModalXBtn.addEventListener("click", () => {
+      feedbackModalEl.classList.remove("open");
+      if (!gameOver) {
+        currentIndex += 1;
+        renderScenario();
+      }
+    });
+
+    newSessionBtn.addEventListener("click", startNewRun);
+
+    startNewRun();
+  </script>
+</body>
+</html>
