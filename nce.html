@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>NCE | Jesse's Study Guides</title>
-  <meta name="description" content="National Counselor Examination (NCE) study hub featuring a 200-question mock exam and 100 active-recall flashcards." />
+  <meta name="description" content="National Counselor Examination (NCE) study hub featuring a 200-question mock exam, 100 flashcards, and the License Ding clinical arcade." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -101,15 +101,10 @@
       justify-content: center;
       gap: 0.45rem;
     }
-    .btn-lime:hover:not(.disabled) {
+    .btn-lime:hover {
       filter: brightness(1.08);
       box-shadow: 0 0 22px rgba(158, 255, 51, 0.35);
       transform: translateY(-1px);
-    }
-    .btn-lime.disabled {
-      background: rgba(148, 163, 184, 0.14);
-      color: var(--text-muted);
-      cursor: not-allowed;
     }
   </style>
 </head>
@@ -217,15 +212,15 @@
             <a href="nce-flashcards.html" class="btn-lime">Launch Flash Cards &rarr;</a>
           </div>
 
-          <div class="module-card">
+          <div class="module-card interactive">
             <div>
               <div class="module-card-head">
                 <h3>Things to Remember</h3>
-                <span class="badge">Coming Soon</span>
+                <span class="badge live">Arcade</span>
               </div>
-              <p>Key theorists, developmental stage comparisons, statistical formulas, and NCE test-day strategies.</p>
+              <p>Interactive NCE clinical games developed by Jesse—play License Ding across 200 tough therapy sessions without getting your license revoked!</p>
             </div>
-            <button type="button" class="btn-lime disabled" disabled>Coming Soon</button>
+            <a href="nce-remember.html" class="btn-lime">Launch Arcade &rarr;</a>
           </div>
         </div>
       </main>
