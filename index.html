@@ -15,7 +15,7 @@
       max-width: 780px;
       display: flex;
       flex-direction: column;
-      gap: 1.35rem;
+      gap: 1.5rem;
     }
 
     /* Top Row: Headline + Tagline on Left, Avatar Column on Right */
@@ -114,33 +114,15 @@
       transform: translateY(-1px);
     }
 
-    /* Collapse excess space inside/under the body panel so only ~1 line remains before box bottom */
-    .frame-wrapper,
-    .main-area,
-    .content-body {
-      min-height: auto;
-      flex: 0 0 auto;
-    }
-
-    .content-body {
-      padding-bottom: 1.15rem;
-    }
-
     .hud-panel {
       width: 100%;
       max-width: 780px;
-      margin-bottom: 0;
-      padding-bottom: 1.15rem;
     }
 
     .hud-panel .prose p {
       margin: 0;
-      line-height: 1.65;
+      line-height: 1.72;
       font-size: 1rem;
-    }
-
-    footer {
-      margin-top: 0;
     }
 
     .modal-link {
@@ -282,7 +264,7 @@
 
             <div class="hero-avatar-col">
               <div class="hero-avatar-wrap">
-                <img src="jesse-avatar.png" alt="Jesse Johnson Cartoon Avatar" class="hero-avatar-img" decoding="async" />
+                <img src="jesse-avatar.png" alt="Jesse Johnson Cartoon Avatar" class="hero-avatar-img" />
               </div>
               <button type="button" class="about-link-btn" id="open-about-btn">
                 &#9432; About Me
@@ -371,37 +353,31 @@
     const menuBtn = document.getElementById("mobile-menu-btn");
     const navDrawer = document.getElementById("nav-drawer");
 
-    if (menuBtn && navDrawer) {
-      menuBtn.addEventListener("click", () => {
-        const isOpen = navDrawer.classList.toggle("open");
-        menuBtn.setAttribute("aria-expanded", String(isOpen));
-        menuBtn.innerHTML = isOpen ? "Close &#10005;" : "Menu &#9776;";
-      });
-    }
+    menuBtn.addEventListener("click", () => {
+      const isOpen = navDrawer.classList.toggle("open");
+      menuBtn.setAttribute("aria-expanded", String(isOpen));
+      menuBtn.innerHTML = isOpen ? "Close &#10005;" : "Menu &#9776;";
+    });
 
     const aboutModal = document.getElementById("about-modal");
     const openAboutBtn = document.getElementById("open-about-btn");
     const closeAboutBtn = document.getElementById("about-close-btn");
 
-    if (aboutModal && openAboutBtn && closeAboutBtn) {
-      openAboutBtn.addEventListener("click", () => aboutModal.classList.add("open"));
-      closeAboutBtn.addEventListener("click", () => aboutModal.classList.remove("open"));
-      aboutModal.addEventListener("click", (e) => {
-        if (e.target === aboutModal) aboutModal.classList.remove("open");
-      });
-    }
+    openAboutBtn.addEventListener("click", () => aboutModal.classList.add("open"));
+    closeAboutBtn.addEventListener("click", () => aboutModal.classList.remove("open"));
+    aboutModal.addEventListener("click", (e) => {
+      if (e.target === aboutModal) aboutModal.classList.remove("open");
+    });
 
     const privacyModal = document.getElementById("privacy-modal");
     const openPrivacyBtn = document.getElementById("open-privacy-btn");
     const closePrivacyBtn = document.getElementById("privacy-close-btn");
 
-    if (privacyModal && openPrivacyBtn && closePrivacyBtn) {
-      openPrivacyBtn.addEventListener("click", () => privacyModal.classList.add("open"));
-      closePrivacyBtn.addEventListener("click", () => privacyModal.classList.remove("open"));
-      privacyModal.addEventListener("click", (e) => {
-        if (e.target === privacyModal) privacyModal.classList.remove("open");
-      });
-    }
+    openPrivacyBtn.addEventListener("click", () => privacyModal.classList.add("open"));
+    closePrivacyBtn.addEventListener("click", () => privacyModal.classList.remove("open"));
+    privacyModal.addEventListener("click", (e) => {
+      if (e.target === privacyModal) privacyModal.classList.remove("open");
+    });
   </script>
 </body>
 </html>
