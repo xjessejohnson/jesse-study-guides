@@ -39,9 +39,10 @@
       padding: 1rem;
     }
 
+    /* Compact width so wide desktop monitors don't stretch the room awkwardly */
     .arcade-shell {
       width: 100%;
-      max-width: 1040px;
+      max-width: 780px;
       background: var(--bg-card);
       border: 1px solid var(--border-slate);
       border-radius: 18px;
@@ -49,8 +50,8 @@
       box-shadow: 0 24px 65px rgba(0, 0, 0, 0.75);
       display: flex;
       flex-direction: column;
-      gap: 1rem;
-      padding: 1.15rem;
+      gap: 0.9rem;
+      padding: 1.05rem;
     }
 
     .top-hud {
@@ -58,14 +59,14 @@
       justify-content: space-between;
       align-items: center;
       flex-wrap: wrap;
-      gap: 0.75rem;
-      padding-bottom: 0.9rem;
+      gap: 0.65rem;
+      padding-bottom: 0.8rem;
       border-bottom: 1px solid var(--border-slate);
     }
 
     .brand-group .tag {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.72rem;
+      font-size: 0.7rem;
       color: var(--cyan);
       letter-spacing: 0.08em;
       text-transform: uppercase;
@@ -73,7 +74,7 @@
 
     .brand-group h1 {
       font-family: 'Archivo Black', sans-serif;
-      font-size: clamp(1.3rem, 3.2vw, 1.85rem);
+      font-size: clamp(1.25rem, 3vw, 1.7rem);
       letter-spacing: 0.03em;
       color: #fff;
       text-transform: uppercase;
@@ -82,20 +83,20 @@
     .hud-stats {
       display: flex;
       align-items: center;
-      gap: 0.75rem;
+      gap: 0.6rem;
       flex-wrap: wrap;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.85rem;
+      font-size: 0.82rem;
     }
 
     .hud-pill {
       background: var(--bg-panel);
       border: 1px solid var(--border-slate);
       border-radius: 10px;
-      padding: 0.5rem 0.85rem;
+      padding: 0.45rem 0.75rem;
       display: flex;
       align-items: center;
-      gap: 0.45rem;
+      gap: 0.4rem;
     }
 
     .dings-pill {
@@ -106,7 +107,7 @@
     .dings-count {
       color: var(--rose);
       font-weight: 700;
-      font-size: 1rem;
+      font-size: 0.95rem;
     }
 
     .progress-count {
@@ -119,9 +120,9 @@
       color: #fff;
       border: 1px solid var(--border-slate);
       border-radius: 10px;
-      padding: 0.52rem 0.9rem;
+      padding: 0.48rem 0.85rem;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.78rem;
+      font-size: 0.76rem;
       font-weight: 700;
       cursor: pointer;
       transition: all 0.2s ease;
@@ -132,14 +133,14 @@
       background: var(--cyan-dim);
     }
 
-    /* Detailed Therapy Office Scene */
+    /* Illustrated Therapy Office Scene */
     .office-scene {
       position: relative;
       width: 100%;
       border-radius: 14px;
       overflow: hidden;
       border: 1px solid var(--border-slate);
-      background: #0d1524;
+      background: #0b1220;
       display: flex;
       flex-direction: column;
     }
@@ -147,7 +148,7 @@
     .office-svg-wrap {
       position: relative;
       width: 100%;
-      height: 290px;
+      height: 310px;
       display: block;
     }
 
@@ -157,35 +158,42 @@
       display: block;
     }
 
-    .correct-toast {
+    /* Clickable "Correct! Next Client" banner that stays until clicked */
+    .correct-next-btn {
       position: absolute;
       top: 14px;
       left: 50%;
-      transform: translateX(-50%) translateY(-10px);
-      background: rgba(16, 185, 129, 0.95);
+      transform: translateX(-50%);
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
       color: #04130d;
+      border: 2px solid #a7f3d0;
       font-family: 'Archivo Black', sans-serif;
-      font-size: 0.95rem;
-      letter-spacing: 0.03em;
-      padding: 0.5rem 1.15rem;
+      font-size: 0.92rem;
+      letter-spacing: 0.02em;
+      padding: 0.55rem 1.25rem;
       border-radius: 999px;
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.45);
-      opacity: 0;
-      pointer-events: none;
-      transition: opacity 0.2s ease, transform 0.2s ease;
-      z-index: 25;
-      white-space: nowrap;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.55);
+      cursor: pointer;
+      display: none;
+      align-items: center;
+      gap: 0.45rem;
+      z-index: 30;
+      transition: transform 0.15s ease, filter 0.15s ease;
     }
 
-    .correct-toast.show {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0);
+    .correct-next-btn.visible {
+      display: inline-flex;
+    }
+
+    .correct-next-btn:hover {
+      transform: translateX(-50%) scale(1.03);
+      filter: brightness(1.06);
     }
 
     .client-dialogue-bar {
-      background: rgba(10, 15, 24, 0.95);
+      background: rgba(9, 14, 23, 0.96);
       border-top: 1px solid var(--border-slate);
-      padding: 1rem 1.25rem;
+      padding: 0.95rem 1.15rem;
     }
 
     .dialogue-meta {
@@ -193,16 +201,16 @@
       justify-content: space-between;
       align-items: center;
       gap: 0.5rem;
-      margin-bottom: 0.4rem;
+      margin-bottom: 0.35rem;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.74rem;
+      font-size: 0.72rem;
       color: var(--amber);
       text-transform: uppercase;
     }
 
     .client-statement {
-      font-size: clamp(0.98rem, 2.2vw, 1.12rem);
-      line-height: 1.55;
+      font-size: clamp(0.95rem, 2.1vw, 1.08rem);
+      line-height: 1.52;
       color: #fff;
       font-weight: 500;
     }
@@ -211,12 +219,12 @@
     .options-section {
       display: flex;
       flex-direction: column;
-      gap: 0.65rem;
+      gap: 0.6rem;
     }
 
     .options-heading {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.78rem;
+      font-size: 0.75rem;
       color: var(--text-secondary);
       text-transform: uppercase;
       letter-spacing: 0.06em;
@@ -225,25 +233,25 @@
     .options-grid {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      gap: 0.75rem;
+      gap: 0.7rem;
     }
 
     .response-btn {
       background: var(--bg-panel);
       border: 1px solid var(--border-slate);
       border-radius: 12px;
-      padding: 0.95rem 1rem;
+      padding: 0.9rem 0.95rem;
       color: var(--text-primary);
       text-align: left;
       font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 0.92rem;
-      line-height: 1.45;
+      font-size: 0.9rem;
+      line-height: 1.42;
       cursor: pointer;
-      transition: all 0.18s ease;
+      transition: all 0.16s ease;
       display: flex;
       align-items: flex-start;
-      gap: 0.7rem;
-      min-height: 76px;
+      gap: 0.65rem;
+      min-height: 74px;
     }
 
     .response-btn:hover:not(:disabled) {
@@ -253,20 +261,20 @@
     }
 
     .response-btn:disabled {
-      opacity: 0.65;
+      opacity: 0.55;
       cursor: default;
     }
 
     .opt-badge {
       flex-shrink: 0;
-      width: 26px;
-      height: 26px;
+      width: 25px;
+      height: 25px;
       border-radius: 7px;
       background: rgba(34, 211, 238, 0.12);
       border: 1px solid rgba(34, 211, 238, 0.35);
       color: var(--cyan);
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       font-weight: 700;
       display: flex;
       align-items: center;
@@ -278,8 +286,8 @@
     .modal-backdrop {
       position: fixed;
       inset: 0;
-      background: rgba(5, 8, 15, 0.68);
-      backdrop-filter: blur(5px);
+      background: rgba(5, 8, 15, 0.62);
+      backdrop-filter: blur(4px);
       z-index: 2000;
       display: none;
       align-items: center;
@@ -293,21 +301,21 @@
 
     .modal-box {
       width: 100%;
-      max-width: 560px;
+      max-width: 540px;
       background: var(--bg-card);
       border: 1px solid var(--border-slate);
       border-radius: 16px;
-      padding: 1.35rem 1.5rem;
-      box-shadow: 0 25px 70px rgba(0, 0, 0, 0.85);
+      padding: 1.25rem 1.4rem;
+      box-shadow: 0 24px 65px rgba(0, 0, 0, 0.85);
       position: relative;
-      max-height: 86vh;
+      max-height: 85vh;
       overflow-y: auto;
     }
 
     .modal-box.compact-ding {
-      max-width: 440px;
-      padding: 1.1rem 1.25rem;
-      border-color: rgba(251, 113, 133, 0.7);
+      max-width: 410px;
+      padding: 0.95rem 1.15rem;
+      border-color: rgba(251, 113, 133, 0.75);
     }
 
     .modal-box.ding-alert {
@@ -317,23 +325,23 @@
     .modal-header {
       display: flex;
       justify-content: space-between;
-      align-items: center;
-      gap: 0.85rem;
-      margin-bottom: 0.75rem;
-      padding-bottom: 0.65rem;
+      align-items: flex-start;
+      gap: 0.75rem;
+      margin-bottom: 0.6rem;
+      padding-bottom: 0.55rem;
       border-bottom: 1px solid var(--border-slate);
     }
 
     .modal-title {
       font-family: 'Archivo Black', sans-serif;
-      font-size: 0.98rem;
+      font-size: 0.92rem;
       color: var(--rose);
       text-transform: uppercase;
       line-height: 1.3;
     }
 
     .modal-title.revoked {
-      font-size: 1.12rem;
+      font-size: 1.08rem;
     }
 
     .modal-title.victory {
@@ -344,11 +352,11 @@
       background: rgba(255, 255, 255, 0.06);
       border: 1px solid var(--border-slate);
       color: #fff;
-      width: 34px;
-      height: 34px;
+      width: 32px;
+      height: 32px;
       border-radius: 8px;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 1rem;
+      font-size: 0.95rem;
       font-weight: 700;
       cursor: pointer;
       display: flex;
@@ -363,16 +371,16 @@
     }
 
     .modal-body-text {
-      font-size: 0.95rem;
-      line-height: 1.5;
+      font-size: 0.92rem;
+      line-height: 1.48;
       color: var(--text-primary);
     }
 
     .revocation-list {
       display: flex;
       flex-direction: column;
-      gap: 0.85rem;
-      margin-top: 1rem;
+      gap: 0.8rem;
+      margin-top: 0.9rem;
     }
 
     .revocation-card {
@@ -380,42 +388,42 @@
       border: 1px solid var(--border-slate);
       border-left: 3px solid var(--rose);
       border-radius: 10px;
-      padding: 0.85rem 1rem;
+      padding: 0.8rem 0.95rem;
       text-align: left;
     }
 
     .revocation-card .q-label {
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.75rem;
+      font-size: 0.74rem;
       color: var(--amber);
-      margin-bottom: 0.3rem;
+      margin-bottom: 0.25rem;
     }
 
     .revocation-card .wrong-ans {
-      font-size: 0.86rem;
+      font-size: 0.85rem;
       color: var(--rose);
-      margin-bottom: 0.3rem;
+      margin-bottom: 0.25rem;
     }
 
     .revocation-card .right-ans {
-      font-size: 0.88rem;
+      font-size: 0.87rem;
       color: var(--lime);
       font-weight: 600;
-      margin-bottom: 0.35rem;
+      margin-bottom: 0.3rem;
     }
 
     .revocation-card .why-ans {
-      font-size: 0.84rem;
+      font-size: 0.83rem;
       color: var(--text-secondary);
-      line-height: 1.45;
+      line-height: 1.42;
     }
 
     .modal-footer-actions {
-      margin-top: 1.25rem;
+      margin-top: 1.15rem;
       display: flex;
       justify-content: flex-end;
       flex-wrap: wrap;
-      gap: 0.75rem;
+      gap: 0.7rem;
     }
 
     .primary-action-btn {
@@ -423,9 +431,9 @@
       color: #061018;
       border: none;
       border-radius: 10px;
-      padding: 0.75rem 1.2rem;
+      padding: 0.72rem 1.15rem;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.84rem;
+      font-size: 0.82rem;
       font-weight: 700;
       cursor: pointer;
     }
@@ -439,9 +447,9 @@
       color: #fff;
       border: 1px solid var(--border-slate);
       border-radius: 10px;
-      padding: 0.75rem 1.2rem;
+      padding: 0.72rem 1.15rem;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.84rem;
+      font-size: 0.82rem;
       font-weight: 700;
       text-decoration: none;
       display: inline-flex;
@@ -454,13 +462,13 @@
       background: var(--cyan-dim);
     }
 
-    @media (max-width: 720px) {
+    @media (max-width: 680px) {
       .options-grid {
         grid-template-columns: 1fr;
       }
 
       .office-svg-wrap {
-        height: 245px;
+        height: 265px;
       }
 
       .arcade-shell {
@@ -493,177 +501,187 @@
 
     <div class="office-scene">
       <div class="office-svg-wrap">
-        <div class="correct-toast" id="correct-toast">Correct! Next Client</div>
-        <svg viewBox="0 0 960 300" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Detailed therapy office with client and therapist seated across a desk">
+        <!-- Stays on screen until clicked -->
+        <button type="button" class="correct-next-btn" id="correct-next-btn">Correct! Next Client</button>
+
+        <svg viewBox="0 0 920 320" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Detailed therapy office room with client and therapist seated across a desk">
           <defs>
-            <linearGradient id="wallGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="#1b2840" />
-              <stop offset="100%" stop-color="#121c2e" />
+            <linearGradient id="officeWall" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#1c2a44" />
+              <stop offset="100%" stop-color="#111a2b" />
             </linearGradient>
-            <linearGradient id="floorGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="#2c1d13" />
-              <stop offset="100%" stop-color="#1b110b" />
+            <linearGradient id="wainscotWall" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#172338" />
+              <stop offset="100%" stop-color="#101827" />
             </linearGradient>
-            <linearGradient id="deskTopGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="#9a4a18" />
-              <stop offset="100%" stop-color="#692f0d" />
+            <linearGradient id="woodFloor" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#311f14" />
+              <stop offset="100%" stop-color="#1a100a" />
             </linearGradient>
-            <linearGradient id="windowSkyGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="#15395c" />
-              <stop offset="100%" stop-color="#265985" />
+            <linearGradient id="deskSurface" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#a44d18" />
+              <stop offset="100%" stop-color="#682d0c" />
             </linearGradient>
-            <radialGradient id="rugGrad" cx="50%" cy="50%" r="50%">
-              <stop offset="0%" stop-color="#293b59" stop-opacity="0.8" />
-              <stop offset="100%" stop-color="#152033" stop-opacity="0.2" />
+            <linearGradient id="windowGlass" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#19426b" />
+              <stop offset="65%" stop-color="#2c6391" />
+              <stop offset="100%" stop-color="#437ba8" />
+            </linearGradient>
+            <radialGradient id="floorRug" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#2a3d5c" stop-opacity="0.72" />
+              <stop offset="100%" stop-color="#162133" stop-opacity="0.15" />
             </radialGradient>
           </defs>
 
-          <!-- Wall & Wainscoting -->
-          <rect x="0" y="0" width="960" height="195" fill="url(#wallGrad)" />
-          <rect x="0" y="152" width="960" height="43" fill="#162136" />
-          <rect x="0" y="150" width="960" height="5" fill="#334563" />
-          <rect x="0" y="192" width="960" height="6" fill="#25334a" />
+          <!-- Wall, Chair Rail & Wainscoting -->
+          <rect x="0" y="0" width="920" height="162" fill="url(#officeWall)" />
+          <rect x="0" y="162" width="920" height="44" fill="url(#wainscotWall)" />
+          <rect x="0" y="160" width="920" height="5" fill="#394c6e" />
+          <rect x="0" y="204" width="920" height="6" fill="#25334a" />
 
-          <!-- Hardwood Floor & Area Rug -->
-          <rect x="0" y="198" width="960" height="102" fill="url(#floorGrad)" />
-          <line x1="0" y1="224" x2="960" y2="224" stroke="#140c08" stroke-width="2" />
-          <line x1="0" y1="252" x2="960" y2="252" stroke="#140c08" stroke-width="2" />
-          <line x1="0" y1="280" x2="960" y2="280" stroke="#140c08" stroke-width="2" />
-          <ellipse cx="480" cy="242" rx="340" ry="34" fill="url(#rugGrad)" stroke="#3b5278" stroke-width="1.5" />
+          <!-- Floor Planks & Woven Rug -->
+          <rect x="0" y="210" width="920" height="110" fill="url(#woodFloor)" />
+          <line x1="0" y1="236" x2="920" y2="236" stroke="#130b07" stroke-width="2" />
+          <line x1="0" y1="264" x2="920" y2="264" stroke="#130b07" stroke-width="2" />
+          <line x1="0" y1="292" x2="920" y2="292" stroke="#130b07" stroke-width="2" />
+          <ellipse cx="460" cy="252" rx="330" ry="34" fill="url(#floorRug)" stroke="#3e567d" stroke-width="1.5" />
 
-          <!-- Sunlit Office Window -->
-          <rect x="385" y="24" width="190" height="114" rx="10" fill="url(#windowSkyGrad)" stroke="#3b4d6b" stroke-width="6" />
-          <line x1="480" y1="24" x2="480" y2="138" stroke="#3b4d6b" stroke-width="4" />
-          <line x1="385" y1="81" x2="575" y2="81" stroke="#3b4d6b" stroke-width="4" />
-          <rect x="378" y="138" width="204" height="8" rx="3" fill="#475569" />
-          <polygon points="385,138 575,138 690,275 270,275" fill="rgba(125, 211, 252, 0.06)" />
+          <!-- Center Window with Curtains & Daylight -->
+          <rect x="372" y="24" width="176" height="112" rx="9" fill="url(#windowGlass)" stroke="#475569" stroke-width="5" />
+          <line x1="460" y1="24" x2="460" y2="136" stroke="#475569" stroke-width="3.5" />
+          <line x1="372" y1="80" x2="548" y2="80" stroke="#475569" stroke-width="3.5" />
+          <rect x="366" y="136" width="188" height="7" rx="2.5" fill="#64748b" />
+          <!-- Curtains -->
+          <path d="M364 20 L388 20 L382 143 L360 143 Z" fill="#334155" opacity="0.85" />
+          <path d="M556 20 L532 20 L538 143 L560 143 Z" fill="#334155" opacity="0.85" />
+          <!-- Soft Sunlight Cone -->
+          <polygon points="374,136 546,136 650,282 270,282" fill="rgba(186, 230, 253, 0.05)" />
 
-          <!-- Left Wall Framed Credentials -->
-          <rect x="64" y="34" width="110" height="78" rx="5" fill="#f1f5f9" stroke="#b45309" stroke-width="4" />
-          <rect x="72" y="42" width="94" height="62" fill="none" stroke="#cbd5e1" stroke-width="1.5" />
-          <line x1="86" y1="60" x2="152" y2="60" stroke="#334155" stroke-width="3" stroke-linecap="round" />
-          <line x1="86" y1="73" x2="142" y2="73" stroke="#64748b" stroke-width="2.5" stroke-linecap="round" />
-          <line x1="86" y1="85" x2="124" y2="85" stroke="#94a3b8" stroke-width="2" stroke-linecap="round" />
-          <circle cx="150" cy="91" r="9" fill="#eab308" stroke="#a16207" stroke-width="1.5" />
+          <!-- Compact, Tasteful Diploma Frame on Left Wall -->
+          <rect x="74" y="54" width="64" height="46" rx="3" fill="#f8fafc" stroke="#b45309" stroke-width="3" />
+          <line x1="84" y1="67" x2="128" y2="67" stroke="#334155" stroke-width="2.2" stroke-linecap="round" />
+          <line x1="84" y1="76" x2="120" y2="76" stroke="#64748b" stroke-width="1.8" stroke-linecap="round" />
+          <line x1="84" y1="84" x2="108" y2="84" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round" />
+          <circle cx="126" cy="89" r="5.5" fill="#eab308" stroke="#a16207" stroke-width="1.2" />
 
-          <!-- Potted Plant Near Window -->
-          <rect x="315" y="156" width="34" height="38" rx="4" fill="#9a3412" />
-          <rect x="312" y="152" width="40" height="7" rx="2" fill="#c2410c" />
-          <path d="M332 152 Q314 126 300 132 Q316 142 332 152 Z" fill="#10b981" />
-          <path d="M332 152 Q332 114 334 112 Q342 128 332 152 Z" fill="#34d399" />
-          <path d="M332 152 Q352 124 366 132 Q348 143 332 152 Z" fill="#059669" />
+          <!-- Indoor Monstera / Leaf Plant -->
+          <rect x="304" y="168" width="30" height="36" rx="4" fill="#9a3412" />
+          <rect x="301" y="164" width="36" height="6" rx="2" fill="#c2410c" />
+          <path d="M319 164 Q300 138 286 144 Q303 154 319 164 Z" fill="#10b981" />
+          <path d="M319 164 Q319 124 321 122 Q329 140 319 164 Z" fill="#34d399" />
+          <path d="M319 164 Q338 136 352 144 Q335 154 319 164 Z" fill="#059669" />
 
           <!-- Right Wall Bookshelf -->
-          <rect x="755" y="28" width="142" height="122" rx="5" fill="#472d1b" stroke="#29180d" stroke-width="3" />
-          <line x1="755" y1="68" x2="897" y2="68" stroke="#29180d" stroke-width="4" />
-          <line x1="755" y1="108" x2="897" y2="108" stroke="#29180d" stroke-width="4" />
-          <rect x="766" y="38" width="16" height="28" rx="2" fill="#22d3ee" />
-          <rect x="785" y="42" width="14" height="24" rx="2" fill="#34d399" />
-          <rect x="802" y="36" width="18" height="30" rx="2" fill="#fb7185" />
-          <rect x="824" y="44" width="15" height="22" rx="2" fill="#fbbf24" />
-          <rect x="768" y="78" width="20" height="28" rx="2" fill="#818cf8" />
-          <rect x="791" y="81" width="16" height="25" rx="2" fill="#f472b6" />
-          <rect x="811" y="76" width="14" height="30" rx="2" fill="#38bdf8" />
+          <rect x="735" y="34" width="132" height="122" rx="4" fill="#4a2e1b" stroke="#29170c" stroke-width="3" />
+          <line x1="735" y1="74" x2="867" y2="74" stroke="#29170c" stroke-width="3.5" />
+          <line x1="735" y1="114" x2="867" y2="114" stroke="#29170c" stroke-width="3.5" />
+          <rect x="745" y="44" width="15" height="27" rx="1.5" fill="#22d3ee" />
+          <rect x="763" y="48" width="13" height="23" rx="1.5" fill="#34d399" />
+          <rect x="779" y="42" width="17" height="29" rx="1.5" fill="#fb7185" />
+          <rect x="799" y="50" width="14" height="21" rx="1.5" fill="#fbbf24" />
+          <rect x="747" y="84" width="18" height="27" rx="1.5" fill="#818cf8" />
+          <rect x="768" y="87" width="15" height="24" rx="1.5" fill="#f472b6" />
+          <rect x="786" y="82" width="13" height="29" rx="1.5" fill="#38bdf8" />
 
           <!-- Client Armchair (Left) -->
-          <rect x="150" y="138" width="22" height="86" rx="7" fill="#334155" />
-          <rect x="150" y="196" width="96" height="22" rx="8" fill="#475569" />
-          <rect x="152" y="182" width="92" height="16" rx="6" fill="#64748b" />
-          <rect x="164" y="218" width="9" height="44" rx="2" fill="#1e293b" />
-          <rect x="225" y="218" width="9" height="44" rx="2" fill="#1e293b" />
+          <rect x="148" y="146" width="20" height="84" rx="6" fill="#334155" />
+          <rect x="148" y="204" width="90" height="20" rx="7" fill="#475569" />
+          <rect x="150" y="190" width="86" height="15" rx="5" fill="#64748b" />
+          <rect x="160" y="224" width="8" height="44" rx="2" fill="#1e293b" />
+          <rect x="218" y="224" width="8" height="44" rx="2" fill="#1e293b" />
 
-          <!-- Dynamic Client Character (Seated Left) -->
+          <!-- Client Character (Seated Left, Facing Right Toward Desk/Therapist) -->
           <g id="client-character-group">
             <!-- Legs -->
-            <rect x="195" y="198" width="14" height="48" rx="5" fill="#1e293b" />
-            <rect x="215" y="198" width="14" height="48" rx="5" fill="#1e293b" />
+            <rect x="188" y="206" width="13" height="46" rx="5" fill="#1e293b" />
+            <rect x="207" y="206" width="13" height="46" rx="5" fill="#1e293b" />
             <!-- Shoes -->
-            <ellipse cx="204" cy="248" rx="11" ry="5" fill="#0f172a" />
-            <ellipse cx="224" cy="248" rx="11" ry="5" fill="#0f172a" />
-            <!-- Torso / Shirt -->
-            <path id="client-shirt" d="M186 146 Q210 138 234 146 L240 202 L182 202 Z" fill="#38bdf8" stroke="#0f172a" stroke-width="2" />
-            <!-- Collar / Neckline Detail -->
-            <path id="client-collar" d="M200 144 L210 156 L220 144" fill="none" stroke="#e0f2fe" stroke-width="2.5" stroke-linecap="round" />
-            <!-- Arm & Hand -->
-            <path id="client-arm" d="M226 154 L252 178 L236 188" stroke="#f1c29b" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" fill="none" />
-            <circle id="client-hand" cx="236" cy="188" r="5" fill="#f1c29b" />
-            <!-- Back/Long Hair Layer (for long/feminine styles) -->
+            <ellipse cx="195" cy="254" rx="11" ry="4.5" fill="#0f172a" />
+            <ellipse cx="215" cy="254" rx="11" ry="4.5" fill="#0f172a" />
+            <!-- Back Hair (Rendered Behind Shoulders & Neck) -->
             <g id="client-hair-back"></g>
-            <!-- Head -->
-            <circle id="client-head" cx="211" cy="116" r="22" fill="#f1c29b" stroke="#0f172a" stroke-width="1.8" />
-            <!-- Ears -->
-            <circle id="client-ear-l" cx="189" cy="118" r="4.5" fill="#f1c29b" />
-            <circle id="client-ear-r" cx="233" cy="118" r="4.5" fill="#f1c29b" />
+            <!-- Shirt / Torso -->
+            <path id="client-shirt" d="M180 152 Q203 145 226 152 L231 208 L176 208 Z" fill="#38bdf8" stroke="#0f172a" stroke-width="2" />
+            <path id="client-collar" d="M194 150 L203 162 L212 150" fill="none" stroke="#e0f2fe" stroke-width="2.4" stroke-linecap="round" />
+            <!-- Arm & Hand -->
+            <path id="client-arm" d="M218 160 L242 182 L228 192" stroke="#f1c29b" stroke-width="8.5" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+            <circle id="client-hand" cx="228" cy="192" r="4.8" fill="#f1c29b" />
+            <!-- Head & Ears -->
+            <circle id="client-head" cx="203" cy="122" r="21" fill="#f1c29b" stroke="#0f172a" stroke-width="1.8" />
+            <circle id="client-ear-l" cx="182" cy="124" r="4" fill="#f1c29b" />
+            <circle id="client-ear-r" cx="224" cy="124" r="4" fill="#f1c29b" />
             <!-- Eyes & Eyebrows -->
-            <circle cx="205" cy="115" r="2.6" fill="#0f172a" />
-            <circle cx="221" cy="115" r="2.6" fill="#0f172a" />
-            <circle cx="205.8" cy="114.2" r="0.9" fill="#ffffff" />
-            <circle cx="221.8" cy="114.2" r="0.9" fill="#ffffff" />
-            <path id="client-brow-l" d="M200 109 Q205 107 209 109" stroke="#1e293b" stroke-width="2" fill="none" stroke-linecap="round" />
-            <path id="client-brow-r" d="M217 109 Q221 107 226 109" stroke="#1e293b" stroke-width="2" fill="none" stroke-linecap="round" />
+            <circle cx="198" cy="121" r="2.5" fill="#0f172a" />
+            <circle cx="213" cy="121" r="2.5" fill="#0f172a" />
+            <circle cx="198.7" cy="120.2" r="0.85" fill="#ffffff" />
+            <circle cx="213.7" cy="120.2" r="0.85" fill="#ffffff" />
+            <path id="client-brow-l" d="M193 115 Q198 113 202 115" stroke="#1e293b" stroke-width="1.9" fill="none" stroke-linecap="round" />
+            <path id="client-brow-r" d="M209 115 Q214 113 218 115" stroke="#1e293b" stroke-width="1.9" fill="none" stroke-linecap="round" />
             <!-- Nose & Mouth -->
-            <path d="M214 115 L212 121 L215 122" stroke="#9a5b3c" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round" />
-            <path id="client-mouth" d="M208 128 Q214 125 220 128" stroke="#7c2d12" stroke-width="2.2" fill="none" stroke-linecap="round" />
-            <!-- Front Hair Layer -->
+            <path d="M206 121 L204 127 L207 128" stroke="#9a5b3c" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+            <path id="client-mouth" d="M200 134 Q206 131 212 134" stroke="#7c2d12" stroke-width="2.1" fill="none" stroke-linecap="round" />
+            <!-- Front Hair Cap (Aligned cleanly on top of head circle r=21 centered at 203,122) -->
             <g id="client-hair-front"></g>
           </g>
+
           <!-- Single Client Name Badge Near Client -->
-          <rect id="client-badge-bg" x="148" y="264" width="128" height="22" rx="6" fill="#121c2e" stroke="#38bdf8" stroke-width="1.5" />
-          <text id="client-svg-label" x="212" y="279" text-anchor="middle" fill="#7dd3fc" font-family="JetBrains Mono, monospace" font-size="11" font-weight="700">JORDAN</text>
+          <rect id="client-badge-bg" x="155" y="274" width="96" height="22" rx="6" fill="#121c2e" stroke="#38bdf8" stroke-width="1.5" />
+          <text id="client-svg-label" x="203" y="289" text-anchor="middle" fill="#7dd3fc" font-family="JetBrains Mono, monospace" font-size="11" font-weight="700">JORDAN</text>
 
           <!-- Office Desk (Center) -->
-          <rect x="382" y="182" width="196" height="16" rx="5" fill="url(#deskTopGrad)" stroke="#451a03" stroke-width="2.5" />
-          <rect x="392" y="198" width="176" height="12" fill="#5c280a" />
-          <rect x="402" y="210" width="16" height="62" fill="#451a03" />
-          <rect x="542" y="210" width="16" height="62" fill="#451a03" />
-          <!-- Desk Lamp & Notepad -->
-          <rect x="414" y="172" width="40" height="10" rx="2" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.2" />
-          <line x1="421" y1="176" x2="447" y2="176" stroke="#94a3b8" stroke-width="1.5" />
-          <line x1="421" y1="179" x2="440" y2="179" stroke="#94a3b8" stroke-width="1.5" />
-          <rect x="518" y="174" width="28" height="6" rx="2" fill="#22d3ee" />
-          <circle cx="480" cy="176" r="5" fill="#eab308" />
+          <rect x="366" y="190" width="188" height="15" rx="5" fill="url(#deskSurface)" stroke="#451a03" stroke-width="2.5" />
+          <rect x="376" y="205" width="168" height="11" fill="#5c280a" />
+          <rect x="386" y="216" width="15" height="62" fill="#451a03" />
+          <rect x="519" y="216" width="15" height="62" fill="#451a03" />
+          <!-- Desk Items -->
+          <rect x="398" y="180" width="38" height="10" rx="2" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.2" />
+          <line x1="405" y1="184" x2="429" y2="184" stroke="#94a3b8" stroke-width="1.4" />
+          <line x1="405" y1="187" x2="422" y2="187" stroke="#94a3b8" stroke-width="1.4" />
+          <rect x="498" y="182" width="26" height="6" rx="2" fill="#22d3ee" />
+          <circle cx="460" cy="184" r="4.5" fill="#eab308" />
 
           <!-- Therapist Chair (Right) -->
-          <rect x="782" y="132" width="22" height="92" rx="7" fill="#334155" />
-          <rect x="708" y="196" width="96" height="22" rx="8" fill="#475569" />
-          <rect x="710" y="182" width="92" height="16" rx="6" fill="#64748b" />
-          <rect x="722" y="218" width="9" height="44" rx="2" fill="#1e293b" />
-          <rect x="782" y="218" width="9" height="44" rx="2" fill="#1e293b" />
+          <rect x="752" y="142" width="20" height="88" rx="6" fill="#334155" />
+          <rect x="682" y="204" width="90" height="20" rx="7" fill="#475569" />
+          <rect x="684" y="190" width="86" height="15" rx="5" fill="#64748b" />
+          <rect x="694" y="224" width="8" height="44" rx="2" fill="#1e293b" />
+          <rect x="752" y="224" width="8" height="44" rx="2" fill="#1e293b" />
 
-          <!-- Constant Therapist Character ("You", Seated Right) -->
+          <!-- Constant Therapist Character ("You", Seated Right, Facing Left) -->
           <g id="therapist-character-group">
             <!-- Legs & Shoes -->
-            <rect x="728" y="198" width="14" height="48" rx="5" fill="#1e293b" />
-            <rect x="748" y="198" width="14" height="48" rx="5" fill="#1e293b" />
-            <ellipse cx="735" cy="248" rx="11" ry="5" fill="#0f172a" />
-            <ellipse cx="755" cy="248" rx="11" ry="5" fill="#0f172a" />
+            <rect x="702" y="206" width="13" height="46" rx="5" fill="#1e293b" />
+            <rect x="721" y="206" width="13" height="46" rx="5" fill="#1e293b" />
+            <ellipse cx="708" cy="254" rx="11" ry="4.5" fill="#0f172a" />
+            <ellipse cx="728" cy="254" rx="11" ry="4.5" fill="#0f172a" />
             <!-- Cardigan & Shirt -->
-            <path d="M722 145 Q746 137 770 145 L776 202 L716 202 Z" fill="#0d9488" stroke="#0f172a" stroke-width="2" />
-            <polygon points="740,143 752,143 746,175" fill="#f8fafc" />
-            <!-- Arm & Notepad Gesture -->
-            <path d="M730 154 L704 176 L722 186" stroke="#e8be9c" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" fill="none" />
-            <circle cx="722" cy="186" r="5" fill="#e8be9c" />
-            <!-- Head -->
-            <circle cx="746" cy="115" r="22" fill="#e8be9c" stroke="#0f172a" stroke-width="1.8" />
-            <circle cx="724" cy="117" r="4.5" fill="#e8be9c" />
-            <circle cx="768" cy="117" r="4.5" fill="#e8be9c" />
-            <!-- Hair -->
-            <path d="M724 112 Q746 84 768 112 Q758 96 742 96 Q730 97 724 112 Z" fill="#3b281c" />
+            <path d="M696 152 Q719 145 742 152 L747 208 L691 208 Z" fill="#0d9488" stroke="#0f172a" stroke-width="2" />
+            <polygon points="713,150 725,150 719,182" fill="#f8fafc" />
+            <!-- Arm & Hand -->
+            <path d="M704 160 L680 182 L696 192" stroke="#e8be9c" stroke-width="8.5" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+            <circle cx="696" cy="192" r="4.8" fill="#e8be9c" />
+            <!-- Head & Ears -->
+            <circle cx="719" cy="122" r="21" fill="#e8be9c" stroke="#0f172a" stroke-width="1.8" />
+            <circle cx="698" cy="124" r="4" fill="#e8be9c" />
+            <circle cx="740" cy="124" r="4" fill="#e8be9c" />
+            <!-- Hair (Cleanly Seated on Head r=21 Centered at 719,122) -->
+            <path d="M698 120 C698 95, 740 95, 740 120 C733 107, 722 104, 712 105 C704 106, 700 112, 698 120 Z" fill="#3b281c" />
             <!-- Glasses -->
-            <rect x="728" y="110" width="13" height="9" rx="2.5" fill="rgba(255,255,255,0.18)" stroke="#0f172a" stroke-width="2" />
-            <rect x="745" y="110" width="13" height="9" rx="2.5" fill="rgba(255,255,255,0.18)" stroke="#0f172a" stroke-width="2" />
-            <line x1="741" y1="114" x2="745" y2="114" stroke="#0f172a" stroke-width="2" />
-            <!-- Eyes & Warm Expression -->
-            <circle cx="734.5" cy="114.5" r="2.2" fill="#0f172a" />
-            <circle cx="751.5" cy="114.5" r="2.2" fill="#0f172a" />
-            <path d="M731 107 Q735 105 739 107" stroke="#3b281c" stroke-width="2" fill="none" stroke-linecap="round" />
-            <path d="M747 107 Q751 105 755 107" stroke="#3b281c" stroke-width="2" fill="none" stroke-linecap="round" />
-            <path d="M743 114 L741 120 L744 121" stroke="#9a5b3c" stroke-width="1.8" fill="none" stroke-linecap="round" />
-            <path d="M739 127 Q745 132 751 127" stroke="#7c2d12" stroke-width="2.2" fill="none" stroke-linecap="round" />
+            <rect x="702" y="117" width="12.5" height="8.5" rx="2.2" fill="rgba(255,255,255,0.18)" stroke="#0f172a" stroke-width="1.9" />
+            <rect x="718.5" y="117" width="12.5" height="8.5" rx="2.2" fill="rgba(255,255,255,0.18)" stroke="#0f172a" stroke-width="1.9" />
+            <line x1="714.5" y1="121" x2="718.5" y2="121" stroke="#0f172a" stroke-width="1.9" />
+            <!-- Eyes, Brows & Smile -->
+            <circle cx="708" cy="121.5" r="2.1" fill="#0f172a" />
+            <circle cx="724.5" cy="121.5" r="2.1" fill="#0f172a" />
+            <path d="M704 114 Q708.5 112 713 114" stroke="#3b281c" stroke-width="1.9" fill="none" stroke-linecap="round" />
+            <path d="M720 114 Q724.5 112 729 114" stroke="#3b281c" stroke-width="1.9" fill="none" stroke-linecap="round" />
+            <path d="M716 121 L714 127 L717 128" stroke="#9a5b3c" stroke-width="1.7" fill="none" stroke-linecap="round" />
+            <path d="M712 134 Q718 139 724 134" stroke="#7c2d12" stroke-width="2.1" fill="none" stroke-linecap="round" />
           </g>
+
           <!-- Therapist Badge Near Therapist -->
-          <rect x="684" y="264" width="124" height="22" rx="6" fill="#121c2e" stroke="#34d399" stroke-width="1.5" />
-          <text x="746" y="279" text-anchor="middle" fill="#6ee7b7" font-family="JetBrains Mono, monospace" font-size="11" font-weight="700">THERAPIST</text>
+          <rect x="667" y="274" width="104" height="22" rx="6" fill="#121c2e" stroke="#34d399" stroke-width="1.5" />
+          <text x="719" y="289" text-anchor="middle" fill="#6ee7b7" font-family="JetBrains Mono, monospace" font-size="11" font-weight="700">THERAPIST</text>
         </svg>
       </div>
 
@@ -1219,7 +1237,7 @@
     let dings = 0;
     let wrongAnswersLog = [];
     let gameOver = false;
-    let toastTimer = null;
+    let awaitingNextClick = false;
 
     const clientProgressEl = document.getElementById("client-progress");
     const dingsCounterEl = document.getElementById("dings-counter");
@@ -1229,7 +1247,7 @@
     const clientStatementEl = document.getElementById("client-statement");
     const optionsGridEl = document.getElementById("options-grid");
     const newSessionBtn = document.getElementById("new-session-btn");
-    const correctToastEl = document.getElementById("correct-toast");
+    const correctNextBtn = document.getElementById("correct-next-btn");
 
     const clientHeadEl = document.getElementById("client-head");
     const clientEarLEl = document.getElementById("client-ear-l");
@@ -1278,42 +1296,37 @@
 
       const upperName = persona.name.toUpperCase();
       clientSvgLabelEl.textContent = upperName;
-      const badgeWidth = Math.max(92, upperName.length * 9 + 26);
+      const badgeWidth = Math.max(88, upperName.length * 8.5 + 24);
       clientBadgeBgEl.setAttribute("width", badgeWidth);
-      clientBadgeBgEl.setAttribute("x", 212 - badgeWidth / 2);
+      clientBadgeBgEl.setAttribute("x", 203 - badgeWidth / 2);
 
+      // Head is circle cx="203" cy="122" r="21" (top at y=101, sides at x=182..224)
       let backSvg = "";
       let frontSvg = "";
 
       if (persona.style === "long") {
-        backSvg = `<path d="M188 112 Q186 154 192 172 L230 172 Q236 154 234 112 Z" fill="${persona.hair}" />`;
-        frontSvg = `<path d="M189 112 Q211 82 233 112 Q225 97 211 97 Q197 98 189 112 Z" fill="${persona.hair}" />`;
+        backSvg = `<path d="M181 118 C179 152, 184 174, 192 178 L214 178 C222 174, 227 152, 225 118 Z" fill="${persona.hair}" />`;
+        frontSvg = `<path d="M182 120 C182 97, 224 97, 224 120 C217 107, 206 105, 196 107 C189 108, 185 113, 182 120 Z" fill="${persona.hair}" />`;
       } else if (persona.style === "bob") {
-        backSvg = `<path d="M188 114 Q188 144 195 148 L227 148 Q234 144 234 114 Z" fill="${persona.hair}" />`;
-        frontSvg = `<path d="M189 112 Q211 84 233 112 Q218 96 196 108 Z" fill="${persona.hair}" />`;
+        backSvg = `<path d="M181 119 C181 143, 186 150, 193 150 L213 150 C220 150, 225 143, 225 119 Z" fill="${persona.hair}" />`;
+        frontSvg = `<path d="M182 120 C182 98, 224 98, 224 120 C214 106, 196 105, 182 120 Z" fill="${persona.hair}" />`;
       } else if (persona.style === "ponytail") {
-        backSvg = `<path d="M192 104 Q170 112 174 142 Q182 128 194 114 Z" fill="${persona.hair}" />`;
-        frontSvg = `<path d="M189 112 Q211 84 233 112 Q215 95 189 112 Z" fill="${persona.hair}" />`;
+        backSvg = `<path d="M185 110 C166 114, 168 142, 174 150 C179 138, 184 125, 188 116 Z" fill="${persona.hair}" />`;
+        frontSvg = `<path d="M182 120 C182 98, 224 98, 224 120 C213 106, 195 106, 182 120 Z" fill="${persona.hair}" />`;
       } else if (persona.style === "fade") {
-        frontSvg = `<path d="M190 111 Q211 86 232 111 Q222 98 210 98 Q198 98 190 111 Z" fill="${persona.hair}" />`;
+        frontSvg = `<path d="M183 118 C184 100, 222 100, 223 118 C215 108, 207 107, 199 107 C192 107, 187 111, 183 118 Z" fill="${persona.hair}" />`;
       } else {
-        frontSvg = `<path d="M189 112 Q211 84 233 112 Q224 96 209 96 Q197 97 189 112 Z" fill="${persona.hair}" />`;
+        frontSvg = `<path d="M182 120 C182 98, 224 98, 224 120 C216 107, 205 105, 194 107 C188 108, 184 113, 182 120 Z" fill="${persona.hair}" />`;
       }
 
       clientHairBackEl.innerHTML = backSvg;
       clientHairFrontEl.innerHTML = frontSvg;
     }
 
-    function showCorrectToast() {
-      correctToastEl.classList.add("show");
-      if (toastTimer) clearTimeout(toastTimer);
-      toastTimer = setTimeout(() => {
-        correctToastEl.classList.remove("show");
-      }, 900);
-    }
-
     function startNewRun() {
       feedbackModalEl.classList.remove("open");
+      correctNextBtn.classList.remove("visible");
+      awaitingNextClick = false;
       dings = 0;
       currentIndex = 0;
       wrongAnswersLog = [];
@@ -1349,6 +1362,8 @@
 
     function renderScenario() {
       if (gameOver) return;
+      correctNextBtn.classList.remove("visible");
+      awaitingNextClick = false;
 
       if (currentIndex >= sessionQuestions.length) {
         showVictoryModal();
@@ -1382,14 +1397,14 @@
     }
 
     function handleOptionSelect(chosenIndex) {
-      if (gameOver) return;
+      if (gameOver || awaitingNextClick) return;
       const q = sessionQuestions[currentIndex];
       setOptionsDisabled(true);
 
       if (chosenIndex === q.correctIndex) {
-        showCorrectToast();
-        currentIndex += 1;
-        renderScenario();
+        // Stays on screen until the user clicks "Correct! Next Client"
+        awaitingNextClick = true;
+        correctNextBtn.classList.add("visible");
         return;
       }
 
@@ -1412,6 +1427,14 @@
         showSingleDingModal();
       }
     }
+
+    correctNextBtn.addEventListener("click", () => {
+      if (!awaitingNextClick) return;
+      correctNextBtn.classList.remove("visible");
+      awaitingNextClick = false;
+      currentIndex += 1;
+      renderScenario();
+    });
 
     function showSingleDingModal() {
       feedbackModalBoxEl.className = "modal-box ding-alert compact-ding";
