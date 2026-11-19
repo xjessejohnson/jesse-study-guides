@@ -4,20 +4,27 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Home | Jesse's Study Guides</title>
-  <meta name="description" content="An independent study portal compiling practice exams, flashcards, and study notes across cybersecurity, counseling, and more." />
+  <meta name="description" content="An independent study portal compiling practice exams, flashcards, and study games across cybersecurity, counseling, and more." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
   <style>
-    /* Hero Header Row with Constrained Width */
+    .home-hero-wrapper {
+      width: 100%;
+      max-width: 740px;
+      display: flex;
+      flex-direction: column;
+      gap: 1.35rem;
+    }
+
+    /* Top Row: Headline + Avatar Column Aligned at Top Edge */
     .hero-header-row {
       display: flex;
-      align-items: flex-end;
+      align-items: flex-start;
       justify-content: space-between;
-      gap: 1.25rem;
-      max-width: 740px; /* Locked to match the HUD box width below */
-      margin-bottom: 1.35rem;
+      gap: 1.5rem;
+      width: 100%;
     }
 
     .hero-headline-wrap {
@@ -26,61 +33,69 @@
     }
 
     .hero-headline {
-      margin-bottom: 0;
-      font-size: clamp(1.85rem, 3.8vw, 3rem);
-      line-height: 1.02;
+      margin: -0.06em 0 0 0; /* Aligns top cap-height of text with top frame of avatar */
+      font-size: clamp(1.75rem, 3.5vw, 2.75rem);
+      line-height: 1.04;
+      letter-spacing: -0.02em;
     }
 
-    /* Responsive Cartoon Portrait Container */
-    .hero-avatar-wrap {
+    /* Right Column: Cartoon Picture + About Me Button Underneath */
+    .hero-avatar-col {
       flex-shrink: 0;
-      width: clamp(100px, 18vw, 155px);
-      aspect-ratio: 896 / 1200;
+      width: clamp(115px, 20vw, 165px);
       display: flex;
-      align-items: flex-end;
-      justify-content: center;
+      flex-direction: column;
+      align-items: stretch;
+      gap: 0.6rem;
+    }
+
+    .hero-avatar-wrap {
+      width: 100%;
+      aspect-ratio: 896 / 1200;
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1.5px solid rgba(34, 211, 238, 0.45);
+      background: rgba(13, 18, 28, 0.7);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6), 0 0 20px rgba(34, 211, 238, 0.18);
     }
 
     .hero-avatar-img {
       width: 100%;
       height: 100%;
       object-fit: cover;
-      border-radius: 12px;
-      border: 1.5px solid rgba(34, 211, 238, 0.45);
-      background: rgba(13, 18, 28, 0.7);
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6), 0 0 20px rgba(34, 211, 238, 0.18);
       display: block;
     }
 
-    .about-trigger-row {
-      margin-top: 1.35rem;
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-      flex-wrap: wrap;
-    }
     .about-link-btn {
+      width: 100%;
       background: rgba(34, 211, 238, 0.08);
       border: 1px solid rgba(34, 211, 238, 0.4);
       color: var(--cyan);
-      padding: 0.55rem 1.05rem;
+      padding: 0.5rem 0.65rem;
       border-radius: 8px;
       font-family: 'JetBrains Mono', monospace;
-      font-size: 0.78rem;
+      font-size: 0.74rem;
       font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.06em;
+      letter-spacing: 0.05em;
       cursor: pointer;
       transition: all 0.2s ease;
       display: inline-flex;
       align-items: center;
-      gap: 0.45rem;
+      justify-content: center;
+      gap: 0.4rem;
     }
     .about-link-btn:hover {
       background: rgba(34, 211, 238, 0.18);
       box-shadow: 0 0 18px rgba(34, 211, 238, 0.25);
       transform: translateY(-1px);
     }
+
+    .hud-panel {
+      width: 100%;
+      max-width: 740px;
+    }
+
     .modal-link {
       color: var(--cyan);
       text-decoration: none;
@@ -92,6 +107,7 @@
       color: var(--lime);
       border-bottom-color: var(--lime);
     }
+
     .email-cta-box {
       margin-top: 1.35rem;
       padding-top: 1.15rem;
@@ -101,6 +117,7 @@
       align-items: flex-start;
       gap: 0.75rem;
     }
+
     .fancy-mail-btn {
       display: inline-flex;
       align-items: center;
@@ -124,12 +141,16 @@
       transform: translateY(-1px);
     }
 
-    @media (max-width: 480px) {
+    @media (max-width: 520px) {
       .hero-header-row {
-        gap: 0.85rem;
+        gap: 0.9rem;
       }
-      .hero-avatar-wrap {
-        width: 95px;
+      .hero-avatar-col {
+        width: 105px;
+      }
+      .about-link-btn {
+        font-size: 0.66rem;
+        padding: 0.42rem 0.4rem;
       }
     }
   </style>
@@ -195,42 +216,36 @@
       </div>
 
       <main class="content-body">
-        <!-- Headline & Cartoon Avatar Row -->
-        <div class="hero-header-row">
-          <div class="hero-headline-wrap">
-            <h1 class="hero-headline">
-              STUDY SMARTER<br />
-              MASTER THE<br />
-              <span class="outline">MATERIAL</span>
-            </h1>
-          </div>
-          <div class="hero-avatar-wrap">
-            <img src="jesse-avatar.png" alt="Jesse Johnson Cartoon Avatar" class="hero-avatar-img" />
-          </div>
-        </div>
+        <div class="home-hero-wrapper">
+          <!-- Headline & Cartoon Avatar Row Aligned at Top Frame Line -->
+          <div class="hero-header-row">
+            <div class="hero-headline-wrap">
+              <h1 class="hero-headline">
+                EVERY HARD<br />
+                QUESTION GETS<br />
+                EASIER WITH<br />
+                <span class="outline">PRACTICE</span>
+              </h1>
+            </div>
 
-        <!-- HUD Welcome Panel -->
-        <div class="hud-panel">
-          <div class="prose">
-            <p>
-              Welcome to my personal study portal. While preparing for exams across different fields, I noticed how hard it is to find practice material that is accurate, well organized, and worth your time.
-            </p>
-            <p>
-              I created this independent site as a digital notebook to bring together practice exams, flashcards, and key concepts in one place. Every guide here is free to use for your own preparation. If this portal helps you on your journey, please consider supporting the project by <a class="inline-link" href="https://www.buymeacoffee.com/xjessejohnson" target="_blank" rel="noopener noreferrer">buying me a coffee</a>.
-            </p>
+            <div class="hero-avatar-col">
+              <div class="hero-avatar-wrap">
+                <img src="jesse-avatar.png" alt="Jesse Johnson Cartoon Avatar" class="hero-avatar-img" />
+              </div>
+              <button type="button" class="about-link-btn" id="open-about-btn">
+                &#9432; About Me
+              </button>
+            </div>
           </div>
 
-          <div class="about-trigger-row">
-            <button type="button" class="about-link-btn" id="open-about-btn">
-              &#9432; About Me
-            </button>
+          <!-- HUD Welcome Panel Aligned Flush Below -->
+          <div class="hud-panel">
+            <div class="prose">
+              <p>
+                You don't run out of study material anymore. You run out of time and sanity sorting through videos, books, forums, and social feeds. I've sat through high-dollar exams that ended in a fail, and it's exhausting. Nobody can memorize every detail without a clear way to practice, so I built this free spot with mock exams, flashcards, and games from what I've pulled together for myself. Use whatever helps, and if it makes your prep easier, <a class="inline-link" href="https://www.buymeacoffee.com/xjessejohnson" target="_blank" rel="noopener noreferrer">buy me a coffee</a> sometime.
+              </p>
+            </div>
           </div>
-        </div>
-
-        <div class="telemetry-strip">
-          <div class="telemetry-tag">Access: <strong>Open</strong></div>
-          <div class="telemetry-tag">Active Tracks: <strong>CISSP, CISM &amp; NCE</strong></div>
-          <div class="telemetry-tag">Mode: <strong>Independent Study</strong></div>
         </div>
       </main>
     </div>
