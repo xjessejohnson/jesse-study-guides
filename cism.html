@@ -10,11 +10,43 @@
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
   <style>
+    .hub-summary {
+      background: rgba(16, 23, 38, 0.78);
+      border: 1px solid var(--border-slate);
+      border-left: 3px solid var(--cyan);
+      border-radius: 10px;
+      padding: 1.15rem 1.35rem;
+      margin-bottom: 1.5rem;
+      max-width: 780px;
+    }
+    .hub-summary p {
+      color: var(--text-secondary);
+      line-height: 1.68;
+      font-size: 0.95rem;
+    }
+    .hub-summary strong { color: #fff; }
+    .domain-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.85rem;
+    }
+    .domain-pill {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      padding: 0.28rem 0.6rem;
+      border-radius: 6px;
+      background: rgba(13, 18, 28, 0.9);
+      border: 1px solid var(--border-slate);
+      color: var(--text-secondary);
+    }
+    .domain-pill span { color: var(--lime); font-weight: 700; }
+
     .module-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
       gap: 1.25rem;
-      margin-top: 1.75rem;
+      margin-top: 1.25rem;
     }
     .module-card {
       background: var(--bg-card);
@@ -73,6 +105,11 @@
       filter: brightness(1.08);
       box-shadow: 0 0 22px rgba(158, 255, 51, 0.35);
       transform: translateY(-1px);
+    }
+    .btn-lime.disabled {
+      background: rgba(148, 163, 184, 0.14);
+      color: var(--text-muted);
+      cursor: not-allowed;
     }
   </style>
 </head>
@@ -142,7 +179,19 @@
           CISM<br />
           <span class="outline">STUDY HUB</span>
         </h1>
-        <p class="prose">Select a training module below to begin your session.</p>
+
+        <!-- CISM Description Banner -->
+        <div class="hub-summary">
+          <p>
+            The <strong>Certified Information Security Manager (CISM)</strong> is an audit-focused management credential issued by <strong>ISACA</strong>. It evaluates a candidate's expertise in designing, managing, and overseeing enterprise-level security governance, risk assessment, and incident handling strategies.
+          </p>
+          <div class="domain-pills">
+            <div class="domain-pill">1. Information Security Governance</div>
+            <div class="domain-pill">2. Information Risk Management</div>
+            <div class="domain-pill">3. Information Security Program Development &amp; Management</div>
+            <div class="domain-pill">4. Information Security Incident Management</div>
+          </div>
+        </div>
 
         <div class="module-grid">
           <div class="module-card interactive">
@@ -173,9 +222,9 @@
                 <h3>Things to Remember</h3>
                 <span class="badge live">Arcade</span>
               </div>
-              <p>Interactive CISM games including the 10x10 Concentration Memory Grid to master all 50 governance and risk pairs.</p>
+              <p>Interactive CISM games developed by Jesse—match 50 CISM governance and risk pairs in the 10x10 Concentration Matrix.</p>
             </div>
-            <a href="cism-remember.html" class="btn-lime">Launch Arcade &rarr;</a>
+            <button type="button" class="btn-lime" onclick="openLauncherMenu()">Launch Arcade &rarr;</button>
           </div>
         </div>
       </main>
