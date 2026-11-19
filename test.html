@@ -41,7 +41,7 @@
 
     .arcade-shell {
       width: 100%;
-      max-width: 1020px;
+      max-width: 1040px;
       background: var(--bg-card);
       border: 1px solid var(--border-slate);
       border-radius: 18px;
@@ -132,23 +132,22 @@
       background: var(--cyan-dim);
     }
 
-    /* Illustrated Therapy Office Scene */
+    /* Detailed Therapy Office Scene */
     .office-scene {
       position: relative;
       width: 100%;
       border-radius: 14px;
       overflow: hidden;
       border: 1px solid var(--border-slate);
-      background: linear-gradient(180deg, #162033 0%, #101726 62%, #1d1510 62%, #140e0b 100%);
-      min-height: 250px;
+      background: #0d1524;
       display: flex;
       flex-direction: column;
-      justify-content: space-between;
     }
 
     .office-svg-wrap {
+      position: relative;
       width: 100%;
-      height: 220px;
+      height: 290px;
       display: block;
     }
 
@@ -158,8 +157,33 @@
       display: block;
     }
 
+    .correct-toast {
+      position: absolute;
+      top: 14px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-10px);
+      background: rgba(16, 185, 129, 0.95);
+      color: #04130d;
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 0.95rem;
+      letter-spacing: 0.03em;
+      padding: 0.5rem 1.15rem;
+      border-radius: 999px;
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.45);
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s ease, transform 0.2s ease;
+      z-index: 25;
+      white-space: nowrap;
+    }
+
+    .correct-toast.show {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+
     .client-dialogue-bar {
-      background: rgba(10, 15, 24, 0.92);
+      background: rgba(10, 15, 24, 0.95);
       border-top: 1px solid var(--border-slate);
       padding: 1rem 1.25rem;
     }
@@ -254,8 +278,8 @@
     .modal-backdrop {
       position: fixed;
       inset: 0;
-      background: rgba(5, 8, 15, 0.82);
-      backdrop-filter: blur(8px);
+      background: rgba(5, 8, 15, 0.68);
+      backdrop-filter: blur(5px);
       z-index: 2000;
       display: none;
       align-items: center;
@@ -273,11 +297,17 @@
       background: var(--bg-card);
       border: 1px solid var(--border-slate);
       border-radius: 16px;
-      padding: 1.5rem;
+      padding: 1.35rem 1.5rem;
       box-shadow: 0 25px 70px rgba(0, 0, 0, 0.85);
       position: relative;
-      max-height: 88vh;
+      max-height: 86vh;
       overflow-y: auto;
+    }
+
+    .modal-box.compact-ding {
+      max-width: 440px;
+      padding: 1.1rem 1.25rem;
+      border-color: rgba(251, 113, 133, 0.7);
     }
 
     .modal-box.ding-alert {
@@ -288,22 +318,22 @@
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 1rem;
-      margin-bottom: 1rem;
-      padding-bottom: 0.75rem;
+      gap: 0.85rem;
+      margin-bottom: 0.75rem;
+      padding-bottom: 0.65rem;
       border-bottom: 1px solid var(--border-slate);
     }
 
     .modal-title {
       font-family: 'Archivo Black', sans-serif;
-      font-size: 1.05rem;
+      font-size: 0.98rem;
       color: var(--rose);
       text-transform: uppercase;
       line-height: 1.3;
     }
 
     .modal-title.revoked {
-      font-size: 1.15rem;
+      font-size: 1.12rem;
     }
 
     .modal-title.victory {
@@ -311,7 +341,7 @@
     }
 
     .close-x-btn {
-      background: rgba(255, 255, 255, 0.05);
+      background: rgba(255, 255, 255, 0.06);
       border: 1px solid var(--border-slate);
       color: #fff;
       width: 34px;
@@ -333,8 +363,8 @@
     }
 
     .modal-body-text {
-      font-size: 0.98rem;
-      line-height: 1.55;
+      font-size: 0.95rem;
+      line-height: 1.5;
       color: var(--text-primary);
     }
 
@@ -430,7 +460,7 @@
       }
 
       .office-svg-wrap {
-        height: 185px;
+        height: 245px;
       }
 
       .arcade-shell {
@@ -444,105 +474,203 @@
   <div class="arcade-shell">
     <div class="top-hud">
       <div class="brand-group">
-        <div class="tag">License Ding // NCE Counseling Game</div>
+        <div class="tag">NCE Clinical Practice</div>
         <h1>LICENSE DING</h1>
       </div>
 
       <div class="hud-stats">
         <div class="hud-pill">
-          <span>Session:</span>
-          <strong class="progress-count" id="q-progress">1 / 20</strong>
+          <span>Client:</span>
+          <strong class="progress-count" id="client-progress">1 of 20</strong>
         </div>
         <div class="hud-pill dings-pill">
           <span>Dings:</span>
           <span class="dings-count" id="dings-counter">0 / 3</span>
         </div>
-        <button type="button" class="restart-btn" id="new-session-btn">Next Session</button>
+        <button type="button" class="restart-btn" id="new-session-btn">New Sessions?</button>
       </div>
     </div>
 
     <div class="office-scene">
       <div class="office-svg-wrap">
-        <svg viewBox="0 0 900 240" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Therapy office room with a desk, client chair, and therapist chair">
-          <!-- Office Wall & Trim -->
-          <rect x="0" y="0" width="900" height="165" fill="#172236" />
-          <rect x="0" y="158" width="900" height="10" fill="#28354d" />
-          <!-- Hardwood Floor -->
-          <rect x="0" y="168" width="900" height="72" fill="#231710" />
-          <line x1="0" y1="192" x2="900" y2="192" stroke="#180f0a" stroke-width="2" />
-          <line x1="0" y1="216" x2="900" y2="216" stroke="#180f0a" stroke-width="2" />
+        <div class="correct-toast" id="correct-toast">Correct! Next Client</div>
+        <svg viewBox="0 0 960 300" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Detailed therapy office with client and therapist seated across a desk">
+          <defs>
+            <linearGradient id="wallGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#1b2840" />
+              <stop offset="100%" stop-color="#121c2e" />
+            </linearGradient>
+            <linearGradient id="floorGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#2c1d13" />
+              <stop offset="100%" stop-color="#1b110b" />
+            </linearGradient>
+            <linearGradient id="deskTopGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#9a4a18" />
+              <stop offset="100%" stop-color="#692f0d" />
+            </linearGradient>
+            <linearGradient id="windowSkyGrad" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#15395c" />
+              <stop offset="100%" stop-color="#265985" />
+            </linearGradient>
+            <radialGradient id="rugGrad" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#293b59" stop-opacity="0.8" />
+              <stop offset="100%" stop-color="#152033" stop-opacity="0.2" />
+            </radialGradient>
+          </defs>
 
-          <!-- Office Window -->
-          <rect x="365" y="24" width="170" height="96" rx="8" fill="#0f2942" stroke="#334155" stroke-width="5" />
-          <line x1="450" y1="24" x2="450" y2="120" stroke="#334155" stroke-width="4" />
-          <line x1="365" y1="72" x2="535" y2="72" stroke="#334155" stroke-width="4" />
-          <!-- Soft Window Light Beam -->
-          <polygon points="365,120 535,120 620,240 280,240" fill="rgba(34, 211, 238, 0.05)" />
+          <!-- Wall & Wainscoting -->
+          <rect x="0" y="0" width="960" height="195" fill="url(#wallGrad)" />
+          <rect x="0" y="152" width="960" height="43" fill="#162136" />
+          <rect x="0" y="150" width="960" height="5" fill="#334563" />
+          <rect x="0" y="192" width="960" height="6" fill="#25334a" />
 
-          <!-- Framed Diploma / Certification on Left Wall -->
-          <rect x="75" y="34" width="96" height="68" rx="4" fill="#e2e8f0" stroke="#b45309" stroke-width="4" />
-          <line x1="92" y1="54" x2="154" y2="54" stroke="#475569" stroke-width="3" />
-          <line x1="92" y1="68" x2="142" y2="68" stroke="#64748b" stroke-width="2.5" />
-          <circle cx="145" cy="84" r="8" fill="#f59e0b" />
+          <!-- Hardwood Floor & Area Rug -->
+          <rect x="0" y="198" width="960" height="102" fill="url(#floorGrad)" />
+          <line x1="0" y1="224" x2="960" y2="224" stroke="#140c08" stroke-width="2" />
+          <line x1="0" y1="252" x2="960" y2="252" stroke="#140c08" stroke-width="2" />
+          <line x1="0" y1="280" x2="960" y2="280" stroke="#140c08" stroke-width="2" />
+          <ellipse cx="480" cy="242" rx="340" ry="34" fill="url(#rugGrad)" stroke="#3b5278" stroke-width="1.5" />
 
-          <!-- Bookshelf on Right Wall -->
-          <rect x="710" y="32" width="120" height="92" rx="4" fill="#3b2618" stroke="#23150c" stroke-width="3" />
-          <line x1="710" y1="64" x2="830" y2="64" stroke="#23150c" stroke-width="4" />
-          <line x1="710" y1="94" x2="830" y2="94" stroke="#23150c" stroke-width="4" />
-          <rect x="720" y="40" width="14" height="22" fill="#22d3ee" rx="1" />
-          <rect x="737" y="43" width="12" height="19" fill="#34d399" rx="1" />
-          <rect x="752" y="39" width="16" height="23" fill="#fb7185" rx="1" />
-          <rect x="722" y="70" width="18" height="22" fill="#fbbf24" rx="1" />
-          <rect x="744" y="72" width="14" height="20" fill="#818cf8" rx="1" />
+          <!-- Sunlit Office Window -->
+          <rect x="385" y="24" width="190" height="114" rx="10" fill="url(#windowSkyGrad)" stroke="#3b4d6b" stroke-width="6" />
+          <line x1="480" y1="24" x2="480" y2="138" stroke="#3b4d6b" stroke-width="4" />
+          <line x1="385" y1="81" x2="575" y2="81" stroke="#3b4d6b" stroke-width="4" />
+          <rect x="378" y="138" width="204" height="8" rx="3" fill="#475569" />
+          <polygon points="385,138 575,138 690,275 270,275" fill="rgba(125, 211, 252, 0.06)" />
 
-          <!-- Client Chair (Left) -->
-          <rect x="175" y="112" width="18" height="66" rx="5" fill="#475569" />
-          <rect x="175" y="154" width="76" height="16" rx="6" fill="#64748b" />
-          <rect x="186" y="170" width="8" height="36" fill="#334155" />
-          <rect x="234" y="170" width="8" height="36" fill="#334155" />
+          <!-- Left Wall Framed Credentials -->
+          <rect x="64" y="34" width="110" height="78" rx="5" fill="#f1f5f9" stroke="#b45309" stroke-width="4" />
+          <rect x="72" y="42" width="94" height="62" fill="none" stroke="#cbd5e1" stroke-width="1.5" />
+          <line x1="86" y1="60" x2="152" y2="60" stroke="#334155" stroke-width="3" stroke-linecap="round" />
+          <line x1="86" y1="73" x2="142" y2="73" stroke="#64748b" stroke-width="2.5" stroke-linecap="round" />
+          <line x1="86" y1="85" x2="124" y2="85" stroke="#94a3b8" stroke-width="2" stroke-linecap="round" />
+          <circle cx="150" cy="91" r="9" fill="#eab308" stroke="#a16207" stroke-width="1.5" />
 
-          <!-- Client Character (Seated Left) -->
-          <g id="client-character">
-            <path d="M198 118 Q216 112 232 118 L238 156 L194 156 Z" fill="#38bdf8" />
-            <path d="M226 124 L248 144 L236 150" stroke="#fdba74" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none" />
-            <circle cx="215" cy="94" r="18" fill="#fdba74" />
-            <path d="M197 92 Q215 70 233 90 Q228 80 214 80 Q202 80 197 92 Z" fill="#1e293b" />
-            <circle cx="220" cy="94" r="2.2" fill="#0f172a" />
-            <path id="client-mouth" d="M213 103 Q220 100 225 103" stroke="#7c2d12" stroke-width="2.2" fill="none" stroke-linecap="round" />
+          <!-- Potted Plant Near Window -->
+          <rect x="315" y="156" width="34" height="38" rx="4" fill="#9a3412" />
+          <rect x="312" y="152" width="40" height="7" rx="2" fill="#c2410c" />
+          <path d="M332 152 Q314 126 300 132 Q316 142 332 152 Z" fill="#10b981" />
+          <path d="M332 152 Q332 114 334 112 Q342 128 332 152 Z" fill="#34d399" />
+          <path d="M332 152 Q352 124 366 132 Q348 143 332 152 Z" fill="#059669" />
+
+          <!-- Right Wall Bookshelf -->
+          <rect x="755" y="28" width="142" height="122" rx="5" fill="#472d1b" stroke="#29180d" stroke-width="3" />
+          <line x1="755" y1="68" x2="897" y2="68" stroke="#29180d" stroke-width="4" />
+          <line x1="755" y1="108" x2="897" y2="108" stroke="#29180d" stroke-width="4" />
+          <rect x="766" y="38" width="16" height="28" rx="2" fill="#22d3ee" />
+          <rect x="785" y="42" width="14" height="24" rx="2" fill="#34d399" />
+          <rect x="802" y="36" width="18" height="30" rx="2" fill="#fb7185" />
+          <rect x="824" y="44" width="15" height="22" rx="2" fill="#fbbf24" />
+          <rect x="768" y="78" width="20" height="28" rx="2" fill="#818cf8" />
+          <rect x="791" y="81" width="16" height="25" rx="2" fill="#f472b6" />
+          <rect x="811" y="76" width="14" height="30" rx="2" fill="#38bdf8" />
+
+          <!-- Client Armchair (Left) -->
+          <rect x="150" y="138" width="22" height="86" rx="7" fill="#334155" />
+          <rect x="150" y="196" width="96" height="22" rx="8" fill="#475569" />
+          <rect x="152" y="182" width="92" height="16" rx="6" fill="#64748b" />
+          <rect x="164" y="218" width="9" height="44" rx="2" fill="#1e293b" />
+          <rect x="225" y="218" width="9" height="44" rx="2" fill="#1e293b" />
+
+          <!-- Dynamic Client Character (Seated Left) -->
+          <g id="client-character-group">
+            <!-- Legs -->
+            <rect x="195" y="198" width="14" height="48" rx="5" fill="#1e293b" />
+            <rect x="215" y="198" width="14" height="48" rx="5" fill="#1e293b" />
+            <!-- Shoes -->
+            <ellipse cx="204" cy="248" rx="11" ry="5" fill="#0f172a" />
+            <ellipse cx="224" cy="248" rx="11" ry="5" fill="#0f172a" />
+            <!-- Torso / Shirt -->
+            <path id="client-shirt" d="M186 146 Q210 138 234 146 L240 202 L182 202 Z" fill="#38bdf8" stroke="#0f172a" stroke-width="2" />
+            <!-- Collar / Neckline Detail -->
+            <path id="client-collar" d="M200 144 L210 156 L220 144" fill="none" stroke="#e0f2fe" stroke-width="2.5" stroke-linecap="round" />
+            <!-- Arm & Hand -->
+            <path id="client-arm" d="M226 154 L252 178 L236 188" stroke="#f1c29b" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+            <circle id="client-hand" cx="236" cy="188" r="5" fill="#f1c29b" />
+            <!-- Back/Long Hair Layer (for long/feminine styles) -->
+            <g id="client-hair-back"></g>
+            <!-- Head -->
+            <circle id="client-head" cx="211" cy="116" r="22" fill="#f1c29b" stroke="#0f172a" stroke-width="1.8" />
+            <!-- Ears -->
+            <circle id="client-ear-l" cx="189" cy="118" r="4.5" fill="#f1c29b" />
+            <circle id="client-ear-r" cx="233" cy="118" r="4.5" fill="#f1c29b" />
+            <!-- Eyes & Eyebrows -->
+            <circle cx="205" cy="115" r="2.6" fill="#0f172a" />
+            <circle cx="221" cy="115" r="2.6" fill="#0f172a" />
+            <circle cx="205.8" cy="114.2" r="0.9" fill="#ffffff" />
+            <circle cx="221.8" cy="114.2" r="0.9" fill="#ffffff" />
+            <path id="client-brow-l" d="M200 109 Q205 107 209 109" stroke="#1e293b" stroke-width="2" fill="none" stroke-linecap="round" />
+            <path id="client-brow-r" d="M217 109 Q221 107 226 109" stroke="#1e293b" stroke-width="2" fill="none" stroke-linecap="round" />
+            <!-- Nose & Mouth -->
+            <path d="M214 115 L212 121 L215 122" stroke="#9a5b3c" stroke-width="1.8" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+            <path id="client-mouth" d="M208 128 Q214 125 220 128" stroke="#7c2d12" stroke-width="2.2" fill="none" stroke-linecap="round" />
+            <!-- Front Hair Layer -->
+            <g id="client-hair-front"></g>
           </g>
-          <text id="client-svg-label" x="215" y="226" text-anchor="middle" fill="#cbd5e1" font-family="JetBrains Mono, monospace" font-size="12" font-weight="700">CLIENT</text>
+          <!-- Single Client Name Badge Near Client -->
+          <rect id="client-badge-bg" x="148" y="264" width="128" height="22" rx="6" fill="#121c2e" stroke="#38bdf8" stroke-width="1.5" />
+          <text id="client-svg-label" x="212" y="279" text-anchor="middle" fill="#7dd3fc" font-family="JetBrains Mono, monospace" font-size="11" font-weight="700">JORDAN</text>
 
           <!-- Office Desk (Center) -->
-          <rect x="372" y="142" width="156" height="14" rx="4" fill="#78350f" stroke="#451a03" stroke-width="2" />
-          <rect x="386" y="156" width="14" height="54" fill="#451a03" />
-          <rect x="500" y="156" width="14" height="54" fill="#451a03" />
-          <rect x="415" y="135" width="32" height="7" rx="1" fill="#f8fafc" />
-          <rect x="462" y="137" width="22" height="4" rx="2" fill="#22d3ee" />
+          <rect x="382" y="182" width="196" height="16" rx="5" fill="url(#deskTopGrad)" stroke="#451a03" stroke-width="2.5" />
+          <rect x="392" y="198" width="176" height="12" fill="#5c280a" />
+          <rect x="402" y="210" width="16" height="62" fill="#451a03" />
+          <rect x="542" y="210" width="16" height="62" fill="#451a03" />
+          <!-- Desk Lamp & Notepad -->
+          <rect x="414" y="172" width="40" height="10" rx="2" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.2" />
+          <line x1="421" y1="176" x2="447" y2="176" stroke="#94a3b8" stroke-width="1.5" />
+          <line x1="421" y1="179" x2="440" y2="179" stroke="#94a3b8" stroke-width="1.5" />
+          <rect x="518" y="174" width="28" height="6" rx="2" fill="#22d3ee" />
+          <circle cx="480" cy="176" r="5" fill="#eab308" />
 
           <!-- Therapist Chair (Right) -->
-          <rect x="705" y="108" width="18" height="70" rx="5" fill="#475569" />
-          <rect x="646" y="154" width="76" height="16" rx="6" fill="#64748b" />
-          <rect x="656" y="170" width="8" height="36" fill="#334155" />
-          <rect x="704" y="170" width="8" height="36" fill="#334155" />
+          <rect x="782" y="132" width="22" height="92" rx="7" fill="#334155" />
+          <rect x="708" y="196" width="96" height="22" rx="8" fill="#475569" />
+          <rect x="710" y="182" width="92" height="16" rx="6" fill="#64748b" />
+          <rect x="722" y="218" width="9" height="44" rx="2" fill="#1e293b" />
+          <rect x="782" y="218" width="9" height="44" rx="2" fill="#1e293b" />
 
-          <!-- Therapist Character ("You", Seated Right) -->
-          <g id="therapist-character">
-            <path d="M666 118 Q684 112 702 118 L706 156 L662 156 Z" fill="#10b981" />
-            <path d="M674 124 L652 143 L664 149" stroke="#fed7aa" stroke-width="8" stroke-linecap="round" stroke-linejoin="round" fill="none" />
-            <circle cx="684" cy="93" r="18" fill="#fed7aa" />
-            <path d="M666 91 Q684 70 702 91 Q692 81 681 81 Q672 82 666 91 Z" fill="#3f2e21" />
-            <rect x="668" y="89" width="11" height="8" rx="2" fill="none" stroke="#0f172a" stroke-width="1.8" />
-            <circle cx="674" cy="93" r="2" fill="#0f172a" />
-            <path d="M673 102 Q678 106 684 102" stroke="#7c2d12" stroke-width="2.2" fill="none" stroke-linecap="round" />
+          <!-- Constant Therapist Character ("You", Seated Right) -->
+          <g id="therapist-character-group">
+            <!-- Legs & Shoes -->
+            <rect x="728" y="198" width="14" height="48" rx="5" fill="#1e293b" />
+            <rect x="748" y="198" width="14" height="48" rx="5" fill="#1e293b" />
+            <ellipse cx="735" cy="248" rx="11" ry="5" fill="#0f172a" />
+            <ellipse cx="755" cy="248" rx="11" ry="5" fill="#0f172a" />
+            <!-- Cardigan & Shirt -->
+            <path d="M722 145 Q746 137 770 145 L776 202 L716 202 Z" fill="#0d9488" stroke="#0f172a" stroke-width="2" />
+            <polygon points="740,143 752,143 746,175" fill="#f8fafc" />
+            <!-- Arm & Notepad Gesture -->
+            <path d="M730 154 L704 176 L722 186" stroke="#e8be9c" stroke-width="9" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+            <circle cx="722" cy="186" r="5" fill="#e8be9c" />
+            <!-- Head -->
+            <circle cx="746" cy="115" r="22" fill="#e8be9c" stroke="#0f172a" stroke-width="1.8" />
+            <circle cx="724" cy="117" r="4.5" fill="#e8be9c" />
+            <circle cx="768" cy="117" r="4.5" fill="#e8be9c" />
+            <!-- Hair -->
+            <path d="M724 112 Q746 84 768 112 Q758 96 742 96 Q730 97 724 112 Z" fill="#3b281c" />
+            <!-- Glasses -->
+            <rect x="728" y="110" width="13" height="9" rx="2.5" fill="rgba(255,255,255,0.18)" stroke="#0f172a" stroke-width="2" />
+            <rect x="745" y="110" width="13" height="9" rx="2.5" fill="rgba(255,255,255,0.18)" stroke="#0f172a" stroke-width="2" />
+            <line x1="741" y1="114" x2="745" y2="114" stroke="#0f172a" stroke-width="2" />
+            <!-- Eyes & Warm Expression -->
+            <circle cx="734.5" cy="114.5" r="2.2" fill="#0f172a" />
+            <circle cx="751.5" cy="114.5" r="2.2" fill="#0f172a" />
+            <path d="M731 107 Q735 105 739 107" stroke="#3b281c" stroke-width="2" fill="none" stroke-linecap="round" />
+            <path d="M747 107 Q751 105 755 107" stroke="#3b281c" stroke-width="2" fill="none" stroke-linecap="round" />
+            <path d="M743 114 L741 120 L744 121" stroke="#9a5b3c" stroke-width="1.8" fill="none" stroke-linecap="round" />
+            <path d="M739 127 Q745 132 751 127" stroke="#7c2d12" stroke-width="2.2" fill="none" stroke-linecap="round" />
           </g>
-          <text x="684" y="226" text-anchor="middle" fill="#34d399" font-family="JetBrains Mono, monospace" font-size="12" font-weight="700">YOU (THERAPIST)</text>
+          <!-- Therapist Badge Near Therapist -->
+          <rect x="684" y="264" width="124" height="22" rx="6" fill="#121c2e" stroke="#34d399" stroke-width="1.5" />
+          <text x="746" y="279" text-anchor="middle" fill="#6ee7b7" font-family="JetBrains Mono, monospace" font-size="11" font-weight="700">THERAPIST</text>
         </svg>
       </div>
 
       <div class="client-dialogue-bar">
         <div class="dialogue-meta">
           <span id="scenario-domain">DOMAIN: HELPING RELATIONSHIPS</span>
-          <span id="scenario-client-name">CLIENT: JORDAN</span>
+          <span id="scenario-role-tag">IN SESSION</span>
         </div>
         <p class="client-statement" id="client-statement">Loading client statement...</p>
       </div>
@@ -554,7 +682,7 @@
     </div>
   </div>
 
-  <!-- Wrong Response / License Revoked / Victory Pop-up -->
+  <!-- Pop-up Modal -->
   <div class="modal-backdrop" id="feedback-modal" role="dialog" aria-modal="true" aria-labelledby="feedback-modal-title">
     <div class="modal-box ding-alert" id="feedback-modal-box">
       <div class="modal-header">
@@ -567,10 +695,19 @@
   </div>
 
   <script>
-    const CLIENT_NAMES = [
-      "Jordan", "Maya", "Devon", "Elena", "Carlos", "Hannah", "Malik", "Priya",
-      "Trevor", "Nadia", "Caleb", "Tessa", "Darius", "Sonia", "Leo", "Camila",
-      "Owen", "Amina", "Gabe", "Zoe", "Hector", "Rachel", "Samir", "Chloe"
+    const CLIENT_PERSONAS = [
+      { name: "Jordan", gender: "nonbinary", skin: "#f1c29b", shade: "#a56948", hair: "#1e293b", shirt: "#38bdf8", collar: "#e0f2fe", style: "short" },
+      { name: "Maya", gender: "female", skin: "#8d5524", shade: "#593212", hair: "#111827", shirt: "#f472b6", collar: "#fce7f3", style: "long" },
+      { name: "Devon", gender: "male", skin: "#e0ac69", shade: "#966634", hair: "#451a03", shirt: "#fb923c", collar: "#ffedd5", style: "crop" },
+      { name: "Elena", gender: "female", skin: "#f7d5b5", shade: "#b5825a", hair: "#7c2d12", shirt: "#a78bfa", collar: "#ede9fe", style: "bob" },
+      { name: "Carlos", gender: "male", skin: "#c68642", shade: "#7c4d1e", hair: "#0f172a", shirt: "#60a5fa", collar: "#dbeafe", style: "fade" },
+      { name: "Hannah", gender: "female", skin: "#fde2c8", shade: "#bc8c63", hair: "#b45309", shirt: "#facc15", collar: "#fef9c3", style: "ponytail" },
+      { name: "Malik", gender: "male", skin: "#5c3818", shade: "#2f1a09", hair: "#090d16", shirt: "#2dd4bf", collar: "#ccfbf1", style: "crop" },
+      { name: "Priya", gender: "female", skin: "#c68642", shade: "#7c4d1e", hair: "#111827", shirt: "#fb7185", collar: "#ffe4e6", style: "long" },
+      { name: "Trevor", gender: "male", skin: "#f3c69f", shade: "#a86d4a", hair: "#92400e", shirt: "#818cf8", collar: "#e0e7ff", style: "fade" },
+      { name: "Nadia", gender: "female", skin: "#d99b66", shade: "#8c5930", hair: "#1e1b4b", shirt: "#34d399", collar: "#d1fae5", style: "bob" },
+      { name: "Caleb", gender: "male", skin: "#f5cba7", shade: "#a8724b", hair: "#27272a", shirt: "#38bdf8", collar: "#e0f2fe", style: "short" },
+      { name: "Tessa", gender: "female", skin: "#8d5524", shade: "#593212", hair: "#18181b", shirt: "#fbbf24", collar: "#fef3c7", style: "ponytail" }
     ];
 
     const BASE_NCE_BANK = [
@@ -1053,114 +1190,6 @@
         ],
         correct: 0,
         explanation: "Identifying transferable skills helps mid-career clients connect past experience to new occupational pathways."
-      },
-      {
-        domain: "Assessment & Testing",
-        client: "My test report says I scored at the 85th percentile on verbal reasoning—does that mean I answered 85% of the questions right?",
-        options: [
-          "Yes, percentile rank is always the exact percentage of correct answers.",
-          "No, the 85th percentile means you scored as well as or better than 85% of the norm comparison group.",
-          "It means you missed 85% of the items.",
-          "It means your score is 85 points above average."
-        ],
-        correct: 1,
-        explanation: "Percentile rank compares an individual's performance to a norm group, not the percentage of items answered correctly."
-      },
-      {
-        domain: "Research & Program Evaluation",
-        client: "Why do researchers use a control group when testing a new anxiety intervention?",
-        options: [
-          "To punish half the participants by withholding treatment.",
-          "To compare outcomes against a baseline or alternative so changes can be evaluated beyond time or expectations alone.",
-          "Because studies aren't allowed to measure anxiety without two groups.",
-          "To make sure the new intervention always looks better."
-        ],
-        correct: 1,
-        explanation: "Control or comparison groups help isolate treatment effects from natural passage of time, regression, or expectancy."
-      },
-      {
-        domain: "Professional Orientation & Ethics",
-        client: "You see my profile pop up on a dating app—what should you do?",
-        options: [
-          "Swipe right so you can ask me about it in session.",
-          "I won't interact on the dating app, I'll protect your confidentiality, and we can address boundaries in session if needed.",
-          "I'll block you immediately and end therapy today.",
-          "I'll mention it to a colleague because it's funny."
-        ],
-        correct: 1,
-        explanation: "Avoiding dual relationships and protecting privacy on social/dating platforms prevents boundary violations."
-      },
-      {
-        domain: "Helping Relationships",
-        client: "I keep saying 'yes' to extra projects at work even when I'm already working sixty hours a week.",
-        options: [
-          "You need to learn to say no immediately next time someone asks.",
-          "What makes it hard to say no in the moment—fear of letting people down, conflict, or something else?",
-          "Working sixty hours is normal when you want to succeed.",
-          "Just do half of each project and turn them in late."
-        ],
-        correct: 1,
-        explanation: "Exploring internal barriers to saying no clarifies underlying fears or beliefs driving overcommitment."
-      },
-      {
-        domain: "Human Growth & Development",
-        client: "My parent is eighty-two and insists on driving at night even though they misjudge distances.",
-        options: [
-          "Take their car keys away in secret tonight.",
-          "That's a delicate balance of independence and safety—let's talk through practical ways to support safe mobility and involve family.",
-          "At eighty-two, nobody should drive at all.",
-          "If they refuse to listen, there's nothing anyone can do."
-        ],
-        correct: 1,
-        explanation: "Supporting older adults involves balancing autonomy and safety with practical planning and family/medical coordination."
-      },
-      {
-        domain: "Social & Cultural Foundations",
-        client: "In my community, asking for help is seen as admitting weakness.",
-        options: [
-          "Seeing help as weakness makes reaching out extra hard—what helped you take the step to sit here today?",
-          "That's an unhealthy belief you should drop right away.",
-          "Everyone needs help eventually, regardless of culture.",
-          "You don't need to worry about community views in here."
-        ],
-        correct: 0,
-        explanation: "Acknowledging cultural stigma around help-seeking while highlighting client strength fosters rapport and engagement."
-      },
-      {
-        domain: "Group Work",
-        client: "I haven't spoken in three sessions, and another member just asked, 'Why are you even here if you don't talk?'",
-        options: [
-          "You can answer that on your own.",
-          "You don't have to speak on demand—let's keep the space safe and you can share whenever it feels right for you.",
-          "They do have a point about participating.",
-          "Give a five-minute update right now so everyone hears you."
-        ],
-        correct: 1,
-        explanation: "Leaders protect members from shaming or coercion while encouraging voluntary, safe participation."
-      },
-      {
-        domain: "Career Development",
-        client: "I'm anxious about salary negotiation because I feel grateful just to get an offer.",
-        options: [
-          "Gratitude and fair compensation can coexist—let's prepare clear, research-backed points for your conversation.",
-          "Never negotiate your first offer or they might rescind it.",
-          "If you're grateful, you should accept whatever they offer.",
-          "Tell them you'll work for less than the posting."
-        ],
-        correct: 0,
-        explanation: "Helping clients separate appreciation from undervaluing their work supports confident, realistic career advocacy."
-      },
-      {
-        domain: "Assessment & Testing",
-        client: "A test has high reliability—does that automatically mean it measures what it claims to measure?",
-        options: [
-          "Yes, reliability and validity mean the exact same thing.",
-          "No, reliability means consistency, while validity refers to whether the test accurately measures what it intends to measure.",
-          "No, high reliability means the test is too easy.",
-          "Reliability only applies to intelligence tests."
-        ],
-        correct: 1,
-        explanation: "Reliability reflects consistency of measurement, whereas validity reflects accuracy and appropriateness of interpretation."
       }
     ];
 
@@ -1168,9 +1197,9 @@
       const result = [];
       for (let i = 0; i < 200; i++) {
         const template = BASE_NCE_BANK[i % BASE_NCE_BANK.length];
-        const clientName = CLIENT_NAMES[i % CLIENT_NAMES.length];
+        const persona = CLIENT_PERSONAS[i % CLIENT_PERSONAS.length];
         result.push({
-          clientName,
+          persona,
           domain: template.domain,
           client: template.client,
           options: [...template.options],
@@ -1190,15 +1219,28 @@
     let dings = 0;
     let wrongAnswersLog = [];
     let gameOver = false;
+    let toastTimer = null;
 
-    const qProgressEl = document.getElementById("q-progress");
+    const clientProgressEl = document.getElementById("client-progress");
     const dingsCounterEl = document.getElementById("dings-counter");
     const scenarioDomainEl = document.getElementById("scenario-domain");
-    const scenarioClientNameEl = document.getElementById("scenario-client-name");
     const clientSvgLabelEl = document.getElementById("client-svg-label");
+    const clientBadgeBgEl = document.getElementById("client-badge-bg");
     const clientStatementEl = document.getElementById("client-statement");
     const optionsGridEl = document.getElementById("options-grid");
     const newSessionBtn = document.getElementById("new-session-btn");
+    const correctToastEl = document.getElementById("correct-toast");
+
+    const clientHeadEl = document.getElementById("client-head");
+    const clientEarLEl = document.getElementById("client-ear-l");
+    const clientEarREl = document.getElementById("client-ear-r");
+    const clientArmEl = document.getElementById("client-arm");
+    const clientHandEl = document.getElementById("client-hand");
+    const clientShirtEl = document.getElementById("client-shirt");
+    const clientCollarEl = document.getElementById("client-collar");
+    const clientHairBackEl = document.getElementById("client-hair-back");
+    const clientHairFrontEl = document.getElementById("client-hair-front");
+    const clientMouthEl = document.getElementById("client-mouth");
 
     const feedbackModalEl = document.getElementById("feedback-modal");
     const feedbackModalBoxEl = document.getElementById("feedback-modal-box");
@@ -1224,6 +1266,52 @@
         .replace(/"/g, "&quot;");
     }
 
+    function applyClientPersona(persona) {
+      clientHeadEl.setAttribute("fill", persona.skin);
+      clientEarLEl.setAttribute("fill", persona.skin);
+      clientEarREl.setAttribute("fill", persona.skin);
+      clientArmEl.setAttribute("stroke", persona.skin);
+      clientHandEl.setAttribute("fill", persona.skin);
+      clientShirtEl.setAttribute("fill", persona.shirt);
+      clientCollarEl.setAttribute("stroke", persona.collar);
+      clientMouthEl.setAttribute("stroke", persona.shade);
+
+      const upperName = persona.name.toUpperCase();
+      clientSvgLabelEl.textContent = upperName;
+      const badgeWidth = Math.max(92, upperName.length * 9 + 26);
+      clientBadgeBgEl.setAttribute("width", badgeWidth);
+      clientBadgeBgEl.setAttribute("x", 212 - badgeWidth / 2);
+
+      let backSvg = "";
+      let frontSvg = "";
+
+      if (persona.style === "long") {
+        backSvg = `<path d="M188 112 Q186 154 192 172 L230 172 Q236 154 234 112 Z" fill="${persona.hair}" />`;
+        frontSvg = `<path d="M189 112 Q211 82 233 112 Q225 97 211 97 Q197 98 189 112 Z" fill="${persona.hair}" />`;
+      } else if (persona.style === "bob") {
+        backSvg = `<path d="M188 114 Q188 144 195 148 L227 148 Q234 144 234 114 Z" fill="${persona.hair}" />`;
+        frontSvg = `<path d="M189 112 Q211 84 233 112 Q218 96 196 108 Z" fill="${persona.hair}" />`;
+      } else if (persona.style === "ponytail") {
+        backSvg = `<path d="M192 104 Q170 112 174 142 Q182 128 194 114 Z" fill="${persona.hair}" />`;
+        frontSvg = `<path d="M189 112 Q211 84 233 112 Q215 95 189 112 Z" fill="${persona.hair}" />`;
+      } else if (persona.style === "fade") {
+        frontSvg = `<path d="M190 111 Q211 86 232 111 Q222 98 210 98 Q198 98 190 111 Z" fill="${persona.hair}" />`;
+      } else {
+        frontSvg = `<path d="M189 112 Q211 84 233 112 Q224 96 209 96 Q197 97 189 112 Z" fill="${persona.hair}" />`;
+      }
+
+      clientHairBackEl.innerHTML = backSvg;
+      clientHairFrontEl.innerHTML = frontSvg;
+    }
+
+    function showCorrectToast() {
+      correctToastEl.classList.add("show");
+      if (toastTimer) clearTimeout(toastTimer);
+      toastTimer = setTimeout(() => {
+        correctToastEl.classList.remove("show");
+      }, 900);
+    }
+
     function startNewRun() {
       feedbackModalEl.classList.remove("open");
       dings = 0;
@@ -1240,7 +1328,7 @@
         const shuffledOptions = shuffleArray(indexedOptions);
         const correctShuffledIndex = shuffledOptions.findIndex((o) => o.isCorrect);
         return {
-          clientName: item.clientName,
+          persona: item.persona,
           domain: item.domain,
           client: item.client,
           options: shuffledOptions.map((o) => o.text),
@@ -1255,7 +1343,7 @@
 
     function updateHud() {
       const displayNum = Math.min(currentIndex + 1, GAMES_PER_RUN);
-      qProgressEl.textContent = `${displayNum} / ${GAMES_PER_RUN}`;
+      clientProgressEl.textContent = `${displayNum} of ${GAMES_PER_RUN}`;
       dingsCounterEl.textContent = `${dings} / ${MAX_DINGS}`;
     }
 
@@ -1269,9 +1357,8 @@
 
       const q = sessionQuestions[currentIndex];
       updateHud();
+      applyClientPersona(q.persona);
       scenarioDomainEl.textContent = `DOMAIN: ${q.domain.toUpperCase()}`;
-      scenarioClientNameEl.textContent = `CLIENT: ${q.clientName.toUpperCase()}`;
-      clientSvgLabelEl.textContent = `CLIENT: ${q.clientName.toUpperCase()}`;
       clientStatementEl.textContent = `"${q.client}"`;
 
       const badges = ["A", "B", "C", "D"];
@@ -1300,6 +1387,7 @@
       setOptionsDisabled(true);
 
       if (chosenIndex === q.correctIndex) {
+        showCorrectToast();
         currentIndex += 1;
         renderScenario();
         return;
@@ -1309,7 +1397,7 @@
       updateHud();
 
       wrongAnswersLog.push({
-        clientName: q.clientName,
+        clientName: q.persona.name,
         domain: q.domain,
         client: q.client,
         chosenText: q.options[chosenIndex],
@@ -1326,14 +1414,11 @@
     }
 
     function showSingleDingModal() {
-      feedbackModalBoxEl.className = "modal-box ding-alert";
+      feedbackModalBoxEl.className = "modal-box ding-alert compact-ding";
       feedbackModalTitleEl.className = "modal-title";
       feedbackModalTitleEl.textContent = "That is not how a licensed therapist should respond to a client";
       closeModalXBtn.style.display = "flex";
-      feedbackModalBodyEl.innerHTML = `
-        <p>You received a <strong>Ding</strong> (${dings} of ${MAX_DINGS} before revocation).</p>
-        <p style="margin-top:0.65rem; color:var(--text-secondary); font-size:0.9rem;">Click <strong>X</strong> to close this notice and continue to the next client.</p>
-      `;
+      feedbackModalBodyEl.innerHTML = `<p>Ding <strong>${dings} of ${MAX_DINGS}</strong>.</p>`;
       feedbackModalFooterEl.innerHTML = "";
       feedbackModalEl.classList.add("open");
     }
@@ -1347,7 +1432,7 @@
       const cardsHtml = wrongAnswersLog
         .map((entry) => `
           <div class="revocation-card">
-            <div class="q-label">Client: ${escapeHtml(entry.clientName)} • ${escapeHtml(entry.domain)}</div>
+            <div class="q-label">${escapeHtml(entry.clientName)} • ${escapeHtml(entry.domain)}</div>
             <div class="wrong-ans"><strong>Your response:</strong> ${escapeHtml(entry.chosenText)}</div>
             <div class="right-ans"><strong>What you should have said:</strong> ${escapeHtml(entry.correctText)}</div>
             <div class="why-ans">${escapeHtml(entry.explanation)}</div>
@@ -1356,12 +1441,12 @@
         .join("");
 
       feedbackModalBodyEl.innerHTML = `
-        <p>You reached <strong>3 Dings</strong>. Here is what you should have said for each missed response:</p>
+        <p>You reached <strong>3 Dings</strong>. What you should have said:</p>
         <div class="revocation-list">${cardsHtml}</div>
       `;
 
       feedbackModalFooterEl.innerHTML = `
-        <button type="button" class="primary-action-btn" id="modal-restart-btn">Next Session</button>
+        <button type="button" class="primary-action-btn" id="modal-restart-btn">New Sessions?</button>
         <a href="nce.html" class="secondary-action-btn">Choose a Different Game</a>
       `;
 
@@ -1376,30 +1461,25 @@
       feedbackModalTitleEl.textContent = "Good job helping the client!";
       closeModalXBtn.style.display = "flex";
 
-      let reviewSection = `<p>You completed this session with <strong>${dings}</strong> of ${MAX_DINGS} dings.</p>`;
+      let reviewSection = `<p>Completed with <strong>${dings}</strong> of ${MAX_DINGS} dings.</p>`;
 
       if (wrongAnswersLog.length > 0) {
         const cardsHtml = wrongAnswersLog
           .map((entry) => `
             <div class="revocation-card">
-              <div class="q-label">Client: ${escapeHtml(entry.clientName)} • ${escapeHtml(entry.domain)}</div>
+              <div class="q-label">${escapeHtml(entry.clientName)} • ${escapeHtml(entry.domain)}</div>
               <div class="wrong-ans"><strong>Your response:</strong> ${escapeHtml(entry.chosenText)}</div>
               <div class="right-ans"><strong>What you should have said:</strong> ${escapeHtml(entry.correctText)}</div>
               <div class="why-ans">${escapeHtml(entry.explanation)}</div>
             </div>
           `)
           .join("");
-        reviewSection += `
-          <p style="margin-top:0.85rem;">Review the ${wrongAnswersLog.length} response(s) that earned a ding:</p>
-          <div class="revocation-list">${cardsHtml}</div>
-        `;
-      } else {
-        reviewSection += `<p style="margin-top:0.65rem; color:var(--lime);">Zero dings across the whole session—great clinical judgment for the NCE.</p>`;
+        reviewSection += `<div class="revocation-list">${cardsHtml}</div>`;
       }
 
       feedbackModalBodyEl.innerHTML = reviewSection;
       feedbackModalFooterEl.innerHTML = `
-        <button type="button" class="primary-action-btn" id="modal-victory-restart-btn">Next Session</button>
+        <button type="button" class="primary-action-btn" id="modal-victory-restart-btn">New Sessions?</button>
         <a href="nce.html" class="secondary-action-btn">Choose a Different Game</a>
       `;
 
