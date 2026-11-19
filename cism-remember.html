@@ -4,19 +4,36 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>CISM Games | Jesse's Study Guides</title>
-  <meta name="description" content="CISM Games developed by Jesse—play the 10x10 CISM Concentration Memory Grid to master all 50 governance and risk pairs." />
+  <meta name="description" content="CISM Games developed by Jesse—play 4x4 Concentration, Risk Invaders, Executive Hot Seat, Audit Hammer Smash, Who Wants to Be a CISMnaire, and Logic Bomb Defusal." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
   <style>
     /* Underlying CISM Hub Layer */
-    .module-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
-      gap: 1.25rem;
-      margin-top: 1.75rem;
+    .hub-summary {
+      background: rgba(16, 23, 38, 0.78);
+      border: 1px solid var(--border-slate);
+      border-left: 3px solid var(--cyan);
+      border-radius: 10px;
+      padding: 1.15rem 1.35rem;
+      margin-bottom: 1.5rem;
+      max-width: 780px;
     }
+    .hub-summary p { color: var(--text-secondary); line-height: 1.68; font-size: 0.95rem; }
+    .hub-summary strong { color: #fff; }
+    .domain-pills { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.85rem; }
+    .domain-pill {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      padding: 0.28rem 0.6rem;
+      border-radius: 6px;
+      background: rgba(13, 18, 28, 0.9);
+      border: 1px solid var(--border-slate);
+      color: var(--text-secondary);
+    }
+    .domain-pill span { color: var(--lime); font-weight: 700; }
+    .module-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 1.25rem; margin-top: 1.25rem; }
     .module-card {
       background: var(--bg-card);
       border: 1px solid var(--border-slate);
@@ -26,31 +43,10 @@
       flex-direction: column;
       justify-content: space-between;
       gap: 1.25rem;
-      transition: all 0.2s ease;
     }
-    .module-card.interactive:hover {
-      border-color: var(--lime);
-      background: var(--bg-card-hover);
-      transform: translateY(-2px);
-    }
-    .module-card-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 0.5rem;
-      margin-bottom: 0.55rem;
-    }
-    .module-card h3 {
-      font-family: 'Archivo Black', sans-serif;
-      font-size: 1.02rem;
-      text-transform: uppercase;
-      color: #fff;
-    }
-    .module-card p {
-      font-size: 0.88rem;
-      color: var(--text-secondary);
-      line-height: 1.55;
-    }
+    .module-card-head { display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; margin-bottom: 0.55rem; }
+    .module-card h3 { font-family: 'Archivo Black', sans-serif; font-size: 1.02rem; text-transform: uppercase; color: #fff; }
+    .module-card p { font-size: 0.88rem; color: var(--text-secondary); line-height: 1.55; }
     .btn-lime {
       padding: 0.75rem 1.25rem;
       border-radius: 9px;
@@ -61,55 +57,45 @@
       font-weight: 700;
       font-size: 0.8rem;
       text-transform: uppercase;
-      letter-spacing: 0.04em;
       text-decoration: none;
       cursor: pointer;
-      transition: all 0.18s ease;
       display: inline-flex;
       align-items: center;
       justify-content: center;
-      gap: 0.45rem;
-    }
-    .btn-lime:hover {
-      filter: brightness(1.08);
-      box-shadow: 0 0 22px rgba(158, 255, 51, 0.35);
-      transform: translateY(-1px);
     }
 
-    /* =========================================================================
-       TACTICAL ARCADE MENU OVERLAY (Appears Over Previous Menu with ✕ Button)
-       ========================================================================= */
-    .launcher-modal-backdrop {
+    /* Translucent Blurred Overlays */
+    .launcher-modal-backdrop,
+    .arcade-modal-backdrop {
       position: fixed;
       inset: 0;
-      background: rgba(3, 6, 12, 0.88);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      background: rgba(8, 12, 24, 0.45);
+      backdrop-filter: blur(7px);
+      -webkit-backdrop-filter: blur(7px);
       z-index: 9990;
       display: none;
       align-items: center;
       justify-content: center;
-      padding: 0.75rem;
+      padding: 1rem;
     }
-    .launcher-modal-backdrop.open {
+    .arcade-modal-backdrop { z-index: 9995; }
+    .launcher-modal-backdrop.open,
+    .arcade-modal-backdrop.open {
       display: flex;
       animation: backdropFade 0.22s ease-out;
     }
-    @keyframes backdropFade {
-      from { opacity: 0; }
-      to { opacity: 1; }
-    }
+    @keyframes backdropFade { from { opacity: 0; } to { opacity: 1; } }
 
     .launcher-modal-window {
-      background: #080c16;
-      border: 1px solid rgba(34, 211, 238, 0.38);
+      background: rgba(10, 15, 28, 0.94);
+      border: 1.5px solid rgba(34, 211, 238, 0.45);
       border-radius: 16px;
-      width: 100%;
-      max-width: 940px;
-      max-height: 92dvh;
+      width: 92%;
+      max-width: 860px;
+      max-height: 86dvh;
       display: flex;
       flex-direction: column;
-      box-shadow: 0 25px 70px rgba(0, 0, 0, 0.92), 0 0 35px rgba(34, 211, 238, 0.14);
+      box-shadow: 0 25px 70px rgba(0, 0, 0, 0.85), 0 0 35px rgba(34, 211, 238, 0.18);
       overflow: hidden;
       animation: cabinetZoomIn 0.26s cubic-bezier(0.22, 1, 0.36, 1);
     }
@@ -117,55 +103,35 @@
       from { transform: scale(0.94) translateY(14px); opacity: 0; }
       to { transform: scale(1) translateY(0); opacity: 1; }
     }
-
     .launcher-header {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 1rem;
-      padding: 1.1rem 1.4rem 0.9rem;
-      border-bottom: 1px solid var(--border-slate);
-      background: #0b111e;
+      display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem;
+      padding: 1rem 1.35rem 0.85rem; border-bottom: 1px solid var(--border-slate);
+      background: rgba(11, 17, 30, 0.96);
     }
-
-    .launcher-body {
-      padding: 1.15rem 1.4rem 1.4rem;
-      overflow-y: auto;
-    }
-
-    .arcade-intro-text {
-      color: var(--text-secondary);
-      line-height: 1.45;
-      font-size: 0.94rem;
-      margin-top: 0.25rem;
-    }
+    .launcher-body { padding: 1.1rem 1.35rem 1.35rem; overflow-y: auto; }
+    .arcade-intro-text { color: var(--text-secondary); line-height: 1.45; font-size: 0.94rem; margin-top: 0.25rem; }
 
     /* 5% Smaller Console Gaming Launcher Cards */
     .game-choice-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(248px, 1fr));
-      gap: 0.95rem;
-      perspective: 1000px;
+      grid-template-columns: repeat(auto-fit, minmax(235px, 1fr));
+      gap: 0.9rem;
     }
-
     .game-selector-card {
       position: relative;
       border-radius: 13px;
-      padding: 1.08rem 1.15rem;
+      padding: 1.05rem 1.1rem;
       cursor: pointer;
       text-align: left;
       overflow: hidden;
       border: 1px solid rgba(148, 163, 184, 0.2);
-      transition: transform 0.32s cubic-bezier(0.22, 1, 0.36, 1),
-                  box-shadow 0.32s cubic-bezier(0.22, 1, 0.36, 1),
-                  border-color 0.25s ease;
+      transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s ease, border-color 0.25s ease;
       display: flex;
       flex-direction: column;
-      gap: 0.38rem;
+      gap: 0.36rem;
       isolation: isolate;
     }
-
-    .game-selector-card:not(.coming-soon)::after {
+    .game-selector-card::after {
       content: "";
       position: absolute;
       inset: -50%;
@@ -173,423 +139,489 @@
       transform: translateX(-100%) rotate(15deg);
       transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
       pointer-events: none;
-      z-index: 1;
     }
-    .game-selector-card:not(.coming-soon):hover::after {
-      transform: translateX(100%) rotate(15deg);
-    }
-
-    .game-selector-card.coming-soon {
-      opacity: 0.62;
-      cursor: not-allowed;
-    }
-
-    .game-card-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 0.5rem;
-    }
-
+    .game-selector-card:hover::after { transform: translateX(100%) rotate(15deg); }
+    .game-card-top { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
     .game-icon-badge {
-      width: 36px;
-      height: 36px;
-      border-radius: 9px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 1.15rem;
-      background: rgba(255, 255, 255, 0.06);
+      width: 35px; height: 35px; border-radius: 9px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.12rem; background: rgba(255, 255, 255, 0.06);
       border: 1px solid rgba(255, 255, 255, 0.14);
       transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
     }
-    .game-selector-card:not(.coming-soon):hover .game-icon-badge {
-      transform: scale(1.15) rotate(-6deg);
-    }
-
+    .game-selector-card:hover .game-icon-badge { transform: scale(1.15) rotate(-6deg); }
     .game-play-pill {
       font-family: Arial, Helvetica, sans-serif;
-      font-size: 0.66rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      padding: 0.2rem 0.55rem;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.06);
-      color: #fff;
-      transition: all 0.25s ease;
+      font-size: 0.66rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.06em; padding: 0.2rem 0.55rem; border-radius: 999px;
+      background: rgba(255, 255, 255, 0.06); color: #fff;
     }
-    .game-selector-card:not(.coming-soon):hover .game-play-pill {
-      transform: translateX(3px);
-    }
-
-    .game-title {
-      font-family: 'Archivo Black', sans-serif;
-      font-size: 1.04rem;
-      color: #fff;
-      text-transform: uppercase;
-      letter-spacing: 0.01em;
-      margin-top: 0.15rem;
-    }
-
-    .game-desc {
-      font-family: Arial, Helvetica, sans-serif;
-      font-size: 0.84rem;
-      color: #cbd5e1;
-      line-height: 1.42;
-    }
+    .game-title { font-family: 'Archivo Black', sans-serif; font-size: 1.02rem; color: #fff; text-transform: uppercase; margin-top: 0.12rem; }
+    .game-desc { font-family: Arial, Helvetica, sans-serif; font-size: 0.84rem; color: #cbd5e1; line-height: 1.42; }
     .game-desc strong { color: #fff; }
 
-    /* 6 Distinct Game Card Themes */
-    .card-concentration {
-      background: radial-gradient(circle at 90% 10%, rgba(34, 211, 238, 0.24), transparent 55%), linear-gradient(145deg, #0b1528 0%, #070b14 100%);
-      border-color: rgba(34, 211, 238, 0.45);
-    }
-    .card-concentration:hover {
-      transform: translateY(-5px) scale(1.015);
-      border-color: var(--cyan);
-      box-shadow: 0 12px 30px rgba(34, 211, 238, 0.28);
-    }
-    .card-concentration .game-play-pill { color: var(--lime); border: 1px solid rgba(158, 255, 51, 0.5); background: rgba(158, 255, 51, 0.1); }
+    .card-conc { background: radial-gradient(circle at 90% 10%, rgba(34, 211, 238, 0.24), transparent 55%), linear-gradient(145deg, #0b192e 0%, #070b14 100%); border-color: rgba(34, 211, 238, 0.42); }
+    .card-conc:hover { transform: translateY(-5px) scale(1.015); border-color: var(--cyan); box-shadow: 0 12px 30px rgba(34, 211, 238, 0.26); }
+    .card-conc .game-play-pill { color: var(--cyan); border: 1px solid rgba(34, 211, 238, 0.45); }
 
-    .card-boardroom {
-      background: radial-gradient(circle at 90% 10%, rgba(251, 191, 36, 0.18), transparent 55%), linear-gradient(145deg, #21180b 0%, #090b12 100%);
-      border-color: rgba(251, 191, 36, 0.28);
-    }
-    .card-balance {
-      background: radial-gradient(circle at 90% 10%, rgba(129, 140, 248, 0.2), transparent 55%), linear-gradient(145deg, #131633 0%, #080b16 100%);
-      border-color: rgba(129, 140, 248, 0.28);
-    }
-    .card-commander {
-      background: radial-gradient(circle at 90% 10%, rgba(251, 113, 133, 0.2), transparent 55%), linear-gradient(145deg, #261019 0%, #080b12 100%);
-      border-color: rgba(251, 113, 133, 0.28);
-    }
-    .card-policy {
-      background: radial-gradient(circle at 90% 10%, rgba(158, 255, 51, 0.16), transparent 55%), linear-gradient(145deg, #112211 0%, #070b12 100%);
-      border-color: rgba(158, 255, 51, 0.28);
-    }
-    .card-vendor {
-      background: radial-gradient(circle at 90% 10%, rgba(52, 211, 153, 0.18), transparent 55%), linear-gradient(145deg, #0b2420 0%, #070b12 100%);
-      border-color: rgba(52, 211, 153, 0.28);
-    }
+    .card-invaders { background: radial-gradient(circle at 90% 10%, rgba(158, 255, 51, 0.22), transparent 55%), linear-gradient(145deg, #112211 0%, #070b12 100%); border-color: rgba(158, 255, 51, 0.38); }
+    .card-invaders:hover { transform: translateY(-5px) scale(1.015); border-color: var(--lime); box-shadow: 0 12px 30px rgba(158, 255, 51, 0.24); }
+    .card-invaders .game-play-pill { color: var(--lime); border: 1px solid rgba(158, 255, 51, 0.45); }
 
-    /* =========================================================================
-       ACTIVE GAME MODAL (10x10 CISM Concentration Grid — Viewport-Locked)
-       ========================================================================= */
-    .arcade-modal-backdrop {
-      position: fixed;
-      inset: 0;
-      background: rgba(3, 6, 12, 0.94);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      z-index: 9999;
-      display: none;
-      align-items: center;
-      justify-content: center;
-      padding: 0.5rem;
-    }
-    .arcade-modal-backdrop.open {
-      display: flex;
-      animation: backdropFade 0.22s ease-out;
-    }
+    .card-hotseat { background: radial-gradient(circle at 90% 10%, rgba(251, 191, 36, 0.22), transparent 55%), linear-gradient(145deg, #241909 0%, #080b12 100%); border-color: rgba(251, 191, 36, 0.38); }
+    .card-hotseat:hover { transform: translateY(-5px) scale(1.015); border-color: var(--amber); box-shadow: 0 12px 30px rgba(251, 191, 36, 0.24); }
+    .card-hotseat .game-play-pill { color: var(--amber); border: 1px solid rgba(251, 191, 36, 0.45); }
 
+    .card-hammer { background: radial-gradient(circle at 90% 10%, rgba(251, 113, 133, 0.24), transparent 55%), linear-gradient(145deg, #261019 0%, #080b12 100%); border-color: rgba(251, 113, 133, 0.4); }
+    .card-hammer:hover { transform: translateY(-5px) scale(1.015); border-color: var(--rose); box-shadow: 0 12px 30px rgba(251, 113, 133, 0.26); }
+    .card-hammer .game-play-pill { color: var(--rose); border: 1px solid rgba(251, 113, 133, 0.45); }
+
+    .card-million { background: radial-gradient(circle at 90% 10%, rgba(129, 140, 248, 0.26), transparent 55%), linear-gradient(145deg, #141636 0%, #080b16 100%); border-color: rgba(129, 140, 248, 0.42); }
+    .card-million:hover { transform: translateY(-5px) scale(1.015); border-color: #818cf8; box-shadow: 0 12px 30px rgba(129, 140, 248, 0.26); }
+    .card-million .game-play-pill { color: #a5b4fc; border: 1px solid rgba(129, 140, 248, 0.45); }
+
+    .card-bomb { background: radial-gradient(circle at 90% 10%, rgba(52, 211, 153, 0.22), transparent 55%), linear-gradient(145deg, #0b2420 0%, #070b12 100%); border-color: rgba(52, 211, 153, 0.4); }
+    .card-bomb:hover { transform: translateY(-5px) scale(1.015); border-color: #34d399; box-shadow: 0 12px 30px rgba(52, 211, 153, 0.25); }
+    .card-bomb .game-play-pill { color: #34d399; border: 1px solid rgba(52, 211, 153, 0.45); }
+
+    /* Active Game Window */
     .arcade-modal-window {
-      background: #080c16;
-      border: 1px solid rgba(34, 211, 238, 0.38);
+      background: rgba(10, 15, 28, 0.96);
+      border: 1.5px solid rgba(34, 211, 238, 0.45);
       border-radius: 14px;
-      width: 100%;
-      max-width: 940px;
-      height: calc(100dvh - 1rem);
-      max-height: 720px;
+      width: 92%;
+      max-width: 860px;
+      height: 84dvh;
+      max-height: 670px;
       display: flex;
       flex-direction: column;
-      box-shadow: 0 25px 70px rgba(0, 0, 0, 0.92), 0 0 35px rgba(34, 211, 238, 0.14);
+      box-shadow: 0 25px 70px rgba(0, 0, 0, 0.88), 0 0 35px rgba(34, 211, 238, 0.18);
       overflow: hidden;
       animation: cabinetZoomIn 0.28s cubic-bezier(0.22, 1, 0.36, 1);
       font-family: Arial, Helvetica, sans-serif;
     }
-
     .arcade-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0.55rem 0.85rem;
-      border-bottom: 1px solid var(--border-slate);
-      background: #0b111e;
-      gap: 0.5rem;
-      flex-shrink: 0;
-      flex-wrap: wrap;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0.55rem 0.85rem; border-bottom: 1px solid var(--border-slate);
+      background: #0b111e; gap: 0.4rem; flex-shrink: 0;
     }
-
-    .arcade-game-title {
-      font-family: 'Archivo Black', sans-serif;
-      font-size: 0.92rem;
-      color: #fff;
-      text-transform: uppercase;
-      white-space: nowrap;
-    }
-
-    .arcade-tracker-hud {
-      display: flex;
-      align-items: center;
-      gap: 0.45rem;
-      flex-shrink: 0;
-    }
-
+    .arcade-game-title { font-family: 'Archivo Black', sans-serif; font-size: 0.92rem; color: #fff; text-transform: uppercase; }
+    .arcade-tracker-hud { display: flex; align-items: center; gap: 0.45rem; }
     .arcade-stat-badge {
-      font-family: Arial, Helvetica, sans-serif;
-      font-size: 0.78rem;
-      font-weight: 700;
-      padding: 0.24rem 0.55rem;
-      border-radius: 6px;
-      background: rgba(255, 255, 255, 0.04);
-      border: 1px solid var(--border-slate);
-      color: var(--cyan);
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      white-space: nowrap;
+      font-family: Arial, Helvetica, sans-serif; font-size: 0.78rem; font-weight: 700;
+      padding: 0.24rem 0.55rem; border-radius: 6px; background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-slate); color: var(--cyan); display: flex; align-items: center; gap: 0.4rem; white-space: nowrap;
     }
+    .hp-bar-bg { width: 68px; height: 9px; background: rgba(255, 255, 255, 0.1); border: 1px solid var(--border-slate); border-radius: 999px; overflow: hidden; }
+    .hp-bar-fill { width: 100%; height: 100%; background: var(--lime); transition: width 0.25s ease, background 0.25s ease; }
 
-    .hp-bar-bg {
-      width: 70px;
-      height: 8px;
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid var(--border-slate);
-      border-radius: 999px;
-      overflow: hidden;
-    }
-    .hp-bar-fill {
-      width: 100%;
-      height: 100%;
-      background: var(--lime);
-      transition: width 0.3s ease, background 0.3s ease;
-    }
-
-    .arcade-nav-controls {
-      display: flex;
-      align-items: center;
-      gap: 0.4rem;
-      flex-shrink: 0;
-    }
+    .arcade-nav-controls { display: flex; align-items: center; gap: 0.4rem; }
     .btn-hud-icon {
-      background: #131c31;
-      border: 1px solid var(--border-slate);
-      color: #fff;
-      width: 32px;
-      height: 32px;
-      border-radius: 7px;
-      font-family: Arial, Helvetica, sans-serif;
-      font-size: 0.9rem;
-      font-weight: 700;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.15s ease;
+      background: #131c31; border: 1px solid var(--border-slate); color: #fff;
+      width: 32px; height: 32px; border-radius: 7px; font-family: Arial, Helvetica, sans-serif;
+      font-size: 0.9rem; font-weight: 700; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
     }
-    .btn-hud-icon:hover {
-      border-color: var(--cyan);
-      background: var(--cyan-dim);
-    }
-    .btn-hud-icon.close-btn {
-      border-color: rgba(251, 113, 133, 0.5);
-      color: var(--rose);
-    }
-    .btn-hud-icon.close-btn:hover {
-      background: rgba(251, 113, 133, 0.22);
-      color: #fff;
-    }
-
-    .arcade-body {
-      flex: 1;
-      padding: 0.65rem;
-      overflow: hidden;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      position: relative;
-    }
-
+    .btn-hud-icon.close-btn { border-color: rgba(251, 113, 133, 0.5); color: var(--rose); }
+    .arcade-body { flex: 1; padding: 0.7rem; overflow: hidden; display: flex; flex-direction: column; justify-content: space-between; }
     .stage-screen {
-      background: rgba(11, 17, 30, 0.94);
-      border: 1px solid var(--border-slate);
-      border-radius: 11px;
-      padding: 0.65rem;
-      height: 100%;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      gap: 0.45rem;
-      overflow: hidden;
+      background: rgba(11, 17, 30, 0.94); border: 1px solid var(--border-slate);
+      border-radius: 11px; padding: 0.8rem; height: 100%;
+      display: flex; flex-direction: column; justify-content: space-between; overflow: hidden;
     }
-
-    .conc-status-banner {
-      font-family: Arial, Helvetica, sans-serif;
-      font-size: clamp(0.84rem, 1.9vw, 0.98rem);
-      font-weight: 700;
-      color: #e2e8f0;
-      text-align: center;
-      padding: 0.2rem 0.4rem;
-      flex-shrink: 0;
+    .prompt-banner {
+      font-family: Arial, Helvetica, sans-serif; font-size: clamp(0.92rem, 2vw, 1.1rem);
+      font-weight: 700; color: #fff; text-align: center; line-height: 1.38; padding: 0.2rem 0.4rem;
     }
-    .conc-status-banner span { color: var(--cyan); }
+    .prompt-banner span { color: var(--cyan); }
 
-    /* 10x10 Matrix Fits Mobile & PC Screen 100% Without Scrolling */
-    .grid-10x10 {
+    /* =========================================================================
+       GAME 1: 4x4 CONCENTRATION + PLAYING CARD MODAL
+       ========================================================================= */
+    .grid-4x4 {
       display: grid;
-      grid-template-columns: repeat(10, 1fr);
-      grid-template-rows: repeat(10, 1fr);
-      gap: 4px;
+      grid-template-columns: repeat(4, 1fr);
+      grid-template-rows: repeat(4, 1fr);
+      gap: 0.65rem;
       width: 100%;
+      max-width: 520px;
+      margin: 0 auto;
       flex: 1;
       min-height: 0;
     }
-
     .cism-card {
-      background: #111827;
-      border: 1px solid rgba(148, 163, 184, 0.24);
-      border-radius: 6px;
+      background: linear-gradient(145deg, #152238 0%, #0c1322 100%);
+      border: 2px solid rgba(34, 211, 238, 0.35);
+      border-radius: 11px;
       cursor: pointer;
       display: flex;
+      flex-direction: column;
       align-items: center;
       justify-content: center;
       font-family: Arial, Helvetica, sans-serif;
-      font-size: clamp(0.68rem, 1.8vw, 0.92rem);
+      font-size: 1.05rem;
       color: var(--cyan);
       font-weight: 700;
-      transition: all 0.14s ease;
-      user-select: none;
-      padding: 0;
+      transition: all 0.16s ease;
+      box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
+      position: relative;
     }
-    .cism-card:hover:not(.matched-green):not(.locked-red) {
-      border-color: var(--cyan);
-      background: var(--cyan-dim);
-      transform: scale(1.04);
-      z-index: 2;
+    .cism-card::before {
+      content: "♠";
+      font-size: 0.78rem;
+      opacity: 0.5;
+      margin-bottom: 2px;
     }
-    .cism-card.active-pick {
-      background: rgba(34, 211, 238, 0.25) !important;
-      border-color: #fff !important;
-      color: #fff !important;
-      box-shadow: 0 0 12px var(--cyan);
-    }
+    .cism-card:hover { border-color: var(--cyan); transform: translateY(-2px) scale(1.03); box-shadow: 0 0 18px rgba(34, 211, 238, 0.3); }
     .cism-card.locked-red {
-      background: rgba(251, 113, 133, 0.25) !important;
+      background: linear-gradient(145deg, #3b1120 0%, #1c0810 100%) !important;
       border-color: var(--rose) !important;
       color: var(--rose) !important;
-      cursor: not-allowed;
+      box-shadow: 0 0 16px rgba(251, 113, 133, 0.4);
     }
     .cism-card.matched-green {
-      background: rgba(52, 211, 153, 0.2) !important;
+      background: rgba(158, 255, 51, 0.14) !important;
       border-color: var(--lime) !important;
       color: var(--lime) !important;
+      opacity: 0.48;
       cursor: default;
-      opacity: 0.55;
     }
 
-    /* Card Inspection & Match Modal Overlay */
-    .inspect-overlay {
+    /* Playing Card Inspection Overlay */
+    .playing-card-backdrop {
       position: fixed;
       inset: 0;
-      background: rgba(4, 7, 14, 0.86);
-      backdrop-filter: blur(8px);
+      background: rgba(4, 8, 16, 0.72);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
       z-index: 10005;
       display: none;
       align-items: center;
       justify-content: center;
       padding: 1rem;
     }
-    .inspect-overlay.open {
-      display: flex;
-      animation: backdropFade 0.18s ease-out;
-    }
-
-    .inspect-card {
-      background: #0d121c;
-      border: 1.5px solid var(--cyan);
-      border-radius: 14px;
-      padding: 1.5rem 1.4rem;
-      max-width: 480px;
-      width: 100%;
-      text-align: center;
-      box-shadow: 0 25px 60px rgba(0,0,0,0.9);
+    .playing-card-backdrop.open { display: flex; animation: backdropFade 0.18s ease-out; }
+    .playing-card-box {
+      width: 310px;
+      min-height: 410px;
+      background: linear-gradient(160deg, #162238 0%, #0b111e 100%);
+      border: 3px solid #e2e8f0;
+      border-radius: 18px;
+      padding: 1.25rem;
+      box-shadow: 0 25px 60px rgba(0, 0, 0, 0.92), 0 0 30px rgba(34, 211, 238, 0.28);
       position: relative;
       display: flex;
       flex-direction: column;
-      gap: 1rem;
+      justify-content: space-between;
       font-family: Arial, Helvetica, sans-serif;
+      text-align: center;
     }
-    .inspect-title {
-      font-size: 0.82rem;
-      font-weight: 700;
-      color: var(--cyan);
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-    }
-    .inspect-compare-box {
-      background: rgba(255, 255, 255, 0.03);
-      border: 1px solid var(--border-slate);
-      border-radius: 9px;
-      padding: 0.85rem;
-      text-align: left;
-      font-size: 0.92rem;
-      color: var(--text-secondary);
-      line-height: 1.45;
-    }
-    .inspect-compare-box strong { color: var(--lime); }
-    .inspect-content-text {
-      font-size: 1.12rem;
-      line-height: 1.5;
-      color: #fff;
-      font-weight: 700;
-      padding: 0.4rem 0;
-    }
-    .inspect-actions {
+    .playing-card-inner-frame {
+      border: 1.5px solid rgba(34, 211, 238, 0.35);
+      border-radius: 12px;
+      padding: 1.15rem 0.95rem;
+      flex: 1;
       display: flex;
-      gap: 0.75rem;
-      justify-content: center;
-      flex-wrap: wrap;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
     }
-    .btn-inspect {
+    .card-corner-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 700;
+      font-size: 1.15rem;
+      color: var(--cyan);
+    }
+    .card-corner-bottom {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-weight: 700;
+      font-size: 1.15rem;
+      color: var(--cyan);
+    }
+    .playing-card-text {
+      font-size: 1.12rem;
+      line-height: 1.48;
+      color: #ffffff;
+      font-weight: 700;
+      margin: auto 0;
+      padding: 0.75rem 0;
+    }
+    .playing-card-locked-note {
+      background: rgba(251, 113, 133, 0.12);
+      border: 1px solid rgba(251, 113, 133, 0.4);
+      border-radius: 8px;
+      padding: 0.5rem 0.65rem;
+      font-size: 0.82rem;
+      color: #fda4af;
+      margin-bottom: 0.5rem;
+      line-height: 1.35;
+    }
+    .btn-card-act {
       background: #131c31;
       border: 1.5px solid var(--border-slate);
       color: #fff;
-      padding: 0.68rem 1.35rem;
+      padding: 0.58rem 1rem;
       border-radius: 8px;
       font-family: Arial, Helvetica, sans-serif;
-      font-size: 0.94rem;
+      font-size: 0.9rem;
       font-weight: 700;
       cursor: pointer;
+    }
+    .btn-card-act.match { border-color: var(--lime); color: var(--lime); background: rgba(158, 255, 51, 0.12); }
+    .btn-card-act.match:hover { background: var(--lime); color: #05070c; }
+
+    /* =========================================================================
+       GAME 2: RISK INVADERS (Space Invaders CISM Edition)
+       ========================================================================= */
+    .invaders-space {
+      position: relative;
+      flex: 1;
+      background: radial-gradient(circle at 50% 20%, #0d1b36 0%, #040710 100%);
+      border: 1.5px solid var(--lime);
+      border-radius: 10px;
+      overflow: hidden;
+    }
+    .invader-ship {
+      position: absolute;
+      transform: translateX(-50%);
+      background: rgba(16, 24, 42, 0.95);
+      border: 2px solid var(--rose);
+      border-radius: 10px;
+      padding: 0.4rem 0.65rem;
+      color: #fff;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: clamp(0.74rem, 1.7vw, 0.88rem);
+      font-weight: 700;
+      cursor: crosshair;
+      text-align: center;
+      box-shadow: 0 0 14px rgba(251, 113, 133, 0.4);
+      z-index: 6;
+      max-width: 175px;
+    }
+    .invader-ship:hover { border-color: var(--lime); box-shadow: 0 0 18px var(--lime); }
+    .defender-ship {
+      position: absolute;
+      bottom: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 1.9rem;
+      filter: drop-shadow(0 0 12px var(--cyan));
+      z-index: 8;
+      transition: left 0.15s ease-out;
+    }
+    .plasma-bolt {
+      position: absolute;
+      bottom: 42px;
+      width: 5px;
+      background: var(--lime);
+      box-shadow: 0 0 14px var(--lime);
+      border-radius: 999px;
+      z-index: 7;
+      display: none;
+    }
+
+    /* =========================================================================
+       GAME 3: EXECUTIVE HOT SEAT (Two Choices, One Problem)
+       ========================================================================= */
+    .boardroom-stage {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+      gap: 0.65rem;
+    }
+    .exec-council {
+      display: flex;
+      justify-content: center;
+      gap: 1.25rem;
+      padding: 0.5rem;
+      background: rgba(255, 255, 255, 0.03);
+      border-radius: 10px;
+      border: 1px solid var(--border-slate);
+    }
+    .exec-avatar { text-align: center; font-size: 0.78rem; color: var(--text-secondary); font-weight: 700; }
+    .exec-avatar span { font-size: 1.75rem; display: block; }
+    .scenario-box {
+      background: #121b2e;
+      border-left: 4px solid var(--amber);
+      border-radius: 9px;
+      padding: 0.95rem 1.1rem;
+      font-size: clamp(0.95rem, 2vw, 1.08rem);
+      color: #fff;
+      line-height: 1.48;
+      font-weight: 600;
+    }
+    .hotseat-choices {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.85rem;
+    }
+    .hotseat-btn {
+      background: #131c31;
+      border: 2px solid var(--cyan);
+      border-radius: 11px;
+      padding: 1rem;
+      color: #fff;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: clamp(0.88rem, 1.9vw, 1rem);
+      font-weight: 700;
+      line-height: 1.42;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.16s ease;
+    }
+    .hotseat-btn:hover { border-color: var(--lime); background: rgba(158, 255, 51, 0.1); transform: translateY(-2px); }
+
+    /* =========================================================================
+       GAME 4: AUDIT HAMMER SMASH (Smash the Wrong Answers)
+       ========================================================================= */
+    .hammer-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.75rem;
+      flex: 1;
+      align-content: center;
+    }
+    .hammer-target {
+      background: #131c31;
+      border: 2px solid var(--cyan);
+      border-radius: 12px;
+      padding: 0.9rem;
+      color: #fff;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: clamp(0.88rem, 1.9vw, 1rem);
+      font-weight: 700;
+      cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" style="font-size:24px"><text y="24">🔨</text></svg>'), pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.6rem;
+      text-align: left;
       transition: all 0.18s ease;
     }
-    .btn-inspect:hover { border-color: var(--cyan); background: var(--cyan-dim); }
-    .btn-inspect.match {
-      border-color: var(--lime);
-      background: rgba(158, 255, 51, 0.14);
-      color: var(--lime);
+    .hammer-target:hover:not(.smashed) { border-color: var(--rose); background: rgba(251, 113, 133, 0.12); transform: scale(1.02); }
+    .hammer-target.smashed {
+      background: rgba(251, 113, 133, 0.12);
+      border-color: rgba(251, 113, 133, 0.35);
+      color: var(--rose);
+      text-decoration: line-through;
+      opacity: 0.42;
+      transform: scale(0.94);
     }
-    .btn-inspect.match:hover {
-      background: var(--lime);
-      color: #05070c;
+
+    /* =========================================================================
+       GAME 5: WHO WANTS TO BE A CISMNAIRE
+       ========================================================================= */
+    .cismnaire-layout {
+      display: grid;
+      grid-template-columns: 1fr 165px;
+      gap: 0.75rem;
+      height: 100%;
+      overflow: hidden;
     }
-    .close-inspect-x {
-      position: absolute;
-      top: 0.85rem;
-      right: 0.95rem;
-      background: rgba(148, 163, 184, 0.12);
-      border: 1px solid var(--border-slate);
-      color: #fff;
-      width: 32px;
-      height: 32px;
-      border-radius: 8px;
-      font-size: 1rem;
+    .cismnaire-main {
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+    .lifelines-bar { display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap; }
+    .lifeline-pill {
+      background: #162038;
+      border: 1.5px solid var(--amber);
+      color: var(--amber);
+      padding: 0.35rem 0.75rem;
+      border-radius: 999px;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 0.78rem;
       font-weight: 700;
       cursor: pointer;
     }
-    .close-inspect-x:hover {
+    .lifeline-pill:disabled { opacity: 0.25; cursor: not-allowed; text-decoration: line-through; }
+    .diamond-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.55rem; }
+    .diamond-btn {
+      background: linear-gradient(90deg, #0f172a, #1e293b, #0f172a);
+      border: 1.5px solid var(--cyan);
+      border-radius: 999px;
+      padding: 0.65rem 0.9rem;
+      color: #fff;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 0.88rem;
+      font-weight: 700;
+      text-align: left;
+      cursor: pointer;
+    }
+    .diamond-btn:hover:not(:disabled) { border-color: var(--amber); background: rgba(251, 191, 36, 0.16); }
+    .diamond-btn:disabled { opacity: 0.2; cursor: default; }
+    .diamond-btn span { color: var(--amber); margin-right: 0.4rem; }
+    .ladder-panel {
+      background: #080d18;
+      border: 1px solid var(--border-slate);
+      border-radius: 9px;
+      padding: 0.45rem;
+      display: flex;
+      flex-direction: column-reverse;
+      justify-content: space-between;
+      font-family: Arial, Helvetica, sans-serif;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+    .ladder-step { padding: 0.15rem 0.4rem; border-radius: 4px; color: var(--text-secondary); display: flex; justify-content: space-between; }
+    .ladder-step.active { background: var(--amber); color: #05070c; }
+    .ladder-step.done { color: var(--lime); }
+
+    /* =========================================================================
+       GAME 6: LOGIC BOMB DEFUSAL (6 Wires / Fill-in-the-Blank)
+       ========================================================================= */
+    .bomb-casing {
+      background: linear-gradient(145deg, #1c1917 0%, #0c0a09 100%);
+      border: 2px solid var(--rose);
+      border-radius: 12px;
+      padding: 0.85rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.55rem;
+      box-shadow: inset 0 0 25px rgba(251, 113, 133, 0.2);
+    }
+    .bomb-led {
+      background: #050505;
+      border: 2px solid #450a0a;
+      border-radius: 8px;
+      padding: 0.3rem 1rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1.35rem;
+      font-weight: 700;
+      color: var(--rose);
+      letter-spacing: 0.1em;
+      text-shadow: 0 0 12px var(--rose);
+    }
+    .wires-row { display: flex; gap: 0.55rem; flex-wrap: wrap; justify-content: center; }
+    .fuse-wire {
+      padding: 0.28rem 0.65rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 700;
+      background: rgba(158, 255, 51, 0.15);
+      border: 1.5px solid var(--lime);
+      color: var(--lime);
+    }
+    .fuse-wire.cut {
+      background: rgba(251, 113, 133, 0.15);
       border-color: var(--rose);
       color: var(--rose);
+      text-decoration: line-through;
+      opacity: 0.5;
+    }
+
+    @media (max-width: 680px) {
+      .hotseat-choices, .diamond-grid { grid-template-columns: 1fr; }
+      .cismnaire-layout { grid-template-columns: 1fr; }
+      .ladder-panel { display: none; }
     }
   </style>
 </head>
@@ -603,106 +635,80 @@
             <a href="index.html" class="brand-title">Jesse's Study Guides</a>
             <div class="brand-tagline">Unofficial compiled training database v1.0</div>
           </div>
-          <button class="mobile-menu-btn" id="mobile-menu-btn" aria-expanded="false" aria-controls="nav-drawer">
-            Menu &#9776;
-          </button>
+          <button class="mobile-menu-btn" id="mobile-menu-btn" aria-expanded="false" aria-controls="nav-drawer">Menu &#9776;</button>
         </div>
-        <a class="coffee-btn" href="https://www.buymeacoffee.com/xjessejohnson" target="_blank" rel="noopener noreferrer">
-          &#9749; Buy Me a Coffee
-        </a>
+        <a class="coffee-btn" href="https://www.buymeacoffee.com/xjessejohnson" target="_blank" rel="noopener noreferrer">&#9749; Buy Me a Coffee</a>
       </div>
 
       <nav class="nav-drawer" id="nav-drawer" aria-label="Study Categories">
         <div class="nav-section">
           <div class="nav-label">Cybersecurity</div>
-          <a href="cissp.html" class="nav-item">
-            <span>CISSP</span>
-            <span class="badge live">Active</span>
-          </a>
-          <a href="cism.html" class="nav-item active">
-            <span>CISM</span>
-            <span class="badge live">Active</span>
-          </a>
-          <span class="nav-item disabled" aria-disabled="true">
-            <span>Security+</span>
-            <span class="badge">Coming Soon</span>
-          </span>
+          <a href="cissp.html" class="nav-item"><span>CISSP</span><span class="badge live">Active</span></a>
+          <a href="cism.html" class="nav-item active"><span>CISM</span><span class="badge live">Active</span></a>
+          <span class="nav-item disabled" aria-disabled="true"><span>Security+</span><span class="badge">Coming Soon</span></span>
         </div>
-
         <div class="nav-section">
           <div class="nav-label">Psychology</div>
-          <a href="nce.html" class="nav-item">
-            <span>NCE</span>
-            <span class="badge live">Active</span>
-          </a>
+          <a href="nce.html" class="nav-item"><span>NCE</span><span class="badge live">Active</span></a>
         </div>
-
         <div class="nav-section">
           <div class="nav-label">Other</div>
-          <span class="nav-item disabled" aria-disabled="true">
-            <span>Coming Soon</span>
-            <span class="badge">Coming Soon</span>
-          </span>
+          <span class="nav-item disabled" aria-disabled="true"><span>Coming Soon</span><span class="badge">Coming Soon</span></span>
         </div>
       </nav>
     </aside>
 
-    <!-- Underlying CISM Study Hub Layer -->
+    <!-- Blurred Background CISM Hub -->
     <div class="main-area">
       <div class="topbar">
-        <div class="breadcrumb">JESSE'S STUDY GUIDES / <span>CISM</span></div>
+        <div class="breadcrumb">JESSE'S STUDY GUIDES / CISM / <span>TACTICAL ARCADE</span></div>
         <div class="status-pill"><span class="status-dot"></span> SYSTEM ONLINE</div>
       </div>
 
       <main class="content-body">
         <div class="eyebrow">Track 02 // ISACA CISM</div>
-        <h1 class="hero-headline">
-          CISM<br />
-          <span class="outline">STUDY HUB</span>
-        </h1>
-        <p class="prose">Select a training module below to begin your session.</p>
+        <h1 class="hero-headline">CISM<br /><span class="outline">STUDY HUB</span></h1>
+
+        <div class="hub-summary">
+          <p>
+            The <strong>Certified Information Security Manager (CISM)</strong> is an executive management credential issued by <strong>ISACA</strong>. It consists of 150 multiple-choice questions scored on a 200 to 800 scale (<strong>450+ required to pass</strong>) across four domains focused on enterprise governance, risk management, program development, and incident response.
+          </p>
+          <div class="domain-pills">
+            <div class="domain-pill">1. Information Security Governance <span>17%</span></div>
+            <div class="domain-pill">2. Information Security Risk Management <span>20%</span></div>
+            <div class="domain-pill">3. Information Security Program <span>33%</span></div>
+            <div class="domain-pill">4. Incident Management <span>30%</span></div>
+          </div>
+        </div>
 
         <div class="module-grid">
           <div class="module-card interactive">
             <div>
-              <div class="module-card-head">
-                <h3>Mock Exam</h3>
-                <span class="badge live">145 Qs</span>
-              </div>
+              <div class="module-card-head"><h3>Mock Exam</h3><span class="badge live">145 Qs</span></div>
               <p>Complete 145-question CISM practice exam covering Governance, Risk Management, Program Development, and Incident Management.</p>
             </div>
             <a href="cism-exam.html" class="btn-lime">Launch Mock Exam &rarr;</a>
           </div>
-
           <div class="module-card interactive">
             <div>
-              <div class="module-card-head">
-                <h3>Flash Cards</h3>
-                <span class="badge live">100 Cards</span>
-              </div>
+              <div class="module-card-head"><h3>Flash Cards</h3><span class="badge live">100 Cards</span></div>
               <p>Active-recall deck covering 100 essential CISM terms, regulatory frameworks, metrics, and risk strategies.</p>
             </div>
             <a href="cism-flashcards.html" class="btn-lime">Launch Flash Cards &rarr;</a>
           </div>
-
           <div class="module-card interactive">
             <div>
-              <div class="module-card-head">
-                <h3>Things to Remember</h3>
-                <span class="badge live">Arcade</span>
-              </div>
-              <p>Interactive CISM games developed by Jesse to lock in governance, risk management, and incident response concepts.</p>
+              <div class="module-card-head"><h3>Things to Remember</h3><span class="badge live">6 Games</span></div>
+              <p>Interactive CISM games developed by Jesse—play 4x4 Concentration, Risk Invaders, Executive Hot Seat, Audit Hammer Smash, CISMnaire, and Logic Bomb Defusal.</p>
             </div>
-            <button type="button" class="btn-lime" onclick="openLauncherMenu()">Launch Arcade &rarr;</a>
+            <button type="button" class="btn-lime" onclick="openLauncherMenu()">Launch Arcade &rarr;</button>
           </div>
         </div>
       </main>
     </div>
   </div>
 
-  <!-- =======================================================================
-       OVERLAY 1: CISM TACTICAL ARCADE MENU (Appears Over Hub with ✕ Button)
-       ======================================================================= -->
+  <!-- OVERLAY 1: CISM TACTICAL ARCADE MENU (Auto-Opened; ✕ Redirects Back to cism.html) -->
   <div class="launcher-modal-backdrop open" id="launcher-modal" role="dialog" aria-modal="true" aria-labelledby="launcher-title">
     <div class="launcher-modal-window">
       <div class="launcher-header">
@@ -713,469 +719,790 @@
           </h2>
           <p class="arcade-intro-text">CISM Games developed by Jesse, play until you master them all</p>
         </div>
-        <button type="button" class="btn-hud-icon close-btn" title="Close Arcade Menu" onclick="closeLauncherMenu()" aria-label="Close Arcade Menu">✕</button>
+        <button type="button" class="btn-hud-icon close-btn" title="Return to CISM Hub" onclick="window.location.href='cism.html'" aria-label="Close Arcade Menu">✕</button>
       </div>
 
       <div class="launcher-body">
         <div class="game-choice-grid">
-          <!-- Game 1: ACTIVE (Concentration 10x10 Grid) -->
-          <button type="button" class="game-selector-card card-concentration" onclick="openConcentrationGame()">
-            <div class="game-card-top">
-              <div class="game-icon-badge">🧠</div>
-              <span class="game-play-pill">Play &rarr;</span>
-            </div>
+          <button type="button" class="game-selector-card card-conc" onclick="launchCismGame(1)">
+            <div class="game-card-top"><div class="game-icon-badge">🃏</div><span class="game-play-pill">Play &rarr;</span></div>
             <div class="game-title">CISM Concentration</div>
-            <div class="game-desc"><strong>Studies: 50 Governance &amp; Risk Pairs.</strong> Inspect and match all 100 tiles across a 10x10 memory matrix before your HP hits 0%.</div>
+            <div class="game-desc"><strong>Studies: Governance &amp; Risk Pairs.</strong> Flip playing cards across a 4x4 grid to match 8 pairs before 8 wrong tries drain your HP.</div>
           </button>
 
-          <!-- Game 2: Coming Soon -->
-          <button type="button" class="game-selector-card card-boardroom coming-soon" disabled>
-            <div class="game-card-top">
-              <div class="game-icon-badge">🏛️</div>
-              <span class="game-play-pill">Coming Soon</span>
-            </div>
-            <div class="game-title">Boardroom Battle</div>
-            <div class="game-desc"><strong>Studies: Executive Sponsorship &amp; Business Cases.</strong> Pitch security ROI to the CFO and win budget approval.</div>
+          <button type="button" class="game-selector-card card-invaders" onclick="launchCismGame(2)">
+            <div class="game-card-top"><div class="game-icon-badge">👾</div><span class="game-play-pill">Play &rarr;</span></div>
+            <div class="game-title">Risk Invaders</div>
+            <div class="game-desc"><strong>Studies: Risk &amp; Recovery Metrics.</strong> Pilot your Governance Ship and blast descending alien threat ships before they breach the perimeter.</div>
           </button>
 
-          <!-- Game 3: Coming Soon -->
-          <button type="button" class="game-selector-card card-balance coming-soon" disabled>
-            <div class="game-card-top">
-              <div class="game-icon-badge">⚖️</div>
-              <span class="game-play-pill">Coming Soon</span>
-            </div>
-            <div class="game-title">Risk Balance Beam</div>
-            <div class="game-desc"><strong>Studies: Risk Appetite &amp; Treatment.</strong> Counterbalance incoming threats using Mitigation, Transfer, or Avoidance.</div>
+          <button type="button" class="game-selector-card card-hotseat" onclick="launchCismGame(3)">
+            <div class="game-card-top"><div class="game-icon-badge">👔</div><span class="game-play-pill">Play &rarr;</span></div>
+            <div class="game-title">Executive Hot Seat</div>
+            <div class="game-desc"><strong>Studies: CISO Decision Prioritization.</strong> Two choices, one executive crisis—make the right call or get FIRED by the Board!</div>
           </button>
 
-          <!-- Game 4: Coming Soon -->
-          <button type="button" class="game-selector-card card-commander coming-soon" disabled>
-            <div class="game-card-top">
-              <div class="game-icon-badge">🚨</div>
-              <span class="game-play-pill">Coming Soon</span>
-            </div>
-            <div class="game-title">Incident Commander</div>
-            <div class="game-desc"><strong>Studies: Triage, Containment &amp; DRP.</strong> Halt spreading breaches across a live SOC map before business loss spikes.</div>
+          <button type="button" class="game-selector-card card-hammer" onclick="launchCismGame(4)">
+            <div class="game-card-top"><div class="game-icon-badge">🔨</div><span class="game-play-pill">Play &rarr;</span></div>
+            <div class="game-title">Audit Hammer Smash</div>
+            <div class="game-desc"><strong>Studies: Core CISM Keywords.</strong> Swing your Audit Hammer to smash all 3 wrong answers and leave only the true CISM rule standing.</div>
           </button>
 
-          <!-- Game 5: Coming Soon -->
-          <button type="button" class="game-selector-card card-policy coming-soon" disabled>
-            <div class="game-card-top">
-              <div class="game-icon-badge">🔌</div>
-              <span class="game-play-pill">Coming Soon</span>
-            </div>
-            <div class="game-title">Policy Tree Builder</div>
-            <div class="game-desc"><strong>Studies: Governance Hierarchy.</strong> Wire Policies, Standards, Procedures, and Guidelines in top-down order.</div>
+          <button type="button" class="game-selector-card card-million" onclick="launchCismGame(5)">
+            <div class="game-card-top"><div class="game-icon-badge">💰</div><span class="game-play-pill">Play &rarr;</span></div>
+            <div class="game-title">Who Wants to Be a CISMnaire</div>
+            <div class="game-desc"><strong>Studies: All 4 ISACA Domains.</strong> Climb the 10-step $1,000,000 ladder using 50:50, Ask the Board, and Call Legal lifelines.</div>
           </button>
 
-          <!-- Game 6: Coming Soon -->
-          <button type="button" class="game-selector-card card-vendor coming-soon" disabled>
-            <div class="game-card-top">
-              <div class="game-icon-badge">🛡️</div>
-              <span class="game-play-pill">Coming Soon</span>
-            </div>
-            <div class="game-title">Third-Party Defender</div>
-            <div class="game-desc"><strong>Studies: SLAs, Indemnification &amp; Outsourcing.</strong> Intercept supply-chain risks with contractual safeguards.</div>
+          <button type="button" class="game-selector-card card-bomb" onclick="launchCismGame(6)">
+            <div class="game-card-top"><div class="game-icon-badge">💣</div><span class="game-play-pill">Play &rarr;</span></div>
+            <div class="game-title">Logic Bomb Defusal</div>
+            <div class="game-desc"><strong>Studies: CISM Definitions &amp; Formulas.</strong> Fill in the blank to defuse the bomb—6 wrong answers cut all 6 wires and detonate!</div>
           </button>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- =======================================================================
-       OVERLAY 2: ACTIVE 10x10 CONCENTRATION MATRIX WINDOW (With ✕ Button)
-       ======================================================================= -->
+  <!-- OVERLAY 2: ACTIVE GAME WINDOW -->
   <div class="arcade-modal-backdrop" id="arcade-modal" role="dialog" aria-modal="true">
     <div class="arcade-modal-window">
       <div class="arcade-header">
-        <div class="arcade-game-title">CISM Concentration (10x10)</div>
+        <div class="arcade-game-title" id="arcade-game-title">CISM Concentration</div>
         <div class="arcade-tracker-hud">
-          <div class="arcade-stat-badge">
-            ❤️ HP: <span id="hp-val" style="color:var(--lime);">100%</span>
+          <div class="arcade-stat-badge" id="hud-hp-badge">
+            <span>HP: <strong id="hp-val">100%</strong></span>
             <div class="hp-bar-bg"><div class="hp-bar-fill" id="hp-fill"></div></div>
           </div>
-          <div class="arcade-stat-badge">
-            🎯 Pairs: <span id="pairs-val" style="color:var(--lime);">0 / 50</span>
-          </div>
+          <div class="arcade-stat-badge" id="hud-progress-badge">🎯 <span id="progress-val">0 / 8</span></div>
         </div>
         <div class="arcade-nav-controls">
-          <button type="button" class="btn-hud-icon" title="Restart Concentration Grid" onclick="initGame()">🔄</button>
-          <button type="button" class="btn-hud-icon close-btn" title="Close Game to Arcade Menu" onclick="closeGameToLauncher()">✕</button>
+          <button type="button" class="btn-hud-icon" title="Restart Current Game" onclick="restartCurrentCismGame()">↻</button>
+          <button type="button" class="btn-hud-icon close-btn" title="Close to CISM Arcade Menu" onclick="closeGameToLauncher()">✕</button>
         </div>
       </div>
+      <div class="arcade-body" id="arcade-body-content"></div>
+    </div>
+  </div>
 
-      <div class="arcade-body">
-        <div class="stage-screen">
-          <div class="conc-status-banner" id="conc-status-banner">
-            Tap any tile <span>[1–100]</span> to inspect it. Closing Card 1 with ✕ locks that tile red until you test a second tile!
+  <!-- Playing Card Inspection Modal (For Game 1 Concentration) -->
+  <div class="playing-card-backdrop" id="playing-card-modal" role="dialog" aria-modal="true">
+    <div class="playing-card-box">
+      <div class="playing-card-inner-frame">
+        <div class="card-corner-top">
+          <span id="pc-top-pip">♠</span>
+          <button type="button" class="btn-hud-icon close-btn" id="pc-close-x" onclick="handleCardClose()" aria-label="Close Card">✕</button>
+        </div>
+        <div>
+          <div class="playing-card-locked-note" id="pc-locked-note" style="display:none;"></div>
+          <div class="playing-card-text" id="pc-main-text"></div>
+        </div>
+        <div>
+          <div id="pc-actions" style="display:flex; gap:0.6rem; justify-content:center; flex-wrap:wrap; margin-bottom:0.75rem;"></div>
+          <div class="card-corner-bottom">
+            <span>CISM</span>
+            <span id="pc-bot-pip">♠</span>
           </div>
-          <div class="grid-10x10" id="cism-grid"></div>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Card Inspection & Match Modal -->
-  <div class="inspect-overlay" id="game-modal" role="dialog" aria-modal="true">
-    <div class="inspect-card">
-      <button type="button" class="close-inspect-x" id="modal-x-btn" onclick="handleCardClose()" aria-label="Close">✕</button>
-      <div class="inspect-title" id="modal-subtitle">Card Inspection</div>
-      <div class="inspect-compare-box" id="modal-card1-box" style="display:none;"></div>
-      <div class="inspect-content-text" id="modal-text"></div>
-      <div class="inspect-actions" id="modal-action-buttons"></div>
+  <!-- Feedback Modal -->
+  <div class="modal-backdrop" id="feedback-modal" role="dialog" aria-modal="true" style="z-index: 10010;">
+    <div class="modal-box" id="feedback-box" style="font-family: Arial, Helvetica, sans-serif;">
+      <div class="modal-top" style="border-bottom:none;padding-bottom:0;">
+        <div class="modal-title" id="feedback-status"></div>
+        <button type="button" class="modal-close" id="feedback-close-btn" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body" id="feedback-body" style="font-size: 0.98rem;"></div>
     </div>
   </div>
-
-  <!-- Privacy Policy Modal -->
-  <div class="modal-backdrop" id="privacy-modal" role="dialog" aria-modal="true" aria-labelledby="privacy-title">
-    <div class="modal-box">
-      <div class="modal-top">
-        <div class="modal-title" id="privacy-title">Privacy Policy</div>
-        <button type="button" class="modal-close" id="privacy-close-btn" aria-label="Close">✕</button>
-      </div>
-      <div class="modal-body">
-        <p><strong>Effective Date:</strong> November 17, 2026</p>
-        <h4>1. Information We Collect</h4>
-        <p>Jesse's Study Guides is a static, informational study website. We do not require user registration, accounts, or logins, and we do not directly collect names, email addresses, or payment details on this site.</p>
-        <h4>2. Hosting and Server Logs</h4>
-        <p>This website is hosted via Vercel. As part of standard web delivery and security operations, our hosting provider may automatically process basic technical request data such as your IP address, browser type, operating system, and timestamps in temporary server logs.</p>
-        <h4>3. Cookies and Tracking</h4>
-        <p>This website does not use advertising trackers or third-party marketing cookies.</p>
-        <h4>4. Third-Party Links</h4>
-        <p>This site includes an external link to Buy Me a Coffee for voluntary donations. If you choose to visit or donate through that platform, any information you provide is governed directly by Buy Me a Coffee's own privacy policy and terms of service.</p>
-        <h4>5. Changes to This Policy</h4>
-        <p>This policy may be updated as new features or study modules are added to the site. Questions regarding this notice can be directed to the site owner, Jesse Johnson.</p>
-      </div>
-    </div>
-  </div>
-
-  <footer>
-    <p>&copy; 2026 Jesse Johnson. All rights reserved.</p>
-    <p>
-      This portal is an independent, unofficial personal study resource and is not affiliated with, endorsed by, or sponsored by ISC2, ISACA, CompTIA, NBCC, or any other certification body.
-      CISSP&reg; is a registered trademark of ISC2. CISM&reg; is a registered trademark of ISACA. CompTIA Security+&reg; is a registered trademark of CompTIA. NCE&reg; is a registered trademark of NBCC. All vendor materials, trademarks, and copyrights remain the property of their respective owners.
-    </p>
-    <div class="footer-links">
-      <button type="button" class="privacy-link" id="open-privacy-btn">Privacy Policy</button>
-    </div>
-  </footer>
 
   <script>
-    const cismPairs = [
-      { id: 1, type: 'term', text: 'Information Security Governance', pairId: 1 },
-      { id: 1, type: 'def', text: 'Strategic alignment of security with business objectives.', pairId: 1 },
-      { id: 2, type: 'term', text: 'Information Risk Assessment', pairId: 2 },
-      { id: 2, type: 'def', text: 'Identifying, estimating, and prioritizing information security risks.', pairId: 2 },
-      { id: 3, type: 'term', text: 'Control Objective', pairId: 3 },
-      { id: 3, type: 'def', text: 'Statement of desired result achieved by implementing controls.', pairId: 3 },
-      { id: 4, type: 'term', text: 'Business Impact Analysis (BIA)', pairId: 4 },
-      { id: 4, type: 'def', text: 'Method to determine critical business processes and MTD.', pairId: 4 },
-      { id: 5, type: 'term', text: 'Key Risk Indicator (KRI)', pairId: 5 },
-      { id: 5, type: 'def', text: 'Metric used to measure likelihood of a risk event occurring.', pairId: 5 },
-      { id: 6, type: 'term', text: 'Key Performance Indicator (KPI)', pairId: 6 },
-      { id: 6, type: 'def', text: 'Quantifiable metric used to evaluate success in meeting goals.', pairId: 6 },
-      { id: 7, type: 'term', text: 'Due Care', pairId: 7 },
-      { id: 7, type: 'def', text: 'Practicing reasonable care and precautionary protective measures.', pairId: 7 },
-      { id: 8, type: 'term', text: 'Due Diligence', pairId: 8 },
-      { id: 8, type: 'def', text: 'Investigating and analyzing risk before business commitments.', pairId: 8 },
-      { id: 9, type: 'term', text: 'Residual Risk', pairId: 9 },
-      { id: 9, type: 'def', text: 'Risk remaining after security controls and countermeasures applied.', pairId: 9 },
-      { id: 10, type: 'term', text: 'Inherent Risk', pairId: 10 },
-      { id: 10, type: 'def', text: 'Risk existing in an environment without any controls applied.', pairId: 10 },
-      { id: 11, type: 'term', text: 'Security Framework', pairId: 11 },
-      { id: 11, type: 'def', text: 'Series of documented policies, standards, and guidelines.', pairId: 11 },
-      { id: 12, type: 'term', text: 'Statement of Applicability', pairId: 12 },
-      { id: 12, type: 'def', text: 'Document identifying selected framework controls for enterprise.', pairId: 12 },
-      { id: 13, type: 'term', text: 'Security Baseline', pairId: 13 },
-      { id: 13, type: 'def', text: 'Minimum required security configuration standard across systems.', pairId: 13 },
-      { id: 14, type: 'term', text: 'Defense-in-Depth', pairId: 14 },
-      { id: 14, type: 'def', text: 'Layered security architecture utilizing multiple defensive controls.', pairId: 14 },
-      { id: 15, type: 'term', text: 'Segregation of Duties', pairId: 15 },
-      { id: 15, type: 'def', text: 'Dividing critical tasks among multiple individuals to prevent fraud.', pairId: 15 },
-      { id: 16, type: 'term', text: 'Least Privilege', pairId: 16 },
-      { id: 16, type: 'def', text: 'Granting users only minimum necessary access rights for roles.', pairId: 16 },
-      { id: 17, type: 'term', text: 'Threat Modeling', pairId: 17 },
-      { id: 17, type: 'def', text: 'Structured approach of identifying potential security design flaws.', pairId: 17 },
-      { id: 18, type: 'term', text: 'Vulnerability Assessment', pairId: 18 },
-      { id: 18, type: 'def', text: 'Systematic evaluation of security weaknesses in systems.', pairId: 18 },
-      { id: 19, type: 'term', text: 'Penetration Testing', pairId: 19 },
-      { id: 19, type: 'def', text: 'Authorized simulated cyber attack to evaluate defenses.', pairId: 19 },
-      { id: 20, type: 'term', text: 'Security Training', pairId: 20 },
-      { id: 20, type: 'def', text: 'Educational program to instill security best practices in staff.', pairId: 20 },
-      { id: 21, type: 'term', text: 'Incident Management', pairId: 21 },
-      { id: 21, type: 'def', text: 'Structured methodology for detecting and resolving breaches.', pairId: 21 },
-      { id: 22, type: 'term', text: 'CSIRT', pairId: 22 },
-      { id: 22, type: 'def', text: 'Dedicated group responsible for handling security emergencies.', pairId: 22 },
-      { id: 23, type: 'term', text: 'Disaster Recovery Plan', pairId: 23 },
-      { id: 23, type: 'def', text: 'Technical procedures for restoring IT infrastructure after outage.', pairId: 23 },
-      { id: 24, type: 'term', text: 'Business Continuity Plan', pairId: 24 },
-      { id: 24, type: 'def', text: 'Enterprise strategy to maintain operations during disruptions.', pairId: 24 },
-      { id: 25, type: 'term', text: 'Max Tolerable Downtime (MTD)', pairId: 25 },
-      { id: 25, type: 'def', text: 'Total allowable time a process can be disrupted.', pairId: 25 },
-      { id: 26, type: 'term', text: 'Recovery Time Objective', pairId: 26 },
-      { id: 26, type: 'def', text: 'Target time set for recovering IT systems after outage.', pairId: 26 },
-      { id: 27, type: 'term', text: 'Recovery Point Objective', pairId: 27 },
-      { id: 27, type: 'def', text: 'Maximum acceptable data loss measured in time prior to outage.', pairId: 27 },
-      { id: 28, type: 'term', text: 'Hot Site', pairId: 28 },
-      { id: 28, type: 'def', text: 'Fully redundant DR facility with live hardware replication.', pairId: 28 },
-      { id: 29, type: 'term', text: 'Warm Site', pairId: 29 },
-      { id: 29, type: 'def', text: 'DR facility with hardware requiring recent backup restoration.', pairId: 29 },
-      { id: 30, type: 'term', text: 'Cold Site', pairId: 30 },
-      { id: 30, type: 'def', text: 'Basic facility requiring complete hardware setup during disaster.', pairId: 30 },
-      { id: 31, type: 'term', text: 'Qualitative Risk Analysis', pairId: 31 },
-      { id: 31, type: 'def', text: 'Subjective risk assessment based on severity ratings.', pairId: 31 },
-      { id: 32, type: 'term', text: 'Quantitative Risk Analysis', pairId: 32 },
-      { id: 32, type: 'def', text: 'Objective financial evaluation using numerical loss values.', pairId: 32 },
-      { id: 33, type: 'term', text: 'Single Loss Expectancy (SLE)', pairId: 33 },
-      { id: 33, type: 'def', text: 'Monetary value expected from a single threat event (AV * EF).', pairId: 33 },
-      { id: 34, type: 'term', text: 'Annual Rate of Occurrence', pairId: 34 },
-      { id: 34, type: 'def', text: 'Estimated frequency a specific threat occurs within a year.', pairId: 34 },
-      { id: 35, type: 'term', text: 'Annualized Loss Expectancy', pairId: 35 },
-      { id: 35, type: 'def', text: 'Expected yearly financial loss from risk threat (SLE * ARO).', pairId: 35 },
-      { id: 36, type: 'term', text: 'Access Control List (ACL)', pairId: 36 },
-      { id: 36, type: 'def', text: 'Table specifying users granted access rights to objects.', pairId: 36 },
-      { id: 37, type: 'term', text: 'Role-Based Access Control', pairId: 37 },
-      { id: 37, type: 'def', text: 'Access rights assigned based on organizational job functions.', pairId: 37 },
-      { id: 38, type: 'term', text: 'Mandatory Access Control', pairId: 38 },
-      { id: 38, type: 'def', text: 'Enforced security labels where owners cannot alter permissions.', pairId: 38 },
-      { id: 39, type: 'term', text: 'Discretionary Access Control', pairId: 39 },
-      { id: 39, type: 'def', text: 'Access model where resource owners grant permissions freely.', pairId: 39 },
-      { id: 40, type: 'term', text: 'Data Classification', pairId: 40 },
-      { id: 40, type: 'def', text: 'Categorizing info based on sensitivity and legal requirements.', pairId: 40 },
-      { id: 41, type: 'term', text: 'Asset Valuation', pairId: 41 },
-      { id: 41, type: 'def', text: 'Determining financial and operational worth of enterprise info.', pairId: 41 },
-      { id: 42, type: 'term', text: 'Threat Intelligence', pairId: 42 },
-      { id: 42, type: 'def', text: 'Evidence-based knowledge about emerging cyber threats.', pairId: 42 },
-      { id: 43, type: 'term', text: 'Supply Chain Risk Management', pairId: 43 },
-      { id: 43, type: 'def', text: 'Evaluating security risks introduced by external vendors.', pairId: 43 },
-      { id: 44, type: 'term', text: 'Service Level Agreement', pairId: 44 },
-      { id: 44, type: 'def', text: 'Contractual commitment defining provider performance standards.', pairId: 44 },
-      { id: 45, type: 'term', text: 'Root Cause Analysis', pairId: 45 },
-      { id: 45, type: 'def', text: 'Problem-solving method identifying fundamental failure origin.', pairId: 45 },
-      { id: 46, type: 'term', text: 'Audit Charter', pairId: 46 },
-      { id: 46, type: 'def', text: 'Formal document defining internal audit purpose and authority.', pairId: 46 },
-      { id: 47, type: 'term', text: 'Compliance Management', pairId: 47 },
-      { id: 47, type: 'def', text: 'Ensuring enterprise adherence to legal and regulatory rules.', pairId: 47 },
-      { id: 48, type: 'term', text: 'Security Metrics', pairId: 48 },
-      { id: 48, type: 'def', text: 'Quantitative measures tracking security program efficiency.', pairId: 48 },
-      { id: 49, type: 'term', text: 'Chain of Custody', pairId: 49 },
-      { id: 49, type: 'def', text: 'Chronological documentation tracking digital evidence handling.', pairId: 49 },
-      { id: 50, type: 'term', text: 'Executive Sponsorship', pairId: 50 },
-      { id: 50, type: 'def', text: 'Senior management backing and leadership support for security.', pairId: 50 }
+    const cismPairPool = [
+      { pairId: 1, term: "Information Security Governance", def: "Strategic alignment of security with business objectives." },
+      { pairId: 2, term: "Information Risk Assessment", def: "Identifying, estimating, and prioritizing information security risks." },
+      { pairId: 3, term: "Control Objective", def: "Statement of desired result achieved by implementing controls." },
+      { pairId: 4, term: "Business Impact Analysis (BIA)", def: "Method to determine critical business processes and MTD." },
+      { pairId: 5, term: "Key Risk Indicator (KRI)", def: "Predictive metric measuring likelihood of a future risk event." },
+      { pairId: 6, term: "Key Performance Indicator (KPI)", def: "Metric evaluating how well a control meets its objective." },
+      { pairId: 7, term: "Due Care", def: "Practicing reasonable care and precautionary protective measures." },
+      { pairId: 8, term: "Due Diligence", def: "Investigating and analyzing risk before business commitments." },
+      { pairId: 9, term: "Residual Risk", def: "Risk remaining after security controls are applied." },
+      { pairId: 10, term: "Inherent Risk", def: "Raw risk existing before any security controls are applied." },
+      { pairId: 11, term: "Security Baseline", def: "Minimum required security configuration standard across systems." },
+      { pairId: 12, term: "Segregation of Duties (SoD)", def: "Dividing critical tasks among multiple people to prevent fraud." },
+      { pairId: 13, term: "Recovery Time Objective (RTO)", def: "Target time set for restoring IT systems after an outage." },
+      { pairId: 14, term: "Recovery Point Objective (RPO)", def: "Maximum acceptable data loss measured in time prior to outage." },
+      { pairId: 15, term: "Service Delivery Objective (SDO)", def: "Minimum level of service required at an alternate site during DR." },
+      { pairId: 16, term: "Single Loss Expectancy (SLE)", def: "Expected monetary loss from a single threat event (AV × EF)." },
+      { pairId: 17, term: "Annualized Loss Expectancy (ALE)", def: "Expected yearly financial loss from a threat (SLE × ARO)." },
+      { pairId: 18, term: "Executive Sponsorship", def: "Senior management backing and authority for the security program." },
+      { pairId: 19, term: "Chain of Custody", def: "Chronological documentation tracking digital evidence handling." },
+      { pairId: 20, term: "Indemnification Clause", def: "Contractual clause reducing financial risk while legal liability stays." }
     ];
 
-    let deck = [];
+    let currentCismGame = 1;
     let hp = 100;
-    let selectedCard1 = null;
-    let selectedCard2 = null;
-    let matchedPairsCount = 0;
+    let invLoop = null;
 
-    const launcherModal = document.getElementById('launcher-modal');
-    const arcadeModal = document.getElementById('arcade-modal');
-    const gridEl = document.getElementById('cism-grid');
-    const hpValEl = document.getElementById('hp-val');
-    const hpFillEl = document.getElementById('hp-fill');
-    const pairsValEl = document.getElementById('pairs-val');
-    const statusBannerEl = document.getElementById('conc-status-banner');
+    const launcherModal = document.getElementById("launcher-modal");
+    const arcadeModal = document.getElementById("arcade-modal");
+    const arcadeTitle = document.getElementById("arcade-game-title");
+    const arcadeBody = document.getElementById("arcade-body-content");
+    const hpValEl = document.getElementById("hp-val");
+    const hpFillEl = document.getElementById("hp-fill");
+    const progressValEl = document.getElementById("progress-val");
 
-    const modalOverlay = document.getElementById('game-modal');
-    const modalSubtitle = document.getElementById('modal-subtitle');
-    const modalCard1Box = document.getElementById('modal-card1-box');
-    const modalText = document.getElementById('modal-text');
-    const modalActions = document.getElementById('modal-action-buttons');
-    const modalXBtn = document.getElementById('modal-x-btn');
+    const pcModal = document.getElementById("playing-card-modal");
+    const pcLockedNote = document.getElementById("pc-locked-note");
+    const pcMainText = document.getElementById("pc-main-text");
+    const pcActions = document.getElementById("pc-actions");
+    const pcCloseX = document.getElementById("pc-close-x");
+
+    const feedbackModal = document.getElementById("feedback-modal");
+    const feedbackBox = document.getElementById("feedback-box");
+    const feedbackStatus = document.getElementById("feedback-status");
+    const feedbackBody = document.getElementById("feedback-body");
+    const feedbackCloseBtn = document.getElementById("feedback-close-btn");
+
+    function shuffle(arr) {
+      const a = [...arr];
+      for (let i = a.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [a[i], a[j]] = [a[j], a[i]];
+      }
+      return a;
+    }
+
+    function stopInvaders() {
+      if (invLoop) {
+        cancelAnimationFrame(invLoop);
+        invLoop = null;
+      }
+    }
 
     function openLauncherMenu() {
-      modalOverlay.classList.remove('open');
-      arcadeModal.classList.remove('open');
-      launcherModal.classList.add('open');
-    }
-
-    function closeLauncherMenu() {
-      launcherModal.classList.remove('open');
-    }
-
-    function openConcentrationGame() {
-      launcherModal.classList.remove('open');
-      arcadeModal.classList.add('open');
-      initGame();
+      stopInvaders();
+      pcModal.classList.remove("open");
+      arcadeModal.classList.remove("open");
+      launcherModal.classList.add("open");
     }
 
     function closeGameToLauncher() {
-      modalOverlay.classList.remove('open');
-      arcadeModal.classList.remove('open');
-      launcherModal.classList.add('open');
+      stopInvaders();
+      pcModal.classList.remove("open");
+      feedbackModal.classList.remove("open");
+      arcadeModal.classList.remove("open");
+      launcherModal.classList.add("open");
     }
 
-    launcherModal.addEventListener('click', (e) => {
-      if (e.target === launcherModal) closeLauncherMenu();
-    });
-
-    function shuffle(array) {
-      let arr = [...array];
-      for (let i = arr.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [arr[i], arr[j]] = [arr[j], arr[i]];
-      }
-      return arr;
+    function setHp(newHp) {
+      hp = Math.max(0, Math.min(100, newHp));
+      hpValEl.textContent = `${hp}%`;
+      hpFillEl.style.width = `${hp}%`;
+      hpFillEl.style.background = hp <= 25 ? "var(--rose)" : (hp <= 50 ? "var(--amber)" : "var(--lime)");
     }
 
-    function initGame() {
-      hp = 100;
-      matchedPairsCount = 0;
+    function launchCismGame(gId) {
+      stopInvaders();
+      currentCismGame = gId;
+      launcherModal.classList.remove("open");
+      arcadeModal.classList.add("open");
+      restartCurrentCismGame();
+    }
+
+    function restartCurrentCismGame() {
+      stopInvaders();
+      pcModal.classList.remove("open");
+      if (currentCismGame === 1) initConcentration4x4();
+      else if (currentCismGame === 2) initRiskInvaders();
+      else if (currentCismGame === 3) initExecutiveHotSeat();
+      else if (currentCismGame === 4) initHammerSmash();
+      else if (currentCismGame === 5) initCismnaire();
+      else if (currentCismGame === 6) initBombDefusal();
+    }
+
+    /* =========================================================================
+       GAME 1: 4x4 CISM CONCENTRATION (8 Pairs, Playing Card Modal, 12.5% HP Hit)
+       ========================================================================= */
+    let concDeck = [];
+    let selectedCard1 = null;
+    let selectedCard2 = null;
+    let matchedPairs = 0;
+
+    function initConcentration4x4() {
+      arcadeTitle.textContent = "CISM Concentration (4x4)";
+      setHp(100);
+      matchedPairs = 0;
       selectedCard1 = null;
       selectedCard2 = null;
-      updateHUD();
-      statusBannerEl.innerHTML = `Tap any tile <span>[1–100]</span> to inspect it. Closing Card 1 with ✕ locks that tile red until you pick a second tile to compare!`;
 
-      deck = shuffle(cismPairs).map((item, idx) => ({
-        ...item,
-        cardIndex: idx,
-        status: 'normal' // 'normal' | 'locked-red' | 'matched-green'
-      }));
-
-      renderGrid();
-    }
-
-    function updateHUD() {
-      hpValEl.textContent = hp + '%';
-      hpFillEl.style.width = hp + '%';
-      pairsValEl.textContent = `${matchedPairsCount} / 50`;
-      if (hp <= 30) {
-        hpFillEl.style.background = 'var(--rose)';
-        hpValEl.style.color = 'var(--rose)';
-      } else {
-        hpFillEl.style.background = 'var(--lime)';
-        hpValEl.style.color = 'var(--lime)';
-      }
-    }
-
-    function renderGrid() {
-      gridEl.innerHTML = '';
-      deck.forEach((card, idx) => {
-        const btn = document.createElement('button');
-        btn.type = 'button';
-        btn.className = 'cism-card';
-        if (card.status === 'locked-red') btn.classList.add('locked-red');
-        if (card.status === 'matched-green') btn.classList.add('matched-green');
-        btn.textContent = card.status === 'matched-green' ? '✓' : `${idx + 1}`;
-        btn.onclick = () => handleCardClick(idx);
-        gridEl.appendChild(btn);
+      const chosen8 = shuffle(cismPairPool).slice(0, 8);
+      const raw16 = [];
+      chosen8.forEach(p => {
+        raw16.push({ pairId: p.pairId, type: "term", text: p.term, status: "normal" });
+        raw16.push({ pairId: p.pairId, type: "def", text: p.def, status: "normal" });
       });
+      concDeck = shuffle(raw16);
+      renderConcentration4x4();
     }
 
-    function handleCardClick(idx) {
-      const card = deck[idx];
-      if (card.status === 'matched-green' || card.status === 'locked-red') return;
+    function renderConcentration4x4() {
+      progressValEl.textContent = `${matchedPairs} / 8 Pairs`;
+      arcadeBody.innerHTML = `
+        <div class="stage-screen">
+          <div class="prompt-banner">
+            ${selectedCard1 !== null ? `Card <span>#${selectedCard1 + 1}</span> locked in red — Tap a second card to match!` : `Tap any card <span>[1–16]</span> to flip. 8 wrong matches (12.5% HP each) = Game Over!`}
+          </div>
+          <div class="grid-4x4">
+            ${concDeck.map((c, idx) => `
+              <button type="button" class="cism-card ${c.status === 'locked-red' ? 'locked-red' : ''} ${c.status === 'matched-green' ? 'matched-green' : ''}"
+                onclick="clickConcCard(${idx})">
+                ${c.status === 'matched-green' ? '✓' : idx + 1}
+              </button>
+            `).join("")}
+          </div>
+        </div>
+      `;
+    }
+
+    function clickConcCard(idx) {
+      const card = concDeck[idx];
+      if (card.status === "matched-green" || card.status === "locked-red") return;
 
       if (selectedCard1 === null) {
         selectedCard1 = idx;
-        modalSubtitle.textContent = `Card 1 Inspection — Tile #${idx + 1} (${card.type === 'term' ? 'CISM Term' : 'Definition'})`;
-        modalCard1Box.style.display = 'none';
-        modalText.textContent = card.text;
-        modalXBtn.style.display = 'block';
-        modalActions.innerHTML = `<button type="button" class="btn-inspect" onclick="handleCardClose()">Lock Tile #${idx + 1} &amp; Pick Second Tile</button>`;
-        modalOverlay.classList.add('open');
+        pcLockedNote.style.display = "none";
+        pcMainText.textContent = card.text;
+        pcCloseX.style.display = "flex";
+        pcActions.innerHTML = `
+          <button type="button" class="btn-card-act match" onclick="handleCardClose()">Lock Card &amp; Pick Match</button>
+          <button type="button" class="btn-card-act" onclick="putBackCards()">Put Back</button>
+        `;
+        pcModal.classList.add("open");
       } else if (selectedCard2 === null && selectedCard1 !== idx) {
         selectedCard2 = idx;
-        const firstCard = deck[selectedCard1];
-        modalSubtitle.textContent = `Compare Tile #${selectedCard1 + 1} vs. Tile #${idx + 1}`;
-        modalCard1Box.style.display = 'block';
-        modalCard1Box.innerHTML = `<strong>Locked Tile #${selectedCard1 + 1}:</strong> ${firstCard.text}`;
-        modalText.textContent = `Tile #${idx + 1}: ${card.text}`;
-        modalXBtn.style.display = 'none';
-        modalActions.innerHTML = `
-          <button type="button" class="btn-inspect match" onclick="evaluateMatch()">✓ Match Pair</button>
-          <button type="button" class="btn-inspect" onclick="putBackCards()">↩ Put Both Back</button>
+        const first = concDeck[selectedCard1];
+        pcLockedNote.style.display = "block";
+        pcLockedNote.innerHTML = `<strong>Locked Card:</strong> ${first.text}`;
+        pcMainText.textContent = card.text;
+        pcCloseX.style.display = "none";
+        pcActions.innerHTML = `
+          <button type="button" class="btn-card-act match" onclick="evaluateConcMatch()">✓ Match Pair</button>
+          <button type="button" class="btn-card-act" onclick="putBackCards()">↩ Put Back Both</button>
         `;
-        modalOverlay.classList.add('open');
+        pcModal.classList.add("open");
       }
     }
 
     function handleCardClose() {
       if (selectedCard1 !== null && selectedCard2 === null) {
-        deck[selectedCard1].status = 'locked-red';
-        statusBannerEl.innerHTML = `Tile <span>#${selectedCard1 + 1}</span> locked in red! Now tap a second tile to compare or put back.`;
-        renderGrid();
-        modalOverlay.classList.remove('open');
-      } else {
-        modalOverlay.classList.remove('open');
-      }
-    }
-
-    function evaluateMatch() {
-      const card1 = deck[selectedCard1];
-      const card2 = deck[selectedCard2];
-
-      if (card1.pairId === card2.pairId && card1.type !== card2.type) {
-        card1.status = 'matched-green';
-        card2.status = 'matched-green';
-        matchedPairsCount++;
-        updateHUD();
-        statusBannerEl.innerHTML = `<span style="color:var(--lime);">✓ Pair Matched!</span> (${card1.type === 'term' ? card1.text : card2.text})`;
-        modalOverlay.classList.remove('open');
-        selectedCard1 = null;
-        selectedCard2 = null;
-        renderGrid();
-
-        if (matchedPairsCount === 50) {
-          triggerWinModal();
-        }
-      } else {
-        hp = Math.max(0, hp - 5);
-        updateHUD();
-        card1.status = 'normal';
-        selectedCard1 = null;
-        selectedCard2 = null;
-        renderGrid();
-
-        if (hp <= 0) {
-          triggerGameOverModal();
-        } else {
-          modalSubtitle.textContent = "Mismatch Penalty (-5% HP)";
-          modalCard1Box.style.display = 'none';
-          modalText.textContent = `Not a matching pair! Your HP dropped by 5% (Remaining HP: ${hp}%). Both tiles have been reset.`;
-          modalXBtn.style.display = 'block';
-          modalActions.innerHTML = `<button type="button" class="btn-inspect" onclick="modalOverlay.classList.remove('open')">Continue</button>`;
-          statusBannerEl.innerHTML = `<span style="color:var(--rose);">✕ Mismatch (-5% HP)!</span> Tap any tile to start your next pair.`;
-        }
+        concDeck[selectedCard1].status = "locked-red";
+        pcModal.classList.remove("open");
+        renderConcentration4x4();
       }
     }
 
     function putBackCards() {
-      if (selectedCard1 !== null) {
-        deck[selectedCard1].status = 'normal';
-      }
+      if (selectedCard1 !== null) concDeck[selectedCard1].status = "normal";
       selectedCard1 = null;
       selectedCard2 = null;
-      statusBannerEl.innerHTML = `Tiles put back with zero penalty. Tap any tile <span>[1–100]</span> to inspect!`;
-      modalOverlay.classList.remove('open');
-      renderGrid();
+      pcModal.classList.remove("open");
+      renderConcentration4x4();
     }
 
-    function triggerGameOverModal() {
-      modalSubtitle.textContent = "Mission Failed (0% HP)";
-      modalCard1Box.style.display = 'none';
-      modalText.textContent = "Your HP reached 0%! Would you like to reshuffle the 10x10 matrix and play again?";
-      modalXBtn.style.display = 'none';
-      modalActions.innerHTML = `
-        <button type="button" class="btn-inspect match" onclick="initGame(); modalOverlay.classList.remove('open');">Play Again</button>
-        <button type="button" class="btn-inspect" onclick="closeGameToLauncher();">Arcade Menu</button>
-      `;
-      modalOverlay.classList.add('open');
+    function evaluateConcMatch() {
+      const c1 = concDeck[selectedCard1];
+      const c2 = concDeck[selectedCard2];
+      pcModal.classList.remove("open");
+
+      if (c1.pairId === c2.pairId && c1.type !== c2.type) {
+        c1.status = "matched-green";
+        c2.status = "matched-green";
+        matchedPairs++;
+        selectedCard1 = null;
+        selectedCard2 = null;
+        renderConcentration4x4();
+        if (matchedPairs === 8) {
+          openFeedback(true, `<strong>All 8 Pairs Matched!</strong><br><br>You cleared the 4x4 CISM matrix with <strong>${hp}% HP</strong> remaining!`);
+        }
+      } else {
+        c1.status = "normal";
+        selectedCard1 = null;
+        selectedCard2 = null;
+        setHp(hp - 12.5);
+        renderConcentration4x4();
+        if (hp <= 0) {
+          openFeedback(false, `<strong>0% HP — Out of Tries!</strong><br><br>You used all 8 wrong attempts. Click ↻ in the top bar to deal a fresh 4x4 board!`);
+        } else {
+          openFeedback(false, `<strong>Mismatch (-12.5% HP)!</strong><br><br>Remaining HP: <strong>${hp}%</strong> (${Math.round(hp / 12.5)} wrong tries left).`);
+        }
+      }
     }
 
-    function triggerWinModal() {
-      modalSubtitle.textContent = "Mission Accomplished!";
-      modalCard1Box.style.display = 'none';
-      modalText.textContent = `Incredible! You matched all 50 CISM governance and risk pairs with ${hp}% HP remaining!`;
-      modalXBtn.style.display = 'none';
-      modalActions.innerHTML = `
-        <button type="button" class="btn-inspect match" onclick="initGame(); modalOverlay.classList.remove('open');">Play Again</button>
-        <button type="button" class="btn-inspect" onclick="closeGameToLauncher();">Arcade Menu</button>
-      `;
-      modalOverlay.classList.add('open');
+    /* =========================================================================
+       GAME 2: RISK INVADERS (Space Invaders CISM Edition)
+       ========================================================================= */
+    let invWave = 0;
+    let invOrder = [];
+    let invY = 12;
+
+    function initRiskInvaders() {
+      arcadeTitle.textContent = "Risk Invaders";
+      setHp(100);
+      invWave = 0;
+      invOrder = shuffle(cismPairPool).slice(0, 10);
+      spawnInvaderWave();
     }
+
+    function spawnInvaderWave() {
+      stopInvaders();
+      if (hp <= 0 || invWave >= invOrder.length) {
+        arcadeBody.innerHTML = `
+          <div class="stage-screen" style="justify-content:center; text-align:center;">
+            <div class="prompt-banner">${hp > 0 ? "🏆 FLEET REPELLED!" : "💥 PERIMETER BREACHED!"}</div>
+            <p style="color:var(--text-secondary); margin:0.75rem 0;">Waves Cleared: ${invWave} / ${invOrder.length} | Remaining HP: ${hp}%</p>
+            <div><button type="button" class="arcade-btn-action" style="background:var(--lime);color:#000;" onclick="initRiskInvaders()">Play Again</button></div>
+          </div>
+        `;
+        return;
+      }
+
+      progressValEl.textContent = `Wave ${invWave + 1} / ${invOrder.length}`;
+      const target = invOrder[invWave];
+      const decoys = shuffle(cismPairPool.filter(p => p.pairId !== target.pairId)).slice(0, 3);
+      const ships = shuffle([target, ...decoys]);
+      const xPositions = [16, 39, 62, 84];
+      invY = 10;
+
+      arcadeBody.innerHTML = `
+        <div class="stage-screen">
+          <div class="prompt-banner">Shoot Invader Matching: <span>"${target.def}"</span></div>
+          <div class="invaders-space" id="inv-space">
+            ${ships.map((s, idx) => `
+              <button type="button" class="invader-ship" data-id="${s.pairId}" style="left:${xPositions[idx]}%; top:${invY}%;"
+                onclick="shootInvader(this, ${s.pairId}, ${target.pairId}, '${target.term.replace(/'/g, "\\'")}')">
+                👾<br>${s.term}
+              </button>
+            `).join("")}
+            <div class="plasma-bolt" id="plasma-bolt"></div>
+            <div class="defender-ship" id="defender-ship">🚀</div>
+          </div>
+        </div>
+      `;
+
+      let last = performance.now();
+      function stepWave(now) {
+        const dt = (now - last) / 1000;
+        last = now;
+        invY += dt * 4.2;
+        document.querySelectorAll(".invader-ship").forEach(el => {
+          el.style.top = `${invY}%`;
+        });
+        if (invY >= 72) {
+          stopInvaders();
+          setHp(hp - 25);
+          openFeedback(false, `<strong>Invaders Reached Base (-25% HP)!</strong><br>Correct ship was <strong>${target.term}</strong>.`);
+          invWave++;
+          spawnInvaderWave();
+          return;
+        }
+        invLoop = requestAnimationFrame(stepWave);
+      }
+      invLoop = requestAnimationFrame(stepWave);
+    }
+
+    function shootInvader(btnEl, chosenId, targetId, correctTerm) {
+      stopInvaders();
+      const space = document.getElementById("inv-space");
+      const ship = document.getElementById("defender-ship");
+      const bolt = document.getElementById("plasma-bolt");
+
+      if (space && ship && bolt && btnEl) {
+        const sRect = space.getBoundingClientRect();
+        const bRect = btnEl.getBoundingClientRect();
+        const centerPct = ((bRect.left + bRect.width / 2 - sRect.left) / sRect.width) * 100;
+        ship.style.left = `${centerPct}%`;
+        bolt.style.left = `${centerPct}%`;
+        bolt.style.height = `${Math.max(20, sRect.height - (bRect.bottom - sRect.top) - 45)}px`;
+        bolt.style.display = "block";
+      }
+
+      if (chosenId === targetId) {
+        btnEl.innerHTML = `💥<br>DESTROYED`;
+        btnEl.style.borderColor = "var(--lime)";
+      } else {
+        setHp(hp - 25);
+        openFeedback(false, `<strong>Wrong Invader (-25% HP)!</strong><br>Target was <strong>${correctTerm}</strong>.`);
+      }
+
+      setTimeout(() => {
+        invWave++;
+        spawnInvaderWave();
+      }, 320);
+    }
+
+    /* =========================================================================
+       GAME 3: EXECUTIVE HOT SEAT (Two Choices, One Problem — Don't Get Fired!)
+       ========================================================================= */
+    const hotseatScenarios = [
+      { problem: "A newly discovered vulnerability affects a critical server, and the vendor patch won't arrive for 14 days. What is your FIRST move?", good: "Identify exposed systems and apply compensating controls.", bad: "Shut down the production server immediately until patched." },
+      { problem: "You want to buy an unbudgeted SIEM platform. How do you win approval from the CFO and Board?", good: "Present a business case tying risk reduction to business objectives.", bad: "Show a live demo of firewall packet logs and CVE scores." },
+      { problem: "A regulator demands a compliance report be sent unencrypted, violating corporate security policy. What do you do?", good: "Initiate a formal policy exception process for executive approval.", bad: "Email it unencrypted immediately on your own authority." },
+      { problem: "During an audit, you discover an HR folder with confidential payroll data is open to all employees. First step?", good: "Report the exposure to the HR Data Owner to authorize action.", bad: "Delete the folder and reprimand the HR staff yourself." },
+      { problem: "An IDS sensor triggers an alert about a possible SQL injection attack. What should happen FIRST?", good: "Perform triage to verify whether it is a true incident or false positive.", bad: "Immediately notify the media and regulatory authorities." },
+      { problem: "You are outsourcing IT administration to a third-party provider. What is the most critical contract element?", good: "Mandatory compliance with your security requirements & measurable SLAs.", bad: "Allowing the vendor to use their own informal security guidelines." },
+      { problem: "A disaster recovery test at a vendor's shared hot site just finished. What MUST be done before leaving?", good: "Wipe and erase all corporate data and software from the vendor's devices.", bad: "Leave the test database loaded to save time during the next test." },
+      { problem: "You and a business unit VP disagree on whether to accept a major new project's security risk. Best step?", good: "Escalate and review the risk assessment with senior executive management.", bad: "Override the business unit VP and block the project launch." }
+    ];
+
+    let hsIdx = 0;
+    let hsList = [];
+
+    function initExecutiveHotSeat() {
+      arcadeTitle.textContent = "Executive Hot Seat";
+      setHp(100);
+      hsIdx = 0;
+      hsList = shuffle(hotseatScenarios);
+      renderHotSeat();
+    }
+
+    function renderHotSeat() {
+      if (hp <= 0 || hsIdx >= hsList.length) {
+        arcadeBody.innerHTML = `
+          <div class="stage-screen" style="justify-content:center; text-align:center;">
+            <div class="prompt-banner" style="font-size:1.35rem; color:${hp > 0 ? 'var(--lime)' : 'var(--rose)'};">
+              ${hp > 0 ? "🏛️ PROMOTED BY THE BOARD!" : "📦 YOU'RE FIRED! (0% JOB SECURITY)"}
+            </div>
+            <p style="color:var(--text-secondary); margin:0.75rem 0;">
+              ${hp > 0 ? `You navigated all ${hsList.length} boardroom crises with ${hp}% Job Security!` : "Too many technical/unaligned decisions cost you your CISO seat."}
+            </p>
+            <div><button type="button" class="arcade-btn-action" style="background:var(--lime);color:#000;" onclick="initExecutiveHotSeat()">Play Again</button></div>
+          </div>
+        `;
+        return;
+      }
+
+      progressValEl.textContent = `Crisis ${hsIdx + 1} / ${hsList.length}`;
+      const item = hsList[hsIdx];
+      const swap = Math.random() > 0.5;
+      const optA = swap ? item.good : item.bad;
+      const optB = swap ? item.bad : item.good;
+
+      arcadeBody.innerHTML = `
+        <div class="stage-screen">
+          <div class="boardroom-stage">
+            <div class="exec-council">
+              <div class="exec-avatar"><span>👩‍💼</span>CEO</div>
+              <div class="exec-avatar"><span>👨‍💼</span>CFO</div>
+              <div class="exec-avatar"><span>⚖️</span>LEGAL</div>
+              <div class="exec-avatar"><span>📊</span>BOARD</div>
+            </div>
+            <div class="scenario-box"><strong>CRISIS #${hsIdx + 1}:</strong> ${item.problem}</div>
+            <div class="hotseat-choices">
+              <button type="button" class="hotseat-btn" onclick="pickHotSeat(${swap ? 'true' : 'false'}, '${item.good.replace(/'/g, "\\'")}')">
+                <strong>DECISION A:</strong><br>${optA}
+              </button>
+              <button type="button" class="hotseat-btn" onclick="pickHotSeat(${swap ? 'false' : 'true'}, '${item.good.replace(/'/g, "\\'")}')">
+                <strong>DECISION B:</strong><br>${optB}
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function pickHotSeat(isGood, goodText) {
+      if (!isGood) {
+        setHp(hp - 25);
+        openFeedback(false, `<strong>Board Disapproves (-25% Job Security)!</strong><br><br>The CISM-aligned decision was:<br><strong>${goodText}</strong>`);
+      }
+      hsIdx++;
+      renderHotSeat();
+    }
+
+    /* =========================================================================
+       GAME 4: AUDIT HAMMER SMASH (Smash the 3 Wrong Answers, Keep the Right One)
+       ========================================================================= */
+    let hmIdx = 0;
+    let hmList = [];
+    let hmSmashed = new Set();
+
+    function initHammerSmash() {
+      arcadeTitle.textContent = "Audit Hammer Smash";
+      setHp(100);
+      hmIdx = 0;
+      hmList = shuffle(cismPairPool).slice(0, 8);
+      startHammerRound();
+    }
+
+    function startHammerRound() {
+      if (hp <= 0 || hmIdx >= hmList.length) {
+        arcadeBody.innerHTML = `
+          <div class="stage-screen" style="justify-content:center; text-align:center;">
+            <div class="prompt-banner">${hp > 0 ? "🔨 AUDIT COMPLETE!" : "💥 TOO MANY GOOD CONTROLS SMASHED!"}</div>
+            <p style="color:var(--text-secondary); margin:0.75rem 0;">Rounds Cleared: ${hmIdx} / ${hmList.length}</p>
+            <div><button type="button" class="arcade-btn-action" style="background:var(--lime);color:#000;" onclick="initHammerSmash()">Play Again</button></div>
+          </div>
+        `;
+        return;
+      }
+
+      progressValEl.textContent = `Keyword ${hmIdx + 1} / ${hmList.length}`;
+      hmSmashed.clear();
+      const target = hmList[hmIdx];
+      const bad3 = shuffle(cismPairPool.filter(p => p.pairId !== target.pairId)).slice(0, 3);
+      const cards = shuffle([
+        { text: target.def, isRight: true },
+        ...bad3.map(b => ({ text: b.def, isRight: false }))
+      ]);
+
+      arcadeBody.innerHTML = `
+        <div class="stage-screen">
+          <div class="prompt-banner">
+            🔨 SMASH the 3 WRONG answers for <span>"${target.term}"</span> (Leave ONLY the 1 correct answer unsmashed!)
+          </div>
+          <div class="hammer-grid">
+            ${cards.map((c, idx) => `
+              <button type="button" class="hammer-target" id="hm-${idx}" onclick="smashOption(${idx}, ${c.isRight}, '${target.def.replace(/'/g, "\\'")}')">
+                <span>${c.text}</span>
+                <span style="font-size:1.3rem;">🔨</span>
+              </button>
+            `).join("")}
+          </div>
+        </div>
+      `;
+    }
+
+    function smashOption(idx, isRight, rightText) {
+      if (hmSmashed.has(idx)) return;
+      const btn = document.getElementById(`hm-${idx}`);
+
+      if (isRight) {
+        setHp(hp - 25);
+        openFeedback(false, `<strong>Ouch! You smashed the CORRECT answer (-25% HP)!</strong><br><br>Correct definition: <strong>${rightText}</strong>`);
+        hmIdx++;
+        startHammerRound();
+      } else {
+        hmSmashed.add(idx);
+        if (btn) {
+          btn.classList.add("smashed");
+          btn.innerHTML = `<span>💥 SMASHED!</span><span>🔨</span>`;
+        }
+        if (hmSmashed.size === 3) {
+          setTimeout(() => {
+            hmIdx++;
+            startHammerRound();
+          }, 300);
+        }
+      }
+    }
+
+    /* =========================================================================
+       GAME 5: WHO WANTS TO BE A CISMNAIRE ($1,000 to $1,000,000 + 3 Lifelines)
+       ========================================================================= */
+    const ladderAmounts = ["$1,000", "$2,500", "$5,000", "$10,000", "$25,000", "$50,000", "$100,000", "$250,000", "$500,000", "$1,000,000"];
+    let milStep = 0;
+    let milQuestions = [];
+    let used5050 = false;
+    let usedBoard = false;
+    let usedLegal = false;
+
+    function initCismnaire() {
+      arcadeTitle.textContent = "Who Wants to Be a CISMnaire";
+      setHp(100);
+      milStep = 0;
+      used5050 = false;
+      usedBoard = false;
+      usedLegal = false;
+      milQuestions = shuffle(cismPairPool).slice(0, 10);
+      renderCismnaire();
+    }
+
+    function renderCismnaire() {
+      if (milStep >= 10) {
+        arcadeBody.innerHTML = `
+          <div class="stage-screen" style="justify-content:center; text-align:center;">
+            <div class="prompt-banner" style="font-size:1.45rem; color:var(--lime);">💰 $1,000,000 CISMNAIRE WINNER!</div>
+            <p style="color:var(--text-secondary); margin:0.75rem 0;">You answered all 10 high-stakes CISM questions to win the grand prize!</p>
+            <div><button type="button" class="arcade-btn-action" style="background:var(--lime);color:#000;" onclick="initCismnaire()">Play Again</button></div>
+          </div>
+        `;
+        return;
+      }
+
+      progressValEl.textContent = ladderAmounts[milStep];
+      const qObj = milQuestions[milStep];
+      const decoys = shuffle(cismPairPool.filter(p => p.pairId !== qObj.pairId)).slice(0, 3);
+      const opts = shuffle([
+        { term: qObj.term, right: true },
+        ...decoys.map(d => ({ term: d.term, right: false }))
+      ]);
+      const letters = ["A", "B", "C", "D"];
+
+      arcadeBody.innerHTML = `
+        <div class="stage-screen">
+          <div class="cismnaire-layout">
+            <div class="cismnaire-main">
+              <div class="lifelines-bar">
+                <button type="button" class="lifeline-pill" id="ll-5050" ${used5050 ? "disabled" : ""} onclick="useLifeline5050()">50:50</button>
+                <button type="button" class="lifeline-pill" id="ll-board" ${usedBoard ? "disabled" : ""} onclick="useLifelineBoard('${qObj.term.replace(/'/g, "\\'")}')">📊 Ask the Board</button>
+                <button type="button" class="lifeline-pill" id="ll-legal" ${usedLegal ? "disabled" : ""} onclick="useLifelineLegal('${qObj.term.replace(/'/g, "\\'")}')">📞 Call Legal</button>
+              </div>
+
+              <div class="scenario-box" style="text-align:center; border-left:none; border:1.5px solid var(--cyan);">
+                <div style="font-size:0.75rem; color:var(--amber); margin-bottom:0.35rem;">FOR ${ladderAmounts[milStep]}:</div>
+                Which CISM term is defined as:<br><span>"${qObj.def}"</span>
+              </div>
+
+              <div class="diamond-grid">
+                ${opts.map((o, idx) => `
+                  <button type="button" class="diamond-btn" data-right="${o.right}" onclick="answerCismnaire(${o.right}, '${qObj.term.replace(/'/g, "\\'")}')">
+                    <span>${letters[idx]}:</span> ${o.term}
+                  </button>
+                `).join("")}
+              </div>
+            </div>
+
+            <div class="ladder-panel">
+              ${ladderAmounts.map((amt, i) => `
+                <div class="ladder-step ${i === milStep ? 'active' : (i < milStep ? 'done' : '')}">
+                  <span>${i + 1}</span><span>${amt}</span>
+                </div>
+              `).join("")}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+
+    function useLifeline5050() {
+      used5050 = true;
+      document.getElementById("ll-5050").disabled = true;
+      const wrongBtns = Array.from(document.querySelectorAll(".diamond-btn[data-right='false']"));
+      shuffle(wrongBtns).slice(0, 2).forEach(b => { b.disabled = true; });
+    }
+
+    function useLifelineBoard(ans) {
+      usedBoard = true;
+      document.getElementById("ll-board").disabled = true;
+      openFeedback(true, `<strong>📊 Steering Committee Poll:</strong><br><br>84% of the Board voted for <strong>${ans}</strong>!`);
+    }
+
+    function useLifelineLegal(ans) {
+      usedLegal = true;
+      document.getElementById("ll-legal").disabled = true;
+      openFeedback(true, `<strong>📞 General Counsel Says:</strong><br><br>"Per ISACA governance standards, the answer is definitely <strong>${ans}</strong>."`);
+    }
+
+    function answerCismnaire(isRight, rightTerm) {
+      if (isRight) {
+        milStep++;
+        renderCismnaire();
+      } else {
+        setHp(0);
+        openFeedback(false, `<strong>Wrong Answer — Game Over!</strong><br><br>The correct CISM term was <strong>${rightTerm}</strong>. Click ↻ in the top bar to start a new climb!`);
+        milStep = 0;
+        setHp(100);
+        renderCismnaire();
+      }
+    }
+
+    /* =========================================================================
+       GAME 6: LOGIC BOMB DEFUSAL (6 Wires / Fill-in-the-Blank)
+       ========================================================================= */
+    let bombWiresLeft = 6;
+    let bombIdx = 0;
+    let bombList = [];
+
+    function initBombDefusal() {
+      arcadeTitle.textContent = "Logic Bomb Defusal";
+      bombWiresLeft = 6;
+      setHp(100);
+      bombIdx = 0;
+      bombList = shuffle(cismPairPool).slice(0, 10);
+      renderBombDefusal();
+    }
+
+    function renderBombDefusal() {
+      if (bombWiresLeft <= 0 || bombIdx >= bombList.length) {
+        arcadeBody.innerHTML = `
+          <div class="stage-screen" style="justify-content:center; text-align:center;">
+            <div class="prompt-banner" style="font-size:1.4rem; color:${bombWiresLeft > 0 ? 'var(--lime)' : 'var(--rose)'};">
+              ${bombWiresLeft > 0 ? "🛡️ LOGIC BOMB DEFUSED!" : "💥 BOOM! ALL 6 WIRES SEVERED!"}
+            </div>
+            <p style="color:var(--text-secondary); margin:0.75rem 0;">
+              ${bombWiresLeft > 0 ? `You defused all 10 CISM circuits with ${bombWiresLeft} wires intact!` : "You cut 6 wrong wires and detonated the logic bomb."}
+            </p>
+            <div><button type="button" class="arcade-btn-action" style="background:var(--lime);color:#000;" onclick="initBombDefusal()">Play Again</button></div>
+          </div>
+        `;
+        return;
+      }
+
+      progressValEl.textContent = `${bombWiresLeft} / 6 Wires`;
+      const item = bombList[bombIdx];
+      const decoys = shuffle(cismPairPool.filter(p => p.pairId !== item.pairId)).slice(0, 3);
+      const opts = shuffle([
+        { term: item.term, right: true },
+        ...decoys.map(d => ({ term: d.term, right: false }))
+      ]);
+
+      let wiresHtml = "";
+      for (let i = 1; i <= 6; i++) {
+        const isCut = i > bombWiresLeft;
+        wiresHtml += `<span class="fuse-wire ${isCut ? 'cut' : ''}">⚡ Wire ${i}</span>`;
+      }
+
+      arcadeBody.innerHTML = `
+        <div class="stage-screen">
+          <div class="bomb-casing">
+            <div class="bomb-led">00:0${bombWiresLeft}:00</div>
+            <div class="wires-row">${wiresHtml}</div>
+          </div>
+
+          <div class="prompt-banner">
+            Complete the CISM Statement:<br>
+            <span>"__________"</span> is defined as: ${item.def}
+          </div>
+
+          <div class="diamond-grid">
+            ${opts.map(o => `
+              <button type="button" class="hotseat-btn" style="padding:0.75rem 0.9rem;" onclick="cutBombWire(${o.right}, '${item.term.replace(/'/g, "\\'")}')">
+                ✂️ ${o.term}
+              </button>
+            `).join("")}
+          </div>
+        </div>
+      `;
+    }
+
+    function cutBombWire(isRight, rightTerm) {
+      if (isRight) {
+        bombIdx++;
+        renderBombDefusal();
+      } else {
+        bombWiresLeft--;
+        setHp(Math.round((bombWiresLeft / 6) * 100));
+        if (bombWiresLeft > 0) {
+          openFeedback(false, `<strong>⚡ Spark! Wrong Wire Cut!</strong><br><br>Correct blank was <strong>${rightTerm}</strong>. You have <strong>${bombWiresLeft} wires</strong> left before detonation!`);
+        }
+        bombIdx++;
+        renderBombDefusal();
+      }
+    }
+
+    function openFeedback(isCorrect, htmlContent) {
+      feedbackBox.className = "modal-box " + (isCorrect ? "correct" : "wrong");
+      feedbackStatus.textContent = isCorrect ? "Success!" : "Alert";
+      feedbackBody.innerHTML = htmlContent;
+      feedbackModal.classList.add("open");
+    }
+
+    feedbackCloseBtn.addEventListener("click", () => feedbackModal.classList.remove("open"));
+    feedbackModal.addEventListener("click", (e) => { if (e.target === feedbackModal) feedbackModal.classList.remove("open"); });
 
     const menuBtn = document.getElementById("mobile-menu-btn");
     const navDrawer = document.getElementById("nav-drawer");
@@ -1185,15 +1512,6 @@
         menuBtn.setAttribute("aria-expanded", String(isOpen));
         menuBtn.innerHTML = isOpen ? "Close &#10005;" : "Menu &#9776;";
       });
-    }
-
-    const privacyModal = document.getElementById("privacy-modal");
-    const openPrivacyBtn = document.getElementById("open-privacy-btn");
-    const privacyCloseBtn = document.getElementById("privacy-close-btn");
-    if (openPrivacyBtn && privacyModal) {
-      openPrivacyBtn.addEventListener("click", () => privacyModal.classList.add("open"));
-      privacyCloseBtn.addEventListener("click", () => privacyModal.classList.remove("open"));
-      privacyModal.addEventListener("click", (e) => { if (e.target === privacyModal) privacyModal.classList.remove("open"); });
     }
   </script>
 </body>
