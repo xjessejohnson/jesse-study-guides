@@ -10,11 +10,43 @@
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
   <style>
+    .hub-summary {
+      background: rgba(16, 23, 38, 0.78);
+      border: 1px solid var(--border-slate);
+      border-left: 3px solid var(--cyan);
+      border-radius: 10px;
+      padding: 1.15rem 1.35rem;
+      margin-bottom: 1.5rem;
+      max-width: 780px;
+    }
+    .hub-summary p {
+      color: var(--text-secondary);
+      line-height: 1.68;
+      font-size: 0.95rem;
+    }
+    .hub-summary strong { color: #fff; }
+    .domain-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.85rem;
+    }
+    .domain-pill {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      padding: 0.28rem 0.6rem;
+      border-radius: 6px;
+      background: rgba(13, 18, 28, 0.9);
+      border: 1px solid var(--border-slate);
+      color: var(--text-secondary);
+    }
+    .domain-pill span { color: var(--lime); font-weight: 700; }
+
     .module-grid {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
       gap: 1.25rem;
-      margin-top: 1.75rem;
+      margin-top: 1.25rem;
     }
     .module-card {
       background: var(--bg-card);
@@ -147,7 +179,23 @@
           CISSP<br />
           <span class="outline">STUDY HUB</span>
         </h1>
-        <p class="prose">Select a training module below to begin your session.</p>
+
+        <!-- CISSP Description Banner -->
+        <div class="hub-summary">
+          <p>
+            The <strong>Certified Information Systems Security Professional (CISSP)</strong> is a globally recognized certification issued by <strong>(ISC)²</strong>. It evaluates a candidate's expertise across eight comprehensive security domains, testing administrative, technical, and physical security controls to verify engineering and management capabilities.
+          </p>
+          <div class="domain-pills">
+            <div class="domain-pill">1. Security &amp; Risk Management</div>
+            <div class="domain-pill">2. Asset Security</div>
+            <div class="domain-pill">3. Security Architecture &amp; Engineering</div>
+            <div class="domain-pill">4. Communication &amp; Network Security</div>
+            <div class="domain-pill">5. Identity &amp; Access Management (IAM)</div>
+            <div class="domain-pill">6. Security Assessment &amp; Testing</div>
+            <div class="domain-pill">7. Security Operations</div>
+            <div class="domain-pill">8. Software Development Security</div>
+          </div>
+        </div>
 
         <div class="module-grid">
           <div class="module-card interactive">
@@ -176,9 +224,9 @@
             <div>
               <div class="module-card-head">
                 <h3>Things to Remember</h3>
-                <span class="badge live">3 Games</span>
+                <span class="badge live">6 Games</span>
               </div>
-              <p>An immersive cyber defense simulator translating Port mapping, Cryptographic domains, and Attack mitigations into active tactical mini-games.</p>
+              <p>Interactive CISSP games developed by Jesse to lock in ports, ciphers, cloud models, and incident response phases.</p>
             </div>
             <a href="cissp-remember.html" class="btn-lime">Launch Arcade &rarr;</a>
           </div>
