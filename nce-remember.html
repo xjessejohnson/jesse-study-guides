@@ -10,17 +10,1269 @@
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
   <style>
-    /* See full enhanced game in repo history / local file — loading complete version */
-    body { background: #0a0e17; color: #fff; font-family: system-ui, sans-serif; padding: 2rem; }
-    .notice { max-width: 640px; margin: 2rem auto; padding: 1.5rem; border: 1px solid #22d3ee; border-radius: 12px; background: #10192c; }
-    a { color: #22d3ee; }
+    .hub-summary {
+      background: rgba(16, 23, 38, 0.78);
+      border: 1px solid var(--border-slate);
+      border-left: 3px solid var(--cyan);
+      border-radius: 10px;
+      padding: 1.15rem 1.35rem;
+      margin-bottom: 1.5rem;
+      max-width: 780px;
+    }
+    .hub-summary p { color: var(--text-secondary); line-height: 1.68; font-size: 0.95rem; }
+    .hub-summary strong { color: #fff; }
+    .domain-pills { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.85rem; }
+    .domain-pill {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      padding: 0.28rem 0.6rem;
+      border-radius: 6px;
+      background: rgba(13, 18, 28, 0.9);
+      border: 1px solid var(--border-slate);
+      color: var(--text-secondary);
+    }
+    .domain-pill span { color: var(--lime); font-weight: 700; }
+    .module-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 1.25rem; margin-top: 1.25rem; }
+    .module-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-slate);
+      border-radius: 12px;
+      padding: 1.45rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 1.25rem;
+    }
+    .module-card-head { display: flex; justify-content: space-between; align-items: center; gap: 0.5rem; margin-bottom: 0.55rem; }
+    .module-card h3 { font-family: 'Archivo Black', sans-serif; font-size: 1.02rem; text-transform: uppercase; color: #fff; }
+    .module-card p { font-size: 0.88rem; color: var(--text-secondary); line-height: 1.55; }
+    .btn-lime {
+      padding: 0.75rem 1.25rem;
+      border-radius: 9px;
+      border: none;
+      background: var(--lime);
+      color: #05070c;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      text-decoration: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .launcher-modal-backdrop,
+    .arcade-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(8, 12, 24, 0.55);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      z-index: 9990;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 0.5rem;
+    }
+    .arcade-modal-backdrop { z-index: 9995; }
+    .launcher-modal-backdrop.open,
+    .arcade-modal-backdrop.open { display: flex; }
+
+    .launcher-modal-window {
+      background: rgba(10, 15, 28, 0.96);
+      border: 1.5px solid rgba(34, 211, 238, 0.45);
+      border-radius: 16px;
+      width: 96%;
+      max-width: 860px;
+      max-height: 90dvh;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 25px 70px rgba(0, 0, 0, 0.85);
+      overflow: hidden;
+    }
+    .launcher-header {
+      display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem;
+      padding: 1rem 1.25rem 0.85rem; border-bottom: 1px solid var(--border-slate);
+      background: rgba(11, 17, 30, 0.96);
+    }
+    .launcher-body { padding: 1rem 1.25rem 1.25rem; overflow-y: auto; }
+    .arcade-intro-text { color: var(--text-secondary); line-height: 1.45; font-size: 0.94rem; margin-top: 0.25rem; }
+
+    .game-choice-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 0.85rem;
+    }
+    .game-selector-card {
+      border-radius: 13px;
+      padding: 1.05rem 1.1rem;
+      cursor: pointer;
+      text-align: left;
+      border: 1px solid rgba(148, 163, 184, 0.2);
+      transition: transform 0.2s ease, border-color 0.2s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+      background: #0b1220;
+      color: #fff;
+      font: inherit;
+    }
+    .game-selector-card.coming-soon { opacity: 0.55; cursor: not-allowed; }
+    .game-selector-card:not(.coming-soon):hover {
+      transform: translateY(-3px);
+      border-color: var(--cyan);
+    }
+    .game-card-top { display: flex; align-items: center; justify-content: space-between; gap: 0.5rem; }
+    .game-icon-badge {
+      width: 36px; height: 36px; border-radius: 9px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem; background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.14);
+    }
+    .game-play-pill {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.66rem; font-weight: 700; text-transform: uppercase;
+      letter-spacing: 0.06em; padding: 0.2rem 0.55rem; border-radius: 999px;
+      background: rgba(158, 255, 51, 0.12); color: var(--lime);
+      border: 1px solid rgba(158, 255, 51, 0.45);
+    }
+    .game-selector-card.coming-soon .game-play-pill {
+      background: rgba(255,255,255,0.06); color: #94a3b8; border-color: var(--border-slate);
+    }
+    .game-title { font-family: 'Archivo Black', sans-serif; font-size: 1.02rem; color: #fff; text-transform: uppercase; }
+    .game-desc { font-size: 0.84rem; color: #cbd5e1; line-height: 1.42; }
+    .game-desc strong { color: #fff; }
+    .card-ding { border-color: rgba(34, 211, 238, 0.45); background: radial-gradient(circle at 90% 10%, rgba(34, 211, 238, 0.18), transparent 55%), linear-gradient(145deg, #0b192e 0%, #070b14 100%); }
+    .card-dsm { border-color: rgba(251, 113, 133, 0.3); }
+    .card-theorist { border-color: rgba(251, 191, 36, 0.3); }
+    .card-pharm { border-color: rgba(129, 140, 248, 0.3); }
+    .card-ncc { border-color: rgba(158, 255, 51, 0.3); }
+    .card-stats { border-color: rgba(52, 211, 153, 0.3); }
+
+    .btn-hud-icon {
+      background: #131c31; border: 1px solid var(--border-slate); color: #fff;
+      width: 34px; height: 34px; border-radius: 8px;
+      font-size: 0.95rem; font-weight: 700; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .btn-hud-icon.close-btn { border-color: rgba(251, 113, 133, 0.5); color: var(--rose); }
+
+    /* ===== PLAY SHELL: quote-first mobile, side-by-side desktop ===== */
+    .arcade-shell {
+      width: 100%;
+      max-width: 980px;
+      height: min(96dvh, 900px);
+      background: #0b1220;
+      border: 1.5px solid rgba(34, 211, 238, 0.45);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: 0 24px 65px rgba(0, 0, 0, 0.85);
+      display: grid;
+      grid-template-rows: auto auto minmax(120px, 22dvh) minmax(0, 1fr);
+      font-family: 'Plus Jakarta Sans', system-ui, sans-serif;
+    }
+
+    .top-hud {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.45rem;
+      padding: 0.65rem 0.85rem;
+      border-bottom: 1px solid var(--border-slate);
+      background: #101726;
+    }
+    .brand-group .tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.64rem;
+      color: var(--cyan);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+    .brand-group h1 {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: clamp(1rem, 2.5vw, 1.3rem);
+      color: #fff;
+      text-transform: uppercase;
+      margin: 0;
+    }
+    .hud-stats {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      flex-wrap: wrap;
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+    .hud-pill {
+      background: #0b1220;
+      border: 1px solid var(--border-slate);
+      border-radius: 8px;
+      padding: 0.3rem 0.55rem;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+    .dings-pill { border-color: rgba(251, 113, 133, 0.45); }
+    .dings-count { color: var(--rose); }
+    .progress-count { color: var(--cyan); }
+    .restart-btn {
+      background: #0b1220;
+      color: #fff;
+      border: 1px solid var(--border-slate);
+      border-radius: 8px;
+      padding: 0.32rem 0.6rem;
+      font-size: 0.78rem;
+      font-weight: 700;
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    /* CLIENT STATEMENT — always first, always readable */
+    .client-dialogue-bar {
+      background: #10192c;
+      border-bottom: 1px solid var(--border-slate);
+      padding: 0.75rem 0.95rem;
+      max-height: 34dvh;
+      overflow-y: auto;
+    }
+    .dialogue-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.3rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: var(--cyan);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .dialogue-meta .who { color: var(--lime); flex-shrink: 0; }
+    .client-statement {
+      font-size: clamp(1.05rem, 3.2vw, 1.28rem);
+      line-height: 1.4;
+      color: #fff;
+      font-weight: 700;
+      margin: 0;
+    }
+
+    /* Portraits strip */
+    .office-scene {
+      position: relative;
+      min-height: 0;
+      overflow: hidden;
+      border-bottom: 1px solid var(--border-slate);
+      background: linear-gradient(#10192b 0%, #17263a 58%, #2c1b11 58%, #1a100c 100%);
+      display: grid;
+      grid-template-columns: 1.15fr 0.9fr;
+      gap: 0.35rem;
+      padding: 0.4rem 0.65rem 0.3rem;
+    }
+    .seat {
+      position: relative;
+      min-width: 0;
+      min-height: 0;
+      height: 100%;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-end;
+    }
+    .frame {
+      position: relative;
+      width: min(100%, 200px);
+      height: 100%;
+      max-height: 100%;
+      border-radius: 999px 999px 14px 14px;
+      overflow: hidden;
+      border: 1px solid rgba(244, 247, 251, 0.16);
+      box-shadow: 0 8px 20px rgba(0,0,0,0.45);
+      background: #10182a;
+    }
+    .frame svg,
+    .frame img {
+      position: absolute;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      display: block;
+      object-fit: cover;
+      object-position: center top;
+    }
+    .seat .name-chip {
+      position: absolute;
+      bottom: 5px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(11, 18, 32, 0.9);
+      border: 1px solid var(--border-slate);
+      color: #fff;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.62rem;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      font-weight: 700;
+      padding: 0.15rem 0.4rem;
+      border-radius: 999px;
+      white-space: nowrap;
+      z-index: 2;
+    }
+    .seat.client .name-chip { border-color: rgba(34, 211, 238, 0.5); color: var(--cyan); }
+    .seat.therapist .name-chip { border-color: rgba(158, 255, 51, 0.45); color: var(--lime); }
+
+    .correct-next-btn {
+      display: none;
+      width: 100%;
+      background: linear-gradient(135deg, #9eff33 0%, #84cc16 100%);
+      color: #0a1405;
+      border: none;
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 0.9rem;
+      padding: 0.7rem 1rem;
+      border-radius: 10px;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+      gap: 0.4rem;
+      margin-bottom: 0.35rem;
+    }
+    .correct-next-btn.visible { display: flex; }
+
+    .options-section {
+      min-height: 0;
+      overflow-y: auto;
+      padding: 0.55rem 0.75rem max(0.75rem, env(safe-area-inset-bottom));
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      background: #0b1220;
+    }
+    .options-heading {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      font-weight: 700;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+    .options-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 0.45rem;
+    }
+    .response-btn {
+      background: #121927;
+      border: 1.5px solid var(--border-slate);
+      border-radius: 10px;
+      padding: 0.7rem 0.8rem;
+      color: #fff;
+      text-align: left;
+      font-family: inherit;
+      font-size: clamp(0.92rem, 2.4vw, 1rem);
+      font-weight: 600;
+      line-height: 1.35;
+      cursor: pointer;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.55rem;
+      min-height: 48px;
+    }
+    .response-btn:hover:not(:disabled) {
+      border-color: var(--cyan);
+      background: var(--cyan-dim);
+    }
+    .response-btn:disabled { opacity: 0.7; cursor: default; }
+    .response-btn.chosen-right { border-color: var(--lime); }
+    .response-btn.chosen-wrong { border-color: var(--rose); }
+    .opt-badge {
+      flex-shrink: 0;
+      width: 24px; height: 24px;
+      border-radius: 6px;
+      background: rgba(34, 211, 238, 0.14);
+      border: 1px solid rgba(34, 211, 238, 0.4);
+      color: var(--cyan);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      font-weight: 700;
+      display: flex; align-items: center; justify-content: center;
+    }
+
+    /* Feedback sheet — bottom sheet so quote stays visible */
+    .ding-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(5, 8, 15, 0.45);
+      z-index: 10010;
+      display: none;
+      align-items: flex-end;
+      justify-content: center;
+      padding: 0;
+    }
+    .ding-modal-backdrop.open { display: flex; }
+    .ding-modal-box {
+      width: min(640px, 100%);
+      max-height: min(48dvh, 420px);
+      overflow-y: auto;
+      background: #0d121c;
+      border: 1.5px solid var(--border-slate);
+      border-bottom: none;
+      border-radius: 16px 16px 0 0;
+      padding: 1rem 1.1rem max(1rem, env(safe-area-inset-bottom));
+      box-shadow: 0 -16px 40px rgba(0,0,0,0.5);
+      font-family: inherit;
+    }
+    .ding-modal-box.wide { max-height: min(78dvh, 720px); }
+    .ding-modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 0.75rem;
+      margin-bottom: 0.55rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 1px solid var(--border-slate);
+    }
+    .ding-modal-title {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 0.95rem;
+      color: var(--rose);
+      text-transform: uppercase;
+      line-height: 1.3;
+      margin: 0;
+    }
+    .ding-modal-title.victory { color: var(--lime); }
+    .close-x-btn {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid var(--border-slate);
+      color: #fff;
+      width: 32px; height: 32px;
+      border-radius: 8px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .said-box {
+      background: #0b1220;
+      border-left: 3px solid var(--cyan);
+      border-radius: 8px;
+      padding: 0.55rem 0.7rem;
+      margin: 0.45rem 0 0.65rem;
+      font-weight: 600;
+      line-height: 1.4;
+      color: #fff;
+    }
+    .revocation-list { display: flex; flex-direction: column; gap: 0.65rem; margin-top: 0.65rem; }
+    .revocation-card {
+      background: #121927;
+      border: 1px solid var(--border-slate);
+      border-left: 3px solid var(--rose);
+      border-radius: 10px;
+      padding: 0.75rem 0.85rem;
+      text-align: left;
+    }
+    .revocation-card .q-label { font-size: 0.72rem; font-weight: 700; color: var(--amber); margin-bottom: 0.25rem; }
+    .revocation-card .wrong-ans { font-size: 0.88rem; color: var(--rose); margin-bottom: 0.2rem; }
+    .revocation-card .right-ans { font-size: 0.88rem; color: var(--lime); font-weight: 700; margin-bottom: 0.25rem; }
+    .revocation-card .why-ans { font-size: 0.84rem; color: var(--text-secondary); line-height: 1.42; }
+    .modal-footer-actions { margin-top: 0.9rem; display: flex; justify-content: flex-end; flex-wrap: wrap; gap: 0.55rem; }
+    .primary-action-btn {
+      background: var(--cyan); color: #061018; border: none; border-radius: 10px;
+      padding: 0.65rem 1rem; font-family: inherit; font-size: 0.9rem; font-weight: 700; cursor: pointer;
+    }
+    .secondary-action-btn {
+      background: #121927; color: #fff; border: 1px solid var(--border-slate);
+      border-radius: 10px; padding: 0.65rem 1rem; font-family: inherit; font-size: 0.9rem; font-weight: 700; cursor: pointer;
+    }
+
+    @media (min-width: 900px) {
+      .arcade-shell {
+        grid-template-columns: minmax(300px, 40%) minmax(0, 1fr);
+        grid-template-rows: auto auto minmax(0, 1fr);
+        grid-template-areas:
+          "stage hud"
+          "stage quote"
+          "stage options";
+        height: min(92dvh, 820px);
+      }
+      .top-hud { grid-area: hud; }
+      .client-dialogue-bar { grid-area: quote; max-height: none; }
+      .client-statement { font-size: 1.35rem; }
+      .office-scene {
+        grid-area: stage;
+        height: 100%;
+        border-bottom: none;
+        border-right: 1px solid var(--border-slate);
+        padding: 1rem 0.85rem;
+      }
+      .frame { width: min(92%, 260px); height: min(68vh, 520px); }
+      .options-section { grid-area: options; }
+      .options-grid { grid-template-columns: 1fr 1fr; }
+      .ding-modal-backdrop { align-items: center; padding: 1.25rem; }
+      .ding-modal-box {
+        border-radius: 16px;
+        border-bottom: 1.5px solid var(--border-slate);
+        max-height: min(70dvh, 560px);
+      }
+    }
+
+    @media (max-width: 680px) {
+      .frame-wrapper { margin: 0; border-radius: 0; }
+      aside { display: none; }
+      .arcade-shell { width: 100%; border-radius: 12px; }
+    }
   </style>
 </head>
 <body>
-  <div class="notice">
-    <h1>License Ding — update in progress</h1>
-    <p>The full enhanced game file is being restored. Please refresh in a moment.</p>
-    <p>If this message persists, the complete <code>nce-remember.html</code> is available from the Grok session download.</p>
+  <div class="frame-wrapper" id="site-wrapper">
+    <aside>
+      <div class="brand-block">
+        <div class="brand-row">
+          <div>
+            <a href="index.html" class="brand-title">Jesse's Study Guides</a>
+            <div class="brand-tagline">Unofficial compiled training database v1.0</div>
+          </div>
+          <button class="mobile-menu-btn" id="mobile-menu-btn" aria-expanded="false" aria-controls="nav-drawer">Menu &#9776;</button>
+        </div>
+        <a class="coffee-btn" href="https://www.buymeacoffee.com/xjessejohnson" target="_blank" rel="noopener noreferrer">&#9749; Buy Me a Coffee</a>
+      </div>
+      <nav class="nav-drawer" id="nav-drawer" aria-label="Study Categories">
+        <div class="nav-section">
+          <div class="nav-label">Cybersecurity</div>
+          <a href="cissp.html" class="nav-item"><span>CISSP</span><span class="badge live">Active</span></a>
+          <a href="cism.html" class="nav-item"><span>CISM</span><span class="badge live">Active</span></a>
+          <span class="nav-item disabled" aria-disabled="true"><span>Security+</span><span class="badge">Coming Soon</span></span>
+        </div>
+        <div class="nav-section">
+          <div class="nav-label">Psychology</div>
+          <a href="nce.html" class="nav-item active"><span>NCE</span><span class="badge live">Active</span></a>
+        </div>
+        <div class="nav-section">
+          <div class="nav-label">Other</div>
+          <span class="nav-item disabled" aria-disabled="true"><span>Coming Soon</span><span class="badge">Coming Soon</span></span>
+        </div>
+      </nav>
+    </aside>
+
+    <div class="main-area">
+      <div class="topbar">
+        <div class="breadcrumb">JESSE'S STUDY GUIDES / NCE / <span>TACTICAL ARCADE</span></div>
+        <div class="status-pill"><span class="status-dot"></span> SYSTEM ONLINE</div>
+      </div>
+      <main class="content-body">
+        <div class="eyebrow">Psychology Track // NBCC</div>
+        <h1 class="hero-headline">NCE<br /><span class="outline">STUDY HUB</span></h1>
+        <div class="hub-summary">
+          <p>
+            The <strong>National Counselor Examination (NCE)</strong> is administered by the <strong>National Board for Certified Counselors (NBCC)</strong>.
+            Play License Ding across 200 clinical scenarios without getting your license revoked.
+          </p>
+        </div>
+        <div class="module-grid">
+          <div class="module-card interactive">
+            <div>
+              <div class="module-card-head"><h3>Things to Remember</h3><span class="badge live">Arcade</span></div>
+              <p>Interactive NCE clinical games—respond to clients as a licensed counselor.</p>
+            </div>
+            <button type="button" class="btn-lime" onclick="openLauncherMenu()">Launch Arcade &rarr;</button>
+          </div>
+          <div class="module-card interactive">
+            <div>
+              <div class="module-card-head"><h3>Back to NCE Hub</h3></div>
+              <p>Mock exam, flash cards, and domain overview.</p>
+            </div>
+            <a href="nce.html" class="btn-lime">NCE Hub &rarr;</a>
+          </div>
+        </div>
+      </main>
+    </div>
   </div>
+
+  <!-- ARCADE LAUNCHER -->
+  <div class="launcher-modal-backdrop open" id="launcher-modal" role="dialog" aria-modal="true" aria-labelledby="launcher-title">
+    <div class="launcher-modal-window">
+      <div class="launcher-header">
+        <div>
+          <div class="eyebrow" style="margin-bottom:0.35rem;">Remember key exam details through gaming</div>
+          <h2 class="hero-headline" id="launcher-title" style="font-size:clamp(1.4rem, 3vw, 2rem); margin-bottom:0.2rem;">
+            TACTICAL <span class="outline">ARCADE</span>
+          </h2>
+          <p class="arcade-intro-text">NCE Games developed by Jesse — play until you master them all</p>
+        </div>
+        <button type="button" class="btn-hud-icon close-btn" title="Return to NCE Hub" onclick="window.location.href='nce.html'" aria-label="Close Arcade Menu">✕</button>
+      </div>
+      <div class="launcher-body">
+        <div class="game-choice-grid">
+          <button type="button" class="game-selector-card card-ding" onclick="openLicenseDingGame()">
+            <div class="game-card-top">
+              <div class="game-icon-badge">🛋️</div>
+              <span class="game-play-pill">Play →</span>
+            </div>
+            <div class="game-title">License Ding</div>
+            <div class="game-desc"><strong>Clinical Interventions &amp; ACA Ethics.</strong> 20 randomized clients from a 200-statement bank — 3 dings revokes your license.</div>
+          </button>
+          <button type="button" class="game-selector-card card-dsm coming-soon" disabled>
+            <div class="game-card-top"><div class="game-icon-badge">🩺</div><span class="game-play-pill">Coming Soon</span></div>
+            <div class="game-title">DSM-5-TR Detective</div>
+            <div class="game-desc"><strong>Differential Diagnosis.</strong> Bipolar I vs II, Acute Stress vs PTSD, and more.</div>
+          </button>
+          <button type="button" class="game-selector-card card-theorist coming-soon" disabled>
+            <div class="game-card-top"><div class="game-icon-badge">🧠</div><span class="game-play-pill">Coming Soon</span></div>
+            <div class="game-title">Theorist Matchmaker</div>
+            <div class="game-desc"><strong>Counseling Theorists.</strong> Pair Rogers, Beck, Adler, and more with their techniques.</div>
+          </button>
+          <button type="button" class="game-selector-card card-pharm coming-soon" disabled>
+            <div class="game-card-top"><div class="game-icon-badge">💊</div><span class="game-play-pill">Coming Soon</span></div>
+            <div class="game-title">Med Red-Flag Triage</div>
+            <div class="game-desc"><strong>Psychopharmacology.</strong> Lithium toxicity, MAOI crisis, serotonin syndrome.</div>
+          </button>
+          <button type="button" class="game-selector-card card-ncc coming-soon" disabled>
+            <div class="game-card-top"><div class="game-icon-badge">🏆</div><span class="game-play-pill">Coming Soon</span></div>
+            <div class="game-title">Who Wants to Be an NCC</div>
+            <div class="game-desc"><strong>All CACREP Areas.</strong> Climb the National Certified Counselor ladder.</div>
+          </button>
+          <button type="button" class="game-selector-card card-stats coming-soon" disabled>
+            <div class="game-card-top"><div class="game-icon-badge">📊</div><span class="game-play-pill">Coming Soon</span></div>
+            <div class="game-title">Psychometrics Lab</div>
+            <div class="game-desc"><strong>Z-Scores, SEM &amp; ANOVA.</strong> Convert percentiles under pressure.</div>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LICENSE DING GAME -->
+  <div class="arcade-modal-backdrop" id="arcade-modal" role="dialog" aria-modal="true">
+    <div class="arcade-shell">
+      <div class="top-hud">
+        <div class="brand-group">
+          <div class="tag">NCE Clinical Practice // 200-Statement Bank</div>
+          <h1>LICENSE DING</h1>
+        </div>
+        <div class="hud-stats">
+          <div class="hud-pill">Client: <strong class="progress-count" id="client-progress">1 of 20</strong></div>
+          <div class="hud-pill dings-pill">Dings: <span class="dings-count" id="dings-counter">0 / 3</span></div>
+          <button type="button" class="restart-btn" id="new-session-btn">New Session</button>
+          <button type="button" class="btn-hud-icon close-btn" title="Close to Arcade" onclick="closeGameToLauncher()" aria-label="Close">✕</button>
+        </div>
+      </div>
+
+      <div class="client-dialogue-bar">
+        <div class="dialogue-meta">
+          <span id="scenario-domain">DOMAIN: HELPING RELATIONSHIPS</span>
+          <span class="who" id="client-name-tag">JORDAN</span>
+        </div>
+        <p class="client-statement" id="client-statement">Loading client statement...</p>
+      </div>
+
+      <div class="office-scene" id="office-scene">
+        <div class="seat client">
+          <div class="frame" id="client-frame"></div>
+          <span class="name-chip" id="client-chip">CLIENT</span>
+        </div>
+        <div class="seat therapist">
+          <div class="frame" id="therapist-frame"></div>
+          <span class="name-chip">YOU</span>
+        </div>
+      </div>
+
+      <div class="options-section">
+        <div class="options-heading">How do you respond as a licensed counselor?</div>
+        <button type="button" class="correct-next-btn" id="correct-next-btn">Correct! Next Client →</button>
+        <div class="options-grid" id="options-grid"></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="ding-modal-backdrop" id="feedback-modal" role="dialog" aria-modal="true" aria-labelledby="feedback-modal-title">
+    <div class="ding-modal-box ding-alert" id="feedback-modal-box">
+      <div class="ding-modal-header">
+        <h2 class="ding-modal-title" id="feedback-modal-title">That is not how a licensed therapist should respond</h2>
+        <button type="button" class="close-x-btn" id="close-modal-x" aria-label="Close">✕</button>
+      </div>
+      <div id="feedback-modal-body" style="font-size:0.94rem; line-height:1.48; color:#f8fafc;"></div>
+      <div class="modal-footer-actions" id="feedback-modal-footer"></div>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2026 Jesse Johnson. All rights reserved.</p>
+    <p>
+      This portal is an independent, unofficial personal study resource and is not affiliated with, endorsed by, or sponsored by ISC2, ISACA, CompTIA, NBCC, or any other certification body.
+      NCE&reg; is a registered trademark of NBCC.
+    </p>
+  </footer>
+
+  <script>
+const NCE_CORE_50 = [
+      { domain: "Helping Relationships", client: "I read online that unconditional positive regard means agreeing with everything I do—is that what you're supposed to do here?", options: ["Yes, my role is to accept and agree with whatever you choose.", "It means warm acceptance without conditional approval, not agreeing with harmful choices.", "Positive regard means praising you whenever you feel upset.", "Only when you are making healthy changes toward your goals."], correct: 1, explanation: "Unconditional positive regard (Rogers) means prizing the client without conditions of worth, not endorsing harmful behavior." },
+      { domain: "Professional Orientation & Ethics", client: "My cousin works at your clinic—can you tell me if my neighbor in the waiting room earlier comes here for depression?", options: ["I can't confirm or deny anyone's client status without signed authorization.", "I won't say their name, just whether they come regularly.", "I can ask my cousin if that's okay to share with you.", "I'll share general info since you're already a client here."], correct: 0, explanation: "Confidentiality bars confirming or denying client identity or treatment without signed authorization." },
+      { domain: "Professional Orientation & Ethics", client: "I bought you this $400 watch to thank you for helping me—please take it, I really want you to have it.", options: ["Thank you, I'll wear it on special occasions.", "High-value gifts cross boundary lines; let's explore what this gratitude means.", "I'll take it only if it goes toward next month's copay.", "Keep it until we terminate so it doesn't feel awkward."], correct: 1, explanation: "Accepting expensive gifts risks boundary distortion; declining respectfully while exploring clinical meaning aligns with ACA ethics." },
+      { domain: "Helping Relationships", client: "When someone says 'I hear you're feeling overwhelmed,' is that reflection of feeling or just paraphrasing?", options: ["Any restatement of what a client says counts as reflection of feeling.", "Naming the emotion ('overwhelmed') reflects feeling; repeating facts is paraphrasing.", "Reflection of feeling requires giving advice right after naming the emotion.", "Paraphrasing is only used when a client stops talking."], correct: 1, explanation: "Reflection of feeling captures affective emotion, whereas paraphrasing restates cognitive content." },
+      { domain: "Social & Cultural Foundations", client: "In my family, elders decide major life steps together, yet a past counselor told me I had to cut ties to be healthy.", options: ["Autonomy separate from family is the universal mark of maturity.", "Collectivist family involvement has different meanings; let's examine your values.", "Your old counselor probably saw something unhealthy in your family.", "Distance from family usually resolves adult stress fastest."], correct: 1, explanation: "Culturally responsive counselors avoid cultural encapsulation and explore values within the client's collectivist context." },
+      { domain: "Human Growth & Development", client: "Since retiring last month, I feel lost without my job title—doesn't retirement just mean relaxing?", options: ["Most retirees feel settled once they stay busy every afternoon.", "Losing work structure and role identity often triggers transition grief.", "You likely over-identified with work while you were employed.", "Try not to overthink it while you have free time."], correct: 1, explanation: "Retirement alters role identity and structure (Super's Disengagement stage), often triggering grief and adjustment challenges." },
+      { domain: "Group Work", client: "In group last night, a member kept talking over everyone—shouldn't you shut that down right away as the leader?", options: ["Yes, the leader should immediately silence or remove dominating members.", "Blocking protects airtime, while inviting feedback builds member ownership.", "Group members always fix dominance patterns without leader help.", "Let the loudest member speak first so they finish faster."], correct: 1, explanation: "Effective group leaders balance blocking monopolizing behavior with fostering member-to-member feedback." },
+      { domain: "Career Development", client: "I'm exhausted as a nurse and thinking of switching to graphic design—is burnout proof I picked the wrong career?", options: ["Yes, sustained exhaustion means the occupation doesn't fit you.", "Burnout reflects workplace strain and differs from core career values.", "Changing fields mid-career usually lowers long-term satisfaction.", "Take two weeks off before making any career plans."], correct: 1, explanation: "Career counseling distinguishes acute workplace burnout/environmental strain from underlying RIASEC interests and values." },
+      { domain: "Assessment & Testing", client: "I scored 92% on an online personality test for narcissism—does that mean I have Narcissistic Personality Disorder?", options: ["Yes, scores above 90% reliably indicate a personality disorder.", "No, unvalidated online quizzes cannot diagnose clinical disorders.", "It means you show more narcissistic traits than most peers.", "Online quizzes are accurate for traits but not diagnoses."], correct: 1, explanation: "Unvalidated internet quizzes lack psychometric norms, reliability, and validity required for DSM-5-TR diagnosis." },
+      { domain: "Research & Program Evaluation", client: "A new grounding exercise helped me sleep three nights in a row—doesn't that prove it works for everyone with insomnia?", options: ["Yes, consistent personal relief demonstrates universal effectiveness.", "Personal benefit helps you, but generalizable causal proof requires controlled trials.", "An exercise needs ten years of trials before being useful.", "If it works for you, research evidence isn't relevant."], correct: 1, explanation: "N=1 personal improvement is clinically useful but does not establish external validity or causal efficacy across populations." },
+      { domain: "Professional Orientation & Ethics", client: "I've been thinking about ending my life tonight and have pills in my cabinet—can we just keep that between us?", options: ["I'll keep it private if you promise to stay safe until next week.", "Immediate safety comes first; I must assess lethality and build a safety plan.", "Try not to focus on dark thoughts while we're talking.", "We're almost out of time, so let's start there next session."], correct: 1, explanation: "Active suicidal ideation with a plan and lethal means requires immediate lethality assessment and protective intervention." },
+      { domain: "Helping Relationships", client: "When my manager critiques a report, I assume I'm getting fired—is that catastrophizing or just realistic caution?", options: ["Assuming the worst outcome from one critique is catastrophizing.", "If you've been criticized before, expecting firing is logical.", "Critique at work usually signals job insecurity.", "Catastrophizing only happens when there's no real problem."], correct: 0, explanation: "In Beck's Cognitive Therapy, jumping from a minor critique to the worst-case disaster exemplifies catastrophizing." },
+      { domain: "Human Growth & Development", client: "My 14-year-old argues with every rule all day, then asks me to sit by their bed at night—isn't that contradictory?", options: ["Yes, teens who want independence shouldn't seek bedtime comfort.", "Adolescents naturally oscillate between autonomy and secure attachment.", "It usually signals regression to an earlier childhood stage.", "Give firm rules by day and stop sitting at night."], correct: 1, explanation: "Adolescent identity development (Erikson) naturally involves oscillating between individuation and seeking secure attachment." },
+      { domain: "Social & Cultural Foundations", client: "People ask where I'm 'really' from even after I say I grew up here—am I overreacting if that bothers me?", options: ["Most people mean it innocently, so try to let it slide.", "Repeatedly questioning belonging is a microinvalidation; how does it impact you?", "People ask everyone that question when making conversation.", "You can usually tell whether they meant harm by their tone."], correct: 1, explanation: "Treating a native-born citizen as a perpetual foreigner is a classic microinvalidation (Sue & Sue)." },
+      { domain: "Group Work", client: "I'm worried group members will judge me if I share my panic attacks—how do you prevent that?", options: ["I warn members not to judge anyone before you speak.", "We establish confidentiality norms and foster universality through shared struggles.", "Most members are too focused on their own issues to notice.", "You can wait to share until everyone else has opened up."], correct: 1, explanation: "Group safety is built through clear norms, active blocking of attacks, and Yalom's therapeutic factor of universality." },
+      { domain: "Career Development", client: "I don't know every tool listed on a job posting—should I wait until I match 100% of them before applying?", options: ["Yes, applying without matching requirements wastes time.", "Job postings often list ideal wish-lists; let's evaluate your core transferable fit.", "Wait until you hit at least ninety percent of the list.", "Entry-level roles rarely expect prior experience."], correct: 1, explanation: "Evaluating transferable skills and core competencies prevents premature self-elimination (SCCT self-efficacy)." },
+      { domain: "Assessment & Testing", client: "Why have me fill out a PHQ-9 mood check every week if I already tell you how my week went?", options: ["Brief standardized scales track symptom trends objectively alongside your narrative.", "Clinics use them mainly to justify insurance billing.", "They help catch details you might forget to mention.", "Weekly forms are standard even when we don't use scores."], correct: 0, explanation: "Standardized outcome measures (like the PHQ-9) provide objective baseline and formative progress tracking." },
+      { domain: "Research & Program Evaluation", client: "If counseling helps on average by week four, why did I have a rougher week than week two?", options: ["Group statistical means smooth out normal individual fluctuations over time.", "A setback in week four usually means the approach isn't fitting.", "Progress in counseling should rise steadily every week.", "Four weeks is too early to see real change."], correct: 0, explanation: "Nomothetic group averages mask idiographic (individual) week-to-week variability during treatment." },
+      { domain: "Professional Orientation & Ethics", client: "My ex-spouse's lawyer just sent you a subpoena for my therapy files—does that mean you have to mail them today?", options: ["No, an attorney subpoena isn't a court order; I'll assert privilege while we consult.", "Yes, failing to mail records immediately violates federal law.", "I'll send a short summary instead of the full chart.", "I can ignore subpoenas completely without replying."], correct: 0, explanation: "Under ACA ethics, counselors assert privilege on behalf of the client when receiving an attorney subpoena and await a judge's court order." },
+      { domain: "Helping Relationships", client: "I know drinking every night is hurting my liver, but it's the only way I unwind—why can't I just quit?", options: ["You're in Contemplation, where ambivalence between pros and cons is normal.", "You lack the willpower needed for the Action stage right now.", "Until you hit rock bottom, motivation won't stick.", "Let's list ten reasons why alcohol is ruining your health."], correct: 0, explanation: "In Prochaska & DiClemente's model, Contemplation is defined by profound ambivalence; rolling with resistance and double-sided reflections fit best." },
+      { domain: "Human Growth & Development", client: "My 5-year-old cried because her brother's tall skinny cup looked like it had more juice than her wide cup, even though I poured the exact same amount!", options: ["At age 5 (Preoperational), children haven't mastered Piaget's conservation of liquid.", "She is displaying early oppositional defiance toward family rules.", "Children should master volume conservation by age 3.", "Use a reward chart whenever she shares juice calmly."], correct: 0, explanation: "Preoperational children (ages 2–7) exhibit centration and lack conservation, which develops in the Concrete Operational stage (ages 7–11)." },
+      { domain: "Social & Cultural Foundations", client: "Ever since I came out to my parents, I've felt on edge at work and school waiting for others to reject me too.", options: ["That chronic hypervigilance reflects minority stress from navigating stigma.", "You may be projecting your parents' reaction onto coworkers.", "Most workplaces are supportive, so try to relax your guard.", "Keep your identity private at work until you feel calmer."], correct: 0, explanation: "Meyer's Minority Stress Model explains how distal rejection and stigma create proximal hypervigilance and chronic stress." },
+      { domain: "Group Work", client: "Why are two people in our group suddenly arguing with you about the group rules in session four?", options: ["We've entered Tuckman's Storming stage, where testing boundaries and conflict are normal.", "The group is failing and those members should be transferred out.", "Storming only happens when the leader lacks clinical authority.", "We should skip back to icebreakers so everyone stays polite."], correct: 0, explanation: "Tuckman's Storming stage naturally follows Forming as members test hierarchy, autonomy, and interpersonal boundaries." },
+      { domain: "Career Development", client: "My 11-year-old daughter says she can't be a mechanical engineer because 'that's a job for boys'—where did that come from?", options: ["Gottfredson's circumscription explains how kids rule out careers based on gender stereotypes.", "She likely lacks the spatial aptitude required for engineering.", "Children don't form career gender impressions until high school.", "Sign her up for an adult career interest inventory this week."], correct: 0, explanation: "Linda Gottfredson's Circumscription and Compromise theory shows children narrow their zone of acceptable alternatives by sex-role and prestige early on." },
+      { domain: "Assessment & Testing", client: "My child's IQ score was 115 on the WISC-V—what percentile does that put them in compared to peers?", options: ["An IQ of 115 is +1 standard deviation above the mean, placing them at the 84th percentile.", "It means they answered 115% of the test questions correctly.", "An IQ of 115 places them at the 50th percentile average.", "It puts them in the top 2% of the normative sample."], correct: 0, explanation: "On a standard IQ distribution (Mean = 100, SD = 15), a score of 115 (+1 SD) corresponds to the 84th percentile." },
+      { domain: "Research & Program Evaluation", client: "If a study finds a correlation of r = -0.85 between exercise and depression scores, does that prove exercise cures depression?", options: ["No—r = -0.85 shows a strong inverse relationship, but correlation never proves causation.", "Yes, any correlation above 0.80 proves direct cause and effect.", "A negative correlation means exercise actually increases depression.", "Correlation only applies to nominal categorical data."], correct: 0, explanation: "A correlation of -0.85 indicates a strong negative (inverse) association, but correlational data alone cannot establish causality." },
+      { domain: "Areas of Clinical Focus", client: "I started a low-sodium diet while training for a summer marathon, and now my hands have a coarse tremor, my speech feels slurred, and I'm nauseous—could it be my lithium?", options: ["Yes—sodium drop and dehydration can trigger lethal lithium toxicity; seek emergency medical care now.", "Those are mild adjustment side effects; drink water and wait until next week.", "Skip your evening lithium dose and take an extra dose tomorrow.", "Coarse tremors just mean your lithium dose is wearing off too fast."], correct: 0, explanation: "Dehydration and sodium depletion cause kidneys to reabsorb lithium, leading to potentially fatal lithium toxicity (coarse tremors, ataxia, slurred speech, GI distress)." },
+      { domain: "Areas of Clinical Focus", client: "My doctor prescribed an MAOI antidepressant for my treatment-resistant depression—why did the pharmacist warn me about aged cheese and cured meats?", options: ["MAOIs block tyramine breakdown, so tyramine-rich foods can trigger a fatal hypertensive crisis.", "Aged cheeses block the absorption of antidepressants in the stomach.", "MAOIs cause severe weight gain when combined with dairy products.", "Tyramine causes tardive dyskinesia if eaten within two hours of a dose."], correct: 0, explanation: "Consuming tyramine-rich foods (aged cheeses, cured meats, draft beer, red wine) while taking an MAOI can provoke an acute, life-threatening hypertensive crisis." },
+      { domain: "Areas of Clinical Focus", client: "Since the car crash three weeks ago, I've had nightmares, flashbacks, and feel detached from my body—do I have PTSD?", options: ["Because symptoms have lasted under one month (3 days to 30 days), the diagnosis is Acute Stress Disorder.", "Yes, PTSD is diagnosed immediately after any life-threatening trauma.", "Detachment after a crash indicates Brief Psychotic Disorder.", "It is an Adjustment Disorder unless symptoms last over six months."], correct: 0, explanation: "Acute Stress Disorder covers trauma intrusion, dissociation, avoidance, and arousal lasting 3 days to 1 month; PTSD requires duration exceeding 1 month." },
+      { domain: "Helping Relationships", client: "Whenever I get angry at my boss, I end up clenching my jaw and getting a migraine instead of speaking up—what's happening?", options: ["In Gestalt therapy, turning outward anger back onto your own body is called retroflection.", "That is an example of Adlerian striving for superiority.", "You are using mature sublimation to channel workplace frustration.", "In CBT, physical tension is called dichotomous thinking."], correct: 0, explanation: "Gestalt therapy defines retroflection as doing to oneself what one wants to do to others (turning outward impulses inward onto the body)." },
+      { domain: "Helping Relationships", client: "Every time my husband and I start arguing about money, we end up pulling our 10-year-old son into the room to ask who's right.", options: ["Bowen calls that triangulation—pulling in a third person to diffuse anxiety in an unstable dyad.", "Minuchin calls that healthy second-order family restructuring.", "In Strategic therapy, involving a child is called prescribing the symptom.", "That represents high differentiation of self in family systems."], correct: 0, explanation: "Murray Bowen defined triangulation as recruiting a third party (often a child) to stabilize tension between two anxious partners." },
+      { domain: "Professional Orientation & Ethics", client: "I'm moving to another state for a three-month work project—can we just keep doing our weekly video sessions like normal?", options: ["I must first verify the licensure and temporary telepractice laws of the state where you'll physically be.", "Yes, my state license automatically covers telehealth anywhere in the country.", "Just turn off your location services so we don't have to worry about state lines.", "Telehealth rules only apply to where the counselor's office is located."], correct: 0, explanation: "Telehealth jurisdiction is determined by the physical location of the client during the session, requiring compliance with that state's licensing board." },
+      { domain: "Areas of Clinical Focus", client: "For the past three years, I've felt down, low-energy, and hopeless almost every day, though I've never had a manic episode or gone two months feeling normal.", options: ["Chronic depressed mood lasting at least two years in adults meets criteria for Persistent Depressive Disorder.", "That pattern describes Cyclothymic Disorder.", "Without a manic episode, it is classified as Bipolar II Disorder.", "Depressed mood lasting over two years is Adjustment Disorder."], correct: 0, explanation: "Persistent Depressive Disorder (Dysthymia) requires depressed mood most days for at least 2 years in adults (1 year in youth) with no symptom-free gap over 2 months." },
+      { domain: "Helping Relationships", client: "In our Solution-Focused session, you asked what the first small sign would be tomorrow morning if a miracle solved my problem tonight—why ask that?", options: ["The Miracle Question helps you envision concrete, observable behavioral goals rather than staying stuck in problem talk.", "It tests whether you have realistic expectations about therapy.", "It uncovers repressed childhood wishes from your unconscious.", "It measures whether your locus of control is internal or external."], correct: 0, explanation: "Steve de Shazer and Insoo Kim Berg designed the Miracle Question in SFBT to shift clients toward concrete, future-oriented behavioral solutions." },
+      { domain: "Assessment & Testing", client: "If an anxiety test has a reliability of 0.91 and a standard deviation of 10, how much can my score bounce around just from random testing error?", options: ["The Standard Error of Measurement (SEM) is 3.0 points, giving a tight 68% confidence band of ±3 around your score.", "Your score can shift by up to 91 points on any given day.", "A reliability of 0.91 means there is zero measurement error.", "The SEM equals the standard deviation divided by two (5.0 points)."], correct: 0, explanation: "Using SEM = SD × √(1 - r), SEM = 10 × √(1 - 0.91) = 10 × 0.3 = 3.00." },
+      { domain: "Career Development", client: "I took the Strong Interest Inventory and all six of my Holland RIASEC scores were almost identical—what does a flat profile mean?", options: ["Holland calls a flat profile low differentiation, meaning your interests aren't sharply defined yet.", "It means the test had low internal consistency reliability.", "A flat profile proves you can succeed equally in every career field.", "Holland calls that high congruence between person and environment."], correct: 0, explanation: "In Holland's theory, Differentiation is the numerical spread between highest and lowest RIASEC scores; a flat profile shows low differentiation." },
+      { domain: "Treatment Planning", client: "When we write my treatment plan today, why can't we just put 'Client will feel happier and less stressed' as the goal?", options: ["Treatment objectives must be SMART—specific, measurable, behavioral, and time-bound so we can track real progress.", "Insurance companies forbid using the word 'happy' in clinical charts.", "Goals should focus on your childhood history rather than current mood.", "Only psychiatrists are allowed to write mood-related treatment goals."], correct: 0, explanation: "Effective treatment plans require observable, quantifiable behavioral objectives with clear baselines and timeframes." },
+      { domain: "Areas of Clinical Focus", client: "I quit drinking cold turkey two days ago after ten years of heavy daily use, and now my hands are shaking violently, my heart is racing, and I'm seeing bugs on the floor!", options: ["Visual hallucinations and autonomic instability signal Delirium Tremens—you need emergency medical detox immediately.", "Practice deep diaphragmatic breathing until the hallucinations pass.", "Those are normal detox symptoms that peak and fade at home.", "Drink a cup of coffee and call your AA sponsor tonight."], correct: 0, explanation: "Severe alcohol withdrawal with tremors, tachycardia, and visual/tactile hallucinations (formication) indicates Delirium Tremens (DTs), a medical emergency." },
+      { domain: "Professional Orientation & Ethics", client: "My husband and I are in couples therapy with you, and I'm emailing you privately to confess I'm having an affair—please don't tell him!", options: ["Let's review our informed consent policy on secrets and address how keeping an active affair hidden blocks couples therapy.", "I'll announce the affair at the start of our next couples session.", "I'll keep your secret indefinitely while we work on communication.", "I have to report infidelity to the state licensing board."], correct: 0, explanation: "In couples therapy, clinicians clarify 'no-secrets' policies in informed consent and do not collude in active deception that undermines joint treatment." },
+      { domain: "Research & Program Evaluation", client: "We compared three different trauma groups—EMDR, CBT, and Waitlist—to see if mean PTSD scores differed. Which statistical test should we run?", options: ["A one-way ANOVA compares the means of three or more independent groups without inflating Type I error.", "Run three separate independent t-tests and average the p-values.", "Use a non-parametric Chi-square test of independence.", "Calculate a Pearson product-moment correlation coefficient."], correct: 0, explanation: "One-way Analysis of Variance (ANOVA) tests for significant mean differences across three or more independent groups in a single test." },
+      { domain: "Helping Relationships", client: "In Acceptance and Commitment Therapy (ACT), what does it mean when you ask me to say 'I'm having the thought that I'm a failure' instead of 'I am a failure'?", options: ["That's cognitive defusion—stepping back to observe thoughts as passing words rather than literal truth.", "It's a classical conditioning technique called systematic desensitization.", "ACT uses that to dispute and erase negative thoughts permanently.", "It's an Adlerian technique called acting 'as if.'" ], correct: 0, explanation: "ACT uses cognitive defusion to reduce literal fusion with unhelpful thoughts so clients can act on their core values." },
+      { domain: "Human Growth & Development", client: "According to Vygotsky, how does my child learn best when tackling a puzzle that's slightly too hard for them to finish alone?", options: ["Through scaffolding within their Zone of Proximal Development (ZPD) alongside a more skilled partner.", "By leaving them completely alone until maturation kicks in.", "By waiting until they reach Piaget's Formal Operational stage.", "Through fixed-ratio operant conditioning rewards after every piece."], correct: 0, explanation: "Lev Vygotsky emphasized sociocultural learning where scaffolding bridges the Zone of Proximal Development." },
+      { domain: "Group Work", client: "After hearing three other group members describe the exact same shame I've been hiding for years, I finally don't feel like a broken freak anymore.", options: ["Yalom calls that Universality—realizing you are not alone in your human struggle.", "In group work, that is called Recapitulation of the Primary Family.", "That therapeutic factor is known as Imitative Behavior.", "Yalom defines that relief as Existential Isolation."], correct: 0, explanation: "Irvin Yalom identified Universality as the powerful relief members experience upon discovering others share similar pain and shame." },
+      { domain: "Career Development", client: "Why did you ask me about my three favorite childhood role models, my favorite magazine/show, and my earliest memory during our career session?", options: ["Mark Savickas's Career Construction Interview uses those prompts to uncover your life themes and narrative identity.", "Those questions score your spatial and mechanical aptitude.", "Frank Parsons used those questions for trait-and-factor matching.", "They measure whether you have an avoidant attachment style."], correct: 0, explanation: "Mark Savickas's postmodern Career Construction Theory uses role models, stories, and early recollections to help clients author their career narrative." },
+      { domain: "Assessment & Testing", client: "My standardized test report says my T-score is 60—is that out of 100 like a school grade?", options: ["No, T-scores have a mean of 50 and a standard deviation of 10, so 60 is one standard deviation above average (84th percentile).", "Yes, a T-score of 60 is a D-minus below the passing mark.", "T-scores range from 1 to 9 with a mean of 5.", "A T-score of 60 is one standard deviation below the mean."], correct: 0, explanation: "T-scores always have a fixed mean of 50 and SD of 10; thus T = 60 equals Z = +1.0 (84th percentile)." },
+      { domain: "Areas of Clinical Focus", client: "For the past six months, I've washed my hands forty times a day until they bleed because I'm terrified of germs—what therapy works best for this?", options: ["Exposure and Response Prevention (ERP) exposes you to triggers while blocking the compulsive washing ritual.", "Free association and dream analysis to uncover oral-stage fixation.", " Eye Movement Desensitization and Reprocessing (EMDR) only.", "Aversion therapy using mild electric shocks on the hands."], correct: 0, explanation: "Exposure and Response Prevention (ERP) is the gold-standard behavioral treatment for Obsessive-Compulsive Disorder (OCD)." },
+      { domain: "Professional Orientation & Ethics", client: "An insurance company is demanding a copy of my separate 'psychotherapy process notes' before they approve more sessions—can they force you to send them?", options: ["No—under HIPAA, separate psychotherapy process notes require your specific, standalone written authorization.", "Yes, insurance carriers automatically own all psychotherapy notes.", "I have to send them if you signed a standard billing release.", "HIPAA only protects medical prescriptions, not therapy notes."], correct: 0, explanation: "HIPAA grants special protection to psychotherapy process notes kept separate from the medical chart; insurers cannot condition payment on their release." },
+      { domain: "Research & Program Evaluation", client: "In our clinic's study, why did the depressed patients with the absolute worst scores at intake improve slightly on the retest even before treatment started?", options: ["Extreme pretest scores naturally drift closer to the average on retesting due to regression toward the mean.", "That improvement is called the Pygmalion experimenter effect.", "It proves the intake paperwork cured their depression.", "That is an example of stratified random sampling error."], correct: 0, explanation: "Regression toward the mean is an internal validity threat where extreme initial scores move closer to the population mean upon retesting." },
+      { domain: "Helping Relationships", client: "In DBT, what does it mean when we work on 'radical acceptance' of my painful past while also working hard to change my self-harm behaviors?", options: ["That's the core dialectic of DBT—balancing complete validation/acceptance of reality as it is with active behavioral change.", "It means giving up on changing your life and accepting defeat.", "Radical acceptance means approving of the people who hurt you.", "DBT focuses only on acceptance and ignores behavior change."], correct: 0, explanation: "Marsha Linehan's Dialectical Behavior Therapy synthesizes the dialectic of radical acceptance/validation and behavioral change." },
+      { domain: "Treatment Planning", client: "Now that we're in our final session and I've met my goals, I suddenly felt a wave of nervousness about handling next month on my own.", options: ["Feeling ambivalent or briefly anxious at termination is normal; let's review your warning signs and relapse-prevention plan.", "That nervousness means you aren't ready and need another year of therapy.", "Termination should always happen abruptly so you don't feel sad.", "Ignore the nervousness—once you leave, you won't need coping skills."], correct: 0, explanation: "Healthy termination normalizes separation ambivalence, consolidates gains, and equips the client with a written relapse-prevention plan." }
+    ];
+const CLIENT_PERSONAS = [
+      { name: "Aaliyah", gender: "female", skin: "#5c3818", shade: "#2f1a09", hair: "#0a0a0a", shirt: "#f472b6", collar: "#fce7f3", style: "afro" },
+      { name: "Marcus", gender: "male", skin: "#8d5524", shade: "#593212", hair: "#111111", shirt: "#38bdf8", collar: "#e0f2fe", style: "fade" },
+      { name: "Priya", gender: "female", skin: "#c68642", shade: "#7c4d1e", hair: "#1a1a1a", shirt: "#a78bfa", collar: "#ede9fe", style: "long" },
+      { name: "Diego", gender: "male", skin: "#d4a574", shade: "#8c5930", hair: "#1c1917", shirt: "#fb923c", collar: "#ffedd5", style: "crop" },
+      { name: "Jordan", gender: "nonbinary", skin: "#e8c4a0", shade: "#a86d4a", hair: "#27272a", shirt: "#2dd4bf", collar: "#ccfbf1", style: "undercut" },
+      { name: "Mei", gender: "female", skin: "#f3d5b5", shade: "#b5825a", hair: "#171717", shirt: "#c084fc", collar: "#f3e8ff", style: "bob" },
+      { name: "Amir", gender: "male", skin: "#c68642", shade: "#7c4d1e", hair: "#0f172a", shirt: "#34d399", collar: "#d1fae5", style: "short" },
+      { name: "Sofia", gender: "female", skin: "#e0ac69", shade: "#966634", hair: "#3f2a1d", shirt: "#f87171", collar: "#fee2e2", style: "waves" },
+      { name: "Kai", gender: "nonbinary", skin: "#f5cba7", shade: "#a8724b", hair: "#44403c", shirt: "#818cf8", collar: "#e0e7ff", style: "crop" },
+      { name: "Nia", gender: "female", skin: "#4a2c17", shade: "#2a180c", hair: "#0a0a0a", shirt: "#fbbf24", collar: "#fef3c7", style: "braids" },
+      { name: "Ethan", gender: "male", skin: "#fde2c8", shade: "#bc8c63", hair: "#92400e", shirt: "#60a5fa", collar: "#dbeafe", style: "short" },
+      { name: "Fatima", gender: "female", skin: "#d99b66", shade: "#8c5930", hair: "#1e1b4b", shirt: "#22d3ee", collar: "#cffafe", style: "hijab" },
+      { name: "Ryan", gender: "male", skin: "#f1c29b", shade: "#a56948", hair: "#1e293b", shirt: "#4ade80", collar: "#dcfce7", style: "fade" },
+      { name: "Aisha", gender: "female", skin: "#6b3f22", shade: "#3d2412", hair: "#0c0a09", shirt: "#e879f9", collar: "#fae8ff", style: "locs" },
+      { name: "Chen", gender: "male", skin: "#e8be9c", shade: "#9a5b3c", hair: "#1c1917", shirt: "#38bdf8", collar: "#e0f2fe", style: "crop" },
+      { name: "Alex", gender: "nonbinary", skin: "#c68642", shade: "#7c4d1e", hair: "#57534e", shirt: "#f472b6", collar: "#fce7f3", style: "bob" },
+      { name: "Isabella", gender: "female", skin: "#f7d5b5", shade: "#b5825a", hair: "#7c2d12", shirt: "#fb7185", collar: "#ffe4e6", style: "long" },
+      { name: "Jamal", gender: "male", skin: "#5c3818", shade: "#2f1a09", hair: "#09090b", shirt: "#a3e635", collar: "#ecfccb", style: "short" },
+      { name: "Yuki", gender: "female", skin: "#f5d0b0", shade: "#b07d52", hair: "#18181b", shirt: "#67e8f9", collar: "#cffafe", style: "ponytail" },
+      { name: "Omar", gender: "male", skin: "#b9895a", shade: "#7a5330", hair: "#0f172a", shirt: "#f59e0b", collar: "#fef3c7", style: "fade" },
+      { name: "Taylor", gender: "nonbinary", skin: "#f3c69f", shade: "#a86d4a", hair: "#78716c", shirt: "#a78bfa", collar: "#ede9fe", style: "undercut" },
+      { name: "Camila", gender: "female", skin: "#c68642", shade: "#7c4d1e", hair: "#292524", shirt: "#f97316", collar: "#ffedd5", style: "waves" },
+      { name: "Noah", gender: "male", skin: "#fde8d0", shade: "#c4a574", hair: "#451a03", shirt: "#2dd4bf", collar: "#ccfbf1", style: "short" },
+      { name: "Zara", gender: "female", skin: "#8d5524", shade: "#593212", hair: "#0a0a0a", shirt: "#e11d48", collar: "#ffe4e6", style: "afro" },
+      { name: "Liam", gender: "male", skin: "#f1c29b", shade: "#a56948", hair: "#292524", shirt: "#6366f1", collar: "#e0e7ff", style: "crop" },
+      { name: "Samira", gender: "female", skin: "#d4a574", shade: "#8c5930", hair: "#1c1917", shirt: "#14b8a6", collar: "#ccfbf1", style: "hijab" },
+      { name: "Dev", gender: "male", skin: "#b9895a", shade: "#7a5330", hair: "#0c0a09", shirt: "#ef4444", collar: "#fee2e2", style: "short" },
+      { name: "Riley", gender: "nonbinary", skin: "#e8c4a0", shade: "#a86d4a", hair: "#44403c", shirt: "#ec4899", collar: "#fce7f3", style: "bob" },
+      { name: "Elena", gender: "female", skin: "#f7d5b5", shade: "#b5825a", hair: "#78350f", shirt: "#8b5cf6", collar: "#ede9fe", style: "long" },
+      { name: "Andre", gender: "male", skin: "#4a2c17", shade: "#2a180c", hair: "#0a0a0a", shirt: "#0ea5e9", collar: "#e0f2fe", style: "locs" }
+    ];
+
+    function buildTwoHundredBank(core50) {
+      const prefixes = [
+        (s) => s,
+        (s) => `I wanted to ask you about this today: ${s.charAt(0).toLowerCase()}${s.slice(1)}`,
+        (s) => `Something has been on my mind all week—${s.charAt(0).toLowerCase()}${s.slice(1)}`,
+        (s) => `Before we wrap up, can we talk about this? ${s}`
+      ];
+      const bank = [];
+      for (let i = 0; i < 200; i++) {
+        const base = core50[i % core50.length];
+        const pFn = prefixes[Math.floor(i / core50.length) % prefixes.length];
+        bank.push({
+          id: i + 1,
+          domain: base.domain,
+          client: pFn(base.client),
+          options: [...base.options],
+          correct: base.correct,
+          explanation: base.explanation
+        });
+      }
+      return bank;
+    }
+
+    const NCE_SCENARIOS = buildTwoHundredBank(NCE_CORE_50);
+    const GAMES_PER_RUN = 20;
+    const MAX_DINGS = 3;
+
+    let sessionQuestions = [];
+    let currentIndex = 0;
+    let dings = 0;
+    let wrongAnswersLog = [];
+    let gameOver = false;
+    let awaitingNextClick = false;
+    let pickedIndex = null;
+
+    const launcherModal = document.getElementById("launcher-modal");
+    const arcadeModal = document.getElementById("arcade-modal");
+    const clientProgressEl = document.getElementById("client-progress");
+    const dingsCounterEl = document.getElementById("dings-counter");
+    const scenarioDomainEl = document.getElementById("scenario-domain");
+    const clientNameTagEl = document.getElementById("client-name-tag");
+    const clientChipEl = document.getElementById("client-chip");
+    const clientStatementEl = document.getElementById("client-statement");
+    const optionsGridEl = document.getElementById("options-grid");
+    const newSessionBtn = document.getElementById("new-session-btn");
+    const correctNextBtn = document.getElementById("correct-next-btn");
+    const clientFrameEl = document.getElementById("client-frame");
+    const therapistFrameEl = document.getElementById("therapist-frame");
+    const feedbackModalEl = document.getElementById("feedback-modal");
+    const feedbackModalBoxEl = document.getElementById("feedback-modal-box");
+    const feedbackModalTitleEl = document.getElementById("feedback-modal-title");
+    const feedbackModalBodyEl = document.getElementById("feedback-modal-body");
+    const feedbackModalFooterEl = document.getElementById("feedback-modal-footer");
+    const closeModalXBtn = document.getElementById("close-modal-x");
+
+    function openLauncherMenu() {
+      feedbackModalEl.classList.remove("open");
+      arcadeModal.classList.remove("open");
+      launcherModal.classList.add("open");
+    }
+    function openLicenseDingGame() {
+      launcherModal.classList.remove("open");
+      arcadeModal.classList.add("open");
+      startNewRun();
+    }
+    function closeGameToLauncher() {
+      feedbackModalEl.classList.remove("open");
+      arcadeModal.classList.remove("open");
+      launcherModal.classList.add("open");
+    }
+
+    function shuffleArray(list) {
+      const copy = [...list];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function portraitSvg(persona, isTherapist) {
+      const skin = isTherapist ? "#e8be9c" : persona.skin;
+      const shade = isTherapist ? "#9a5b3c" : persona.shade;
+      const hair = isTherapist ? "#3b281c" : persona.hair;
+      const shirt = isTherapist ? "#0d9488" : persona.shirt;
+      const collar = isTherapist ? "#f8fafc" : persona.collar;
+      const style = isTherapist ? "short" : persona.style;
+
+      let hairBack = "";
+      let hairFront = "";
+      let headCover = "";
+
+      if (style === "hijab") {
+        headCover = `
+          <path d="M22 70 C22 40, 98 40, 98 70 L98 130 Q60 150 22 130 Z" fill="${hair}" opacity="0.95"/>
+          <path d="M28 78 C28 52, 92 52, 92 78 L90 118 Q60 132 30 118 Z" fill="${shirt}" opacity="0.85"/>
+          <ellipse cx="60" cy="78" rx="26" ry="27" fill="${skin}"/>
+        `;
+      } else if (style === "afro") {
+        hairBack = `<circle cx="60" cy="72" r="40" fill="${hair}"/><circle cx="32" cy="70" r="16" fill="${hair}"/><circle cx="88" cy="70" r="16" fill="${hair}"/><circle cx="45" cy="48" r="14" fill="${hair}"/><circle cx="75" cy="48" r="14" fill="${hair}"/>`;
+        hairFront = "";
+      } else if (style === "braids") {
+        hairBack = `
+          <path d="M30 70 C20 90, 18 130, 22 150" stroke="${hair}" stroke-width="7" fill="none" stroke-linecap="round"/>
+          <path d="M40 68 C32 95, 30 130, 34 152" stroke="${hair}" stroke-width="6" fill="none" stroke-linecap="round"/>
+          <path d="M80 68 C88 95, 90 130, 86 152" stroke="${hair}" stroke-width="6" fill="none" stroke-linecap="round"/>
+          <path d="M90 70 C100 90, 102 130, 98 150" stroke="${hair}" stroke-width="7" fill="none" stroke-linecap="round"/>
+          <path d="M28 78 C28 48, 92 48, 92 78 C80 60, 50 56, 28 78 Z" fill="${hair}"/>
+        `;
+      } else if (style === "locs") {
+        hairBack = `
+          <path d="M32 72 C24 100, 22 130, 26 150" stroke="${hair}" stroke-width="6" fill="none" stroke-linecap="round"/>
+          <path d="M42 68 C36 105, 34 132, 38 152" stroke="${hair}" stroke-width="5.5" fill="none" stroke-linecap="round"/>
+          <path d="M52 66 C50 110, 48 135, 50 154" stroke="${hair}" stroke-width="5" fill="none" stroke-linecap="round"/>
+          <path d="M68 66 C70 110, 72 135, 70 154" stroke="${hair}" stroke-width="5" fill="none" stroke-linecap="round"/>
+          <path d="M78 68 C84 105, 86 132, 82 152" stroke="${hair}" stroke-width="5.5" fill="none" stroke-linecap="round"/>
+          <path d="M88 72 C96 100, 98 130, 94 150" stroke="${hair}" stroke-width="6" fill="none" stroke-linecap="round"/>
+          <path d="M30 78 C30 50, 90 50, 90 78 Z" fill="${hair}"/>
+        `;
+      } else if (style === "long") {
+        hairBack = `<path d="M28 78 C24 120, 30 148, 40 152 L80 152 C90 148, 96 120, 92 78 Z" fill="${hair}"/>`;
+        hairFront = `<path d="M30 80 C30 48, 90 48, 90 80 C80 62, 60 58, 45 62 C36 64, 32 72, 30 80 Z" fill="${hair}"/>`;
+      } else if (style === "waves") {
+        hairBack = `<path d="M28 78 C22 110, 28 140, 38 148 L82 148 C92 140, 98 110, 92 78 Z" fill="${hair}"/><path d="M34 100 Q40 108 36 116" stroke="${shade}" stroke-width="1.2" fill="none" opacity="0.3"/><path d="M84 100 Q78 108 82 116" stroke="${shade}" stroke-width="1.2" fill="none" opacity="0.3"/>`;
+        hairFront = `<path d="M30 80 C30 50, 90 50, 90 80 C78 64, 55 58, 30 80 Z" fill="${hair}"/>`;
+      } else if (style === "bob") {
+        hairBack = `<path d="M30 80 C28 112, 36 122, 44 122 L76 122 C84 122, 92 112, 90 80 Z" fill="${hair}"/>`;
+        hairFront = `<path d="M30 80 C30 50, 90 50, 90 80 C78 62, 50 58, 30 80 Z" fill="${hair}"/>`;
+      } else if (style === "ponytail") {
+        hairBack = `<path d="M34 70 C10 78, 12 120, 22 132 C30 112, 34 90, 38 78 Z" fill="${hair}"/><ellipse cx="18" cy="128" rx="8" ry="10" fill="${hair}"/>`;
+        hairFront = `<path d="M30 80 C30 50, 90 50, 90 80 C76 62, 48 60, 30 80 Z" fill="${hair}"/>`;
+      } else if (style === "undercut") {
+        hairFront = `<path d="M38 78 C40 52, 80 52, 82 78 C74 64, 60 60, 48 62 C42 64, 38 70, 38 78 Z" fill="${hair}"/><path d="M30 80 C32 70, 36 68, 40 72" stroke="${hair}" stroke-width="3" fill="none"/>`;
+      } else if (style === "fade") {
+        hairFront = `<path d="M32 78 C34 54, 86 54, 88 78 C78 64, 64 62, 50 62 C40 62, 34 70, 32 78 Z" fill="${hair}"/><path d="M30 82 C32 74, 34 72, 36 76" stroke="${hair}" stroke-width="2.5" opacity="0.5" fill="none"/>`;
+      } else if (style === "crop") {
+        hairFront = `<path d="M34 76 C36 56, 84 56, 86 76 C76 64, 62 60, 48 62 C40 64, 34 70, 34 76 Z" fill="${hair}"/>`;
+      } else {
+        hairFront = `<path d="M30 80 C30 50, 90 50, 90 80 C78 62, 62 58, 46 62 C38 64, 32 72, 30 80 Z" fill="${hair}"/>`;
+      }
+
+      const glasses = isTherapist
+        ? `<rect x="42" y="74" width="14" height="10" rx="2" fill="rgba(255,255,255,0.2)" stroke="#0f172a" stroke-width="1.6"/>
+           <rect x="64" y="74" width="14" height="10" rx="2" fill="rgba(255,255,255,0.2)" stroke="#0f172a" stroke-width="1.6"/>
+           <line x1="56" y1="79" x2="64" y2="79" stroke="#0f172a" stroke-width="1.6"/>`
+        : (persona.gender === "nonbinary" && !isTherapist
+          ? `<circle cx="34" cy="86" r="2.2" fill="#cbd5e1" stroke="#64748b" stroke-width="0.8"/>`
+          : "");
+
+      const mouth = isTherapist
+        ? `<path d="M52 96 Q60 102 68 96" stroke="#7c2d12" stroke-width="2" fill="none" stroke-linecap="round"/>`
+        : `<path d="M52 96 Q60 93 68 96" stroke="#7c2d12" stroke-width="2" fill="none" stroke-linecap="round"/>`;
+
+      if (style === "hijab") {
+        return `<svg viewBox="0 0 120 160" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+          <rect width="120" height="160" fill="#10182a"/>
+          <ellipse cx="60" cy="148" rx="38" ry="18" fill="${shirt}"/>
+          <path d="M28 118 Q60 108 92 118 L96 160 L24 160 Z" fill="${shirt}"/>
+          ${headCover}
+          <circle cx="50" cy="78" r="3.2" fill="#0f172a"/>
+          <circle cx="70" cy="78" r="3.2" fill="#0f172a"/>
+          <circle cx="51.2" cy="76.8" r="1.1" fill="#fff"/>
+          <circle cx="71.2" cy="76.8" r="1.1" fill="#fff"/>
+          <path d="M44 70 Q50 67 56 70" stroke="#1e293b" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+          <path d="M64 70 Q70 67 76 70" stroke="#1e293b" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+          <path d="M60 80 L57 88 L61 90" stroke="${shade}" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+          ${mouth}
+        </svg>`;
+      }
+
+      return `<svg viewBox="0 0 120 160" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+        <rect width="120" height="160" fill="#10182a"/>
+        ${hairBack}
+        <ellipse cx="60" cy="148" rx="38" ry="18" fill="${shirt}"/>
+        <path d="M28 118 Q60 108 92 118 L96 160 L24 160 Z" fill="${shirt}"/>
+        <path d="M50 112 L60 124 L70 112" fill="none" stroke="${collar}" stroke-width="2.2" stroke-linecap="round"/>
+        <circle cx="60" cy="78" r="28" fill="${skin}" stroke="#0f172a" stroke-width="1.5"/>
+        <circle cx="36" cy="80" r="5" fill="${skin}"/>
+        <circle cx="84" cy="80" r="5" fill="${skin}"/>
+        ${hairFront}
+        <circle cx="50" cy="78" r="3.2" fill="#0f172a"/>
+        <circle cx="70" cy="78" r="3.2" fill="#0f172a"/>
+        <circle cx="51.2" cy="76.8" r="1.1" fill="#fff"/>
+        <circle cx="71.2" cy="76.8" r="1.1" fill="#fff"/>
+        <path d="M44 70 Q50 67 56 70" stroke="#1e293b" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+        <path d="M64 70 Q70 67 76 70" stroke="#1e293b" stroke-width="1.8" fill="none" stroke-linecap="round"/>
+        <path d="M60 80 L57 88 L61 90" stroke="${shade}" stroke-width="1.6" fill="none" stroke-linecap="round"/>
+        ${glasses}
+        ${mouth}
+      </svg>`;
+    }
+
+    /* Portrait images live in ./characters/
+       Naming (case-insensitive):
+         characters/aaliyah.jpg   → client "Aaliyah"
+         characters/marcus.png
+         characters/therapist.jpg → therapist portrait
+       Supported extensions: .jpg .jpeg .png .webp .gif
+       If a file is missing, the built-in SVG portrait is used automatically.
+       Drop new images in and hard-refresh the page — no code changes needed.
+    */
+    const PORTRAIT_EXTS = [".jpg", ".jpeg", ".png", ".webp", ".gif"];
+    const portraitCache = Object.create(null); // slug -> resolved URL or null (use SVG)
+
+    function personaSlug(name) {
+      return String(name || "")
+        .toLowerCase()
+        .trim()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-+|-+$/g, "");
+    }
+
+    function tryPortraitUrl(slug) {
+      // Probe common extensions; first that loads wins (cached).
+      // We return a Promise that resolves to a usable src or null.
+      if (slug in portraitCache) {
+        return Promise.resolve(portraitCache[slug]);
+      }
+      return new Promise((resolve) => {
+        let i = 0;
+        const probe = () => {
+          if (i >= PORTRAIT_EXTS.length) {
+            portraitCache[slug] = null;
+            resolve(null);
+            return;
+          }
+          const url = "characters/" + slug + PORTRAIT_EXTS[i++];
+          const img = new Image();
+          img.onload = () => {
+            portraitCache[slug] = url;
+            resolve(url);
+          };
+          img.onerror = probe;
+          img.src = url;
+        };
+        probe();
+      });
+    }
+
+    function setFramePortrait(frameEl, persona, isTherapist) {
+      const slug = isTherapist ? "therapist" : personaSlug(persona.name);
+      const svgFallback = portraitSvg(persona, isTherapist);
+      // Optimistic SVG so the seat never looks empty while we probe.
+      frameEl.innerHTML = svgFallback;
+      tryPortraitUrl(slug).then((url) => {
+        if (!url) return;
+        // Only replace if this frame is still showing the same person.
+        const stillSame =
+          (isTherapist && frameEl === therapistFrameEl) ||
+          (!isTherapist && clientChipEl && clientChipEl.textContent === persona.name.toUpperCase());
+        if (!stillSame && !isTherapist) return;
+        frameEl.innerHTML =
+          '<img src="' +
+          url +
+          '" alt="' +
+          (isTherapist ? "Therapist" : persona.name) +
+          '" decoding="async" />';
+      });
+    }
+
+    function applyPersona(persona) {
+      setFramePortrait(clientFrameEl, persona, false);
+      setFramePortrait(therapistFrameEl, persona, true);
+      const name = persona.name.toUpperCase();
+      clientNameTagEl.textContent = name;
+      clientChipEl.textContent = name;
+    }
+
+    function startNewRun() {
+      feedbackModalEl.classList.remove("open");
+      correctNextBtn.classList.remove("visible");
+      awaitingNextClick = false;
+      pickedIndex = null;
+      dings = 0;
+      currentIndex = 0;
+      wrongAnswersLog = [];
+      gameOver = false;
+
+      const uniquePicked = shuffleArray(NCE_SCENARIOS).slice(0, GAMES_PER_RUN);
+      const shuffledPersonas = shuffleArray(CLIENT_PERSONAS);
+
+      sessionQuestions = uniquePicked.map((item, idx) => {
+        const persona = shuffledPersonas[idx % shuffledPersonas.length];
+        const indexedOptions = item.options.map((text, optIdx) => ({
+          text,
+          isCorrect: optIdx === item.correct
+        }));
+        const shuffledOptions = shuffleArray(indexedOptions);
+        return {
+          persona,
+          domain: item.domain,
+          client: item.client,
+          options: shuffledOptions.map((o) => o.text),
+          correctIndex: shuffledOptions.findIndex((o) => o.isCorrect),
+          explanation: item.explanation
+        };
+      });
+
+      updateHud();
+      renderScenario();
+    }
+
+    function updateHud() {
+      const displayNum = Math.min(currentIndex + 1, GAMES_PER_RUN);
+      clientProgressEl.textContent = displayNum + " of " + GAMES_PER_RUN;
+      dingsCounterEl.textContent = dings + " / " + MAX_DINGS;
+    }
+
+    function renderScenario() {
+      if (gameOver && currentIndex >= sessionQuestions.length) {
+        showVictoryModal();
+        return;
+      }
+      correctNextBtn.classList.remove("visible");
+      awaitingNextClick = false;
+      pickedIndex = null;
+
+      if (currentIndex >= sessionQuestions.length) {
+        showVictoryModal();
+        return;
+      }
+
+      const q = sessionQuestions[currentIndex];
+      updateHud();
+      applyPersona(q.persona);
+      scenarioDomainEl.textContent = "DOMAIN: " + q.domain.toUpperCase();
+      clientStatementEl.textContent = '"' + q.client + '"';
+
+      const badges = ["A", "B", "C", "D"];
+      optionsGridEl.innerHTML = "";
+      q.options.forEach((optText, idx) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "response-btn";
+        btn.innerHTML = '<span class="opt-badge">' + badges[idx] + '</span><span>' + escapeHtml(optText) + '</span>';
+        btn.addEventListener("click", () => handleOptionSelect(idx));
+        optionsGridEl.appendChild(btn);
+      });
+    }
+
+    function setOptionsDisabled(disabled) {
+      optionsGridEl.querySelectorAll("button").forEach((b) => { b.disabled = disabled; });
+    }
+
+    function handleOptionSelect(chosenIndex) {
+      if (gameOver || awaitingNextClick) return;
+      const q = sessionQuestions[currentIndex];
+      pickedIndex = chosenIndex;
+      setOptionsDisabled(true);
+
+      const buttons = optionsGridEl.querySelectorAll("button");
+      if (chosenIndex === q.correctIndex) {
+        buttons[chosenIndex].classList.add("chosen-right");
+        awaitingNextClick = true;
+        correctNextBtn.classList.add("visible");
+        return;
+      }
+
+      buttons[chosenIndex].classList.add("chosen-wrong");
+      if (buttons[q.correctIndex]) buttons[q.correctIndex].classList.add("chosen-right");
+
+      dings += 1;
+      updateHud();
+      wrongAnswersLog.push({
+        clientName: q.persona.name,
+        domain: q.domain,
+        client: q.client,
+        chosenText: q.options[chosenIndex],
+        correctText: q.options[q.correctIndex],
+        explanation: q.explanation
+      });
+
+      if (dings >= MAX_DINGS) {
+        gameOver = true;
+        showRevokedModal();
+      } else {
+        showSingleDingModal();
+      }
+    }
+
+    correctNextBtn.addEventListener("click", () => {
+      if (!awaitingNextClick) return;
+      correctNextBtn.classList.remove("visible");
+      awaitingNextClick = false;
+      currentIndex += 1;
+      renderScenario();
+    });
+
+    function showSingleDingModal() {
+      const entry = wrongAnswersLog[wrongAnswersLog.length - 1];
+      feedbackModalBoxEl.className = "ding-modal-box";
+      feedbackModalTitleEl.className = "ding-modal-title";
+      feedbackModalTitleEl.textContent = "That is not how a licensed therapist should respond";
+      closeModalXBtn.style.display = "flex";
+      feedbackModalBodyEl.innerHTML =
+        "<p>Ding <strong>" + dings + " of " + MAX_DINGS + "</strong>.</p>" +
+        '<div class="said-box">' + escapeHtml(entry.client) + "</div>" +
+        '<p style="color:var(--rose);margin:0.35rem 0;"><strong>Your response:</strong> ' + escapeHtml(entry.chosenText) + "</p>" +
+        '<p style="color:var(--lime);margin:0.35rem 0;font-weight:700;"><strong>What you should have said:</strong> ' + escapeHtml(entry.correctText) + "</p>" +
+        '<p style="color:var(--text-secondary);margin:0.35rem 0;">' + escapeHtml(entry.explanation) + "</p>";
+      feedbackModalFooterEl.innerHTML = '<button type="button" class="primary-action-btn" id="ding-next-btn">Next client</button>';
+      document.getElementById("ding-next-btn").addEventListener("click", () => {
+        feedbackModalEl.classList.remove("open");
+        currentIndex += 1;
+        renderScenario();
+      });
+      feedbackModalEl.classList.add("open");
+    }
+
+    function reviewCardsHtml() {
+      return wrongAnswersLog.map((entry) =>
+        '<div class="revocation-card">' +
+        '<div class="q-label">' + escapeHtml(entry.clientName) + " • " + escapeHtml(entry.domain) + "</div>" +
+        '<div class="said-box" style="margin:0.35rem 0;">' + escapeHtml(entry.client) + "</div>" +
+        '<div class="wrong-ans"><strong>Your response:</strong> ' + escapeHtml(entry.chosenText) + "</div>" +
+        '<div class="right-ans"><strong>What you should have said:</strong> ' + escapeHtml(entry.correctText) + "</div>" +
+        '<div class="why-ans">' + escapeHtml(entry.explanation) + "</div>" +
+        "</div>"
+      ).join("");
+    }
+
+    function showRevokedModal() {
+      feedbackModalBoxEl.className = "ding-modal-box wide";
+      feedbackModalTitleEl.className = "ding-modal-title";
+      feedbackModalTitleEl.textContent = "The board has revoked your license as a therapist";
+      closeModalXBtn.style.display = "flex";
+      feedbackModalBodyEl.innerHTML =
+        "<p>You reached <strong>3 Dings</strong>. Review what the clients said:</p>" +
+        '<div class="revocation-list">' + reviewCardsHtml() + "</div>";
+      feedbackModalFooterEl.innerHTML =
+        '<button type="button" class="primary-action-btn" id="modal-restart-btn">New Session</button>' +
+        '<button type="button" class="secondary-action-btn" onclick="closeGameToLauncher()">Arcade Menu</button>';
+      document.getElementById("modal-restart-btn").addEventListener("click", startNewRun);
+      feedbackModalEl.classList.add("open");
+    }
+
+    function showVictoryModal() {
+      gameOver = true;
+      feedbackModalBoxEl.className = "ding-modal-box wide";
+      feedbackModalTitleEl.className = "ding-modal-title victory";
+      feedbackModalTitleEl.textContent = "Good job helping the clients!";
+      closeModalXBtn.style.display = "flex";
+      let body = "<p>Completed all 20 client sessions with <strong>" + dings + "</strong> of " + MAX_DINGS + " dings.</p>";
+      if (wrongAnswersLog.length > 0) {
+        body += '<div class="revocation-list">' + reviewCardsHtml() + "</div>";
+      }
+      feedbackModalBodyEl.innerHTML = body;
+      feedbackModalFooterEl.innerHTML =
+        '<button type="button" class="primary-action-btn" id="modal-victory-restart-btn">New Session</button>' +
+        '<button type="button" class="secondary-action-btn" onclick="closeGameToLauncher()">Arcade Menu</button>';
+      document.getElementById("modal-victory-restart-btn").addEventListener("click", startNewRun);
+      feedbackModalEl.classList.add("open");
+    }
+
+    closeModalXBtn.addEventListener("click", () => {
+      feedbackModalEl.classList.remove("open");
+      if (!gameOver) {
+        currentIndex += 1;
+        renderScenario();
+      }
+    });
+
+    newSessionBtn.addEventListener("click", startNewRun);
+
+    const menuBtn = document.getElementById("mobile-menu-btn");
+    const navDrawer = document.getElementById("nav-drawer");
+    if (menuBtn && navDrawer) {
+      menuBtn.addEventListener("click", () => {
+        const isOpen = navDrawer.classList.toggle("open");
+        menuBtn.setAttribute("aria-expanded", String(isOpen));
+        menuBtn.innerHTML = isOpen ? "Close &#10005;" : "Menu &#9776;";
+      });
+    }
+  </script>
 </body>
 </html>
