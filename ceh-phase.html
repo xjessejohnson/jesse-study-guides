@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Phase Rush</title>
+<style>body{margin:0;background:#0c1018;color:#fff;font-family:system-ui;min-height:100vh;display:flex;flex-direction:column}header{padding:1rem;display:flex;justify-content:space-between;border-bottom:1px solid #243044}header a{color:#a3e635;text-decoration:none}.arena{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;padding:1rem}.card{background:#141b2b;border:1px solid #243044;border-radius:14px;padding:1.3rem;max-width:460px;text-align:center}.btns{display:grid;grid-template-columns:1fr 1fr;gap:.5rem;width:100%;max-width:460px}.btns button{padding:.8rem;border:none;border-radius:8px;font-weight:700;cursor:pointer}</style></head>
+<body>
+<header><a href="ceh.html">&larr; Hub</a><strong>PHASE RUSH</strong><span id="s">0</span></header>
+<div class="arena"><div class="card" id="p"></div>
+<div class="btns">
+<button onclick="pick('recon')">Recon</button>
+<button onclick="pick('scan')">Scanning</button>
+<button onclick="pick('gain')">Gain Access</button>
+<button onclick="pick('cover')">Cover Tracks</button>
+</div></div>
+<script>
+const I=[{t:"Collect public WHOIS and job posts",c:"recon"},{t:"Run Nmap against in-scope hosts",c:"scan"},{t:"Use an authorized exploit module",c:"gain"},{t:"Clear test logs after documenting",c:"cover"},{t:"OSINT on employee LinkedIn",c:"recon"},{t:"Banner grab on open ports",c:"scan"},{t:"Obtain a reverse shell in scope",c:"gain"},{t:"Modify timestamps to hide activity",c:"cover"}];
+let i=0,sc=0;function show(){document.getElementById('p').textContent=I[i%I.length].t;}
+function pick(c){if(c===I[i%I.length].c)sc++;document.getElementById('s').textContent=sc;i++;show();}show();
+</script></body></html>
