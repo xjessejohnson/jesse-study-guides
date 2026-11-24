@@ -106,7 +106,18 @@
             <div class="game-card-top"><div class="game-icon-badge">⚡</div><span class="game-play-pill">Play →</span></div>
             <div class="game-title">Recon Rush</div>
             <div class="game-desc">45 seconds. Call the phase.</div>
-          </button></div>
+          </button>
+          <button type="button" class="game-selector-card" onclick="launch('auth')">
+            <div class="game-card-top"><div class="game-icon-badge">📝</div><span class="game-play-pill">Play →</span></div>
+            <div class="game-title">In Scope?</div>
+            <div class="game-desc">Decide what a written engagement allows.</div>
+          </button>
+          <button type="button" class="game-selector-card" onclick="launch('tool')">
+            <div class="game-card-top"><div class="game-icon-badge">🛠️</div><span class="game-play-pill">Play →</span></div>
+            <div class="game-title">Tool ID</div>
+            <div class="game-desc">Name the right tool for the job.</div>
+          </button>
+        </div>
     </div>
   </div>
   <div class="arcade-modal-backdrop" id="arcade">
@@ -126,7 +137,7 @@
   </div>
   <script src="theme.js"></script>
   <script>
-const GAMES = [{"id":"phase","name":"Phase Drop","type":"sort"},{"id":"match","name":"Tool Match","type":"memory"},{"id":"ladder","name":"Scope Ladder","type":"ladder"},{"id":"blitz","name":"Recon Rush","type":"blitz","timed":true}];
+const GAMES = [{"id":"phase","name":"Phase Drop","type":"sort"},{"id":"match","name":"Tool Match","type":"memory"},{"id":"ladder","name":"Scope Ladder","type":"ladder"},{"id":"blitz","name":"Recon Rush","type":"blitz","timed":true},{"id":"auth","name":"In Scope?","type":"sort"},{"id":"tool","name":"Tool ID","type":"scenario"}];
 const DATA = {
     scenarios: [],
     sort: [
