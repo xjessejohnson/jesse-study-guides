@@ -7,26 +7,54 @@
   <link rel="stylesheet" href="styles.css" />
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
   <style>
-    .exam-wrap { max-width: 800px; margin: 0 auto; padding: 1.5rem; }
-    .q-card { background: var(--bg-card); border: 1px solid var(--border-slate); border-radius: 12px; padding: 1.25rem; margin-bottom: 1rem; }
-    .q-num { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; color: #e8a87c; margin-bottom: 0.5rem; }
-    .q-text { font-size: 1.05rem; line-height: 1.5; margin-bottom: 1rem; color: #fff; }
-    .opt { display: block; width: 100%; text-align: left; background: #121927; border: 1.5px solid var(--border-slate); border-radius: 8px; padding: 0.75rem 1rem; margin-bottom: 0.5rem; color: #fff; cursor: pointer; font-size: 0.95rem; }
-    .opt:hover { border-color: #e8a87c; }
-    .opt.correct { border-color: #9eff33; background: rgba(158,255,51,0.1); }
-    .opt.wrong { border-color: #fb7185; background: rgba(251,113,133,0.1); }
-    .explain { margin-top: 0.75rem; padding: 0.75rem; background: rgba(13,18,28,0.8); border-radius: 8px; font-size: 0.88rem; color: var(--text-secondary); display: none; }
-    .explain.show { display: block; }
-    .score-bar { position: sticky; top: 0; background: #0b1220; padding: 0.75rem 1rem; border-bottom: 1px solid var(--border-slate); display: flex; justify-content: space-between; align-items: center; z-index: 10; }
-    .btn-back { color: #e8a87c; text-decoration: none; font-size: 0.85rem; }
+    body { background:#0b1220; color:#fff; font-family:'Plus Jakarta Sans',sans-serif; margin:0; min-height:100vh; }
+    .bar { display:flex; justify-content:space-between; align-items:center; padding:0.85rem 1.25rem; border-bottom:1px solid #243044; background:#0b1220; position:sticky; top:0; z-index:5; }
+    .bar a { color:#e8a87c; text-decoration:none; font-size:0.9rem; }
+    .timer { font-family:'JetBrains Mono',monospace; font-size:1.35rem; color:#e8a87c; }
+    .timer.warn { color:#fb7185; }
+    .wrap { max-width:720px; margin:0 auto; padding:1.5rem 1.25rem 3rem; }
+    .progress { font-family:'JetBrains Mono',monospace; font-size:0.8rem; color:#94a3b8; margin-bottom:0.75rem; }
+    .q { font-size:1.15rem; line-height:1.5; margin-bottom:1.25rem; }
+    .opt { display:block; width:100%; text-align:left; background:#121927; border:1.5px solid #243044; border-radius:10px; padding:0.85rem 1rem; margin-bottom:0.55rem; color:#fff; cursor:pointer; font-size:0.98rem; }
+    .opt:hover { border-color:#e8a87c; }
+    .opt.selected { border-color:#e8a87c; background:rgba(232,168,124,0.12); }
+    .navbtns { display:flex; gap:0.6rem; margin-top:1.25rem; }
+    .navbtns button { padding:0.7rem 1.2rem; border-radius:8px; border:none; cursor:pointer; font-weight:700; }
+    .next { background:#c45c26; color:#fff; }
+    .prev { background:#121927; color:#fff; border:1px solid #243044; }
+    .start, .done { text-align:center; padding:3rem 1rem; }
+    .start h1, .done h1 { font-family:'Archivo Black',sans-serif; }
+    .start button, .done a { display:inline-block; margin-top:1rem; padding:0.85rem 1.6rem; background:#c45c26; color:#fff; border:none; border-radius:10px; font-weight:700; text-decoration:none; cursor:pointer; }
+    .hidden { display:none; }
   </style>
 </head>
 <body>
-  <div class="score-bar">
-    <a href="olere.html" class="btn-back">&larr; OLERE Hub</a>
-    <span id="score">Score: 0 / 0</span>
+  <div class="bar">
+    <a href="olere.html">&larr; Hub</a>
+    <div class="timer" id="timer">60:00</div>
+    <div id="qnum">—</div>
   </div>
-  <div class="exam-wrap" id="exam"></div>
+  <div class="wrap">
+    <div class="start" id="start">
+      <h1>OLERE Practice Exam</h1>
+      <p style="color:#94a3b8;max-width:480px;margin:0.75rem auto;">Oklahoma Legal and Ethical Responsibilities Examination format. Timed session. Passing mark on the real exam is 80%.</p>
+      <button onclick="startExam()">Begin</button>
+    </div>
+    <div id="exam" class="hidden">
+      <div class="progress" id="progress"></div>
+      <div class="q" id="qtext"></div>
+      <div id="opts"></div>
+      <div class="navbtns">
+        <button class="prev" onclick="prevQ()">Previous</button>
+        <button class="next" id="nextBtn" onclick="nextQ()">Next</button>
+      </div>
+    </div>
+    <div class="done hidden" id="done">
+      <h1 id="resultTitle">Complete</h1>
+      <p id="resultBody" style="color:#94a3b8;"></p>
+      <a href="olere.html">Back to Hub</a>
+    </div>
+  </div>
   <script>
 const QUESTIONS = [
   { q: "In Oklahoma, how many hours of supervised experience are typically required for LPC licensure?", opts: ["1,000 hours", "2,000 hours", "3,000 hours", "4,000 hours"], correct: 2, exp: "Oklahoma requires 3,000 hours of supervised postgraduate experience for LPC licensure." },
@@ -71,34 +99,72 @@ const QUESTIONS = [
   { q: "Research with clients in Oklahoma requires:", opts: ["No consent", "Informed consent and ethical review as applicable", "Secret recording", "Payment to the board"], correct: 1, exp: "Research participation requires proper consent and protections." },
   { q: "The primary purpose of Oklahoma counseling regulation is:", opts: ["Maximizing counselor income", "Protecting the public", "Eliminating all rural practice", "Replacing national ethics codes"], correct: 1, exp: "Licensure exists primarily to protect public welfare." }
 ];
-let answered = 0, correctCount = 0;
-const exam = document.getElementById('exam');
-QUESTIONS.forEach((item, i) => {
-  const card = document.createElement('div');
-  card.className = 'q-card';
-  card.innerHTML = '<div class="q-num">Question ' + (i+1) + ' of ' + QUESTIONS.length + '</div><div class="q-text">' + item.q + '</div>';
+const EXAM_LEN = 40;
+const SECONDS = 60 * 60;
+let order = [], idx = 0, answers = {}, timeLeft = SECONDS, timerId = null;
+
+function shuffle(a) {
+  const c = [...a];
+  for (let i = c.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [c[i], c[j]] = [c[j], c[i]];
+  }
+  return c;
+}
+function startExam() {
+  order = shuffle(QUESTIONS).slice(0, EXAM_LEN);
+  idx = 0;
+  answers = {};
+  timeLeft = SECONDS;
+  document.getElementById('start').classList.add('hidden');
+  document.getElementById('exam').classList.remove('hidden');
+  render();
+  timerId = setInterval(tick, 1000);
+}
+function tick() {
+  timeLeft--;
+  const m = Math.floor(timeLeft / 60);
+  const s = timeLeft % 60;
+  const el = document.getElementById('timer');
+  el.textContent = m + ':' + String(s).padStart(2, '0');
+  if (timeLeft <= 300) el.classList.add('warn');
+  if (timeLeft <= 0) finish();
+}
+function render() {
+  const item = order[idx];
+  document.getElementById('progress').textContent = 'Question ' + (idx + 1) + ' of ' + order.length;
+  document.getElementById('qnum').textContent = (idx + 1) + ' / ' + order.length;
+  document.getElementById('qtext').textContent = item.q;
+  const box = document.getElementById('opts');
+  box.innerHTML = '';
   item.opts.forEach((opt, oi) => {
-    const btn = document.createElement('button');
-    btn.className = 'opt';
-    btn.textContent = opt;
-    btn.onclick = () => {
-      if (card.dataset.done) return;
-      card.dataset.done = '1';
-      answered++;
-      btn.classList.add(oi === item.correct ? 'correct' : 'wrong');
-      if (oi === item.correct) correctCount++;
-      else card.querySelectorAll('.opt')[item.correct].classList.add('correct');
-      card.querySelector('.explain').classList.add('show');
-      document.getElementById('score').textContent = 'Score: ' + correctCount + ' / ' + answered;
-    };
-    card.appendChild(btn);
+    const b = document.createElement('button');
+    b.className = 'opt' + (answers[idx] === oi ? ' selected' : '');
+    b.textContent = opt;
+    b.onclick = () => { answers[idx] = oi; render(); };
+    box.appendChild(b);
   });
-  const exp = document.createElement('div');
-  exp.className = 'explain';
-  exp.textContent = item.exp;
-  card.appendChild(exp);
-  exam.appendChild(card);
-});
+  document.getElementById('nextBtn').textContent = idx === order.length - 1 ? 'Submit' : 'Next';
+}
+function nextQ() {
+  if (idx === order.length - 1) finish();
+  else { idx++; render(); }
+}
+function prevQ() {
+  if (idx > 0) { idx--; render(); }
+}
+function finish() {
+  clearInterval(timerId);
+  let correct = 0;
+  order.forEach((item, i) => { if (answers[i] === item.correct) correct++; });
+  const pct = Math.round((correct / order.length) * 100);
+  const pass = pct >= 80;
+  document.getElementById('exam').classList.add('hidden');
+  document.getElementById('done').classList.remove('hidden');
+  document.getElementById('resultTitle').textContent = pass ? 'Pass' : 'Not yet';
+  document.getElementById('resultBody').textContent = correct + ' of ' + order.length + ' (' + pct + '%). Real OLERE passing mark is 80%.';
+  document.getElementById('timer').textContent = 'Done';
+}
   </script>
 </body>
 </html>
