@@ -810,39 +810,7 @@ const NCE_CORE_50 = [
       { domain: "Research & Program Evaluation", client: "In our clinic's study, why did the depressed patients with the absolute worst scores at intake improve slightly on the retest even before treatment started?", options: ["Extreme pretest scores naturally drift closer to the average on retesting due to regression toward the mean.", "That improvement is called the Pygmalion experimenter effect.", "It proves the intake paperwork cured their depression.", "That is an example of stratified random sampling error."], correct: 0, explanation: "Regression toward the mean is an internal validity threat where extreme initial scores move closer to the population mean upon retesting." },
       { domain: "Helping Relationships", client: "In DBT, what does it mean when we work on 'radical acceptance' of my painful past while also working hard to change my self-harm behaviors?", options: ["That's the core dialectic of DBT—balancing complete validation/acceptance of reality as it is with active behavioral change.", "It means giving up on changing your life and accepting defeat.", "Radical acceptance means approving of the people who hurt you.", "DBT focuses only on acceptance and ignores behavior change."], correct: 0, explanation: "Marsha Linehan's Dialectical Behavior Therapy synthesizes the dialectic of radical acceptance/validation and behavioral change." },
       { domain: "Treatment Planning", client: "Now that we're in our final session and I've met my goals, I suddenly felt a wave of nervousness about handling next month on my own.", options: ["Feeling ambivalent or briefly anxious at termination is normal; let's review your warning signs and relapse-prevention plan.", "That nervousness means you aren't ready and need another year of therapy.", "Termination should always happen abruptly so you don't feel sad.", "Ignore the nervousness—once you leave, you won't need coping skills."], correct: 0, explanation: "Healthy termination normalizes separation ambivalence, consolidates gains, and equips the client with a written relapse-prevention plan." }
-    ];
-const CLIENT_PERSONAS = [
-      { name: "Aaliyah", gender: "female", skin: "#5c3818", shade: "#2f1a09", hair: "#0a0a0a", shirt: "#f472b6", collar: "#fce7f3", style: "afro" },
-      { name: "Marcus", gender: "male", skin: "#8d5524", shade: "#593212", hair: "#111111", shirt: "#38bdf8", collar: "#e0f2fe", style: "fade" },
-      { name: "Priya", gender: "female", skin: "#c68642", shade: "#7c4d1e", hair: "#1a1a1a", shirt: "#a78bfa", collar: "#ede9fe", style: "long" },
-      { name: "Diego", gender: "male", skin: "#d4a574", shade: "#8c5930", hair: "#1c1917", shirt: "#fb923c", collar: "#ffedd5", style: "crop" },
-      { name: "Jordan", gender: "nonbinary", skin: "#e8c4a0", shade: "#a86d4a", hair: "#27272a", shirt: "#2dd4bf", collar: "#ccfbf1", style: "undercut" },
-      { name: "Mei", gender: "female", skin: "#f3d5b5", shade: "#b5825a", hair: "#171717", shirt: "#c084fc", collar: "#f3e8ff", style: "bob" },
-      { name: "Amir", gender: "male", skin: "#c68642", shade: "#7c4d1e", hair: "#0f172a", shirt: "#34d399", collar: "#d1fae5", style: "short" },
-      { name: "Sofia", gender: "female", skin: "#e0ac69", shade: "#966634", hair: "#3f2a1d", shirt: "#f87171", collar: "#fee2e2", style: "waves" },
-      { name: "Kai", gender: "nonbinary", skin: "#f5cba7", shade: "#a8724b", hair: "#44403c", shirt: "#818cf8", collar: "#e0e7ff", style: "crop" },
-      { name: "Nia", gender: "female", skin: "#4a2c17", shade: "#2a180c", hair: "#0a0a0a", shirt: "#fbbf24", collar: "#fef3c7", style: "braids" },
-      { name: "Ethan", gender: "male", skin: "#fde2c8", shade: "#bc8c63", hair: "#92400e", shirt: "#60a5fa", collar: "#dbeafe", style: "short" },
-      { name: "Fatima", gender: "female", skin: "#d99b66", shade: "#8c5930", hair: "#1e1b4b", shirt: "#22d3ee", collar: "#cffafe", style: "hijab" },
-      { name: "Ryan", gender: "male", skin: "#f1c29b", shade: "#a56948", hair: "#1e293b", shirt: "#4ade80", collar: "#dcfce7", style: "fade" },
-      { name: "Aisha", gender: "female", skin: "#6b3f22", shade: "#3d2412", hair: "#0c0a09", shirt: "#e879f9", collar: "#fae8ff", style: "locs" },
-      { name: "Chen", gender: "male", skin: "#e8be9c", shade: "#9a5b3c", hair: "#1c1917", shirt: "#38bdf8", collar: "#e0f2fe", style: "crop" },
-      { name: "Alex", gender: "nonbinary", skin: "#c68642", shade: "#7c4d1e", hair: "#57534e", shirt: "#f472b6", collar: "#fce7f3", style: "bob" },
-      { name: "Isabella", gender: "female", skin: "#f7d5b5", shade: "#b5825a", hair: "#7c2d12", shirt: "#fb7185", collar: "#ffe4e6", style: "long" },
-      { name: "Jamal", gender: "male", skin: "#5c3818", shade: "#2f1a09", hair: "#09090b", shirt: "#a3e635", collar: "#ecfccb", style: "short" },
-      { name: "Yuki", gender: "female", skin: "#f5d0b0", shade: "#b07d52", hair: "#18181b", shirt: "#67e8f9", collar: "#cffafe", style: "ponytail" },
-      { name: "Omar", gender: "male", skin: "#b9895a", shade: "#7a5330", hair: "#0f172a", shirt: "#f59e0b", collar: "#fef3c7", style: "fade" },
-      { name: "Taylor", gender: "nonbinary", skin: "#f3c69f", shade: "#a86d4a", hair: "#78716c", shirt: "#a78bfa", collar: "#ede9fe", style: "undercut" },
-      { name: "Camila", gender: "female", skin: "#c68642", shade: "#7c4d1e", hair: "#292524", shirt: "#f97316", collar: "#ffedd5", style: "waves" },
-      { name: "Noah", gender: "male", skin: "#fde8d0", shade: "#c4a574", hair: "#451a03", shirt: "#2dd4bf", collar: "#ccfbf1", style: "short" },
-      { name: "Zara", gender: "female", skin: "#8d5524", shade: "#593212", hair: "#0a0a0a", shirt: "#e11d48", collar: "#ffe4e6", style: "afro" },
-      { name: "Liam", gender: "male", skin: "#f1c29b", shade: "#a56948", hair: "#292524", shirt: "#6366f1", collar: "#e0e7ff", style: "crop" },
-      { name: "Samira", gender: "female", skin: "#d4a574", shade: "#8c5930", hair: "#1c1917", shirt: "#14b8a6", collar: "#ccfbf1", style: "hijab" },
-      { name: "Dev", gender: "male", skin: "#b9895a", shade: "#7a5330", hair: "#0c0a09", shirt: "#ef4444", collar: "#fee2e2", style: "short" },
-      { name: "Riley", gender: "nonbinary", skin: "#e8c4a0", shade: "#a86d4a", hair: "#44403c", shirt: "#ec4899", collar: "#fce7f3", style: "bob" },
-      { name: "Elena", gender: "female", skin: "#f7d5b5", shade: "#b5825a", hair: "#78350f", shirt: "#8b5cf6", collar: "#ede9fe", style: "long" },
-      { name: "Andre", gender: "male", skin: "#4a2c17", shade: "#2a180c", hair: "#0a0a0a", shirt: "#0ea5e9", collar: "#e0f2fe", style: "locs" }
-    
+    ,
       { domain: "Professional Orientation & Ethics", client: "My therapist friend asked me to describe a tough case from last week for their supervision group—they promised to keep it anonymous. Is that okay?", options: ["Peer consultation requires careful de-identification and ideally formal consent when feasible.", "Since they're a licensed counselor too, full case details are fine to share.", "Anonymous means you can use the client's first name and workplace.", "Only share if the client is no longer in active treatment."], correct: 0, explanation: "Even among professionals, consultation requires protecting identifiable information; 'anonymous' still risks recognition in small communities." },
       { domain: "Helping Relationships", client: "You keep reflecting my feelings back to me, but I already know I'm angry—shouldn't you just tell me what to do about my boss?", options: ["Advice can short-circuit exploration; reflecting helps you clarify what the anger protects.", "You're right—reflection is only useful with children or highly emotional clients.", "I'll switch to pure advice-giving since you prefer direct guidance.", "Anger always means you should confront the other person immediately."], correct: 0, explanation: "Premature advice can foster dependency and miss the protective function of the emotion; reflection supports client agency." },
       { domain: "Social & Cultural Foundations", client: "My family believes depression is a spiritual weakness, not a medical issue. Should I just ignore them and take the medication my doctor prescribed?", options: ["We can explore how to honor family values while also addressing symptoms that affect your functioning.", "Ignore family beliefs—scientific evidence always overrides cultural views.", "Stop the medication since family harmony matters more than individual symptoms.", "Tell your family their beliefs are outdated and harmful."], correct: 0, explanation: "Culturally responsive care integrates rather than dismisses family explanatory models while still addressing clinical needs." },
@@ -928,7 +896,42 @@ const CLIENT_PERSONAS = [
       { domain: "Group Work", client: "I noticed the group leader treating one member more gently than others. It bothers me but I haven't said anything.", options: ["Differential treatment is observable process; raising it allows the group to examine fairness and leadership.", "Leaders should treat all members identically at all times.", "If it bothers you, you are probably projecting.", "Members should not comment on leader behavior."], correct: 0, explanation: "Group members can provide feedback about leadership; leaders model openness to it." },
       { domain: "Career Development", client: "I love creative work but everyone says I need a 'real job' for stability. How do I decide?", options: ["Stability and creativity are not always opposed; hybrid paths, portfolio careers, and phased approaches can be explored.", "Creative careers are never financially stable.", "You should ignore practical concerns if you are passionate.", "Only people without families can pursue creative work."], correct: 0, explanation: "Career construction can integrate multiple values rather than forcing binary choices." },
       { domain: "Assessment & Testing", client: "The report says my adaptive functioning is lower than my IQ would predict. What does that mean?", options: ["Adaptive scores reflect everyday skills; a gap may indicate need for supports even with average cognitive ability.", "Lower adaptive scores mean the IQ test was wrong.", "Adaptive functioning always matches IQ closely.", "This pattern only occurs in intellectual disability."], correct: 0, explanation: "Discrepancies between cognitive and adaptive scores inform support planning." },
-      { domain: "Research & Program Evaluation", client: "Participants knew which treatment they were getting. Could that have affected the outcomes?", options: ["Expectancy and placebo effects can influence results when blinding is absent; designs try to minimize this.", "Knowing the treatment never affects self-report outcomes.", "Blinding is only necessary in drug studies.", "Open-label designs are always stronger."], correct: 0, explanation: "Awareness of condition assignment can shape responses through expectation." },
+      { domain: "Research & Program Evaluation", client: "Participants knew which treatment they were getting. Could that have affected the outcomes?", options: ["Expectancy and placebo effects can influence results when blinding is absent; designs try to minimize this.", "Knowing the treatment never affects self-report outcomes.", "Blinding is only necessary in drug studies.", "Open-label designs are always stronger."], correct: 0, explanation: "Awareness of condition assignment can shape responses through expectation." }
+    ];
+const CLIENT_PERSONAS = [
+      { name: "Aaliyah", gender: "female", skin: "#5c3818", shade: "#2f1a09", hair: "#0a0a0a", shirt: "#f472b6", collar: "#fce7f3", style: "afro" },
+      { name: "Marcus", gender: "male", skin: "#8d5524", shade: "#593212", hair: "#111111", shirt: "#38bdf8", collar: "#e0f2fe", style: "fade" },
+      { name: "Priya", gender: "female", skin: "#c68642", shade: "#7c4d1e", hair: "#1a1a1a", shirt: "#a78bfa", collar: "#ede9fe", style: "long" },
+      { name: "Diego", gender: "male", skin: "#d4a574", shade: "#8c5930", hair: "#1c1917", shirt: "#fb923c", collar: "#ffedd5", style: "crop" },
+      { name: "Jordan", gender: "nonbinary", skin: "#e8c4a0", shade: "#a86d4a", hair: "#27272a", shirt: "#2dd4bf", collar: "#ccfbf1", style: "undercut" },
+      { name: "Mei", gender: "female", skin: "#f3d5b5", shade: "#b5825a", hair: "#171717", shirt: "#c084fc", collar: "#f3e8ff", style: "bob" },
+      { name: "Amir", gender: "male", skin: "#c68642", shade: "#7c4d1e", hair: "#0f172a", shirt: "#34d399", collar: "#d1fae5", style: "short" },
+      { name: "Sofia", gender: "female", skin: "#e0ac69", shade: "#966634", hair: "#3f2a1d", shirt: "#f87171", collar: "#fee2e2", style: "waves" },
+      { name: "Kai", gender: "nonbinary", skin: "#f5cba7", shade: "#a8724b", hair: "#44403c", shirt: "#818cf8", collar: "#e0e7ff", style: "crop" },
+      { name: "Nia", gender: "female", skin: "#4a2c17", shade: "#2a180c", hair: "#0a0a0a", shirt: "#fbbf24", collar: "#fef3c7", style: "braids" },
+      { name: "Ethan", gender: "male", skin: "#fde2c8", shade: "#bc8c63", hair: "#92400e", shirt: "#60a5fa", collar: "#dbeafe", style: "short" },
+      { name: "Fatima", gender: "female", skin: "#d99b66", shade: "#8c5930", hair: "#1e1b4b", shirt: "#22d3ee", collar: "#cffafe", style: "hijab" },
+      { name: "Ryan", gender: "male", skin: "#f1c29b", shade: "#a56948", hair: "#1e293b", shirt: "#4ade80", collar: "#dcfce7", style: "fade" },
+      { name: "Aisha", gender: "female", skin: "#6b3f22", shade: "#3d2412", hair: "#0c0a09", shirt: "#e879f9", collar: "#fae8ff", style: "locs" },
+      { name: "Chen", gender: "male", skin: "#e8be9c", shade: "#9a5b3c", hair: "#1c1917", shirt: "#38bdf8", collar: "#e0f2fe", style: "crop" },
+      { name: "Alex", gender: "nonbinary", skin: "#c68642", shade: "#7c4d1e", hair: "#57534e", shirt: "#f472b6", collar: "#fce7f3", style: "bob" },
+      { name: "Isabella", gender: "female", skin: "#f7d5b5", shade: "#b5825a", hair: "#7c2d12", shirt: "#fb7185", collar: "#ffe4e6", style: "long" },
+      { name: "Jamal", gender: "male", skin: "#5c3818", shade: "#2f1a09", hair: "#09090b", shirt: "#a3e635", collar: "#ecfccb", style: "short" },
+      { name: "Yuki", gender: "female", skin: "#f5d0b0", shade: "#b07d52", hair: "#18181b", shirt: "#67e8f9", collar: "#cffafe", style: "ponytail" },
+      { name: "Omar", gender: "male", skin: "#b9895a", shade: "#7a5330", hair: "#0f172a", shirt: "#f59e0b", collar: "#fef3c7", style: "fade" },
+      { name: "Taylor", gender: "nonbinary", skin: "#f3c69f", shade: "#a86d4a", hair: "#78716c", shirt: "#a78bfa", collar: "#ede9fe", style: "undercut" },
+      { name: "Camila", gender: "female", skin: "#c68642", shade: "#7c4d1e", hair: "#292524", shirt: "#f97316", collar: "#ffedd5", style: "waves" },
+      { name: "Noah", gender: "male", skin: "#fde8d0", shade: "#c4a574", hair: "#451a03", shirt: "#2dd4bf", collar: "#ccfbf1", style: "short" },
+      { name: "Zara", gender: "female", skin: "#8d5524", shade: "#593212", hair: "#0a0a0a", shirt: "#e11d48", collar: "#ffe4e6", style: "afro" },
+      { name: "Liam", gender: "male", skin: "#f1c29b", shade: "#a56948", hair: "#292524", shirt: "#6366f1", collar: "#e0e7ff", style: "crop" },
+      { name: "Samira", gender: "female", skin: "#d4a574", shade: "#8c5930", hair: "#1c1917", shirt: "#14b8a6", collar: "#ccfbf1", style: "hijab" },
+      { name: "Dev", gender: "male", skin: "#b9895a", shade: "#7a5330", hair: "#0c0a09", shirt: "#ef4444", collar: "#fee2e2", style: "short" },
+      { name: "Riley", gender: "nonbinary", skin: "#e8c4a0", shade: "#a86d4a", hair: "#44403c", shirt: "#ec4899", collar: "#fce7f3", style: "bob" },
+      { name: "Elena", gender: "female", skin: "#f7d5b5", shade: "#b5825a", hair: "#78350f", shirt: "#8b5cf6", collar: "#ede9fe", style: "long" },
+      { name: "Andre", gender: "male", skin: "#4a2c17", shade: "#2a180c", hair: "#0a0a0a", shirt: "#0ea5e9", collar: "#e0f2fe", style: "locs" }
+    
+
+    
 
     ];
 
@@ -986,6 +989,8 @@ const CLIENT_PERSONAS = [
     const feedbackModalBodyEl = document.getElementById("feedback-modal-body");
     const feedbackModalFooterEl = document.getElementById("feedback-modal-footer");
     const closeModalXBtn = document.getElementById("close-modal-x");
+
+    let playerGender = "male";
 
     function openLauncherMenu() {
       feedbackModalEl.classList.remove("open");
@@ -1206,8 +1211,6 @@ const CLIENT_PERSONAS = [
         probe();
       });
     }
-
-    let playerGender = "male";
 
     function setFramePortrait(frameEl, persona, isTherapist) {
       const slug = isTherapist
