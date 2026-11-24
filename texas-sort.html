@@ -106,7 +106,18 @@
             <div class="game-card-top"><div class="game-icon-badge">⚡</div><span class="game-play-pill">Play →</span></div>
             <div class="game-title">Docket Dash</div>
             <div class="game-desc">45 seconds of rapid Texas law calls.</div>
-          </button></div>
+          </button>
+          <button type="button" class="game-selector-card" onclick="launch('minor')">
+            <div class="game-card-top"><div class="game-icon-badge">🧒</div><span class="game-play-pill">Play →</span></div>
+            <div class="game-title">Minor Privacy</div>
+            <div class="game-desc">Balance a teen client and a parent request.</div>
+          </button>
+          <button type="button" class="game-selector-card" onclick="launch('ad')">
+            <div class="game-card-top"><div class="game-icon-badge">📣</div><span class="game-play-pill">Play →</span></div>
+            <div class="game-title">Ad Check</div>
+            <div class="game-desc">Spot compliant and noncompliant Texas LPC ads.</div>
+          </button>
+        </div>
     </div>
   </div>
   <div class="arcade-modal-backdrop" id="arcade">
@@ -126,7 +137,7 @@
   </div>
   <script src="theme.js"></script>
   <script>
-const GAMES = [{"id":"bench","name":"BHEC Bench","type":"scenario"},{"id":"match","name":"Chapter Match","type":"memory"},{"id":"ladder","name":"Capitol Climb","type":"ladder"},{"id":"blitz","name":"Docket Dash","type":"blitz","timed":true}];
+const GAMES = [{"id":"bench","name":"BHEC Bench","type":"scenario"},{"id":"match","name":"Chapter Match","type":"memory"},{"id":"ladder","name":"Capitol Climb","type":"ladder"},{"id":"blitz","name":"Docket Dash","type":"blitz","timed":true},{"id":"minor","name":"Minor Privacy","type":"scenario"},{"id":"ad","name":"Ad Check","type":"sort"}];
 const DATA = {
     scenarios: [
       {client:"A parent demands every word from their 16-year-old's session.", opts:["Read the whole note aloud","Balance minor privacy with parental rights and safety","Refuse all contact","Post a summary"], correct:1, exp:"Minor confidentiality is limited, not absolute."},
