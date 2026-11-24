@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CEH | Jesse's Study Guides</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=JetBrains+Mono:wght@400;700&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    .hub-summary { background:rgba(16,23,38,.78); border:1px solid var(--border-slate); border-left:3px solid #a3e635; border-radius:10px; padding:1.15rem 1.35rem; margin-bottom:1.5rem; max-width:780px; }
+    .hub-summary p { color:var(--text-secondary); line-height:1.68; }
+    .module-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:1.25rem; margin-top:1.25rem; }
+    .module-card { background:var(--bg-card); border:1px solid var(--border-slate); border-radius:12px; padding:1.45rem; display:flex; flex-direction:column; justify-content:space-between; gap:1.25rem; }
+    .module-card:hover { border-color:#a3e635; }
+    .module-card h3 { font-family:'Archivo Black',sans-serif; font-size:1.02rem; text-transform:uppercase; color:#fff; margin:0 0 .4rem; }
+    .module-card p { font-size:.88rem; color:var(--text-secondary); }
+    .btn { padding:.75rem 1.25rem; border-radius:9px; background:#a3e635; color:#111; font-family:'JetBrains Mono',monospace; font-weight:700; font-size:.8rem; text-transform:uppercase; text-decoration:none; display:inline-flex; }
+  </style>
+</head>
+<body>
+  <div class="frame-wrapper">
+    <aside>
+      <div class="brand-block">
+        <div class="brand-row">
+          <div><a href="index.html" class="brand-title">Jesse's Study Guides</a><div class="brand-tagline">Unofficial compiled training database v1.0</div></div>
+          <button class="mobile-menu-btn" id="mobile-menu-btn">Menu &#9776;</button>
+        </div>
+        <a class="coffee-btn" href="https://www.buymeacoffee.com/xjessejohnson" target="_blank" rel="noopener noreferrer">&#9749; Buy Me a Coffee</a>
+      </div>
+      <nav class="nav-drawer" id="nav-drawer">
+        <div class="nav-section"><div class="nav-label">Cybersecurity</div>
+          <a href="cissp.html" class="nav-item"><span>CISSP</span><span class="badge live">Active</span></a>
+          <a href="cism.html" class="nav-item"><span>CISM</span><span class="badge live">Active</span></a>
+          <a href="secplus.html" class="nav-item"><span>Security+</span><span class="badge live">Active</span></a>
+          <a href="ceh.html" class="nav-item active"><span>CEH</span><span class="badge live">Active</span></a>
+        </div>
+        <div class="nav-section"><div class="nav-label">Psychology</div>
+          <a href="nce.html" class="nav-item"><span>NCE</span><span class="badge live">Active</span></a>
+          <a href="olere.html" class="nav-item"><span>OLERE (Oklahoma)</span><span class="badge live">Active</span></a>
+          <a href="texas.html" class="nav-item"><span>Texas LPC Jurisprudence</span><span class="badge live">Active</span></a>
+        </div>
+      </nav>
+    </aside>
+    <div class="main-area">
+      <div class="topbar"><div class="breadcrumb">JESSE'S STUDY GUIDES / CYBERSECURITY / <span>CEH</span></div><div class="status-pill"><span class="status-dot"></span> SYSTEM ONLINE</div></div>
+      <main class="content-body">
+        <div class="eyebrow">Cybersecurity Track // EC-Council</div>
+        <h1 class="hero-headline">CEH<br /><span class="outline">ETHICAL HACKER</span></h1>
+        <div class="hub-summary"><p><strong>Certified Ethical Hacker</strong> practice covering reconnaissance, scanning, exploitation concepts, and rules of engagement. For authorized testing knowledge only.</p></div>
+        <div class="module-grid">
+          <div class="module-card"><div><h3>Practice Exam</h3><p>Instant feedback or full exam mode, with question jumper.</p></div><a class="btn" href="ceh-exam.html">Launch Exam &rarr;</a></div>
+          <div class="module-card"><div><h3>Flashcards</h3><p>Phases, tools, and attack classes.</p></div><a class="btn" href="ceh-flashcards.html">Study Cards &rarr;</a></div>
+          <div class="module-card"><div><h3>Phase Rush</h3><p>Sort actions into the ethical hacking phases. Speed drill, not a scenario arcade.</p></div><a class="btn" href="ceh-phase.html">Play &rarr;</a></div>
+        </div>
+      </main>
+    </div>
+  </div>
+  <footer><p>&copy; 2026 Jesse Johnson. All rights reserved.</p><p>Independent study resource. Not affiliated with EC-Council. CEH is a trademark of EC-Council.</p></footer>
+  <script>document.getElementById('mobile-menu-btn').onclick=()=>document.getElementById('nav-drawer').classList.toggle('open');</script>
+</body>
+</html>
