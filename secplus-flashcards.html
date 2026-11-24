@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Security+ Flashcards</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    body { margin:0; background:#0b1220; color:#fff; font-family:'Plus Jakarta Sans',sans-serif; min-height:100vh; display:flex; flex-direction:column; }
+    .top { padding:1rem 1.25rem; display:flex; justify-content:space-between; border-bottom:1px solid #243044; }
+    .top a { color:#f87171; text-decoration:none; }
+    .stage { flex:1; display:flex; align-items:center; justify-content:center; padding:1.5rem; }
+    .card { width:min(520px,92vw); min-height:240px; background:#141b2b; border:1px solid #243044; border-radius:16px; padding:2rem; text-align:center; cursor:pointer; display:flex; flex-direction:column; justify-content:center; }
+    .label { font-family:'JetBrains Mono',monospace; font-size:0.7rem; color:#f87171; margin-bottom:0.8rem; }
+    .text { font-size:1.2rem; line-height:1.45; }
+    .controls { display:flex; gap:0.75rem; justify-content:center; padding:1rem; }
+    .controls button { padding:0.7rem 1.3rem; border-radius:8px; border:1px solid #243044; background:#121927; color:#fff; cursor:pointer; }
+    .controls .p { background:#ef4444; border-color:#ef4444; }
+  </style>
+</head>
+<body>
+  <div class="top"><a href="secplus.html">&larr; Hub</a><span id="count">1 / 20</span></div>
+  <div class="stage"><div class="card" onclick="flip()"><div class="label" id="label">TERM</div><div class="text" id="text"></div></div></div>
+  <div class="controls"><button onclick="prev()">Previous</button><button class="p" onclick="next()">Next</button></div>
+  <script>
+const CARDS = [
+  {t:"Least privilege", d:"Users and systems get only the access required to perform their role."},
+  {t:"Defense in depth", d:"Multiple overlapping security controls so one failure does not expose everything."},
+  {t:"Phishing", d:"Social engineering via fraudulent messages that trick users into revealing credentials or installing malware."},
+  {t:"Zero-day", d:"A vulnerability that is exploited before a patch is available."},
+  {t:"AES", d:"A widely used symmetric encryption algorithm."},
+  {t:"RSA", d:"A common asymmetric algorithm used for key exchange and digital signatures."},
+  {t:"SIEM", d:"Security information and event management — aggregates and correlates logs."},
+  {t:"IDS vs IPS", d:"IDS detects and alerts; IPS can also block traffic inline."},
+  {t:"MFA", d:"Authentication using factors from at least two different categories."},
+  {t:"Ransomware", d:"Malware that encrypts data and demands payment for restoration."},
+  {t:"Tailgating", d:"Following an authorized person through a physical access point."},
+  {t:"DLP", d:"Data loss prevention — controls that stop sensitive data from leaving the organization."},
+  {t:"Hot site", d:"A fully equipped alternate site ready for rapid failover."},
+  {t:"Change management", d:"Formal process for approving and tracking modifications."},
+  {t:"On-path attack", d:"Intercepting or altering communications between two parties (formerly MitM)."},
+  {t:"SHA-256", d:"A cryptographic hash function commonly used for integrity checking."},
+  {t:"Implicit deny", d:"Default stance that traffic or access is blocked unless explicitly allowed."},
+  {t:"Separation of duties", d:"Splitting critical tasks so no single person controls an entire sensitive process."},
+  {t:"VPN", d:"Encrypted tunnel for secure remote access over untrusted networks."},
+  {t:"Logic bomb", d:"Malicious code that triggers when a specific condition is met."}
+];
+let i=0, flipped=false;
+function render(){ flipped=false; document.getElementById('label').textContent='TERM'; document.getElementById('text').textContent=CARDS[i].t; document.getElementById('count').textContent=(i+1)+' / '+CARDS.length; }
+function flip(){ flipped=!flipped; document.getElementById('label').textContent=flipped?'DEFINITION':'TERM'; document.getElementById('text').textContent=flipped?CARDS[i].d:CARDS[i].t; }
+function next(){ i=(i+1)%CARDS.length; render(); }
+function prev(){ i=(i-1+CARDS.length)%CARDS.length; render(); }
+render();
+  </script>
+</body>
+</html>
