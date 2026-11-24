@@ -106,7 +106,18 @@
             <div class="game-card-top"><div class="game-icon-badge">⚡</div><span class="game-play-pill">Play →</span></div>
             <div class="game-title">Ethics Blitz</div>
             <div class="game-desc">45 seconds. Answer as many as you can.</div>
-          </button></div>
+          </button>
+          <button type="button" class="game-selector-card" onclick="launch('rural')">
+            <div class="game-card-top"><div class="game-icon-badge">🌾</div><span class="game-play-pill">Play →</span></div>
+            <div class="game-title">Rural Boundaries</div>
+            <div class="game-desc">Handle dual roles common in small Oklahoma towns.</div>
+          </button>
+          <button type="button" class="game-selector-card" onclick="launch('report')">
+            <div class="game-card-top"><div class="game-icon-badge">📞</div><span class="game-play-pill">Play →</span></div>
+            <div class="game-title">Report or Not</div>
+            <div class="game-desc">Decide what must be reported and what stays in the room.</div>
+          </button>
+        </div>
     </div>
   </div>
   <div class="arcade-modal-backdrop" id="arcade">
@@ -126,7 +137,7 @@
   </div>
   <script src="theme.js"></script>
   <script>
-const GAMES = [{"id":"counsel","name":"Prairie Counsel","type":"scenario"},{"id":"match","name":"Statute Match","type":"memory"},{"id":"ladder","name":"Sooner Ladder","type":"ladder"},{"id":"blitz","name":"Ethics Blitz","type":"blitz","timed":true}];
+const GAMES = [{"id":"counsel","name":"Prairie Counsel","type":"scenario"},{"id":"match","name":"Statute Match","type":"memory"},{"id":"ladder","name":"Sooner Ladder","type":"ladder"},{"id":"blitz","name":"Ethics Blitz","type":"blitz","timed":true},{"id":"rural","name":"Rural Boundaries","type":"sort"},{"id":"report","name":"Report or Not","type":"scenario"}];
 const DATA = {
     scenarios: [
       {client:"A client asks you to keep their affair secret from their spouse in couples work.", opts:["Keep it forever","Review the no-secrets policy from informed consent","Announce it next session without discussion","Report it to the board"], correct:1, exp:"Clarify the couples policy; do not collude in active deception."},
