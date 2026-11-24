@@ -10,5 +10,5 @@ const C=[{t:"Reconnaissance",d:"Gathering information about a target before acti
 let i=0,f=false;function show(){f=false;document.getElementById('card').textContent=C[i].t;document.getElementById('c').textContent=(i+1)+' / '+C.length;}
 function flip(){f=!f;document.getElementById('card').textContent=f?C[i].d:C[i].t;}
 function next(){i=(i+1)%C.length;show();}function prev(){i=(i-1+C.length)%C.length;show();}show();
-</script><script src="site.js"></script>
+</script><script src="theme.js"></script>
 </body></html>
