@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Security+ Practice Exam</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    body { background:#0b1220; color:#fff; font-family:'Plus Jakarta Sans',sans-serif; margin:0; }
+    .bar { display:flex; justify-content:space-between; align-items:center; padding:0.85rem 1.25rem; border-bottom:1px solid #243044; }
+    .bar a { color:#f87171; text-decoration:none; }
+    .timer { font-family:'JetBrains Mono',monospace; font-size:1.3rem; color:#f87171; }
+    .wrap { max-width:720px; margin:0 auto; padding:1.5rem; }
+    .q { font-size:1.12rem; line-height:1.5; margin-bottom:1rem; }
+    .opt { display:block; width:100%; text-align:left; background:#121927; border:1.5px solid #243044; border-radius:10px; padding:0.8rem 1rem; margin-bottom:0.5rem; color:#fff; cursor:pointer; }
+    .opt.selected { border-color:#ef4444; }
+    .navbtns { display:flex; gap:0.6rem; margin-top:1rem; }
+    .navbtns button { padding:0.7rem 1.2rem; border-radius:8px; border:none; cursor:pointer; font-weight:700; }
+    .next { background:#ef4444; color:#fff; }
+    .prev { background:#121927; color:#fff; border:1px solid #243044; }
+    .start, .done { text-align:center; padding:3rem 1rem; }
+    .hidden { display:none; }
+    .start button, .done a { display:inline-block; margin-top:1rem; padding:0.85rem 1.6rem; background:#ef4444; color:#fff; border:none; border-radius:10px; font-weight:700; text-decoration:none; cursor:pointer; }
+  </style>
+</head>
+<body>
+  <div class="bar"><a href="secplus.html">&larr; Hub</a><div class="timer" id="timer">90:00</div><div id="qnum">—</div></div>
+  <div class="wrap">
+    <div class="start" id="start">
+      <h1 style="font-family:'Archivo Black',sans-serif;">Security+ Practice</h1>
+      <p style="color:#94a3b8;">Timed session. Real exam is up to 90 questions in 90 minutes.</p>
+      <button onclick="startExam()">Begin</button>
+    </div>
+    <div id="exam" class="hidden">
+      <div id="progress" style="color:#94a3b8;font-size:0.8rem;margin-bottom:0.6rem;"></div>
+      <div class="q" id="qtext"></div>
+      <div id="opts"></div>
+      <div class="navbtns">
+        <button class="prev" onclick="prevQ()">Previous</button>
+        <button class="next" id="nextBtn" onclick="nextQ()">Next</button>
+      </div>
+    </div>
+    <div class="done hidden" id="done">
+      <h1 id="rt" style="font-family:'Archivo Black',sans-serif;">Done</h1>
+      <p id="rb" style="color:#94a3b8;"></p>
+      <a href="secplus.html">Back to Hub</a>
+    </div>
+  </div>
+  <script>
+const QUESTIONS = [
+  { q: "Which control type is a firewall?", opts: ["Detective", "Preventive", "Corrective", "Compensating"], correct: 1 },
+  { q: "A user receives an email asking them to verify a password via a fake login page. This is:", opts: ["Whaling", "Phishing", "Tailgating", "Dumpster diving"], correct: 1 },
+  { q: "Which principle limits user access to only what is required for their role?", opts: ["Separation of duties", "Least privilege", "Defense in depth", "Implicit deny"], correct: 1 },
+  { q: "AES is an example of:", opts: ["Asymmetric encryption", "Symmetric encryption", "Hashing", "Steganography"], correct: 1 },
+  { q: "Which log would best show a failed SSH login?", opts: ["Windows Application log", "Auth / secure log", "DNS query log", "DHCP lease log"], correct: 1 },
+  { q: "A zero-day is:", opts: ["A vulnerability with no available patch", "A scheduled maintenance window", "A backup rotation scheme", "An expired certificate"], correct: 0 },
+  { q: "Which protocol secures web traffic?", opts: ["FTP", "Telnet", "HTTPS", "SNMPv1"], correct: 2 },
+  { q: "Multi-factor authentication requires:", opts: ["Two passwords", "Factors from different categories", "A single biometric", "Only a hardware token"], correct: 1 },
+  { q: "Ransomware primarily:", opts: ["Steals bandwidth", "Encrypts data and demands payment", "Floods a network", "Alters DNS records"], correct: 1 },
+  { q: "A SIEM is used to:", opts: ["Replace firewalls", "Aggregate and correlate security events", "Issue digital certificates", "Provision user accounts"], correct: 1 },
+  { q: "Which is a detective control?", opts: ["Firewall rule", "Security camera review", "Door lock", "Encryption"], correct: 1 },
+  { q: "Social engineering relies mainly on:", opts: ["Exploiting software bugs", "Manipulating people", "Brute-forcing hashes", "Packet flooding"], correct: 1 },
+  { q: "A VPN primarily provides:", opts: ["Higher bandwidth", "Encrypted remote access", "Free public Wi-Fi", "Automatic patching"], correct: 1 },
+  { q: "Which hashing algorithm is currently preferred for integrity?", opts: ["MD5", "SHA-1", "SHA-256", "CRC32"], correct: 2 },
+  { q: "An IDS that only alerts is:", opts: ["Inline preventive", "Passive detective", "A load balancer", "A certificate authority"], correct: 1 },
+  { q: "Least privilege helps reduce:", opts: ["Hardware cost", "Blast radius of compromise", "Network latency", "Certificate expiration"], correct: 1 },
+  { q: "Which attack captures data in transit?", opts: ["On-path / MitM", "Logic bomb", "Race condition", "Buffer overflow only"], correct: 0 },
+  { q: "A hot site is:", opts: ["A fully ready alternate facility", "A list of phone numbers", "An unpatched server", "A cold backup tape"], correct: 0 },
+  { q: "Change management exists to:", opts: ["Skip testing", "Control modifications and reduce outages", "Disable logging", "Remove approvals"], correct: 1 },
+  { q: "Which is asymmetric?", opts: ["AES", "3DES", "RSA", "RC4"], correct: 2 },
+  { q: "Tailgating is:", opts: ["Following someone through a secure door", "Guessing passwords", "SQL injection", "ARP poisoning"], correct: 0 },
+  { q: "A DLP solution primarily:", opts: ["Blocks malware signatures", "Prevents sensitive data from leaving", "Issues VPN certs", "Balances web traffic"], correct: 1 },
+  { q: "Defense in depth means:", opts: ["One strong control", "Layered overlapping controls", "No logging", "Single firewall only"], correct: 1 },
+  { q: "Which port is HTTPS?", opts: ["21", "22", "80", "443"], correct: 3 },
+  { q: "A logic bomb:", opts: ["Triggers on a condition", "Is always ransomware", "Only affects mobile", "Is a physical device"], correct: 0 }
+];
+const SECONDS = 90 * 60;
+let order = [], idx = 0, answers = {}, timeLeft = SECONDS, timerId;
+function shuffle(a){const c=[...a]; for(let i=c.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[c[i],c[j]]=[c[j],c[i]];} return c;}
+function startExam(){
+  order = shuffle(QUESTIONS);
+  idx = 0; answers = {}; timeLeft = SECONDS;
+  document.getElementById('start').classList.add('hidden');
+  document.getElementById('exam').classList.remove('hidden');
+  render();
+  timerId = setInterval(()=>{
+    timeLeft--;
+    const m=Math.floor(timeLeft/60), s=timeLeft%60;
+    document.getElementById('timer').textContent = m+':'+String(s).padStart(2,'0');
+    if(timeLeft<=0) finish();
+  },1000);
+}
+function render(){
+  const item = order[idx];
+  document.getElementById('progress').textContent = 'Question '+(idx+1)+' of '+order.length;
+  document.getElementById('qnum').textContent = (idx+1)+' / '+order.length;
+  document.getElementById('qtext').textContent = item.q;
+  const box = document.getElementById('opts');
+  box.innerHTML = '';
+  item.opts.forEach((opt,oi)=>{
+    const b=document.createElement('button');
+    b.className='opt'+(answers[idx]===oi?' selected':'');
+    b.textContent=opt;
+    b.onclick=()=>{answers[idx]=oi; render();};
+    box.appendChild(b);
+  });
+  document.getElementById('nextBtn').textContent = idx===order.length-1?'Submit':'Next';
+}
+function nextQ(){ if(idx===order.length-1) finish(); else {idx++; render();} }
+function prevQ(){ if(idx>0){idx--; render();} }
+function finish(){
+  clearInterval(timerId);
+  let c=0; order.forEach((item,i)=>{ if(answers[i]===item.correct) c++; });
+  const pct=Math.round(c/order.length*100);
+  document.getElementById('exam').classList.add('hidden');
+  document.getElementById('done').classList.remove('hidden');
+  document.getElementById('rt').textContent = pct>=75?'Strong':'Keep studying';
+  document.getElementById('rb').textContent = c+' of '+order.length+' ('+pct+'%). Real Security+ uses a scaled score.';
+}
+  </script>
+</body>
+</html>
