@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://jesse-study-guides.vercel.app/sitemap.xml
