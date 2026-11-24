@@ -7,7 +7,7 @@
   <meta name="description" content="NCE Games developed by Jesse—play License Ding across 200 challenging clinical therapy scenarios." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
   <style>
     .hub-summary {
@@ -567,6 +567,23 @@
   </style>
 </head>
 <body>
+
+<div class="share-row" style="display:flex;gap:0.4rem;flex-wrap:wrap;margin:0.6rem 0;">
+  <button type="button" class="share-btn" onclick="shareGame()" style="padding:0.4rem 0.7rem;border-radius:8px;border:1px solid var(--border-slate);background:var(--bg-card);color:var(--text-primary);cursor:pointer;font-size:0.8rem;">Share</button>
+</div>
+<script>
+function shareGame(){
+  var url = location.href;
+  var title = document.title;
+  if (navigator.share) {
+    navigator.share({ title: title, url: url }).catch(function(){});
+  } else {
+    var text = encodeURIComponent(title + ' ' + url);
+    window.open('https://twitter.com/intent/tweet?text=' + text, '_blank', 'noopener');
+  }
+}
+</script>
+
   <div class="frame-wrapper" id="site-wrapper">
     <aside>
       <div class="brand-block">
@@ -603,7 +620,7 @@
         <div class="status-pill"><span class="status-dot"></span> SYSTEM ONLINE</div>
       </div>
       <main class="content-body">
-        <div class="eyebrow">Psychology Track // NBCC</div>
+        <div class="eyebrow">NBCC</div>
         <h1 class="hero-headline">NCE<br /><span class="outline">STUDY HUB</span></h1>
         <div class="hub-summary">
           <p>
@@ -908,7 +925,7 @@ const CLIENT_PERSONAS = [
       { name: "Amir", gender: "male", skin: "#c68642", shade: "#7c4d1e", hair: "#0f172a", shirt: "#34d399", collar: "#d1fae5", style: "short" },
       { name: "Sofia", gender: "female", skin: "#e0ac69", shade: "#966634", hair: "#3f2a1d", shirt: "#f87171", collar: "#fee2e2", style: "waves" },
       { name: "Kai", gender: "nonbinary", skin: "#f5cba7", shade: "#a8724b", hair: "#44403c", shirt: "#818cf8", collar: "#e0e7ff", style: "crop" },
-      { name: "Nia", gender: "female", skin: "#4a2c17", shade: "#2a180c", hair: "#0a0a0a", shirt: "#fbbf24", collar: "#fef3c7", style: "braids" },
+      { name: "Keisha", gender: "female", skin: "#4a2c17", shade: "#2a180c", hair: "#0a0a0a", shirt: "#fbbf24", collar: "#fef3c7", style: "braids" },
       { name: "Ethan", gender: "male", skin: "#fde2c8", shade: "#bc8c63", hair: "#92400e", shirt: "#60a5fa", collar: "#dbeafe", style: "short" },
       { name: "Fatima", gender: "female", skin: "#d99b66", shade: "#8c5930", hair: "#1e1b4b", shirt: "#22d3ee", collar: "#cffafe", style: "hijab" },
       { name: "Ryan", gender: "male", skin: "#f1c29b", shade: "#a56948", hair: "#1e293b", shirt: "#4ade80", collar: "#dcfce7", style: "fade" },
