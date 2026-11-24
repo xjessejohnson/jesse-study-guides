@@ -7,163 +7,165 @@
   <link rel="stylesheet" href="styles.css" />
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
   <style>
-    body { background:#0b1220; color:#fff; font-family:'Plus Jakarta Sans',sans-serif; margin:0; min-height:100vh; }
-    .bar { display:flex; justify-content:space-between; align-items:center; padding:0.85rem 1.25rem; border-bottom:1px solid #243044; background:#0b1220; position:sticky; top:0; z-index:5; }
-    .bar a { color:#e8a87c; text-decoration:none; font-size:0.9rem; }
-    .timer { font-family:'JetBrains Mono',monospace; font-size:1.35rem; color:#e8a87c; }
-    .timer.warn { color:#fb7185; }
-    .wrap { max-width:720px; margin:0 auto; padding:1.5rem 1.25rem 3rem; }
-    .progress { font-family:'JetBrains Mono',monospace; font-size:0.8rem; color:#94a3b8; margin-bottom:0.75rem; }
-    .q { font-size:1.15rem; line-height:1.5; margin-bottom:1.25rem; }
-    .opt { display:block; width:100%; text-align:left; background:#121927; border:1.5px solid #243044; border-radius:10px; padding:0.85rem 1rem; margin-bottom:0.55rem; color:#fff; cursor:pointer; font-size:0.98rem; }
-    .opt:hover { border-color:#e8a87c; }
-    .opt.selected { border-color:#e8a87c; background:rgba(232,168,124,0.12); }
-    .navbtns { display:flex; gap:0.6rem; margin-top:1.25rem; }
-    .navbtns button { padding:0.7rem 1.2rem; border-radius:8px; border:none; cursor:pointer; font-weight:700; }
-    .next { background:#c45c26; color:#fff; }
-    .prev { background:#121927; color:#fff; border:1px solid #243044; }
-    .start, .done { text-align:center; padding:3rem 1rem; }
-    .start h1, .done h1 { font-family:'Archivo Black',sans-serif; }
-    .start button, .done a { display:inline-block; margin-top:1rem; padding:0.85rem 1.6rem; background:#c45c26; color:#fff; border:none; border-radius:10px; font-weight:700; text-decoration:none; cursor:pointer; }
-    .hidden { display:none; }
-  </style>
+    .exam-topbar { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:0.85rem; margin-bottom:1.25rem; }
+    .btn-ghost { padding:0.55rem 1rem; border-radius:8px; border:1px solid var(--border-slate); background:transparent; color:var(--text-secondary); font-family:'JetBrains Mono',monospace; font-size:0.76rem; cursor:pointer; text-decoration:none; }
+    .btn-lime { padding:0.78rem 1.45rem; border-radius:9px; border:none; background:var(--lime); color:#05070c; font-family:'JetBrains Mono',monospace; font-weight:700; font-size:0.82rem; text-transform:uppercase; cursor:pointer; }
+    .progress-track { width:100%; height:5px; background:rgba(148,163,184,0.14); border-radius:999px; overflow:hidden; margin-bottom:1.4rem; }
+    .progress-fill { height:100%; background:linear-gradient(90deg,var(--cyan),var(--lime)); transition:width 0.25s ease; }
+    .q-card { background:var(--bg-card); border:1px solid var(--border-slate); border-radius:12px; padding:1.35rem; }
+    .q-text { font-size:1.08rem; line-height:1.5; margin-bottom:1rem; color:#fff; }
+    .opt { display:block; width:100%; text-align:left; background:#121927; border:1.5px solid var(--border-slate); border-radius:10px; padding:0.8rem 1rem; margin-bottom:0.5rem; color:#fff; cursor:pointer; font-size:0.95rem; }
+    .opt:hover { border-color:var(--cyan); }
+    .opt.selected { border-color:var(--lime); background:rgba(158,255,51,0.1); }
+    .opt.correct { border-color:var(--lime); }
+    .opt.wrong { border-color:var(--rose); }
+    .jump-wrap { margin-top:1.25rem; }
+    .jump-label { font-family:'JetBrains Mono',monospace; font-size:0.7rem; color:var(--text-secondary); margin-bottom:0.5rem; }
+    .jump-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(42px,1fr)); gap:0.35rem; }
+    .jump-opt { padding:0.4rem; border-radius:6px; border:1px solid transparent; background:rgba(255,255,255,0.04); color:var(--text-secondary); font-family:'JetBrains Mono',monospace; font-size:0.72rem; text-align:center; cursor:pointer; }
+    .jump-opt.answered { background:rgba(34,211,238,0.22); color:var(--cyan); }
+    .jump-opt.current { background:var(--lime); color:#05070c; font-weight:700; }
+    .mode-grid { display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin-top:1rem; }
+    .mode-choice { background:#121927; border:1.5px solid var(--border-slate); border-radius:12px; padding:1.1rem; text-align:left; cursor:pointer; color:#fff; }
+    .mode-choice:hover { border-color:var(--lime); }
+    .mode-choice-title { font-weight:700; margin-bottom:0.3rem; }
+    .mode-choice-desc { font-size:0.85rem; color:var(--text-secondary); }
+    .modal-backdrop { position:fixed; inset:0; background:rgba(0,0,0,0.72); display:none; align-items:center; justify-content:center; z-index:50; padding:1rem; }
+    .modal-backdrop.open { display:flex; }
+    .modal-box { background:#141b2b; border:1px solid var(--border-slate); border-radius:14px; padding:1.35rem; max-width:560px; width:100%; }
+    .nav-row { display:flex; gap:0.6rem; margin-top:1rem; }
+    @media (max-width:640px) { .mode-grid { grid-template-columns:1fr; } }
+</style>
 </head>
 <body>
-  <div class="bar">
-    <a href="olere.html">&larr; Hub</a>
-    <div class="timer" id="timer">60:00</div>
-    <div id="qnum">—</div>
-  </div>
-  <div class="wrap">
-    <div class="start" id="start">
-      <h1>OLERE Practice Exam</h1>
-      <p style="color:#94a3b8;max-width:480px;margin:0.75rem auto;">Oklahoma Legal and Ethical Responsibilities Examination format. Timed session. Passing mark on the real exam is 80%.</p>
-      <button onclick="startExam()">Begin</button>
+  <div class="frame-wrapper">
+    <div class="main-area" style="margin-left:0;">
+      <div class="topbar">
+        <div class="breadcrumb"><a href="olere.html" style="color:inherit;text-decoration:none;">← Hub</a> / <span>EXAM</span></div>
+        <div class="status-pill"><span class="status-dot"></span> <span id="mode-label">Select mode</span></div>
+      </div>
+      <main class="content-body" id="exam-main"></main>
     </div>
-    <div id="exam" class="hidden">
-      <div class="progress" id="progress"></div>
-      <div class="q" id="qtext"></div>
-      <div id="opts"></div>
-      <div class="navbtns">
-        <button class="prev" onclick="prevQ()">Previous</button>
-        <button class="next" id="nextBtn" onclick="nextQ()">Next</button>
+  </div>
+  <div class="modal-backdrop open" id="mode-modal">
+    <div class="modal-box">
+      <div style="font-family:'Archivo Black',sans-serif;font-size:1.2rem;margin-bottom:0.4rem;">Select Exam Mode</div>
+      <p style="color:var(--text-secondary);font-size:0.92rem;">Oklahoma Legal and Ethical Responsibilities Examination practice.</p>
+      <div class="mode-grid">
+        <button type="button" class="mode-choice" onclick="startMode('instant')">
+          <div class="mode-choice-title">Answers Instantly</div>
+          <div class="mode-choice-desc">Immediate feedback with explanation. Jump between questions anytime.</div>
+        </button>
+        <button type="button" class="mode-choice" onclick="startMode('end')">
+          <div class="mode-choice-title">Answers at the End</div>
+          <div class="mode-choice-desc">Answer the full set, then review score and explanations.</div>
+        </button>
       </div>
     </div>
-    <div class="done hidden" id="done">
-      <h1 id="resultTitle">Complete</h1>
-      <p id="resultBody" style="color:#94a3b8;"></p>
-      <a href="olere.html">Back to Hub</a>
+  </div>
+  <div class="modal-backdrop" id="feedback-modal">
+    <div class="modal-box">
+      <div id="fb-title" style="font-weight:700;margin-bottom:0.5rem;"></div>
+      <div id="fb-body" style="color:var(--text-secondary);font-size:0.92rem;line-height:1.5;"></div>
+      <button class="btn-lime" style="margin-top:1rem;" onclick="closeFb()">Continue</button>
     </div>
   </div>
   <script>
-const QUESTIONS = [
-  { q: "In Oklahoma, how many hours of supervised experience are typically required for LPC licensure?", opts: ["1,000 hours", "2,000 hours", "3,000 hours", "4,000 hours"], correct: 2, exp: "Oklahoma requires 3,000 hours of supervised postgraduate experience for LPC licensure." },
-  { q: "Which board regulates Licensed Professional Counselors in Oklahoma?", opts: ["Oklahoma Medical Board", "State Board of Behavioral Health Licensure", "Oklahoma Psychology Board", "Department of Human Services"], correct: 1, exp: "The Oklahoma State Board of Behavioral Health Licensure oversees LPC licensure." },
-  { q: "Oklahoma mandated reporters must report suspected child abuse to:", opts: ["Only the school principal", "DHS Child Welfare or law enforcement", "The client's parents first", "The licensing board only"], correct: 1, exp: "Mandated reporters contact the Oklahoma Department of Human Services or law enforcement." },
-  { q: "An LPC in Oklahoma may practice independently after:", opts: ["Graduation from a master's program", "Passing the NCE only", "Completing supervision and obtaining full licensure", "One year of any counseling work"], correct: 2, exp: "Independent practice requires completion of required supervision and full LPC licensure." },
-  { q: "Continuing education for Oklahoma LPCs is required:", opts: ["Every year with no exceptions", "Biennially, with specific hour requirements", "Only when changing employers", "Never after initial licensure"], correct: 1, exp: "Oklahoma requires ongoing CE for license renewal on a set cycle." },
-  { q: "A dual relationship in a small Oklahoma town is:", opts: ["Always prohibited with no exceptions", "Sometimes unavoidable; must be managed carefully", "Encouraged to build community trust", "Only a problem in urban areas"], correct: 1, exp: "Rural practice may involve unavoidable multiple relationships that require careful boundary management." },
-  { q: "Client records in Oklahoma must generally be retained for:", opts: ["1 year", "3 years", "7 years or as required by rule", "Indefinitely"], correct: 2, exp: "Record retention follows board rules, typically several years after last contact." },
-  { q: "An LPC candidate (under supervision) in Oklahoma:", opts: ["May practice without any oversight", "Must practice under an approved supervisor", "Can bill insurance independently", "Needs no documentation of hours"], correct: 1, exp: "Candidates accrue hours under board-approved supervision." },
-  { q: "Informed consent in Oklahoma counseling should include:", opts: ["Only the fee amount", "Limits of confidentiality, fees, and therapist credentials", "A guarantee of specific outcomes", "The client's social media handles"], correct: 1, exp: "Informed consent covers confidentiality limits, costs, qualifications, and treatment nature." },
-  { q: "Sexual contact with a current client in Oklahoma is:", opts: ["Permitted if the client initiates", "Always unethical and prohibited", "Allowed after 6 months", "Acceptable in rural areas"], correct: 1, exp: "Sexual relationships with current clients are strictly prohibited." },
-  { q: "Privilege (confidentiality in legal proceedings) for counseling in Oklahoma:", opts: ["Does not exist", "May be limited by court order or mandated reporting", "Is absolute with no exceptions", "Only applies to psychiatrists"], correct: 1, exp: "Privilege has exceptions including court orders and safety-related mandates." },
-  { q: "An Oklahoma LPC who moves to another state:", opts: ["Automatically has a license there", "Must meet that state's requirements", "Can practice anywhere with an OK license", "Loses the OK license immediately"], correct: 1, exp: "Licensure is state-specific; other states have their own requirements." },
-  { q: "Supervision hours in Oklahoma must be:", opts: ["Documented and verifiable", "Estimated by the candidate", "Only verbal with no records", "Completed entirely online with no rules"], correct: 0, exp: "Supervision must be properly documented per board requirements." },
-  { q: "Bartering for services with a client in Oklahoma:", opts: ["Is always acceptable", "Requires careful consideration of exploitation risk", "Is required in rural areas", "Is prohibited by federal law only"], correct: 1, exp: "Bartering can create conflicts; ethics codes urge caution." },
-  { q: "A client requests their records. In Oklahoma, the LPC should:", opts: ["Always refuse", "Provide access consistent with law and ethics, with limited exceptions", "Charge any amount desired", "Destroy the records first"], correct: 1, exp: "Clients generally have a right to access records, with narrow exceptions." },
-  { q: "Telehealth counseling for Oklahoma clients:", opts: ["Has no regulations", "Must comply with Oklahoma licensure and applicable rules", "Is only allowed for psychiatrists", "Requires no informed consent"], correct: 1, exp: "Telehealth is regulated; the counselor must be appropriately licensed for the client's location." },
-  { q: "Reporting colleague impairment in Oklahoma is:", opts: ["Never appropriate", "An ethical responsibility when client welfare is at risk", "Only the board's job", "Optional gossip"], correct: 1, exp: "Ethical codes support addressing impairment that risks clients." },
-  { q: "The NCE is:", opts: ["An Oklahoma-only exam", "A national exam often required alongside state requirements", "Replaced by OLERE entirely", "Only for social workers"], correct: 1, exp: "Many states including Oklahoma use the NCE plus state-specific requirements." },
-  { q: "Advertising counseling services in Oklahoma must:", opts: ["Guarantee cures", "Be truthful and not misleading", "Include client testimonials always", "Hide the counselor's credentials"], correct: 1, exp: "Advertising must be accurate and not deceptive." },
-  { q: "A minor client in Oklahoma:", opts: ["Always has full confidentiality from parents", "Has confidentiality with exceptions related to safety and parental rights", "Cannot receive counseling", "Must have a court order for any session"], correct: 1, exp: "Minor confidentiality is limited; parents often have rights, balanced with minor welfare." },
-  { q: "Abandonment of a client occurs when an LPC:", opts: ["Takes a planned vacation with coverage", "Terminates suddenly without referral when still needed", "Refers appropriately", "Ends treatment by mutual agreement"], correct: 1, exp: "Abrupt termination without arrangement for continued care can constitute abandonment." },
-  { q: "Fees and billing in Oklahoma should be:", opts: ["Hidden until the end", "Disclosed in advance as part of informed consent", "Changed without notice", "Based solely on client income with no discussion"], correct: 1, exp: "Financial arrangements belong in informed consent." },
-  { q: "An LPC may release information without consent when:", opts: ["A friend asks nicely", "Mandated reporting or a valid court order applies", "The client is late to a session", "Never under any circumstances"], correct: 1, exp: "Exceptions include legal mandates and certain safety situations." },
-  { q: "Scope of practice for an Oklahoma LPC includes:", opts: ["Prescribing medication", "Counseling within education and competence", "Performing surgery", "Legal representation"], correct: 1, exp: "Practice must stay within training, competence, and legal authorization." },
-  { q: "Documentation of sessions should be:", opts: ["Optional", "Timely, accurate, and sufficient for continuity", "Shared on social media", "Destroyed daily"], correct: 1, exp: "Records support care continuity and meet professional standards." },
-  { q: "A conflict of interest arises when:", opts: ["The counselor has lunch alone", "Personal interests could impair professional judgment", "The client pays the agreed fee", "Sessions occur in an office"], correct: 1, exp: "Conflicts exist when personal gain or relationships may bias care." },
-  { q: "Group counseling confidentiality in Oklahoma:", opts: ["Can be absolutely guaranteed by the leader", "Cannot be fully guaranteed because members are not bound like the counselor", "Is irrelevant", "Only applies to the leader"], correct: 1, exp: "Leaders must explain that member-to-member confidentiality cannot be enforced the same way." },
-  { q: "License renewal in Oklahoma typically requires:", opts: ["Nothing after initial issue", "CE hours and fees by the deadline", "Retaking the NCE every year", "A new degree"], correct: 1, exp: "Renewal involves continuing education and administrative requirements." },
-  { q: "If a client threatens serious harm to an identifiable person, the Oklahoma counselor:", opts: ["Must always stay silent", "May have a duty to warn or protect consistent with law", "Should post about it online", "Only tells the client's family"], correct: 1, exp: "Duty-to-protect principles may require action when imminent harm is foreseeable." },
-  { q: "Internship or practicum hours for Oklahoma licensure:", opts: ["Count fully without supervision rules", "Must meet board-specified supervision standards", "Are optional", "Can be fabricated"], correct: 1, exp: "Training hours must satisfy board supervision and documentation rules." },
-  { q: "Cultural competence in Oklahoma practice means:", opts: ["Ignoring cultural differences", "Providing services responsive to client cultural context", "Only seeing clients from one background", "Memorizing one textbook"], correct: 1, exp: "Effective practice includes cultural responsiveness." },
-  { q: "Termination of counseling should include:", opts: ["No discussion", "Planning, review of progress, and referrals if needed", "Immediate ghosting", "A social media announcement"], correct: 1, exp: "Ethical termination is collaborative and provides for continuity when appropriate." },
-  { q: "An Oklahoma LPC using assessments must:", opts: ["Use any test found online", "Be qualified and use instruments appropriately", "Skip informed consent", "Share raw data publicly"], correct: 1, exp: "Assessment use requires competence and proper administration." },
-  { q: "Gifts from clients:", opts: ["Must always be accepted", "Should be evaluated for impact on the relationship", "Are required", "Are illegal"], correct: 1, exp: "Gifts can affect boundaries and should be handled thoughtfully." },
-  { q: "Supervision notes for candidates should:", opts: ["Be discarded immediately", "Document hours, content, and evaluation as required", "Be posted publicly", "Only exist verbally"], correct: 1, exp: "Proper supervision documentation protects the candidate and the public." },
-  { q: "A complaint to the Oklahoma board may result in:", opts: ["Nothing ever", "Investigation and possible sanctions", "Automatic prison", "A cash prize"], correct: 1, exp: "Boards investigate complaints and may impose discipline." },
-  { q: "Confidentiality after client death in Oklahoma:", opts: ["Ends completely", "Generally continues, with legal exceptions", "Requires a blog post", "Is optional"], correct: 1, exp: "Confidentiality obligations typically survive death unless law provides otherwise." },
-  { q: "Multiple clients from the same family:", opts: ["Never create issues", "Require clear policies about secrets and roles", "Are always ideal", "Are prohibited by federal tax law"], correct: 1, exp: "Treating related clients needs clear agreements about information sharing." },
-  { q: "Emergency coverage when an LPC is unavailable:", opts: ["Is unnecessary", "Should be arranged so clients are not abandoned", "Means deleting the practice", "Is only for hospitals"], correct: 1, exp: "Reasonable coverage planning supports continuity of care." },
-  { q: "Research with clients in Oklahoma requires:", opts: ["No consent", "Informed consent and ethical review as applicable", "Secret recording", "Payment to the board"], correct: 1, exp: "Research participation requires proper consent and protections." },
-  { q: "The primary purpose of Oklahoma counseling regulation is:", opts: ["Maximizing counselor income", "Protecting the public", "Eliminating all rural practice", "Replacing national ethics codes"], correct: 1, exp: "Licensure exists primarily to protect public welfare." }
-];
-const EXAM_LEN = 40;
-const SECONDS = 60 * 60;
-let order = [], idx = 0, answers = {}, timeLeft = SECONDS, timerId = null;
 
-function shuffle(a) {
-  const c = [...a];
-  for (let i = c.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1));
-    [c[i], c[j]] = [c[j], c[i]];
-  }
-  return c;
-}
-function startExam() {
-  order = shuffle(QUESTIONS).slice(0, EXAM_LEN);
-  idx = 0;
-  answers = {};
-  timeLeft = SECONDS;
-  document.getElementById('start').classList.add('hidden');
-  document.getElementById('exam').classList.remove('hidden');
+const QUESTIONS = [
+  { q: "In Oklahoma, how many hours of supervised experience are typically required for LPC licensure?", opts: ["1,000 hours","2,000 hours","3,000 hours","4,000 hours"], correct: 2, exp: "Oklahoma requires 3,000 hours of supervised postgraduate experience for LPC licensure." },
+  { q: "Which board regulates Licensed Professional Counselors in Oklahoma?", opts: ["Oklahoma Medical Board","State Board of Behavioral Health Licensure","Oklahoma Psychology Board","Department of Human Services"], correct: 1, exp: "The Oklahoma State Board of Behavioral Health Licensure oversees LPC licensure." },
+  { q: "Oklahoma mandated reporters must report suspected child abuse to:", opts: ["Only the school principal","DHS Child Welfare or law enforcement","The client's parents first","The licensing board only"], correct: 1, exp: "Mandated reporters contact DHS or law enforcement." },
+  { q: "An LPC in Oklahoma may practice independently after:", opts: ["Graduation only","Passing the NCE only","Completing supervision and obtaining full licensure","One year of any work"], correct: 2, exp: "Independent practice requires completed supervision and full licensure." },
+  { q: "Sexual contact with a current client in Oklahoma is:", opts: ["Permitted if the client initiates","Always prohibited","Allowed after 6 months","Acceptable in rural areas"], correct: 1, exp: "Sexual relationships with current clients are strictly prohibited." },
+  { q: "Informed consent in Oklahoma counseling should include:", opts: ["Only the fee","Limits of confidentiality, fees, and credentials","A guarantee of outcomes","Social media handles"], correct: 1, exp: "Informed consent covers confidentiality limits, costs, and qualifications." },
+  { q: "A dual relationship in a small Oklahoma town is:", opts: ["Always prohibited with no nuance","Sometimes unavoidable and must be managed","Encouraged","Only a problem in cities"], correct: 1, exp: "Rural practice may involve unavoidable multiple relationships requiring careful management." },
+  { q: "Telehealth counseling for Oklahoma clients:", opts: ["Has no rules","Must comply with Oklahoma licensure for the client's location","Is only for psychiatrists","Needs no consent"], correct: 1, exp: "The counselor must be appropriately licensed for where the client is located." },
+  { q: "If a client threatens serious harm to an identifiable person, the counselor:", opts: ["Must always stay silent","May have a duty to protect consistent with law","Should post online","Only tells family"], correct: 1, exp: "Duty-to-protect principles may require action when imminent harm is foreseeable." },
+  { q: "The primary purpose of Oklahoma counseling regulation is:", opts: ["Maximizing income","Protecting the public","Eliminating rural practice","Replacing national ethics"], correct: 1, exp: "Licensure exists primarily to protect public welfare." },
+  { q: "Client records in Oklahoma must generally be:", opts: ["Destroyed daily","Retained per board rule","Posted publicly","Optional"], correct: 1, exp: "Record retention follows board rules after last contact." },
+  { q: "An LPC candidate under supervision in Oklahoma:", opts: ["May practice with no oversight","Must practice under an approved supervisor","Can bill independently with no rules","Needs no hour logs"], correct: 1, exp: "Candidates accrue hours under board-approved supervision." },
+  { q: "Advertising counseling services in Oklahoma must:", opts: ["Guarantee cures","Be truthful and not misleading","Always include testimonials","Hide credentials"], correct: 1, exp: "Advertising must be accurate." },
+  { q: "A minor client in Oklahoma:", opts: ["Always has full confidentiality from parents","Has confidentiality with safety and parental-rights exceptions","Cannot receive counseling","Needs a court order for any session"], correct: 1, exp: "Minor confidentiality is limited and balanced with parental rights and safety." },
+  { q: "Abandonment occurs when an LPC:", opts: ["Takes planned leave with coverage","Terminates suddenly without referral when still needed","Refers appropriately","Ends by mutual agreement"], correct: 1, exp: "Abrupt termination without continuity arrangements can be abandonment." },
+  { q: "Privilege for counseling communications in Oklahoma:", opts: ["Does not exist","May be limited by court order or mandated reporting","Is absolute","Only applies to psychiatrists"], correct: 1, exp: "Privilege has exceptions including court orders and safety mandates." },
+  { q: "Continuing education for Oklahoma LPCs is:", opts: ["Never required","Required on the renewal cycle","Only when changing jobs","Optional after year one"], correct: 1, exp: "Oklahoma requires ongoing CE for renewal." },
+  { q: "Bartering for services:", opts: ["Is always fine","Requires careful consideration of exploitation risk","Is required in rural areas","Is banned by federal tax law only"], correct: 1, exp: "Bartering can create conflicts and should be handled with caution." },
+  { q: "A client requests their records. The LPC should:", opts: ["Always refuse","Provide access consistent with law, with limited exceptions","Charge any amount","Destroy them first"], correct: 1, exp: "Clients generally have a right of access, with narrow exceptions." },
+  { q: "Scope of practice for an Oklahoma LPC includes:", opts: ["Prescribing medication","Counseling within education and competence","Surgery","Legal representation"], correct: 1, exp: "Practice must stay within training, competence, and legal authorization." }
+];
+
+let mode = null, idx = 0, answers = {}, locked = {};
+function startMode(m) {
+  mode = m;
+  document.getElementById('mode-modal').classList.remove('open');
+  document.getElementById('mode-label').textContent = m === 'instant' ? 'Instant feedback' : 'Exam mode';
   render();
-  timerId = setInterval(tick, 1000);
-}
-function tick() {
-  timeLeft--;
-  const m = Math.floor(timeLeft / 60);
-  const s = timeLeft % 60;
-  const el = document.getElementById('timer');
-  el.textContent = m + ':' + String(s).padStart(2, '0');
-  if (timeLeft <= 300) el.classList.add('warn');
-  if (timeLeft <= 0) finish();
 }
 function render() {
-  const item = order[idx];
-  document.getElementById('progress').textContent = 'Question ' + (idx + 1) + ' of ' + order.length;
-  document.getElementById('qnum').textContent = (idx + 1) + ' / ' + order.length;
-  document.getElementById('qtext').textContent = item.q;
-  const box = document.getElementById('opts');
-  box.innerHTML = '';
-  item.opts.forEach((opt, oi) => {
-    const b = document.createElement('button');
-    b.className = 'opt' + (answers[idx] === oi ? ' selected' : '');
-    b.textContent = opt;
-    b.onclick = () => { answers[idx] = oi; render(); };
-    box.appendChild(b);
+  const q = QUESTIONS[idx];
+  const main = document.getElementById('exam-main');
+  const pct = Math.round(((idx) / QUESTIONS.length) * 100);
+  let opts = '';
+  q.opts.forEach((o, i) => {
+    const sel = answers[idx] === i ? ' selected' : '';
+    const mark = locked[idx] ? (i === q.correct ? ' correct' : (answers[idx] === i ? ' wrong' : '')) : '';
+    opts += '<button class="opt' + sel + mark + '" onclick="pick(' + i + ')">' + o + '</button>';
   });
-  document.getElementById('nextBtn').textContent = idx === order.length - 1 ? 'Submit' : 'Next';
+  let jumps = '';
+  QUESTIONS.forEach((_, i) => {
+    const cls = (i === idx ? ' current' : '') + (answers[i] !== undefined ? ' answered' : '');
+    jumps += '<button class="jump-opt' + cls + '" onclick="jump(' + i + ')">' + (i + 1) + '</button>';
+  });
+  main.innerHTML = `
+    <div class="exam-topbar">
+      <div>Question ${idx + 1} of ${QUESTIONS.length}</div>
+      <a class="btn-ghost" href="olere.html">Exit</a>
+    </div>
+    <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
+    <div class="q-card">
+      <div class="q-text">${q.q}</div>
+      ${opts}
+      <div class="nav-row">
+        <button class="btn-ghost" onclick="prev()">Previous</button>
+        <button class="btn-lime" onclick="next()">${idx === QUESTIONS.length - 1 ? 'Finish' : 'Next'}</button>
+      </div>
+    </div>
+    <div class="jump-wrap">
+      <div class="jump-label">JUMP TO QUESTION</div>
+      <div class="jump-grid">${jumps}</div>
+    </div>`;
 }
-function nextQ() {
-  if (idx === order.length - 1) finish();
-  else { idx++; render(); }
+function pick(i) {
+  if (locked[idx] && mode === 'instant') return;
+  answers[idx] = i;
+  if (mode === 'instant') {
+    locked[idx] = true;
+    const q = QUESTIONS[idx];
+    const ok = i === q.correct;
+    document.getElementById('fb-title').textContent = ok ? 'Correct' : 'Not quite';
+    document.getElementById('fb-body').textContent = q.exp || '';
+    document.getElementById('feedback-modal').classList.add('open');
+  }
+  render();
 }
-function prevQ() {
-  if (idx > 0) { idx--; render(); }
+function closeFb() { document.getElementById('feedback-modal').classList.remove('open'); }
+function jump(i) { idx = i; render(); }
+function prev() { if (idx > 0) { idx--; render(); } }
+function next() {
+  if (idx < QUESTIONS.length - 1) { idx++; render(); }
+  else finish();
 }
 function finish() {
-  clearInterval(timerId);
-  let correct = 0;
-  order.forEach((item, i) => { if (answers[i] === item.correct) correct++; });
-  const pct = Math.round((correct / order.length) * 100);
-  const pass = pct >= 80;
-  document.getElementById('exam').classList.add('hidden');
-  document.getElementById('done').classList.remove('hidden');
-  document.getElementById('resultTitle').textContent = pass ? 'Pass' : 'Not yet';
-  document.getElementById('resultBody').textContent = correct + ' of ' + order.length + ' (' + pct + '%). Real OLERE passing mark is 80%.';
-  document.getElementById('timer').textContent = 'Done';
+  let c = 0;
+  QUESTIONS.forEach((q, i) => { if (answers[i] === q.correct) c++; });
+  const pct = Math.round(c / QUESTIONS.length * 100);
+  document.getElementById('exam-main').innerHTML = `
+    <div class="q-card" style="text-align:center;padding:2rem;">
+      <div style="font-family:'Archivo Black',sans-serif;font-size:1.6rem;">${c} / ${QUESTIONS.length}</div>
+      <p style="color:var(--text-secondary);">${pct}%</p>
+      <a class="btn-lime" href="olere.html" style="display:inline-block;margin-top:1rem;text-decoration:none;">Back to Hub</a>
+    </div>`;
 }
   </script>
 </body>
