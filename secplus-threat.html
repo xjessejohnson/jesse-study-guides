@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Threat Sort | Security+</title>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    body { margin:0; background:#0c1018; color:#fff; font-family:'Plus Jakarta Sans',sans-serif; min-height:100vh; display:flex; flex-direction:column; }
+    header { padding:1rem 1.25rem; display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid #243044; }
+    header a { color:#f87171; text-decoration:none; }
+    h1 { font-family:'Archivo Black',sans-serif; font-size:1.05rem; margin:0; }
+    .arena { flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:1.5rem; gap:1.25rem; }
+    .card { background:#141b2b; border:1px solid #243044; border-radius:16px; padding:1.6rem; max-width:520px; width:100%; text-align:center; min-height:120px; display:flex; align-items:center; justify-content:center; }
+    .btns { display:grid; grid-template-columns:1fr 1fr; gap:0.6rem; width:100%; max-width:520px; }
+    .btns button { padding:0.9rem; border:none; border-radius:10px; font-weight:700; cursor:pointer; }
+    .b1 { background:#ef4444; color:#fff; }
+    .b2 { background:#f59e0b; color:#111; }
+    .b3 { background:#22d3ee; color:#111; }
+    .b4 { background:#a78bfa; color:#111; }
+    .fb { min-height:1.4rem; text-align:center; }
+    .start { position:fixed; inset:0; background:rgba(12,16,24,0.96); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:0.8rem; }
+    .start button { padding:0.85rem 1.8rem; background:#ef4444; border:none; border-radius:10px; color:#fff; font-weight:700; cursor:pointer; }
+    .timer { font-family:'JetBrains Mono',monospace; color:#f87171; font-size:1.3rem; }
+  </style>
+</head>
+<body>
+  <div class="start" id="start">
+    <h2 style="font-family:'Archivo Black',sans-serif;margin:0;">THREAT SORT</h2>
+    <p style="max-width:380px;text-align:center;color:#94a3b8;">Classify each item. 45 seconds. Not a scenario arcade — pure category speed.</p>
+    <button onclick="begin()">Start</button>
+  </div>
+  <header>
+    <a href="secplus.html">&larr; Hub</a>
+    <h1>THREAT SORT</h1>
+    <div><span class="timer" id="time">45</span> · <span id="score">0</span></div>
+  </header>
+  <div class="arena">
+    <div class="card"><p id="prompt" style="margin:0;font-size:1.15rem;">Ready</p></div>
+    <div class="btns">
+      <button class="b1" onclick="pick('malware')">Malware</button>
+      <button class="b2" onclick="pick('social')">Social Eng</button>
+      <button class="b3" onclick="pick('network')">Network</button>
+      <button class="b4" onclick="pick('physical')">Physical</button>
+    </div>
+    <div class="fb" id="fb"></div>
+  </div>
+  <script>
+const ITEMS = [
+  {t:"Ransomware encrypts files", c:"malware"},
+  {t:"Phishing email with fake login", c:"social"},
+  {t:"SYN flood against a server", c:"network"},
+  {t:"Tailgating through a badge door", c:"physical"},
+  {t:"Keylogger installed on a workstation", c:"malware"},
+  {t:"Pretexting phone call for a password", c:"social"},
+  {t:"ARP poisoning on the LAN", c:"network"},
+  {t:"Shoulder surfing at a cafe", c:"physical"},
+  {t:"Trojan disguised as a utility", c:"malware"},
+  {t:"Baiting with an infected USB", c:"social"},
+  {t:"DNS spoofing", c:"network"},
+  {t:"Dumpster diving for documents", c:"physical"},
+  {t:"Worm spreading without user action", c:"malware"},
+  {t:"Vishing call claiming to be IT", c:"social"},
+  {t:"On-path attack on public Wi-Fi", c:"network"},
+  {t:"Piggybacking into a server room", c:"physical"}
+];
+let deck=[], idx=0, score=0, time=45, running=false, timer;
+function shuffle(a){const c=[...a]; for(let i=c.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[c[i],c[j]]=[c[j],c[i]];} return c;}
+function begin(){
+  document.getElementById('start').style.display='none';
+  deck=shuffle(ITEMS); idx=0; score=0; time=45; running=true;
+  document.getElementById('score').textContent='0';
+  show();
+  timer=setInterval(()=>{ time--; document.getElementById('time').textContent=time; if(time<=0) end(); },1000);
+}
+function show(){
+  if(idx>=deck.length){ deck=shuffle(ITEMS); idx=0; }
+  document.getElementById('prompt').textContent=deck[idx].t;
+  document.getElementById('fb').textContent='';
+}
+function pick(cat){
+  if(!running) return;
+  const right = cat===deck[idx].c;
+  if(right) score++;
+  document.getElementById('score').textContent=score;
+  document.getElementById('fb').textContent = right?'Correct':'Was '+deck[idx].c;
+  document.getElementById('fb').style.color = right?'#9eff33':'#fb7185';
+  idx++;
+  setTimeout(show, 350);
+}
+function end(){ running=false; clearInterval(timer); document.getElementById('prompt').textContent='Time. Score: '+score; }
+  </script>
+</body>
+</html>
