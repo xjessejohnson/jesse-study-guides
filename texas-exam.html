@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Texas LPC Jurisprudence | Jesse's Study Guides</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    .exam-topbar { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:0.85rem; margin-bottom:1.25rem; }
+    .btn-ghost { padding:0.55rem 1rem; border-radius:8px; border:1px solid var(--border-slate); background:transparent; color:var(--text-secondary); font-family:'JetBrains Mono',monospace; font-size:0.76rem; cursor:pointer; text-decoration:none; }
+    .btn-lime { padding:0.78rem 1.45rem; border-radius:9px; border:none; background:var(--lime); color:#05070c; font-family:'JetBrains Mono',monospace; font-weight:700; font-size:0.82rem; text-transform:uppercase; cursor:pointer; }
+    .progress-track { width:100%; height:5px; background:rgba(148,163,184,0.14); border-radius:999px; overflow:hidden; margin-bottom:1.4rem; }
+    .progress-fill { height:100%; background:linear-gradient(90deg,var(--cyan),var(--lime)); transition:width 0.25s ease; }
+    .q-card { background:var(--bg-card); border:1px solid var(--border-slate); border-radius:12px; padding:1.35rem; }
+    .q-text { font-size:1.08rem; line-height:1.5; margin-bottom:1rem; color:#fff; }
+    .opt { display:block; width:100%; text-align:left; background:#121927; border:1.5px solid var(--border-slate); border-radius:10px; padding:0.8rem 1rem; margin-bottom:0.5rem; color:#fff; cursor:pointer; font-size:0.95rem; }
+    .opt:hover { border-color:var(--cyan); }
+    .opt.selected { border-color:var(--lime); background:rgba(158,255,51,0.1); }
+    .opt.correct { border-color:var(--lime); }
+    .opt.wrong { border-color:var(--rose); }
+    .jump-wrap { margin-top:1.25rem; }
+    .jump-label { font-family:'JetBrains Mono',monospace; font-size:0.7rem; color:var(--text-secondary); margin-bottom:0.5rem; }
+    .jump-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(42px,1fr)); gap:0.35rem; }
+    .jump-opt { padding:0.4rem; border-radius:6px; border:1px solid transparent; background:rgba(255,255,255,0.04); color:var(--text-secondary); font-family:'JetBrains Mono',monospace; font-size:0.72rem; text-align:center; cursor:pointer; }
+    .jump-opt.answered { background:rgba(34,211,238,0.22); color:var(--cyan); }
+    .jump-opt.current { background:var(--lime); color:#05070c; font-weight:700; }
+    .mode-grid { display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin-top:1rem; }
+    .mode-choice { background:#121927; border:1.5px solid var(--border-slate); border-radius:12px; padding:1.1rem; text-align:left; cursor:pointer; color:#fff; }
+    .mode-choice:hover { border-color:var(--lime); }
+    .mode-choice-title { font-weight:700; margin-bottom:0.3rem; }
+    .mode-choice-desc { font-size:0.85rem; color:var(--text-secondary); }
+    .modal-backdrop { position:fixed; inset:0; background:rgba(0,0,0,0.72); display:none; align-items:center; justify-content:center; z-index:50; padding:1rem; }
+    .modal-backdrop.open { display:flex; }
+    .modal-box { background:#141b2b; border:1px solid var(--border-slate); border-radius:14px; padding:1.35rem; max-width:560px; width:100%; }
+    .nav-row { display:flex; gap:0.6rem; margin-top:1rem; }
+    @media (max-width:640px) { .mode-grid { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+  <div class="frame-wrapper">
+    <div class="main-area" style="margin-left:0;">
+      <div class="topbar">
+        <div class="breadcrumb"><a href="texas.html" style="color:inherit;text-decoration:none;">← Hub</a> / <span>EXAM</span></div>
+        <div class="status-pill"><span class="status-dot"></span> <span id="mode-label">Select mode</span></div>
+      </div>
+      <main class="content-body" id="exam-main"></main>
+    </div>
+  </div>
+  <div class="modal-backdrop open" id="mode-modal">
+    <div class="modal-box">
+      <div style="font-family:'Archivo Black',sans-serif;font-size:1.2rem;margin-bottom:0.4rem;">Select Exam Mode</div>
+      <p style="color:var(--text-secondary);font-size:0.92rem;">Texas Behavioral Health Executive Council LPC jurisprudence practice.</p>
+      <div class="mode-grid">
+        <button type="button" class="mode-choice" onclick="startMode('instant')">
+          <div class="mode-choice-title">Answers Instantly</div>
+          <div class="mode-choice-desc">Immediate feedback with explanation. Jump between questions anytime.</div>
+        </button>
+        <button type="button" class="mode-choice" onclick="startMode('end')">
+          <div class="mode-choice-title">Answers at the End</div>
+          <div class="mode-choice-desc">Answer the full set, then review score and explanations.</div>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="modal-backdrop" id="feedback-modal">
+    <div class="modal-box">
+      <div id="fb-title" style="font-weight:700;margin-bottom:0.5rem;"></div>
+      <div id="fb-body" style="color:var(--text-secondary);font-size:0.92rem;line-height:1.5;"></div>
+      <button class="btn-lime" style="margin-top:1rem;" onclick="closeFb()">Continue</button>
+    </div>
+  </div>
+  <script>
+
+const QUESTIONS = [
+  { q: "Which entity provides administrative oversight for LPC licensure in Texas?", opts: ["Texas Medical Board","Texas Behavioral Health Executive Council (BHEC)","Department of State Health Services only","NBCC"], correct: 1, exp: "BHEC consolidates oversight of behavioral health boards, including professional counselors." },
+  { q: "The Texas LPC Act is primarily found in:", opts: ["Occupations Code Chapter 503","Penal Code","Education Code only","Insurance Code"], correct: 0, exp: "Chapter 503 of the Occupations Code is the Licensed Professional Counselor Act." },
+  { q: "Texas LPC applicants must also complete:", opts: ["Only the NCE","A Texas jurisprudence examination","No state exam","Only a thesis"], correct: 1, exp: "Texas requires the jurisprudence exam in addition to an accepted national exam." },
+  { q: "Accepted national exams for Texas LPC include:", opts: ["Only the bar exam","NCE or NCMHCE","Only the EPPP","CISSP"], correct: 1, exp: "BHEC accepts the NCE or NCMHCE." },
+  { q: "Supervised experience toward full Texas LPC typically totals:", opts: ["500 hours","1,500 hours","3,000 hours","10,000 hours"], correct: 2, exp: "Full LPC licensure in Texas requires substantial supervised experience, commonly 3,000 hours under applicable rules." },
+  { q: "Sexual misconduct with a current client in Texas is:", opts: ["A boundary to negotiate","Prohibited","Allowed after termination paperwork","Only an ethics suggestion"], correct: 1, exp: "Sexual contact with clients is prohibited and grounds for discipline." },
+  { q: "Mandated reporting of child abuse in Texas goes to:", opts: ["Only the school","DFPS or law enforcement","The client's employer","Social media"], correct: 1, exp: "Suspected abuse is reported to the Department of Family and Protective Services or law enforcement." },
+  { q: "Informed consent in Texas counseling should address:", opts: ["Nothing","Fees, confidentiality limits, and counselor qualifications","Guaranteed outcomes","Political affiliation"], correct: 1, exp: "Clients need enough information to consent knowingly." },
+  { q: "A Texas LPC practicing via telehealth with a client in Texas must:", opts: ["Ignore location","Be appropriately licensed for the practice","Only use email","Skip consent"], correct: 1, exp: "Telehealth still requires proper licensure for the client's location and applicable rules." },
+  { q: "Confidentiality exceptions in Texas can include:", opts: ["No exceptions ever","Court orders and mandated reporting","Any curious relative","Blog requests"], correct: 1, exp: "Legal mandates and safety-related duties can limit confidentiality." },
+  { q: "The jurisprudence exam certificate for Texas applicants is generally:", opts: ["Valid forever","Time-limited relative to the application","Optional","Issued by NBCC"], correct: 1, exp: "The certificate must be recent enough to satisfy application timing rules." },
+  { q: "Advertising as a Texas LPC must be:", opts: ["Misleading if catchy","Truthful and not deceptive","Anonymous","Guarantee-based"], correct: 1, exp: "Public representations must be accurate." },
+  { q: "Record keeping for a Texas LPC should be:", opts: ["Optional","Timely and sufficient for continuity of care","Destroyed each night","Posted online"], correct: 1, exp: "Records support care and meet professional standards." },
+  { q: "Duty to protect may arise when:", opts: ["A client is mildly sad","There is serious imminent harm to an identifiable person","A client is late","Never"], correct: 1, exp: "Foreseeable serious harm can trigger protective duties consistent with law." },
+  { q: "Practicing counseling in Texas without a required license is:", opts: ["Encouraged","Unlawful","Only a suggestion","Fine if unpaid"], correct: 1, exp: "Unlicensed practice can result in enforcement action." }
+];
+
+let mode = null, idx = 0, answers = {}, locked = {};
+function startMode(m) {
+  mode = m;
+  document.getElementById('mode-modal').classList.remove('open');
+  document.getElementById('mode-label').textContent = m === 'instant' ? 'Instant feedback' : 'Exam mode';
+  render();
+}
+function render() {
+  const q = QUESTIONS[idx];
+  const main = document.getElementById('exam-main');
+  const pct = Math.round(((idx) / QUESTIONS.length) * 100);
+  let opts = '';
+  q.opts.forEach((o, i) => {
+    const sel = answers[idx] === i ? ' selected' : '';
+    const mark = locked[idx] ? (i === q.correct ? ' correct' : (answers[idx] === i ? ' wrong' : '')) : '';
+    opts += '<button class="opt' + sel + mark + '" onclick="pick(' + i + ')">' + o + '</button>';
+  });
+  let jumps = '';
+  QUESTIONS.forEach((_, i) => {
+    const cls = (i === idx ? ' current' : '') + (answers[i] !== undefined ? ' answered' : '');
+    jumps += '<button class="jump-opt' + cls + '" onclick="jump(' + i + ')">' + (i + 1) + '</button>';
+  });
+  main.innerHTML = `
+    <div class="exam-topbar">
+      <div>Question ${idx + 1} of ${QUESTIONS.length}</div>
+      <a class="btn-ghost" href="texas.html">Exit</a>
+    </div>
+    <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
+    <div class="q-card">
+      <div class="q-text">${q.q}</div>
+      ${opts}
+      <div class="nav-row">
+        <button class="btn-ghost" onclick="prev()">Previous</button>
+        <button class="btn-lime" onclick="next()">${idx === QUESTIONS.length - 1 ? 'Finish' : 'Next'}</button>
+      </div>
+    </div>
+    <div class="jump-wrap">
+      <div class="jump-label">JUMP TO QUESTION</div>
+      <div class="jump-grid">${jumps}</div>
+    </div>`;
+}
+function pick(i) {
+  if (locked[idx] && mode === 'instant') return;
+  answers[idx] = i;
+  if (mode === 'instant') {
+    locked[idx] = true;
+    const q = QUESTIONS[idx];
+    const ok = i === q.correct;
+    document.getElementById('fb-title').textContent = ok ? 'Correct' : 'Not quite';
+    document.getElementById('fb-body').textContent = q.exp || '';
+    document.getElementById('feedback-modal').classList.add('open');
+  }
+  render();
+}
+function closeFb() { document.getElementById('feedback-modal').classList.remove('open'); }
+function jump(i) { idx = i; render(); }
+function prev() { if (idx > 0) { idx--; render(); } }
+function next() {
+  if (idx < QUESTIONS.length - 1) { idx++; render(); }
+  else finish();
+}
+function finish() {
+  let c = 0;
+  QUESTIONS.forEach((q, i) => { if (answers[i] === q.correct) c++; });
+  const pct = Math.round(c / QUESTIONS.length * 100);
+  document.getElementById('exam-main').innerHTML = `
+    <div class="q-card" style="text-align:center;padding:2rem;">
+      <div style="font-family:'Archivo Black',sans-serif;font-size:1.6rem;">${c} / ${QUESTIONS.length}</div>
+      <p style="color:var(--text-secondary);">${pct}%</p>
+      <a class="btn-lime" href="texas.html" style="display:inline-block;margin-top:1rem;text-decoration:none;">Back to Hub</a>
+    </div>`;
+}
+  </script>
+</body>
+</html>
