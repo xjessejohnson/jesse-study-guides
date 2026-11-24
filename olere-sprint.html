@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Red Dirt Rules | OLERE</title>
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root { --bg: #0c1018; --card: #141b2b; --ok: #9eff33; --bad: #fb7185; --accent: #e8a87c; }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--bg); color: #fff; font-family: 'Plus Jakarta Sans', sans-serif; min-height: 100vh; display: flex; flex-direction: column; }
+    header { padding: 1rem 1.25rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #243044; }
+    header a { color: var(--accent); text-decoration: none; font-size: 0.9rem; }
+    h1 { font-family: 'Archivo Black', sans-serif; font-size: 1.1rem; margin: 0; letter-spacing: 0.04em; }
+    .stats { display: flex; gap: 1rem; font-family: 'JetBrains Mono', monospace; font-size: 0.85rem; }
+    .stats span { color: var(--accent); }
+    .arena { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 1.5rem; gap: 1.5rem; }
+    .scenario { background: var(--card); border: 1px solid #243044; border-radius: 16px; padding: 1.75rem; max-width: 560px; width: 100%; text-align: center; min-height: 160px; display: flex; align-items: center; justify-content: center; }
+    .scenario p { font-size: 1.15rem; line-height: 1.5; margin: 0; }
+    .buttons { display: flex; gap: 1rem; width: 100%; max-width: 560px; }
+    .buttons button { flex: 1; padding: 1.1rem; border: none; border-radius: 12px; font-family: 'Archivo Black', sans-serif; font-size: 1rem; cursor: pointer; letter-spacing: 0.05em; }
+    .btn-ok { background: var(--ok); color: #0a1405; }
+    .btn-bad { background: var(--bad); color: #1a0508; }
+    .feedback { min-height: 1.5rem; font-size: 0.95rem; text-align: center; }
+    .feedback.good { color: var(--ok); }
+    .feedback.bad { color: var(--bad); }
+    .timer { font-family: 'JetBrains Mono', monospace; font-size: 1.4rem; color: var(--accent); }
+    .start-overlay { position: fixed; inset: 0; background: rgba(12,16,24,0.95); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1rem; z-index: 10; }
+    .start-overlay h2 { font-family: 'Archivo Black', sans-serif; font-size: 2rem; margin: 0; }
+    .start-overlay p { max-width: 400px; text-align: center; color: #94a3b8; }
+    .start-overlay button { padding: 0.9rem 2rem; background: var(--accent); border: none; border-radius: 10px; font-weight: 700; cursor: pointer; font-size: 1rem; }
+    .over { display: none; }
+  </style>
+</head>
+<body>
+  <div class="start-overlay" id="start">
+    <h2>RED DIRT RULES</h2>
+    <p>Classify each Oklahoma practice scenario as <strong style="color:#9eff33">COMPLIANT</strong> or <strong style="color:#fb7185">VIOLATION</strong>. You have 60 seconds. Different from License Ding — pure speed classification.</p>
+    <button onclick="begin()">Start Sprint</button>
+  </div>
+  <header>
+    <a href="olere.html">&larr; Hub</a>
+    <h1>RED DIRT RULES</h1>
+    <div class="stats">
+      <div class="timer" id="time">60</div>
+      <div>Score: <span id="score">0</span></div>
+    </div>
+  </header>
+  <div class="arena">
+    <div class="scenario"><p id="prompt">Press start</p></div>
+    <div class="buttons">
+      <button class="btn-ok" onclick="answer(true)">COMPLIANT</button>
+      <button class="btn-bad" onclick="answer(false)">VIOLATION</button>
+    </div>
+    <div class="feedback" id="fb"></div>
+  </div>
+  <script>
+const ITEMS = [
+  { text: "You document supervision hours accurately and have your supervisor sign the log.", ok: true },
+  { text: "You begin seeing clients independently the week after graduation, before supervision is approved.", ok: false },
+  { text: "A client discloses ongoing child abuse. You report to DHS.", ok: true },
+  { text: "You promise a client absolute confidentiality with zero exceptions.", ok: false },
+  { text: "You explain fees, credentials, and confidentiality limits before treatment starts.", ok: true },
+  { text: "You date a current client because they live in the same small town.", ok: false },
+  { text: "You arrange coverage with a colleague before a two-week vacation.", ok: true },
+  { text: "You terminate a high-risk client by text with no referral because you are busy.", ok: false },
+  { text: "You decline a large gift and discuss what the offer means clinically.", ok: true },
+  { text: "You advertise that you guarantee depression will be cured in three sessions.", ok: false },
+  { text: "You keep records for the period required by board rule.", ok: true },
+  { text: "You share a client's full name and diagnosis at a party.", ok: false },
+  { text: "You complete required continuing education before renewal.", ok: true },
+  { text: "You practice telehealth with an Oklahoma client while only licensed in another state.", ok: false },
+  { text: "You refer a client whose needs exceed your competence.", ok: true },
+  { text: "You barter counseling for free car repairs without discussing exploitation risks.", ok: false },
+  { text: "You provide a client access to their records upon proper request.", ok: true },
+  { text: "You ignore a colleague who is practicing while intoxicated.", ok: false },
+  { text: "You clarify that group members cannot be forced to keep each other's secrets.", ok: true },
+  { text: "You bill an insurance company for sessions that never occurred.", ok: false },
+  { text: "You obtain informed consent that includes the limits of confidentiality.", ok: true },
+  { text: "You use a psychological test you have never been trained to administer.", ok: false },
+  { text: "You document a duty-to-protect decision when a client names a specific target.", ok: true },
+  { text: "You tell a minor's parents every detail of session with no clinical judgment.", ok: false },
+  { text: "You maintain boundaries when you also see the client at community events.", ok: true }
+];
+let time = 60, score = 0, idx = 0, running = false, timer;
+function shuffle(a) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+let deck = [];
+function begin() {
+  document.getElementById('start').style.display = 'none';
+  deck = shuffle([...ITEMS]);
+  idx = 0; score = 0; time = 60; running = true;
+  document.getElementById('score').textContent = '0';
+  show();
+  timer = setInterval(() => {
+    time--;
+    document.getElementById('time').textContent = time;
+    if (time <= 0) end();
+  }, 1000);
+}
+function show() {
+  if (idx >= deck.length) deck = shuffle([...ITEMS]), idx = 0;
+  document.getElementById('prompt').textContent = deck[idx].text;
+  document.getElementById('fb').textContent = '';
+  document.getElementById('fb').className = 'feedback';
+}
+function answer(saidOk) {
+  if (!running) return;
+  const item = deck[idx];
+  const right = saidOk === item.ok;
+  if (right) score++;
+  document.getElementById('score').textContent = score;
+  const fb = document.getElementById('fb');
+  fb.textContent = right ? 'Correct' : (item.ok ? 'Actually compliant' : 'That was a violation');
+  fb.className = 'feedback ' + (right ? 'good' : 'bad');
+  idx++;
+  setTimeout(show, 400);
+}
+function end() {
+  running = false;
+  clearInterval(timer);
+  document.getElementById('prompt').textContent = 'Time! Final score: ' + score;
+  document.getElementById('fb').textContent = 'Reload to play again';
+}
+  </script>
+</body>
+</html>
