@@ -671,28 +671,28 @@ function shareGame(){
             <div class="game-title">License Ding</div>
             <div class="game-desc"><strong>Clinical Interventions &amp; ACA Ethics.</strong> 20 randomized clients from a 200-statement bank — 3 dings revokes your license.</div>
           </button>
-          <button type="button" class="game-selector-card card-dsm coming-soon" disabled>
-            <div class="game-card-top"><div class="game-icon-badge">🩺</div><span class="game-play-pill">Coming Soon</span></div>
+          <button type="button" class="game-selector-card card-dsm" onclick="openMini('dsm')">
+            <div class="game-card-top"><div class="game-icon-badge">🩺</div><span class="game-play-pill">Play →</span></div>
             <div class="game-title">DSM-5-TR Detective</div>
             <div class="game-desc"><strong>Differential Diagnosis.</strong> Bipolar I vs II, Acute Stress vs PTSD, and more.</div>
           </button>
-          <button type="button" class="game-selector-card card-theorist coming-soon" disabled>
-            <div class="game-card-top"><div class="game-icon-badge">🧠</div><span class="game-play-pill">Coming Soon</span></div>
+          <button type="button" class="game-selector-card card-theorist" onclick="openMini('theorist')">
+            <div class="game-card-top"><div class="game-icon-badge">🧠</div><span class="game-play-pill">Play →</span></div>
             <div class="game-title">Theorist Matchmaker</div>
             <div class="game-desc"><strong>Counseling Theorists.</strong> Pair Rogers, Beck, Adler, and more with their techniques.</div>
           </button>
-          <button type="button" class="game-selector-card card-pharm coming-soon" disabled>
-            <div class="game-card-top"><div class="game-icon-badge">💊</div><span class="game-play-pill">Coming Soon</span></div>
+          <button type="button" class="game-selector-card card-pharm" onclick="openMini('pharm')">
+            <div class="game-card-top"><div class="game-icon-badge">💊</div><span class="game-play-pill">Play →</span></div>
             <div class="game-title">Med Red-Flag Triage</div>
             <div class="game-desc"><strong>Psychopharmacology.</strong> Lithium toxicity, MAOI crisis, serotonin syndrome.</div>
           </button>
-          <button type="button" class="game-selector-card card-ncc coming-soon" disabled>
-            <div class="game-card-top"><div class="game-icon-badge">🏆</div><span class="game-play-pill">Coming Soon</span></div>
+          <button type="button" class="game-selector-card card-ncc" onclick="openMini('ncc')">
+            <div class="game-card-top"><div class="game-icon-badge">🏆</div><span class="game-play-pill">Play →</span></div>
             <div class="game-title">Who Wants to Be an NCC</div>
             <div class="game-desc"><strong>All CACREP Areas.</strong> Climb the National Certified Counselor ladder.</div>
           </button>
-          <button type="button" class="game-selector-card card-stats coming-soon" disabled>
-            <div class="game-card-top"><div class="game-icon-badge">📊</div><span class="game-play-pill">Coming Soon</span></div>
+          <button type="button" class="game-selector-card card-stats" onclick="openMini('stats')">
+            <div class="game-card-top"><div class="game-icon-badge">📊</div><span class="game-play-pill">Play →</span></div>
             <div class="game-title">Psychometrics Lab</div>
             <div class="game-desc"><strong>Z-Scores, SEM &amp; ANOVA.</strong> Convert percentiles under pressure.</div>
           </button>
@@ -1461,5 +1461,93 @@ const CLIENT_PERSONAS = [
       });
     }
   </script>
+
+<div class="arcade-modal-backdrop" id="mini-modal" style="position:fixed;inset:0;background:rgba(5,8,14,.92);display:none;align-items:center;justify-content:center;z-index:50;padding:1rem;">
+  <div style="width:min(860px,96vw);height:min(88dvh,720px);background:#0b1220;border:1px solid #243044;border-radius:16px;display:flex;flex-direction:column;">
+    <div style="display:flex;justify-content:space-between;align-items:center;padding:.7rem .9rem;border-bottom:1px solid #243044;">
+      <div class="arcade-game-title" id="mini-title">Game</div>
+      <div style="display:flex;gap:.4rem;">
+        <button class="btn-hud-icon" onclick="shareGame()">Share</button>
+        <button class="btn-hud-icon" onclick="restartMini()">↻</button>
+        <button class="btn-hud-icon close-btn" onclick="closeMini()">✕</button>
+      </div>
+    </div>
+    <div id="mini-play" style="flex:1;overflow:auto;padding:1rem;"></div>
+  </div>
+</div>
+<script>
+const MINI = {
+  dsm: { name: "DSM-5-TR Detective", items: [
+    { q: "Elevated mood for 7 days with hospitalization. Best fit?", opts: ["Bipolar II", "Bipolar I", "Cyclothymia", "MDD"], c: 1 },
+    { q: "Trauma symptoms lasting 2 weeks after an assault. Best fit?", opts: ["PTSD", "Acute Stress Disorder", "Adjustment", "GAD"], c: 1 },
+    { q: "Low mood most days for 2 years, no full major episode. Best fit?", opts: ["MDD", "Persistent Depressive", "Bipolar II", "GAD"], c: 1 },
+    { q: "Panic attacks plus a month of worry about more attacks. Best fit?", opts: ["Specific phobia", "Panic disorder", "Social anxiety", "PTSD"], c: 1 }
+  ]},
+  theorist: { name: "Theorist Matchmaker", items: [
+    { q: "Unconditional positive regard belongs to:", opts: ["Beck", "Rogers", "Skinner", "Freud"], c: 1 },
+    { q: "Automatic thoughts and cognitive triad belong to:", opts: ["Adler", "Beck", "Rogers", "Perls"], c: 1 },
+    { q: "Social interest and birth order belong to:", opts: ["Adler", "Freud", "Ellis", "Bowen"], c: 0 },
+    { q: "Empty chair and contact boundary belong to:", opts: ["CBT", "Gestalt", "REBT", "SFBT"], c: 1 }
+  ]},
+  pharm: { name: "Med Red-Flag Triage", items: [
+    { q: "Tremor, confusion, and coarse hand shake on lithium. First move?", opts: ["Increase dose", "Suspect toxicity and refer", "Add an SSRI", "Wait a month"], c: 1 },
+    { q: "Aged cheese plus an MAOI. Watch for:", opts: ["Hypertensive crisis", "Nothing", "Hypoglycemia", "Hair loss"], c: 0 },
+    { q: "Agitation, clonus, fever after two serotonergic drugs. Think:", opts: ["NMS", "Serotonin syndrome", "Akathisia only", "Withdrawal"], c: 1 },
+    { q: "Counselor role with meds is mainly:", opts: ["Prescribe", "Coordinate and monitor side effects", "Stop all meds", "Ignore them"], c: 1 }
+  ]},
+  ncc: { name: "Who Wants to Be an NCC", items: [
+    { q: "Tarasoff established a duty to:", opts: ["Warn an identifiable victim", "Never break confidentiality", "Report all crimes", "Record every session"], c: 0 },
+    { q: "Informed consent should cover:", opts: ["Fees and limits", "Only the fee", "Nothing written", "Only diagnosis"], c: 0 },
+    { q: "A dual relationship is:", opts: ["Always illegal", "A second role that can impair judgment", "Required in rural areas", "The same as referral"], c: 1 },
+    { q: "Standard error of measurement tells you:", opts: ["Exact true score", "Likely score range", "Item difficulty only", "Test length"], c: 1 }
+  ]},
+  stats: { name: "Psychometrics Lab", items: [
+    { q: "Reliability means:", opts: ["Consistency", "Measures the right construct", "Norms only", "Face appeal"], c: 0 },
+    { q: "Validity means:", opts: ["Consistency", "Measures what it claims", "Test length", "Inter-rater only"], c: 1 },
+    { q: "A z-score of 0 is:", opts: ["The mean", "Two SDs above", "The floor", "Invalid"], c: 0 },
+    { q: "A negative correlation means:", opts: ["As one rises the other falls", "No relationship", "Both rise", "Both fall"], c: 0 }
+  ]}
+};
+let miniId = null, miniIdx = 0, miniScore = 0, miniLives = 3;
+function openMini(id) {
+  miniId = id; miniIdx = 0; miniScore = 0; miniLives = 3;
+  document.getElementById('mini-title').textContent = MINI[id].name;
+  document.getElementById('mini-modal').style.display = 'flex';
+  const launcher = document.getElementById('launcher-modal');
+  if (launcher) launcher.style.display = 'none';
+  renderMini();
+}
+function closeMini() {
+  document.getElementById('mini-modal').style.display = 'none';
+  const launcher = document.getElementById('launcher-modal');
+  if (launcher) launcher.style.display = 'flex';
+}
+function restartMini() { miniIdx = 0; miniScore = 0; miniLives = 3; renderMini(); }
+function renderMini() {
+  const bank = MINI[miniId].items;
+  if (miniLives <= 0 || miniIdx >= bank.length) {
+    document.getElementById('mini-play').innerHTML = '<div class="prompt">Score ' + miniScore + '</div><button class="primary-action-btn" onclick="restartMini()">New</button> <button class="secondary-action-btn" onclick="closeMini()">Menu</button>';
+    return;
+  }
+  const item = bank[miniIdx % bank.length];
+  let html = '<div class="prompt">' + item.q + '</div><div class="choices" id="mini-chs" style="display:grid;gap:.5rem;margin-top:.7rem;"></div>';
+  document.getElementById('mini-play').innerHTML = html;
+  const box = document.getElementById('mini-chs');
+  item.opts.forEach((o, i) => {
+    const b = document.createElement('button');
+    b.className = 'response-btn';
+    b.textContent = o;
+    b.onclick = function () {
+      if (box.dataset.done) return;
+      box.dataset.done = '1';
+      if (i === item.c) { miniScore++; b.classList.add('correct'); }
+      else { miniLives--; b.classList.add('wrong'); }
+      setTimeout(() => { miniIdx++; renderMini(); }, 500);
+    };
+    box.appendChild(b);
+  });
+}
+</script>
+
 </body>
 </html>
