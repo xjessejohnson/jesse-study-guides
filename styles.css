@@ -89,7 +89,7 @@ aside {
   font-family: 'Archivo Black', sans-serif;
   font-size: 1.35rem;
   letter-spacing: -0.02em;
-  color: #fff;
+  color: var(--text-primary);
   text-decoration: none;
   display: block;
   line-height: 1.12;
@@ -196,7 +196,7 @@ aside {
 }
 
 .nav-item:hover:not(.disabled) {
-  color: #fff;
+  color: var(--text-primary);
   background: rgba(34, 211, 238, 0.07);
   border-color: rgba(34, 211, 238, 0.32);
   transform: translateX(2px);
@@ -337,7 +337,7 @@ aside {
   line-height: 1.01;
   letter-spacing: -0.02em;
   text-transform: uppercase;
-  color: #fff;
+  color: var(--text-primary);
   margin-bottom: 1.5rem;
 }
 .hero-headline .outline {
@@ -502,7 +502,7 @@ footer {
 .modal-close {
   background: rgba(148, 163, 184, 0.12);
   border: 1px solid var(--border-slate);
-  color: #fff;
+  color: var(--text-primary);
   width: 34px;
   height: 34px;
   border-radius: 8px;
@@ -522,7 +522,7 @@ footer {
   font-size: 0.9rem;
 }
 .modal-body h4 {
-  color: #fff;
+  color: var(--text-primary);
   font-family: 'JetBrains Mono', monospace;
   font-size: 0.78rem;
   text-transform: uppercase;
