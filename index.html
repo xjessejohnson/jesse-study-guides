@@ -3,393 +3,105 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Home | Jesse's Study Guides</title>
-  <meta name="description" content="An independent study portal compiling practice exams, flashcards, and study games across cybersecurity, counseling, and more." />
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <title>Jesse's Study Guides</title>
+  <meta name="description" content="Practice exams, flashcards, and arcade games for cybersecurity and counseling certifications." />
   <link rel="stylesheet" href="styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
-    .home-hero-wrapper {
-      width: 100%;
-      max-width: 780px;
-      display: flex;
-      flex-direction: column;
-      gap: 1.5rem;
+    .home-wrap { max-width: 980px; }
+    .hero { display: grid; grid-template-columns: 1fr auto; gap: 1.5rem; align-items: center; margin-bottom: 1.75rem; }
+    .hero h1 { font-size: clamp(1.8rem, 4vw, 2.8rem); line-height: 1.05; margin: 0.3rem 0; }
+    .hero p { color: var(--text-secondary); max-width: 46ch; line-height: 1.55; }
+    .avatar { width: 140px; border-radius: 14px; border: 1px solid var(--border-slate); }
+    .tracks { display: grid; gap: 1.25rem; }
+    .track h2 { font-family: 'Archivo Black', sans-serif; font-size: 0.85rem; letter-spacing: 0.08em; text-transform: uppercase; color: var(--cyan); margin-bottom: 0.65rem; }
+    .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 0.75rem; }
+    .track-card {
+      display: block; background: var(--bg-card); border: 1px solid var(--border-slate); border-radius: 12px;
+      padding: 1rem; text-decoration: none; color: inherit; transition: border-color .15s, transform .15s;
     }
-
-    /* Top Row: Headline + Tagline on Left, Avatar Column on Right */
-    .hero-header-row {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 2rem;
-      width: 100%;
-    }
-
-    .hero-headline-wrap {
-      flex: 1;
-      min-width: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 0.85rem;
-    }
-
-    .hero-kicker {
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.75rem;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      color: var(--cyan);
-    }
-
-    .hero-headline {
-      margin: 0;
-      font-size: clamp(1.85rem, 3.8vw, 2.9rem);
-      line-height: 1.05;
-      letter-spacing: -0.025em;
-    }
-
-    .hero-tagline {
-      margin: 0.15rem 0 0 0;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: clamp(0.98rem, 1.5vw, 1.12rem);
-      line-height: 1.55;
-      font-weight: 500;
-      color: rgba(241, 245, 249, 0.82);
-      max-width: 46ch;
-    }
-
-    /* Right Column: Cartoon Picture + About Me Button Underneath */
-    .hero-avatar-col {
-      flex-shrink: 0;
-      width: clamp(135px, 21vw, 185px);
-      display: flex;
-      flex-direction: column;
-      align-items: stretch;
-      gap: 0.65rem;
-    }
-
-    .hero-avatar-wrap {
-      width: 100%;
-      aspect-ratio: 896 / 1200;
-      border-radius: 12px;
-      overflow: hidden;
-      border: 1.5px solid rgba(34, 211, 238, 0.45);
-      background: rgba(13, 18, 28, 0.7);
-      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.6), 0 0 20px rgba(34, 211, 238, 0.18);
-    }
-
-    .hero-avatar-img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      object-position: top center;
-      display: block;
-    }
-
-    .about-link-btn {
-      width: 100%;
-      background: rgba(34, 211, 238, 0.08);
-      border: 1px solid rgba(34, 211, 238, 0.4);
-      color: var(--cyan);
-      padding: 0.55rem 0.7rem;
-      border-radius: 8px;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.74rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      cursor: pointer;
-      transition: all 0.2s ease;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.4rem;
-    }
-    .about-link-btn:hover {
-      background: rgba(34, 211, 238, 0.18);
-      box-shadow: 0 0 18px rgba(34, 211, 238, 0.25);
-      transform: translateY(-1px);
-    }
-
-    .hud-panel {
-      width: 100%;
-      max-width: 780px;
-    }
-
-    .hud-panel .prose p {
-      margin: 0;
-      line-height: 1.72;
-      font-size: 1rem;
-    }
-
-    .modal-link {
-      color: var(--cyan);
-      text-decoration: none;
-      border-bottom: 1px dashed rgba(34, 211, 238, 0.6);
-      font-weight: 600;
-      transition: color 0.15s ease;
-    }
-    .modal-link:hover {
-      color: var(--lime);
-      border-bottom-color: var(--lime);
-    }
-
-    .email-cta-box {
-      margin-top: 1.35rem;
-      padding-top: 1.15rem;
-      border-top: 1px solid var(--border-slate);
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-      gap: 0.75rem;
-    }
-
-    .fancy-mail-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.55rem;
-      padding: 0.72rem 1.3rem;
-      border-radius: 9px;
-      background: linear-gradient(90deg, var(--lime), var(--cyan));
-      color: #05070c;
-      font-family: 'JetBrains Mono', monospace;
-      font-size: 0.78rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      text-decoration: none;
-      box-shadow: 0 0 20px rgba(158, 255, 51, 0.25);
-      transition: all 0.2s ease;
-    }
-    .fancy-mail-btn:hover {
-      filter: brightness(1.08);
-      box-shadow: 0 0 28px rgba(34, 211, 238, 0.45);
-      transform: translateY(-1px);
-    }
-
-    @media (max-width: 640px) {
-      .hero-header-row {
-        flex-direction: column-reverse;
-        align-items: flex-start;
-        gap: 1.25rem;
-      }
-      .hero-avatar-col {
-        width: 130px;
-      }
-      .hero-tagline {
-        max-width: none;
-      }
+    .track-card:hover { border-color: var(--lime); transform: translateY(-2px); }
+    .track-card strong { display: block; font-family: 'Archivo Black', sans-serif; font-size: 0.95rem; margin-bottom: 0.25rem; }
+    .track-card span { font-size: 0.8rem; color: var(--text-secondary); }
+    @media (max-width: 680px) {
+      .hero { grid-template-columns: 1fr; }
+      .avatar { width: 96px; }
+      .card-grid { grid-template-columns: 1fr 1fr; }
     }
   </style>
 </head>
 <body>
-
   <div class="frame-wrapper">
     <aside>
       <div class="brand-block">
         <div class="brand-row">
           <div>
             <a href="index.html" class="brand-title">Jesse's Study Guides</a>
-            <div class="brand-tagline">Unofficial compiled training database v1.0</div>
+            <div class="brand-tagline">Practice for 2027</div>
           </div>
-          <button class="mobile-menu-btn" id="mobile-menu-btn" aria-expanded="false" aria-controls="nav-drawer">
-            Menu &#9776;
-          </button>
+          <button class="mobile-menu-btn" id="mobile-menu-btn">Menu &#9776;</button>
         </div>
-        <a class="coffee-btn" href="https://www.buymeacoffee.com/xjessejohnson" target="_blank" rel="noopener noreferrer">
-          &#9749; Buy Me a Coffee
-        </a>
+        <a class="coffee-btn" href="https://www.buymeacoffee.com/xjessejohnson" target="_blank" rel="noopener noreferrer">&#9749; Buy Me a Coffee</a>
       </div>
-
-      <nav class="nav-drawer" id="nav-drawer" aria-label="Study Categories">
+      <nav class="nav-drawer" id="nav-drawer">
         <div class="nav-section">
           <div class="nav-label">Cybersecurity</div>
-          <a href="cissp.html" class="nav-item">
-            <span>CISSP</span>
-            <span class="badge live">Active</span>
-          </a>
-          <a href="cism.html" class="nav-item">
-            <span>CISM</span>
-            <span class="badge live">Active</span>
-          </a>
-          <a href="secplus.html" class="nav-item">
-            <span>Security+</span>
-            <span class="badge live">Active</span>
-          </a>
-          <a href="ceh.html" class="nav-item">
-            <span>CEH</span>
-            <span class="badge live">Active</span>
-          </a>
+          <a href="cissp.html" class="nav-item"><span>CISSP</span><span class="badge live">Active</span></a>
+          <a href="cism.html" class="nav-item"><span>CISM</span><span class="badge live">Active</span></a>
+          <a href="secplus.html" class="nav-item"><span>Security+</span><span class="badge live">Active</span></a>
+          <a href="ceh.html" class="nav-item"><span>CEH</span><span class="badge live">Active</span></a>
         </div>
-
         <div class="nav-section">
           <div class="nav-label">Psychology</div>
-          <a href="nce.html" class="nav-item">
-            <span>NCE</span>
-            <span class="badge live">Active</span>
-          </a>
-          <a href="olere.html" class="nav-item">
-            <span>OLERE (Oklahoma)</span>
-            <span class="badge live">Active</span>
-          </a>
-          <a href="texas.html" class="nav-item">
-            <span>Texas LPC Jurisprudence</span>
-            <span class="badge live">Active</span>
-          </a>
-        </div>
-
-        <div class="nav-section">
-          <div class="nav-label">Other</div>
-          <span class="nav-item disabled" aria-disabled="true">
-            <span>Coming Soon</span>
-            <span class="badge">Coming Soon</span>
-          </span>
+          <a href="nce.html" class="nav-item"><span>NCE</span><span class="badge live">Active</span></a>
+          <a href="olere.html" class="nav-item"><span>OLERE (Oklahoma)</span><span class="badge live">Active</span></a>
+          <a href="texas.html" class="nav-item"><span>Texas LPC Jurisprudence</span><span class="badge live">Active</span></a>
         </div>
       </nav>
     </aside>
-
     <div class="main-area">
       <div class="topbar">
-        <div class="breadcrumb">JESSE'S STUDY GUIDES / <span>HOME</span></div>
-        <div class="status-pill"><span class="status-dot"></span> SYSTEM ONLINE</div>
+        <div class="breadcrumb">JESSE'S STUDY GUIDES</div>
+        <div class="status-pill"><span class="status-dot"></span> ONLINE</div>
       </div>
-
-      <main class="content-body">
-        <div class="home-hero-wrapper">
-          <!-- Headline, Tagline & Cartoon Avatar Row -->
-          <div class="hero-header-row">
-            <div class="hero-headline-wrap">
-              <div class="hero-kicker">// ACTIVE RECALL &amp; EXAM PREP</div>
-              <h1 class="hero-headline">
-                EVERY HARD<br />
-                QUESTION GETS<br />
-                EASIER WITH<br />
-                <span class="outline">PRACTICE</span>
-              </h1>
-              <p class="hero-tagline">
-                Practice exams, flashcards, and study games built for high-stakes certification and licensure prep.
-              </p>
-            </div>
-
-            <div class="hero-avatar-col">
-              <div class="hero-avatar-wrap">
-                <img src="jesse-avatar.png" alt="Jesse Johnson Cartoon Avatar" class="hero-avatar-img" />
-              </div>
-              <button type="button" class="about-link-btn" id="open-about-btn">
-                &#9432; About Me
-              </button>
-            </div>
+      <main class="content-body home-wrap">
+        <div class="hero">
+          <div>
+            <div class="eyebrow">Exams · Flashcards · Arcade</div>
+            <h1 class="hero-headline">Study sharper.<br /><span class="outline">Sit ready.</span></h1>
+            <p>Pick a track. Practice the exam, flip the cards, or play the arcade. Built for phone and desktop.</p>
           </div>
-
-          <!-- HUD Welcome Panel Aligned Flush Below -->
-          <div class="hud-panel">
-            <div class="prose">
-              <p>
-                You don't run out of study material anymore. You run out of time and sanity sorting through videos, books, forums, and social feeds. I've sat through high-dollar exams that ended in a fail, and it's exhausting. Nobody can memorize every detail without a clear way to practice, so I built this free spot with mock exams, flashcards, and games from what I've pulled together for myself. Use whatever helps, and if it makes your prep easier, <a class="inline-link" href="https://www.buymeacoffee.com/xjessejohnson" target="_blank" rel="noopener noreferrer">buy me a coffee</a> sometime.
-              </p>
+          <img class="avatar" src="jesse-avatar.png" alt="Jesse" />
+        </div>
+        <div class="tracks">
+          <section class="track">
+            <h2>Cybersecurity</h2>
+            <div class="card-grid">
+              <a class="track-card" href="cissp.html"><strong>CISSP</strong><span>ISC2 · 8 domains</span></a>
+              <a class="track-card" href="cism.html"><strong>CISM</strong><span>ISACA · management</span></a>
+              <a class="track-card" href="secplus.html"><strong>Security+</strong><span>CompTIA · SY0-701</span></a>
+              <a class="track-card" href="ceh.html"><strong>CEH</strong><span>Ethical hacking</span></a>
             </div>
-          </div>
+          </section>
+          <section class="track">
+            <h2>Psychology</h2>
+            <div class="card-grid">
+              <a class="track-card" href="nce.html"><strong>NCE</strong><span>NBCC counselor exam</span></a>
+              <a class="track-card" href="olere.html"><strong>OLERE</strong><span>Oklahoma law & ethics</span></a>
+              <a class="track-card" href="texas.html"><strong>Texas LPC</strong><span>Jurisprudence</span></a>
+            </div>
+          </section>
         </div>
       </main>
     </div>
   </div>
-
-  <!-- About Me Modal -->
-  <div class="modal-backdrop" id="about-modal" role="dialog" aria-modal="true" aria-labelledby="about-title">
-    <div class="modal-box">
-      <div class="modal-top">
-        <div class="modal-title" id="about-title">About Me</div>
-        <button class="modal-close" id="about-close-btn" aria-label="Close">✕</button>
-      </div>
-      <div class="modal-body">
-        <p>
-          I am <a class="modal-link" href="https://www.linkedin.com/in/jessejohnsonit/" target="_blank" rel="noopener noreferrer">Jesse Johnson</a>, a U.S. Army Combat Veteran of Operation Iraqi Freedom (2008 to 2009) with 19 years of professional experience in technology. I have served and currently work for the U.S. Department of War and hold the CompTIA Security+ certification.
-        </p>
-        <p>
-          As a lifelong learner, I am an alumnus of <a class="modal-link" href="https://www.snu.edu/" target="_blank" rel="noopener noreferrer">Southern Nazarene University</a> (Class of 2020, Master's in Business) and <a class="modal-link" href="https://www.macu.edu/" target="_blank" rel="noopener noreferrer">Mid-America Christian University</a> (Class of 2027, Master's in Clinical Mental Health Counseling, CMHC). I built this platform to keep my study materials structured and accessible, and I hope it helps you reach your goals as well.
-        </p>
-
-        <div class="email-cta-box">
-          <p>Have ideas, feedback, or suggestions for the site? Send me a message directly:</p>
-          <a class="fancy-mail-btn" href="mailto:xjessejohnson@gmail.com?subject=Idea%20for%20Jesse's%20Study%20Guides">
-            &#9993; Email Me Ideas
-          </a>
-        </div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Privacy Policy Modal -->
-  <div class="modal-backdrop" id="privacy-modal" role="dialog" aria-modal="true" aria-labelledby="privacy-title">
-    <div class="modal-box">
-      <div class="modal-top">
-        <div class="modal-title" id="privacy-title">Privacy Policy</div>
-        <button class="modal-close" id="privacy-close-btn" aria-label="Close">✕</button>
-      </div>
-      <div class="modal-body">
-        <p><strong>Effective Date:</strong> November 17, 2026</p>
-
-        <h4>1. Information We Collect</h4>
-        <p>Jesse's Study Guides is a static, informational study website. We do not require user registration, accounts, or logins, and we do not directly collect names, email addresses, or payment details on this site.</p>
-
-        <h4>2. Hosting and Server Logs</h4>
-        <p>This website is hosted via Vercel. As part of standard web delivery and security operations, our hosting provider may automatically process basic technical request data such as your IP address, browser type, operating system, and timestamps in temporary server logs.</p>
-
-        <h4>3. Cookies and Tracking</h4>
-        <p>This website does not use advertising trackers or third-party marketing cookies.</p>
-
-        <h4>4. Third-Party Links</h4>
-        <p>This site includes external links to Buy Me a Coffee, LinkedIn, and university websites. If you choose to visit those external platforms, any information you provide is governed by their respective privacy policies and terms of service.</p>
-
-        <h4>5. Changes to This Policy</h4>
-        <p>This policy may be updated as new features or study modules are added to the site. Questions regarding this notice can be directed to the site owner, Jesse Johnson.</p>
-      </div>
-    </div>
-  </div>
-
   <footer>
-    <p>&copy; 2026 Jesse Johnson. All rights reserved.</p>
-    <p>
-      This portal is an independent, unofficial personal study resource and is not affiliated with, endorsed by, or sponsored by ISC2, ISACA, CompTIA, NBCC, or any other certification body.
-      CISSP&reg; is a registered trademark of ISC2. CISM&reg; is a registered trademark of ISACA. CompTIA Security+&reg; is a registered trademark of CompTIA. NCE&reg; is a registered trademark of NBCC. All vendor materials, trademarks, and copyrights remain the property of their respective owners.
-    </p>
-    <div class="footer-links">
-      <button type="button" class="privacy-link" id="open-privacy-btn">Privacy Policy</button>
-    </div>
+    <p>&copy; 2026–2027 Jesse Johnson. Independent study resource. Not affiliated with ISC2, ISACA, CompTIA, EC-Council, NBCC, or any state board.</p>
   </footer>
-
+  <script src="site.js"></script>
   <script>
-    const menuBtn = document.getElementById("mobile-menu-btn");
-    const navDrawer = document.getElementById("nav-drawer");
-
-    menuBtn.addEventListener("click", () => {
-      const isOpen = navDrawer.classList.toggle("open");
-      menuBtn.setAttribute("aria-expanded", String(isOpen));
-      menuBtn.innerHTML = isOpen ? "Close &#10005;" : "Menu &#9776;";
-    });
-
-    const aboutModal = document.getElementById("about-modal");
-    const openAboutBtn = document.getElementById("open-about-btn");
-    const closeAboutBtn = document.getElementById("about-close-btn");
-
-    openAboutBtn.addEventListener("click", () => aboutModal.classList.add("open"));
-    closeAboutBtn.addEventListener("click", () => aboutModal.classList.remove("open"));
-    aboutModal.addEventListener("click", (e) => {
-      if (e.target === aboutModal) aboutModal.classList.remove("open");
-    });
-
-    const privacyModal = document.getElementById("privacy-modal");
-    const openPrivacyBtn = document.getElementById("open-privacy-btn");
-    const closePrivacyBtn = document.getElementById("privacy-close-btn");
-
-    openPrivacyBtn.addEventListener("click", () => privacyModal.classList.add("open"));
-    closePrivacyBtn.addEventListener("click", () => privacyModal.classList.remove("open"));
-    privacyModal.addEventListener("click", (e) => {
-      if (e.target === privacyModal) privacyModal.classList.remove("open");
-    });
+    var b = document.getElementById('mobile-menu-btn'), n = document.getElementById('nav-drawer');
+    if (b && n) b.onclick = function () { n.classList.toggle('open'); };
   </script>
 </body>
 </html>
