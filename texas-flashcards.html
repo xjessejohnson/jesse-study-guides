@@ -1,0 +1,13 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Texas Flashcards</title>
+<link rel="stylesheet" href="styles.css"/>
+<style>body{margin:0;background:#0b1220;color:#fff;font-family:system-ui;min-height:100vh;display:flex;flex-direction:column}.top{padding:1rem;display:flex;justify-content:space-between;border-bottom:1px solid #243044}.top a{color:#60a5fa;text-decoration:none}.stage{flex:1;display:flex;align-items:center;justify-content:center;padding:1.5rem}.card{width:min(500px,92vw);min-height:220px;background:#141b2b;border:1px solid #243044;border-radius:16px;padding:1.75rem;text-align:center;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:1.15rem}.controls{display:flex;gap:.7rem;justify-content:center;padding:1rem}button{padding:.7rem 1.2rem;border-radius:8px;border:1px solid #243044;background:#121927;color:#fff;cursor:pointer}</style></head>
+<body><div class="top"><a href="texas.html">&larr; Hub</a><span id="c">1</span></div>
+<div class="stage"><div class="card" id="card" onclick="flip()"></div></div>
+<div class="controls"><button onclick="prev()">Prev</button><button onclick="next()">Next</button></div>
+<script>
+const C=[{t:"BHEC",d:"Texas Behavioral Health Executive Council — oversees LPC and related boards."},{t:"Chapter 503",d:"Texas Occupations Code chapter containing the Licensed Professional Counselor Act."},{t:"Jurisprudence exam",d:"State law-and-rules exam required for Texas LPC applicants."},{t:"NCE / NCMHCE",d:"National exams accepted by Texas for LPC licensure."},{t:"DFPS",d:"Department of Family and Protective Services — child abuse reporting path."},{t:"Informed consent",d:"Disclosure of fees, confidentiality limits, and qualifications before treatment."},{t:"Telehealth",d:"Remote counseling still requires proper licensure for the client's location."}];
+let i=0,f=false;function show(){f=false;document.getElementById('card').textContent=C[i].t;document.getElementById('c').textContent=(i+1)+' / '+C.length;}
+function flip(){f=!f;document.getElementById('card').textContent=f?C[i].d:C[i].t;}
+function next(){i=(i+1)%C.length;show();}function prev(){i=(i-1+C.length)%C.length;show();}show();
+</script></body></html>
