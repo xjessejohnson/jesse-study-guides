@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Security+ | Jesse's Study Guides</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=JetBrains+Mono:wght@400;700&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    .hub-summary { background: rgba(16,23,38,0.78); border: 1px solid var(--border-slate); border-left: 3px solid #ef4444; border-radius: 10px; padding: 1.15rem 1.35rem; margin-bottom: 1.5rem; max-width: 780px; }
+    .hub-summary p { color: var(--text-secondary); line-height: 1.68; }
+    .hub-summary strong { color: #fff; }
+    .module-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 1.25rem; margin-top: 1.25rem; }
+    .module-card { background: var(--bg-card); border: 1px solid var(--border-slate); border-radius: 12px; padding: 1.45rem; display: flex; flex-direction: column; justify-content: space-between; gap: 1.25rem; }
+    .module-card.interactive:hover { border-color: #ef4444; transform: translateY(-2px); }
+    .module-card h3 { font-family: 'Archivo Black', sans-serif; font-size: 1.02rem; text-transform: uppercase; color: #fff; margin: 0 0 0.4rem; }
+    .module-card p { font-size: 0.88rem; color: var(--text-secondary); line-height: 1.55; }
+    .btn-sec { padding: 0.75rem 1.25rem; border-radius: 9px; border: none; background: #ef4444; color: #fff; font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 0.8rem; text-transform: uppercase; text-decoration: none; display: inline-flex; }
+  </style>
+</head>
+<body>
+  <div class="frame-wrapper">
+    <aside>
+      <div class="brand-block">
+        <div class="brand-row">
+          <div>
+            <a href="index.html" class="brand-title">Jesse's Study Guides</a>
+            <div class="brand-tagline">Unofficial compiled training database v1.0</div>
+          </div>
+          <button class="mobile-menu-btn" id="mobile-menu-btn">Menu &#9776;</button>
+        </div>
+        <a class="coffee-btn" href="https://www.buymeacoffee.com/xjessejohnson" target="_blank" rel="noopener noreferrer">&#9749; Buy Me a Coffee</a>
+      </div>
+      <nav class="nav-drawer" id="nav-drawer">
+        <div class="nav-section">
+          <div class="nav-label">Cybersecurity</div>
+          <a href="cissp.html" class="nav-item"><span>CISSP</span><span class="badge live">Active</span></a>
+          <a href="cism.html" class="nav-item"><span>CISM</span><span class="badge live">Active</span></a>
+          <a href="secplus.html" class="nav-item active"><span>Security+</span><span class="badge live">Active</span></a>
+        </div>
+        <div class="nav-section">
+          <div class="nav-label">Psychology</div>
+          <a href="nce.html" class="nav-item"><span>NCE</span><span class="badge live">Active</span></a>
+          <a href="olere.html" class="nav-item"><span>OLERE (Oklahoma)</span><span class="badge live">Active</span></a>
+        </div>
+      </nav>
+    </aside>
+    <div class="main-area">
+      <div class="topbar">
+        <div class="breadcrumb">JESSE'S STUDY GUIDES / CYBERSECURITY / <span>SECURITY+</span></div>
+        <div class="status-pill"><span class="status-dot"></span> SYSTEM ONLINE</div>
+      </div>
+      <main class="content-body">
+        <div class="eyebrow">Cybersecurity Track // CompTIA</div>
+        <h1 class="hero-headline">SECURITY+<br /><span class="outline">SY0-701</span></h1>
+        <div class="hub-summary">
+          <p>CompTIA <strong>Security+</strong> validates baseline cybersecurity skills: threats, architecture, operations, and program management. Practice here covers the core domains used on the current exam.</p>
+        </div>
+        <div class="module-grid">
+          <div class="module-card interactive">
+            <div>
+              <h3>Practice Exam</h3>
+              <p>Timed multiple-choice session modeled on the Security+ format.</p>
+            </div>
+            <a href="secplus-exam.html" class="btn-sec">Launch Exam &rarr;</a>
+          </div>
+          <div class="module-card interactive">
+            <div>
+              <h3>Flashcards</h3>
+              <p>Core terms across the five Security+ domains.</p>
+            </div>
+            <a href="secplus-flashcards.html" class="btn-sec">Study Cards &rarr;</a>
+          </div>
+          <div class="module-card interactive">
+            <div>
+              <h3>Threat Sort</h3>
+              <p>Rapid attack-classification drill. Different from the scenario arcade — pure speed sorting.</p>
+            </div>
+            <a href="secplus-threat.html" class="btn-sec">Play Game &rarr;</a>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+  <footer>
+    <p>&copy; 2026 Jesse Johnson. All rights reserved.</p>
+    <p>Independent study resource. Not affiliated with CompTIA. Security+ is a trademark of CompTIA.</p>
+  </footer>
+  <script>
+    const b = document.getElementById('mobile-menu-btn'), n = document.getElementById('nav-drawer');
+    if (b && n) b.onclick = () => n.classList.toggle('open');
+  </script>
+</body>
+</html>
