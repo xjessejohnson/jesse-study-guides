@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width, initial-scale=1.0"/><title>Lone Star Sort</title>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap" rel="stylesheet"/>
+<style>body{margin:0;background:#0c1018;color:#fff;font-family:system-ui;min-height:100vh;display:flex;flex-direction:column}header{padding:1rem;display:flex;justify-content:space-between;border-bottom:1px solid #243044}header a{color:#60a5fa;text-decoration:none}.arena{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:1rem;padding:1.5rem}.card{background:#141b2b;border:1px solid #243044;border-radius:14px;padding:1.4rem;max-width:480px;text-align:center}.btns{display:flex;gap:.6rem}.btns button{padding:.9rem 1.2rem;border:none;border-radius:10px;font-weight:700;cursor:pointer}.ok{background:#9eff33;color:#111}.bad{background:#fb7185;color:#111}</style></head>
+<body>
+<header><a href="texas.html">&larr; Hub</a><strong>LONE STAR SORT</strong><span id="s">0</span></header>
+<div class="arena"><div class="card" id="p">Ready</div><div class="btns"><button class="ok" onclick="ans(true)">Allowed</button><button class="bad" onclick="ans(false)">Violation</button></div></div>
+<script>
+const I=[{t:"Report suspected child abuse to DFPS",ok:true},{t:"Date a current client",ok:false},{t:"Explain confidentiality limits before intake",ok:true},{t:"Guarantee a cure in advertising",ok:false},{t:"Keep session notes for continuity",ok:true},{t:"Practice in Texas with no required license",ok:false},{t:"Refer when the issue is outside competence",ok:true},{t:"Share a client's diagnosis at a party",ok:false}];
+let i=0,sc=0;function show(){document.getElementById('p').textContent=I[i%I.length].t;}
+function ans(v){if(v===I[i%I.length].ok)sc++;document.getElementById('s').textContent=sc;i++;show();}show();
+</script></body></html>
