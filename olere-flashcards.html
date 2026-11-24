@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>OLERE Flashcards | Jesse's Study Guides</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@400;600&display=swap" rel="stylesheet" />
+  <style>
+    body { display: flex; flex-direction: column; min-height: 100vh; }
+    .top { padding: 1rem 1.25rem; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-slate); }
+    .top a { color: #e8a87c; text-decoration: none; }
+    .stage { flex: 1; display: flex; align-items: center; justify-content: center; padding: 1.5rem; }
+    .card { width: min(520px, 92vw); min-height: 280px; background: var(--bg-card); border: 1px solid var(--border-slate); border-radius: 16px; padding: 2rem; display: flex; flex-direction: column; justify-content: center; cursor: pointer; text-align: center; }
+    .card .label { font-family: 'JetBrains Mono', monospace; font-size: 0.7rem; color: #e8a87c; letter-spacing: 0.1em; margin-bottom: 1rem; }
+    .card .text { font-size: 1.25rem; line-height: 1.5; color: #fff; }
+    .card.back .text { font-size: 1.05rem; color: var(--text-secondary); }
+    .controls { display: flex; gap: 0.75rem; justify-content: center; padding: 1rem; }
+    .controls button { padding: 0.7rem 1.4rem; border-radius: 8px; border: 1px solid var(--border-slate); background: #121927; color: #fff; cursor: pointer; font-weight: 600; }
+    .controls button.primary { background: #c45c26; border-color: #c45c26; }
+    .progress { text-align: center; font-size: 0.85rem; color: var(--text-secondary); padding-bottom: 1rem; }
+  </style>
+</head>
+<body>
+  <div class="top">
+    <a href="olere.html">&larr; OLERE Hub</a>
+    <span id="count">1 / 30</span>
+  </div>
+  <div class="stage">
+    <div class="card" id="card" onclick="flip()">
+      <div class="label" id="label">TERM</div>
+      <div class="text" id="text">Loading...</div>
+    </div>
+  </div>
+  <div class="progress">Click card to flip</div>
+  <div class="controls">
+    <button onclick="prev()">Previous</button>
+    <button class="primary" onclick="next()">Next</button>
+  </div>
+  <script>
+const CARDS = [
+  { t: "LPC", d: "Licensed Professional Counselor — the Oklahoma license for independent counseling practice after meeting education, exam, and supervision requirements." },
+  { t: "OLERE", d: "Oklahoma Legal and Ethical Responsibilities Examination — the state jurisprudence exam covering Oklahoma counseling law and ethics." },
+  { t: "Supervised hours", d: "Postgraduate counseling experience under a board-approved supervisor, typically 3,000 hours for Oklahoma LPC." },
+  { t: "Mandated reporter", d: "A professional required by law to report suspected child abuse or neglect to DHS or law enforcement." },
+  { t: "Informed consent", d: "Process of explaining confidentiality limits, fees, credentials, and treatment so the client can agree knowingly." },
+  { t: "Dual relationship", d: "When a counselor has another significant relationship with a client; common challenge in rural Oklahoma." },
+  { t: "Scope of practice", d: "The range of services an LPC may legally and competently provide based on training and license." },
+  { t: "Privilege", d: "Legal protection of counseling communications, subject to exceptions such as court orders or safety mandates." },
+  { t: "Abandonment", d: "Ending care abruptly without reasonable notice or referral when the client still needs services." },
+  { t: "Continuing education", d: "Ongoing learning required for Oklahoma license renewal." },
+  { t: "Candidate", d: "A person accruing supervised hours toward full LPC licensure under board rules." },
+  { t: "Title 59", d: "Oklahoma statutes that include professional licensing provisions relevant to counselors." },
+  { t: "OAC 86:10", d: "Oklahoma Administrative Code section containing rules for licensed professional counselors." },
+  { t: "Duty to protect", d: "Obligation to take reasonable steps when a client poses serious imminent harm to an identifiable person." },
+  { t: "Record retention", d: "Keeping clinical records for the period required by board rule after services end." },
+  { t: "Telehealth", d: "Counseling delivered remotely; must comply with Oklahoma licensure for the client's location." },
+  { t: "Bartering", d: "Exchanging services for non-monetary payment; ethically sensitive due to exploitation risk." },
+  { t: "Supervision documentation", d: "Records of hours, activities, and evaluation required for licensure candidates." },
+  { t: "Public protection", d: "The primary purpose of counseling licensure and board oversight." },
+  { t: "Minor confidentiality", d: "Limited privacy for child clients, balanced against parental rights and safety." },
+  { t: "Board complaint", d: "A formal allegation that can trigger investigation and possible discipline." },
+  { t: "Advertising rules", d: "Requirement that promotional statements about counseling be truthful and not misleading." },
+  { t: "Cultural responsiveness", d: "Adapting services to the client's cultural context and values." },
+  { t: "Termination planning", d: "Collaborative ending of counseling with review and referrals when needed." },
+  { t: "Assessment competence", d: "Using tests only when qualified and with proper consent and interpretation." },
+  { t: "Gift boundaries", d: "Evaluating client gifts for their effect on the therapeutic relationship." },
+  { t: "Colleague impairment", d: "Ethical duty to address another professional's impairment when clients are at risk." },
+  { t: "Group confidentiality limits", d: "Leaders cannot fully guarantee that other members will keep disclosures private." },
+  { t: "Emergency coverage", d: "Arrangements so clients can reach help when the primary counselor is unavailable." },
+  { t: "State-specific licensure", d: "An Oklahoma license does not automatically authorize practice in other states." }
+];
+let i = 0, flipped = false;
+const card = document.getElementById('card');
+const label = document.getElementById('label');
+const text = document.getElementById('text');
+const count = document.getElementById('count');
+function render() {
+  flipped = false;
+  card.classList.remove('back');
+  label.textContent = 'TERM';
+  text.textContent = CARDS[i].t;
+  count.textContent = (i+1) + ' / ' + CARDS.length;
+}
+function flip() {
+  flipped = !flipped;
+  card.classList.toggle('back', flipped);
+  label.textContent = flipped ? 'DEFINITION' : 'TERM';
+  text.textContent = flipped ? CARDS[i].d : CARDS[i].t;
+}
+function next() { i = (i + 1) % CARDS.length; render(); }
+function prev() { i = (i - 1 + CARDS.length) % CARDS.length; render(); }
+render();
+  </script>
+</body>
+</html>
