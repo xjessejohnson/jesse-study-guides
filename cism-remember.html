@@ -7,7 +7,7 @@
   <meta name="description" content="CISM Games developed by Jesse—play 4x4 Concentration, Risk Invaders, Executive Hot Seat, Audit Hammer Smash, Who Wants to Be a CISMnaire, and Logic Bomb Defusal." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
   <style>
     /* Underlying CISM Hub Layer */
@@ -627,6 +627,23 @@
 </head>
 <body>
 
+<div class="share-row" style="display:flex;gap:0.4rem;flex-wrap:wrap;margin:0.6rem 0;">
+  <button type="button" class="share-btn" onclick="shareGame()" style="padding:0.4rem 0.7rem;border-radius:8px;border:1px solid var(--border-slate);background:var(--bg-card);color:var(--text-primary);cursor:pointer;font-size:0.8rem;">Share</button>
+</div>
+<script>
+function shareGame(){
+  var url = location.href;
+  var title = document.title;
+  if (navigator.share) {
+    navigator.share({ title: title, url: url }).catch(function(){});
+  } else {
+    var text = encodeURIComponent(title + ' ' + url);
+    window.open('https://twitter.com/intent/tweet?text=' + text, '_blank', 'noopener');
+  }
+}
+</script>
+
+
   <div class="frame-wrapper" id="site-wrapper">
     <aside>
       <div class="brand-block">
@@ -666,7 +683,7 @@
       </div>
 
       <main class="content-body">
-        <div class="eyebrow">Track 02 // ISACA CISM</div>
+        <div class="eyebrow">ISACA CISM</div>
         <h1 class="hero-headline">CISM<br /><span class="outline">STUDY HUB</span></h1>
 
         <div class="hub-summary">
