@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CEH Practice Exam | Jesse's Study Guides</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    .exam-topbar { display:flex; flex-wrap:wrap; align-items:center; justify-content:space-between; gap:0.85rem; margin-bottom:1.25rem; }
+    .btn-ghost { padding:0.55rem 1rem; border-radius:8px; border:1px solid var(--border-slate); background:transparent; color:var(--text-secondary); font-family:'JetBrains Mono',monospace; font-size:0.76rem; cursor:pointer; text-decoration:none; }
+    .btn-lime { padding:0.78rem 1.45rem; border-radius:9px; border:none; background:var(--lime); color:#05070c; font-family:'JetBrains Mono',monospace; font-weight:700; font-size:0.82rem; text-transform:uppercase; cursor:pointer; }
+    .progress-track { width:100%; height:5px; background:rgba(148,163,184,0.14); border-radius:999px; overflow:hidden; margin-bottom:1.4rem; }
+    .progress-fill { height:100%; background:linear-gradient(90deg,var(--cyan),var(--lime)); transition:width 0.25s ease; }
+    .q-card { background:var(--bg-card); border:1px solid var(--border-slate); border-radius:12px; padding:1.35rem; }
+    .q-text { font-size:1.08rem; line-height:1.5; margin-bottom:1rem; color:#fff; }
+    .opt { display:block; width:100%; text-align:left; background:#121927; border:1.5px solid var(--border-slate); border-radius:10px; padding:0.8rem 1rem; margin-bottom:0.5rem; color:#fff; cursor:pointer; font-size:0.95rem; }
+    .opt:hover { border-color:var(--cyan); }
+    .opt.selected { border-color:var(--lime); background:rgba(158,255,51,0.1); }
+    .opt.correct { border-color:var(--lime); }
+    .opt.wrong { border-color:var(--rose); }
+    .jump-wrap { margin-top:1.25rem; }
+    .jump-label { font-family:'JetBrains Mono',monospace; font-size:0.7rem; color:var(--text-secondary); margin-bottom:0.5rem; }
+    .jump-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(42px,1fr)); gap:0.35rem; }
+    .jump-opt { padding:0.4rem; border-radius:6px; border:1px solid transparent; background:rgba(255,255,255,0.04); color:var(--text-secondary); font-family:'JetBrains Mono',monospace; font-size:0.72rem; text-align:center; cursor:pointer; }
+    .jump-opt.answered { background:rgba(34,211,238,0.22); color:var(--cyan); }
+    .jump-opt.current { background:var(--lime); color:#05070c; font-weight:700; }
+    .mode-grid { display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin-top:1rem; }
+    .mode-choice { background:#121927; border:1.5px solid var(--border-slate); border-radius:12px; padding:1.1rem; text-align:left; cursor:pointer; color:#fff; }
+    .mode-choice:hover { border-color:var(--lime); }
+    .mode-choice-title { font-weight:700; margin-bottom:0.3rem; }
+    .mode-choice-desc { font-size:0.85rem; color:var(--text-secondary); }
+    .modal-backdrop { position:fixed; inset:0; background:rgba(0,0,0,0.72); display:none; align-items:center; justify-content:center; z-index:50; padding:1rem; }
+    .modal-backdrop.open { display:flex; }
+    .modal-box { background:#141b2b; border:1px solid var(--border-slate); border-radius:14px; padding:1.35rem; max-width:560px; width:100%; }
+    .nav-row { display:flex; gap:0.6rem; margin-top:1rem; }
+    @media (max-width:640px) { .mode-grid { grid-template-columns:1fr; } }
+</style>
+</head>
+<body>
+  <div class="frame-wrapper">
+    <div class="main-area" style="margin-left:0;">
+      <div class="topbar">
+        <div class="breadcrumb"><a href="ceh.html" style="color:inherit;text-decoration:none;">← Hub</a> / <span>EXAM</span></div>
+        <div class="status-pill"><span class="status-dot"></span> <span id="mode-label">Select mode</span></div>
+      </div>
+      <main class="content-body" id="exam-main"></main>
+    </div>
+  </div>
+  <div class="modal-backdrop open" id="mode-modal">
+    <div class="modal-box">
+      <div style="font-family:'Archivo Black',sans-serif;font-size:1.2rem;margin-bottom:0.4rem;">Select Exam Mode</div>
+      <p style="color:var(--text-secondary);font-size:0.92rem;">Certified Ethical Hacker style practice. Authorized testing concepts only.</p>
+      <div class="mode-grid">
+        <button type="button" class="mode-choice" onclick="startMode('instant')">
+          <div class="mode-choice-title">Answers Instantly</div>
+          <div class="mode-choice-desc">Immediate feedback with explanation. Jump between questions anytime.</div>
+        </button>
+        <button type="button" class="mode-choice" onclick="startMode('end')">
+          <div class="mode-choice-title">Answers at the End</div>
+          <div class="mode-choice-desc">Answer the full set, then review score and explanations.</div>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="modal-backdrop" id="feedback-modal">
+    <div class="modal-box">
+      <div id="fb-title" style="font-weight:700;margin-bottom:0.5rem;"></div>
+      <div id="fb-body" style="color:var(--text-secondary);font-size:0.92rem;line-height:1.5;"></div>
+      <button class="btn-lime" style="margin-top:1rem;" onclick="closeFb()">Continue</button>
+    </div>
+  </div>
+  <script>
+
+const QUESTIONS = [
+  { q: "The first phase of a typical ethical hacking methodology is:", opts: ["Exploitation","Reconnaissance","Covering tracks","Maintaining access"], correct: 1, exp: "Reconnaissance gathers information before active attacks." },
+  { q: "Which tool is commonly used for network scanning?", opts: ["Nmap","Wireshark only for exploits","John the Ripper for ports","Aircrack for SQL"], correct: 0, exp: "Nmap is a standard port and service scanner." },
+  { q: "A white-hat hacker is:", opts: ["Unauthorized and malicious","Authorized and defensive","Always illegal","Only a script kiddie"], correct: 1, exp: "White hats test with permission to improve security." },
+  { q: "SQL injection targets:", opts: ["Physical locks","Database queries via unsanitized input","Wi-Fi handshakes only","BIOS passwords"], correct: 1, exp: "SQLi abuses application input that reaches a database." },
+  { q: "Which is passive reconnaissance?", opts: ["Running exploits","OSINT from public sources","Brute-forcing SSH","ARP poisoning"], correct: 1, exp: "Passive recon uses publicly available information without touching the target directly." },
+  { q: "Metasploit is primarily:", opts: ["A word processor","An exploitation framework","A firewall","A certificate authority"], correct: 1, exp: "Metasploit is used to develop and run exploit modules in authorized tests." },
+  { q: "A reverse shell means:", opts: ["The target connects back to the attacker","The attacker only scans","DNS is disabled","Encryption is removed"], correct: 0, exp: "The compromised host initiates the connection outbound." },
+  { q: "Rules of engagement in a pentest define:", opts: ["Nothing","Scope, timing, and allowed techniques","Only the invoice","Social media policy"], correct: 1, exp: "ROE sets boundaries so testing stays authorized." },
+  { q: "XSS allows an attacker to:", opts: ["Inject script into a page viewed by others","Only crack Wi-Fi","Replace a hard drive","Disable TCP"], correct: 0, exp: "Cross-site scripting runs attacker script in a victim browser context." },
+  { q: "Hashcat is used for:", opts: ["Packet capture","Password hash cracking","Writing policies","Load balancing"], correct: 1, exp: "Hashcat recovers passwords from hashes in authorized assessments." },
+  { q: "Footprinting is part of:", opts: ["Reconnaissance","Only post-exploitation","Physical destruction","Certificate issuance"], correct: 0, exp: "Footprinting maps the target's publicly visible footprint." },
+  { q: "A vulnerability scan differs from a pentest because it:", opts: ["Always exploits everything","Identifies weaknesses, often without full exploitation","Is illegal","Replaces rules of engagement"], correct: 1, exp: "Scans find issues; pentests attempt authorized exploitation within scope." },
+  { q: "Social engineering in CEH context is:", opts: ["Only technical exploits","Manipulating people to bypass security","A hashing algorithm","A firewall mode"], correct: 1, exp: "Human manipulation is a core attack path." },
+  { q: "Covering tracks may involve:", opts: ["Clearing logs","Publishing a report only","Buying a domain","Enabling MFA"], correct: 0, exp: "Attackers (and testers documenting the risk) may alter logs to hide activity." },
+  { q: "Written authorization before a pentest is:", opts: ["Optional","Essential","Only for black hats","Replaced by a verbal maybe"], correct: 1, exp: "Authorization is what makes the work legal and ethical." }
+];
+
+let mode = null, idx = 0, answers = {}, locked = {};
+function startMode(m) {
+  mode = m;
+  document.getElementById('mode-modal').classList.remove('open');
+  document.getElementById('mode-label').textContent = m === 'instant' ? 'Instant feedback' : 'Exam mode';
+  render();
+}
+function render() {
+  const q = QUESTIONS[idx];
+  const main = document.getElementById('exam-main');
+  const pct = Math.round(((idx) / QUESTIONS.length) * 100);
+  let opts = '';
+  q.opts.forEach((o, i) => {
+    const sel = answers[idx] === i ? ' selected' : '';
+    const mark = locked[idx] ? (i === q.correct ? ' correct' : (answers[idx] === i ? ' wrong' : '')) : '';
+    opts += '<button class="opt' + sel + mark + '" onclick="pick(' + i + ')">' + o + '</button>';
+  });
+  let jumps = '';
+  QUESTIONS.forEach((_, i) => {
+    const cls = (i === idx ? ' current' : '') + (answers[i] !== undefined ? ' answered' : '');
+    jumps += '<button class="jump-opt' + cls + '" onclick="jump(' + i + ')">' + (i + 1) + '</button>';
+  });
+  main.innerHTML = `
+    <div class="exam-topbar">
+      <div>Question ${idx + 1} of ${QUESTIONS.length}</div>
+      <a class="btn-ghost" href="ceh.html">Exit</a>
+    </div>
+    <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
+    <div class="q-card">
+      <div class="q-text">${q.q}</div>
+      ${opts}
+      <div class="nav-row">
+        <button class="btn-ghost" onclick="prev()">Previous</button>
+        <button class="btn-lime" onclick="next()">${idx === QUESTIONS.length - 1 ? 'Finish' : 'Next'}</button>
+      </div>
+    </div>
+    <div class="jump-wrap">
+      <div class="jump-label">JUMP TO QUESTION</div>
+      <div class="jump-grid">${jumps}</div>
+    </div>`;
+}
+function pick(i) {
+  if (locked[idx] && mode === 'instant') return;
+  answers[idx] = i;
+  if (mode === 'instant') {
+    locked[idx] = true;
+    const q = QUESTIONS[idx];
+    const ok = i === q.correct;
+    document.getElementById('fb-title').textContent = ok ? 'Correct' : 'Not quite';
+    document.getElementById('fb-body').textContent = q.exp || '';
+    document.getElementById('feedback-modal').classList.add('open');
+  }
+  render();
+}
+function closeFb() { document.getElementById('feedback-modal').classList.remove('open'); }
+function jump(i) { idx = i; render(); }
+function prev() { if (idx > 0) { idx--; render(); } }
+function next() {
+  if (idx < QUESTIONS.length - 1) { idx++; render(); }
+  else finish();
+}
+function finish() {
+  let c = 0;
+  QUESTIONS.forEach((q, i) => { if (answers[i] === q.correct) c++; });
+  const pct = Math.round(c / QUESTIONS.length * 100);
+  document.getElementById('exam-main').innerHTML = `
+    <div class="q-card" style="text-align:center;padding:2rem;">
+      <div style="font-family:'Archivo Black',sans-serif;font-size:1.6rem;">${c} / ${QUESTIONS.length}</div>
+      <p style="color:var(--text-secondary);">${pct}%</p>
+      <a class="btn-lime" href="ceh.html" style="display:inline-block;margin-top:1rem;text-decoration:none;">Back to Hub</a>
+    </div>`;
+}
+  </script>
+</body>
+</html>
