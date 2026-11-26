@@ -671,7 +671,7 @@
 #mini-play .dsm-case-brief strong{color:#fff}
 #mini-play .dsm-scene-wrap{grid-column:1;position:relative;overflow:hidden;border:1px solid #1683b4;border-radius:13px;background:#07111d;box-shadow:0 8px 30px #0008,0 0 20px #00b7ff16;line-height:0}
 #mini-play .dsm-scene-art{display:block;width:100%;aspect-ratio:16/9;background:#0a1828}
-#mini-play .dsm-scene-img{display:block;width:100%;height:100%;object-fit:cover;object-position:center}
+#mini-play .dsm-scene-img{display:block;width:100%;height:100%;object-fit:contain;object-position:center;background:#07111d}
 #mini-play .dsm-scene-label{position:absolute;left:10px;top:10px;padding:6px 9px;border:1px solid #9deaff77;border-radius:7px;background:#06101ddd;color:#dff9ff;font:700 .62rem 'JetBrains Mono',monospace;letter-spacing:.06em;line-height:1.2}
 #mini-play .dsm-scene-hint{position:absolute;right:10px;top:10px;padding:6px 9px;border-radius:7px;background:#06101dcc;color:#8cecff;font:700 .58rem 'JetBrains Mono',monospace;line-height:1.2}
 #mini-play .dsm-hotspot{position:absolute;transform:translate(-50%,-50%);width:clamp(30px,3vw,42px);height:clamp(30px,3vw,42px);border:2px solid #b8f5ff;background:#061b2bdc;color:#fff;border-radius:50%;font-size:0;cursor:pointer;box-shadow:0 0 0 4px #00c8ff2c,0 0 18px #00c8ff88;transition:transform .16s,background .16s}
@@ -1740,7 +1740,7 @@ function renderDsmDetective(){
   [[87,19],[33,72],[54,78],[67,87],[16,49],[45,35],[78,52],[92,75]],
   [[65,20],[24,57],[52,75],[84,56],[40,40],[72,81],[12,30],[91,18]]
  ][dsmCaseIndex]||[[15,35],[32,72],[42,35],[58,66],[75,37],[87,68],[8,70],[66,22]];
- const marks=targets.map((p,i)=>{const real=[0,2,4,6].includes(i),clueIndex=[0,1,2,3][[0,2,4,6].indexOf(i)];const done=real?found.includes(clueIndex):dsmUsedDecoys[dsmCaseIndex].includes(i);return '<button class="dsm-hotspot '+(done?(real?'found':'decoy-found'):'')+'" style="left:'+p[0]+'%;top:'+p[1]+'%" aria-label="'+(done?'Investigated':'Inspect object')+'" '+(done?'disabled':'')+' onclick="inspectDsmObject('+i+')">'+(done?(real?'✓':'×'):'⌕')+'</button>';}).join("");
+ const marks=targets.map((p,i)=>{const real=[0,2,4,6].includes(i),clueIndex=[0,1,2,3][[0,2,4,6].indexOf(i)];const done=real?found.includes(clueIndex):dsmUsedDecoys[dsmCaseIndex].includes(i);return '<button class="dsm-hotspot '+(done?(real?'found':'decoy-found'):'')+'" style="left:'+p[0]+'%;top:'+p[1]+'%" aria-label="'+(done?'Investigated':'Inspect object')+'" '+(done?'disabled':'')+' data-object="'+i+'" onclick="inspectDsmObject('+i+')">'+(done?(real?'✓':'×'):'⌕')+'</button>';}).join("");
  const evidence=c.clues.map((clue,i)=>found.includes(i)?'<div class="dsm-evidence filled"><strong>✓ '+dsmEscape(clue.name)+'</strong><p>'+dsmEscape(clue.detail)+'</p><span class="dsm-term">'+dsmEscape(clue.term)+'</span></div>':'<div class="dsm-evidence empty"><span>◌</span><span>Evidence '+(i+1)+' · undiscovered</span></div>').join("");
  const analysis=all?'<div class="dsm-diagnosis"><h3>PHASE 2 · DIFFERENTIAL DIAGNOSIS</h3><p>'+dsmEscape(c.question)+' Choose the single best answer. A wrong answer costs 20 points.</p><div class="dsm-options">'+c.options.map((o,i)=>'<button class="dsm-choice" onclick="chooseDsmDiagnosis('+i+')">'+String.fromCharCode(65+i)+'. '+dsmEscape(o)+'</button>').join("")+'</div><div id="dsm-feedback"></div></div>':'<div class="dsm-diagnosis"><h3>DIAGNOSTIC BOARD LOCKED</h3><p>Investigate all four clinically relevant objects to unlock the differential diagnosis. '+found.length+' of 4 evidence items recovered.</p></div>';
  const guide=(dsmCaseIndex%2===0)?"characters/therapist-female.jpg":"characters/therapist.jpg";
@@ -1776,7 +1776,7 @@ function inspectDsmObject(i){
   dsmUsedDecoys[dsmCaseIndex].push(i);dsmScore=Math.max(0,dsmScore-10);
   const msg=dsmDecoys[dsmCaseIndex][[1,3,5,7].indexOf(i)];
   box.className="dsm-feedback wrong";box.innerHTML='<strong>False lead · −10 points</strong><br>'+dsmEscape(msg)+'. This detail does not meaningfully distinguish the diagnostic possibilities. Look for duration, symptom pattern, impairment, or exclusion criteria.';
-  const btn=document.querySelector('.dsm-hotspot[style*="left: '+[[15,35],[32,72],[42,35],[58,66],[75,37],[87,68],[8,70],[66,22]][i][0]+'%"]');
+  const btn=document.querySelector('.dsm-hotspot[data-object="'+i+'"]');
   if(btn){btn.classList.add("decoy-found");btn.disabled=true;btn.textContent="×";}
   const pill=document.querySelectorAll(".dsm-status-pill");if(pill[1])pill[1].textContent="FALSE LEADS "+dsmUsedDecoys[dsmCaseIndex].length+"/4";if(document.querySelector(".dsm-score-chip"))document.querySelector(".dsm-score-chip").textContent="★ "+dsmScore+" PTS";
  }
