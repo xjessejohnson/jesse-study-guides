@@ -1813,18 +1813,35 @@ function openMini(id) {
   const title = document.getElementById('mini-title');
   const launcher = document.getElementById('launcher-modal');
   const play = document.getElementById('mini-play');
-  if (!modal || !title || !play || !MINI[id]) { console.error('Unable to open game:', id); return; }
-  miniId = id; miniIdx = 0; miniScore = 0; miniLives = 3;
-  title.textContent = MINI[id].name;
-  modal.style.display = 'flex';
-  if (launcher) launcher.style.display = 'none';
-  if (id === 'dsm') {
-    dsmCaseIndex = 0; dsmFound = DSM_CASES.map(() => []);
-    dsmScore = 0; dsmSolved = 0; dsmWrong = 0;
-    dsmChoiceLocked = false; dsmRationaleLocked = false;
-    dsmUsedDecoys = DSM_CASES.map(() => []);
-    renderDsmDetective();
-  } else { renderMini(); }
+  try {
+    if (!modal || !title || !play || !MINI[id]) throw new Error('The game launcher could not find the requested game.');
+    miniId = id; miniIdx = 0; miniScore = 0; miniLives = 3;
+    title.textContent = MINI[id].name;
+    modal.style.setProperty('display', 'flex', 'important');
+    modal.setAttribute('aria-hidden', 'false');
+    if (launcher) launcher.style.setProperty('display', 'none', 'important');
+    if (id === 'dsm') {
+      dsmCaseIndex = 0; dsmFound = DSM_CASES.map(() => []);
+      dsmScore = 0; dsmSolved = 0; dsmWrong = 0;
+      dsmChoiceLocked = false; dsmRationaleLocked = false;
+      dsmUsedDecoys = DSM_CASES.map(() => []);
+      renderDsmDetective();
+      const scene = play.querySelector('.dsm-scene-img');
+      if (scene) scene.addEventListener('error', function () {
+        this.alt = 'Scene image could not load. Check the dsm-scenes folder in the repository.';
+        this.style.display = 'none';
+        const note = document.createElement('p');
+        note.className = 'dsm-feedback wrong';
+        note.textContent = 'The case artwork did not load. The investigation is still playable below.';
+        this.parentNode.appendChild(note);
+      }, { once: true });
+    } else { renderMini(); }
+  } catch (err) {
+    console.error('DSM/NCE game launch error:', err);
+    if (modal) modal.style.setProperty('display', 'flex', 'important');
+    if (launcher) launcher.style.setProperty('display', 'none', 'important');
+    if (play) play.innerHTML = '<div role="alert" style="padding:1rem;color:#fff;background:#351923;border:1px solid #fb7185;border-radius:10px"><h3>Game could not start</h3><p>' + String(err && err.message || err).replace(/[&<>]/g, function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;'}[c];}) + '</p><button class="primary-action-btn" onclick="closeMini()">Return to game menu</button></div>';
+  }
 }
 function closeMini() {
   document.getElementById('mini-modal').style.display = 'none';
