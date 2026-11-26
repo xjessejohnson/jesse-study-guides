@@ -728,3 +728,7 @@ footer {
 [data-theme="light"] .brand-tagline,
 [data-theme="light"] .hero-tagline { color: #334155; }
 [data-theme="light"] .share-row { background: #f8fafc; border-color: #cbd5e1; }
+
+
+/* Keep the copyright line brighter and easier to read on every page. */
+footer p:first-child { color: var(--text-secondary); font-weight: 600; }
