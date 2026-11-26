@@ -3,8 +3,16 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Jesse's Study Guides | Exam Practice</title>
-  <meta name="description" content="An independent study portal compiling practice exams, flashcards, and study games across cybersecurity, counseling, and more." />
+  <title>Free Practice Exams & Study Guides | Jesse's Study Guides</title>
+  <meta name="description" content="Explore free practice exams, flashcards, and interactive study games for cybersecurity certifications and counseling licensure preparation, including CISSP, CISM, Security+, CEH, and NCE." />
+  <link rel="canonical" href="https://jesse-study-guides.vercel.app/" />
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Jesse's Study Guides | Free Exam Practice & Study Resources" />
+  <meta property="og:description" content="Free practice exams, flashcards, and interactive study games for cybersecurity certifications and counseling licensure preparation." />
+  <meta property="og:url" content="https://jesse-study-guides.vercel.app/" />
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Jesse's Study Guides | Free Exam Practice" />
+  <meta name="twitter:description" content="Free practice exams, flashcards, and interactive study games for cybersecurity and counseling exam preparation." />
   <link rel="stylesheet" href="styles.css" />
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap&family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
@@ -89,41 +97,106 @@
       </div>
       <main class="content-body">
         <div class="home-hero-wrapper">
-          <div class="hero-header-row">
-            <div class="hero-headline-wrap">
-              <div class="hero-kicker"></div>
-              <h1 class="hero-headline">EVERY HARD<br />QUESTION GETS<br />EASIER WITH<br /><span class="outline">PRACTICE</span></h1>
-              <p class="hero-tagline">Practice exams, flashcards, and study games built for high-stakes certification and licensure prep.</p>
-            </div>
-            <div class="hero-avatar-col">
-              <div class="hero-avatar-wrap">
-                <img src="jesse-avatar.png" alt="Jesse Johnson Cartoon Avatar" class="hero-avatar-img" />
+          <section class="home-hero" aria-labelledby="home-title">
+            <div class="hero-header-row">
+              <div class="hero-headline-wrap">
+                <div class="hero-kicker">Independent exam-preparation resources</div>
+                <h1 class="hero-headline" id="home-title">STUDY SMARTER.<br />PRACTICE WITH<br /><span class="outline">PURPOSE.</span></h1>
+                <p class="hero-tagline">Free practice exams, flashcards, and interactive study games for cybersecurity certifications and counseling licensure preparation.</p>
+                <div class="hero-actions">
+                  <a class="hero-primary-btn" href="#study-paths">Explore study paths <span aria-hidden="true">→</span></a>
+                  <a class="hero-secondary-btn" href="#study-tools">Explore study tools</a>
+                </div>
               </div>
-              <button type="button" class="about-link-btn" id="open-about-btn">&#9432; About Me</button>
+              <div class="hero-avatar-col">
+                <div class="hero-avatar-wrap">
+                  <img src="jesse-avatar.png" alt="Illustrated portrait of Jesse Johnson, creator of Jesse's Study Guides" class="hero-avatar-img" width="896" height="1200" fetchpriority="high" />
+                </div>
+                <button type="button" class="about-link-btn" id="open-about-btn">&#9432; About the creator</button>
+                <div class="hero-avatar-caption">Built by a lifelong learner</div>
+              </div>
             </div>
-          </div>
-          <div class="hud-panel">
-            <p>You don't run out of study material anymore. You run out of time and sanity sorting through videos, books, forums, and social feeds. I've sat through high-dollar exams that ended in a fail, and it's exhausting. Nobody can memorize every detail without a clear way to practice, so I built this free spot with mock exams, flashcards, and games from what I've pulled together for myself. Use whatever helps, and if it makes your prep easier, <a class="inline-link" href="https://www.buymeacoffee.com/xjessejohnson" target="_blank" rel="noopener noreferrer">buy me a coffee</a> sometime.</p>
-          </div>
-          <div class="tracks">
-            <section>
-              <h2>Cybersecurity</h2>
+          </section>
+
+          <section class="intro-panel" aria-label="About this study platform">
+            <div class="intro-panel-mark" aria-hidden="true">JG</div>
+            <div>
+              <h2>One place to organize your exam preparation.</h2>
+              <p>Finding useful study material shouldn't mean digging through endless videos, books, and forums. I built this independent resource hub to bring practice questions, flashcards, and study games together in one accessible place. Explore the subjects below and use the tools that help you prepare with confidence.</p>
+            </div>
+          </section>
+
+          <section class="study-tools" id="study-tools" aria-labelledby="tools-title">
+            <div class="section-heading">
+              <div>
+                <div class="section-eyebrow">Choose how you want to study</div>
+                <h2 id="tools-title">STUDY TOOLS</h2>
+              </div>
+              <span class="section-index">01 / PRACTICE</span>
+            </div>
+            <div class="tool-grid">
+              <a class="tool-card" href="#study-paths">
+                <span class="tool-icon tool-icon-cyan" aria-hidden="true">✓</span>
+                <span class="tool-card-title">Practice Exams</span>
+                <span class="tool-card-copy">Challenge yourself with exam-style questions and review what you know.</span>
+                <span class="tool-card-link">Find an exam <span aria-hidden="true">↗</span></span>
+              </a>
+              <a class="tool-card" href="#study-paths">
+                <span class="tool-icon tool-icon-lime" aria-hidden="true">▤</span>
+                <span class="tool-card-title">Flashcards</span>
+                <span class="tool-card-copy">Review important terms, concepts, and facts in focused study sessions.</span>
+                <span class="tool-card-link">Explore subjects <span aria-hidden="true">↗</span></span>
+              </a>
+              <a class="tool-card" href="#study-paths">
+                <span class="tool-icon tool-icon-violet" aria-hidden="true">◇</span>
+                <span class="tool-card-title">Study Games</span>
+                <span class="tool-card-copy">Make practice more engaging with interactive learning activities.</span>
+                <span class="tool-card-link">Browse study paths <span aria-hidden="true">↗</span></span>
+              </a>
+            </div>
+          </section>
+
+          <div class="tracks" id="study-paths">
+            <section class="track-section track-section-cyber" aria-labelledby="cyber-title">
+              <div class="section-heading">
+                <div>
+                  <div class="section-eyebrow">Information security & technology</div>
+                  <h2 id="cyber-title">CYBERSECURITY</h2>
+                </div>
+                <span class="section-index">02 / SECURITY</span>
+              </div>
               <div class="card-grid">
-                <a class="track-card" href="cissp.html"><strong>CISSP</strong><span>ISC2</span></a>
-                <a class="track-card" href="cism.html"><strong>CISM</strong><span>ISACA</span></a>
-                <a class="track-card" href="secplus.html"><strong>Security+</strong><span>CompTIA</span></a>
-                <a class="track-card" href="ceh.html"><strong>CEH</strong><span>EC-Council</span></a>
+                <a class="track-card" href="cissp.html"><span class="track-card-icon" aria-hidden="true">⬡</span><strong>CISSP</strong><span class="track-provider">ISC2</span><span class="track-description">Security leadership, architecture, and professional practice.</span><span class="track-card-cta">Explore CISSP resources <b aria-hidden="true">→</b></span></a>
+                <a class="track-card" href="cism.html"><span class="track-card-icon" aria-hidden="true">◈</span><strong>CISM</strong><span class="track-provider">ISACA</span><span class="track-description">Information security governance, risk, and management.</span><span class="track-card-cta">Explore CISM resources <b aria-hidden="true">→</b></span></a>
+                <a class="track-card" href="secplus.html"><span class="track-card-icon" aria-hidden="true">⌘</span><strong>Security+</strong><span class="track-provider">CompTIA</span><span class="track-description">Core cybersecurity knowledge and practical security concepts.</span><span class="track-card-cta">Explore Security+ resources <b aria-hidden="true">→</b></span></a>
+                <a class="track-card" href="ceh.html"><span class="track-card-icon" aria-hidden="true">⌁</span><strong>CEH</strong><span class="track-provider">EC-Council</span><span class="track-description">Ethical hacking concepts, tools, and security assessment.</span><span class="track-card-cta">Explore CEH resources <b aria-hidden="true">→</b></span></a>
               </div>
             </section>
-            <section>
-              <h2>Psychology</h2>
+            <section class="track-section track-section-counseling" aria-labelledby="counseling-title">
+              <div class="section-heading">
+                <div>
+                  <div class="section-eyebrow">Counseling & professional licensure</div>
+                  <h2 id="counseling-title">COUNSELING EXAMS</h2>
+                </div>
+                <span class="section-index">03 / COUNSELING</span>
+              </div>
               <div class="card-grid">
-                <a class="track-card" href="nce.html"><strong>NCE</strong><span>NBCC</span></a>
-                <a class="track-card" href="olere.html"><strong>OLERE</strong><span>Oklahoma</span></a>
-                <a class="track-card" href="texas.html"><strong>Texas LPC</strong><span>Jurisprudence</span></a>
+                <a class="track-card" href="nce.html"><span class="track-card-icon" aria-hidden="true">✳</span><strong>NCE</strong><span class="track-provider">NBCC</span><span class="track-description">Counseling knowledge, professional practice, and exam preparation.</span><span class="track-card-cta">Explore NCE resources <b aria-hidden="true">→</b></span></a>
+                <a class="track-card" href="olere.html"><span class="track-card-icon" aria-hidden="true">⌖</span><strong>OLERE</strong><span class="track-provider">Oklahoma</span><span class="track-description">Study resources for Oklahoma counseling licensure requirements.</span><span class="track-card-cta">Explore OLERE resources <b aria-hidden="true">→</b></span></a>
+                <a class="track-card" href="texas.html"><span class="track-card-icon" aria-hidden="true">§</span><strong>Texas LPC</strong><span class="track-provider">Jurisprudence</span><span class="track-description">Review Texas counseling laws, rules, and professional responsibilities.</span><span class="track-card-cta">Explore Texas LPC resources <b aria-hidden="true">→</b></span></a>
               </div>
             </section>
           </div>
+
+          <section class="creator-note" aria-labelledby="creator-note-title">
+            <div class="creator-note-icon" aria-hidden="true">✦</div>
+            <div>
+              <div class="section-eyebrow">A personal study project</div>
+              <h2 id="creator-note-title">Built from the perspective of a fellow student.</h2>
+              <p>This is an independent collection of learning resources created to make exam preparation easier to navigate. Materials are provided for educational practice and should be used alongside current official exam guides and requirements.</p>
+              <button type="button" class="creator-note-link" id="open-about-inline">More about Jesse <span aria-hidden="true">→</span></button>
+            </div>
+          </section>
         </div>
       </main>
     </div>
@@ -193,6 +266,7 @@
     }
     wire('open-about-btn', 'about-modal', 'about-close-btn');
     wire('open-privacy-btn', 'privacy-modal', 'privacy-close-btn');
+    wire('open-about-inline', 'about-modal', 'about-close-btn');
   </script>
 </body>
 </html>
