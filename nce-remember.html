@@ -1725,7 +1725,7 @@ function dsmEscape(v){return String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"
 function dsmSceneSvg(c){
  const index=String(dsmCaseIndex+1).padStart(2,"0");
  const label=dsmEscape(c.setting);
- return '<div class="dsm-scene-art"><img class="dsm-scene-img" src="dsm-scenes/case-'+index+'.jpg" alt="Detailed illustrated investigation scene: '+label+'" loading="eager" draggable="false"></div>';
+ return '<div class="dsm-scene-art"><img class="dsm-scene-img" src="/dsm-scenes/case-'+index+'.jpg" alt="Detailed illustrated investigation scene: '+label+'" loading="eager" draggable="false"></div>';
 }
 function renderDsmDetective(){
  const root=document.getElementById("mini-play"); if(!root)return;
@@ -1809,13 +1809,22 @@ function nextDsmCase(){dsmCaseIndex++;dsmChoiceLocked=false;dsmRationaleLocked=f
 function restartDsmDetective(){dsmCaseIndex=0;dsmFound=DSM_CASES.map(()=>[]);dsmScore=0;dsmSolved=0;dsmWrong=0;dsmChoiceLocked=false;dsmRationaleLocked=false;dsmUsedDecoys=DSM_CASES.map(()=>[]);renderDsmDetective();}
 
 function openMini(id) {
-  if (id === 'dsm') restartDsmDetective();
-  miniId = id; miniIdx = 0; miniScore = 0; miniLives = 3;
-  document.getElementById('mini-title').textContent = MINI[id].name;
-  document.getElementById('mini-modal').style.display = 'flex';
+  const modal = document.getElementById('mini-modal');
+  const title = document.getElementById('mini-title');
   const launcher = document.getElementById('launcher-modal');
+  const play = document.getElementById('mini-play');
+  if (!modal || !title || !play || !MINI[id]) { console.error('Unable to open game:', id); return; }
+  miniId = id; miniIdx = 0; miniScore = 0; miniLives = 3;
+  title.textContent = MINI[id].name;
+  modal.style.display = 'flex';
   if (launcher) launcher.style.display = 'none';
-  renderMini();
+  if (id === 'dsm') {
+    dsmCaseIndex = 0; dsmFound = DSM_CASES.map(() => []);
+    dsmScore = 0; dsmSolved = 0; dsmWrong = 0;
+    dsmChoiceLocked = false; dsmRationaleLocked = false;
+    dsmUsedDecoys = DSM_CASES.map(() => []);
+    renderDsmDetective();
+  } else { renderMini(); }
 }
 function closeMini() {
   document.getElementById('mini-modal').style.display = 'none';
