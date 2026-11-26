@@ -655,6 +655,92 @@
  .dsm-status-pill{font-size:.57rem}
 }
 
+
+/* Cinematic, responsive DSM detective experience */
+#mini-modal.arcade-modal-backdrop{padding:.45rem!important}
+#mini-modal>div{width:min(1360px,99vw)!important;height:min(96dvh,1000px)!important;max-height:96dvh!important;border:1px solid #1e9cc4!important;background:#06101e!important;box-shadow:0 20px 80px #000b,0 0 35px #007ca844!important}
+#mini-modal>div>div:first-child{background:linear-gradient(100deg,#071525,#0d2038)!important;min-height:56px}
+#mini-play{padding:clamp(.55rem,1.5vw,1.25rem)!important;background:radial-gradient(ellipse at 50% 0,#102943 0,#07111f 58%)!important}
+#mini-play .dsm-game{max-width:1280px;margin:0 auto;color:#e8f2ff;display:grid;grid-template-columns:minmax(0,1.8fr) minmax(255px,.82fr);gap:12px;align-items:start}
+#mini-play .dsm-header{grid-column:1/-1;display:grid;grid-template-columns:minmax(0,1fr) auto auto;gap:10px;align-items:center;padding:10px 13px;border:1px solid #12638b;border-radius:13px;background:linear-gradient(100deg,#07182c,#0d2945);box-shadow:inset 0 0 18px #007db522}
+#mini-play .dsm-brand{font:900 clamp(1rem,2vw,1.55rem) 'Archivo Black',sans-serif;letter-spacing:.02em;color:#dff8ff}
+#mini-play .dsm-brand em{font-style:normal;color:#a5ff36}
+#mini-play .dsm-sub{font-size:.7rem;color:#93c6df;margin-top:2px}
+#mini-play .dsm-metric{padding:8px 12px;border:1px solid #1a7098;border-radius:10px;background:#081b30;color:#a9f3ff;font:800 .8rem 'JetBrains Mono',monospace;white-space:nowrap}
+#mini-play .dsm-case-brief{grid-column:1/-1;margin:0;padding:12px 15px;border:1px solid #234a6c;border-radius:12px;background:linear-gradient(100deg,#12243a,#0d1a2b);color:#d5e5f4;font-size:.88rem;line-height:1.5}
+#mini-play .dsm-case-brief strong{color:#fff}
+#mini-play .dsm-scene-wrap{grid-column:1;position:relative;overflow:hidden;border:1px solid #1683b4;border-radius:13px;background:#07111d;box-shadow:0 8px 30px #0008,0 0 20px #00b7ff16;line-height:0}
+#mini-play .dsm-scene-art{display:block;width:100%;aspect-ratio:16/9;background:#0a1828}
+#mini-play .dsm-scene-img{display:block;width:100%;height:100%;object-fit:cover;object-position:center}
+#mini-play .dsm-scene-label{position:absolute;left:10px;top:10px;padding:6px 9px;border:1px solid #9deaff77;border-radius:7px;background:#06101ddd;color:#dff9ff;font:700 .62rem 'JetBrains Mono',monospace;letter-spacing:.06em;line-height:1.2}
+#mini-play .dsm-scene-hint{position:absolute;right:10px;top:10px;padding:6px 9px;border-radius:7px;background:#06101dcc;color:#8cecff;font:700 .58rem 'JetBrains Mono',monospace;line-height:1.2}
+#mini-play .dsm-hotspot{position:absolute;transform:translate(-50%,-50%);width:clamp(30px,3vw,42px);height:clamp(30px,3vw,42px);border:2px solid #b8f5ff;background:#061b2bdc;color:#fff;border-radius:50%;font-size:0;cursor:pointer;box-shadow:0 0 0 4px #00c8ff2c,0 0 18px #00c8ff88;transition:transform .16s,background .16s}
+#mini-play .dsm-hotspot:before{content:"";position:absolute;inset:8px;border:2px solid #8eeeff;border-radius:50%}
+#mini-play .dsm-hotspot:after{content:"";position:absolute;width:9px;height:2px;background:#8eeeff;right:5px;bottom:6px;transform:rotate(45deg);border-radius:2px}
+#mini-play .dsm-hotspot:hover{transform:translate(-50%,-50%) scale(1.12);background:#0878a7}
+#mini-play .dsm-hotspot.found{background:#0d8a54;border-color:#b5ffd7;box-shadow:0 0 0 4px #25e58b33,0 0 20px #2bff9a99}
+#mini-play .dsm-hotspot.found:before{content:"✓";inset:0;border:0;display:grid;place-items:center;font-size:17px;font-weight:900}
+#mini-play .dsm-hotspot.found:after{display:none}
+#mini-play .dsm-hotspot.decoy-found{background:#8a3440;border-color:#ffb6c1;box-shadow:0 0 0 4px #f8717133}
+#mini-play .dsm-hotspot.decoy-found:before{content:"×";inset:0;border:0;display:grid;place-items:center;font-size:19px;font-weight:900}
+#mini-play .dsm-hotspot.decoy-found:after{display:none}
+#mini-play .dsm-side{grid-column:2;grid-row:3/span 4;display:flex;flex-direction:column;gap:10px;min-width:0}
+#mini-play .dsm-panel{border:1px solid #1d6287;border-radius:12px;background:linear-gradient(145deg,#0d2035,#081524);overflow:hidden;box-shadow:inset 0 0 18px #00a5d51a}
+#mini-play .dsm-panel-title{padding:10px 12px;border-bottom:1px solid #155171;color:#65eaff;font-weight:900;font-size:.85rem;letter-spacing:.02em}
+#mini-play .dsm-panel-body{padding:10px 12px}
+#mini-play .dsm-investigation-status{grid-column:1;display:flex;flex-wrap:wrap;gap:7px;margin:0}
+#mini-play .dsm-status-pill{display:inline-flex;align-items:center;padding:7px 10px;border:1px solid #1b6c91;border-radius:8px;background:#0a1c30;color:#a9f2ff;font:800 .66rem 'JetBrains Mono',monospace}
+#mini-play .dsm-hunt-hint{grid-column:1;margin:0;color:#a9bed2;font-size:.78rem;line-height:1.45}
+#mini-play .dsm-board{display:grid;grid-template-columns:1fr;gap:7px}
+#mini-play .dsm-evidence{padding:9px 10px;border:1px solid #294763;border-radius:9px;background:#0b1a2c;min-width:0}
+#mini-play .dsm-evidence.empty{display:flex;gap:8px;align-items:center;color:#8ba3ba;border-style:dashed;font-size:.72rem}
+#mini-play .dsm-evidence.filled{border-color:#237c5c;background:linear-gradient(120deg,#0c2c25,#0c1b2a)}
+#mini-play .dsm-evidence strong{display:block;color:#effbff;font-size:.76rem;margin-bottom:4px}
+#mini-play .dsm-evidence p{margin:0;color:#c0d0e0;font-size:.72rem;line-height:1.45}
+#mini-play .dsm-term{display:inline-block;margin-top:5px;padding:3px 6px;border-radius:5px;background:#12354a;color:#8deaff;font:700 .61rem 'JetBrains Mono',monospace}
+#mini-play .dsm-diagnosis{grid-column:1/-1;margin-top:0;padding:12px;border:1px solid #27769a;border-radius:12px;background:linear-gradient(120deg,#102941,#09182a)}
+#mini-play .dsm-diagnosis h3{margin:0 0 4px;color:#65eaff;font-size:1rem}
+#mini-play .dsm-diagnosis>p{margin:0 0 10px;color:#b5c9db;font-size:.78rem}
+#mini-play .dsm-options{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+#mini-play .dsm-choice{min-height:44px;padding:10px 12px;border:1px solid #267ca5;border-radius:9px;background:linear-gradient(120deg,#102e4a,#0b1c31);color:#edf8ff;text-align:left;font-size:.8rem;font-weight:800;cursor:pointer}
+#mini-play .dsm-choice:hover{border-color:#71edff;background:#123b58}
+#mini-play .dsm-choice:disabled{opacity:.75}
+#mini-play .dsm-feedback{margin-top:10px;padding:11px;border:1px solid #247b5b;border-radius:9px;background:#0d2a24;color:#d0f9df;font-size:.78rem;line-height:1.55}
+#mini-play .dsm-feedback.wrong{border-color:#a34d60;background:#321c2a;color:#ffdce2}
+#mini-play .dsm-analysis-step{margin-top:12px;padding-top:10px;border-top:1px solid #28506a}
+#mini-play .dsm-analysis-step h4{margin:0 0 5px;color:#a8f7ff;font-size:.76rem;letter-spacing:.06em}
+#mini-play .dsm-analysis-step p{color:#c0d0e0;font-size:.76rem}
+#mini-play .dsm-next{border:0;border-radius:8px;padding:10px 14px;background:linear-gradient(100deg,#a4ff36,#d4ff70);color:#081421;font-weight:900;cursor:pointer}
+#mini-play .dsm-guide{grid-column:1/-1;display:flex;align-items:center;gap:12px;padding:10px 12px;border:1px solid #12638b;border-radius:12px;background:#091b2d}
+#mini-play .dsm-guide img{width:58px;height:58px;object-fit:cover;object-position:center 25%;border-radius:50%;border:2px solid #39d8ff}
+#mini-play .dsm-guide p{margin:0;color:#d2e2ef;font-size:.78rem;line-height:1.45}
+#mini-play .dsm-learning-note{grid-column:1/-1;margin:0;color:#829ab1;font-size:.65rem;line-height:1.45}
+#mini-play .dsm-finish{grid-column:1/-1;padding:2rem 1rem;text-align:center;border:1px solid #247da3;border-radius:14px;background:radial-gradient(circle at 50% 0,#16415b,#081523 70%)}
+#mini-play .dsm-finish h2{color:#f2fbff;font:1.5rem 'Archivo Black',sans-serif}
+@media(max-width:760px){
+ #mini-modal{padding:0!important;align-items:stretch!important}
+ #mini-modal>div{width:100vw!important;height:100dvh!important;max-height:100dvh!important;border-radius:0!important;border-left:0!important;border-right:0!important}
+ #mini-modal>div>div:first-child{padding:.55rem .7rem!important}
+ #mini-play{padding:.55rem!important}
+ #mini-play .dsm-game{grid-template-columns:minmax(0,1fr);gap:9px}
+ #mini-play .dsm-header{grid-template-columns:1fr auto;gap:7px;padding:9px}
+ #mini-play .dsm-header .dsm-case-meta{grid-column:1/-1;grid-row:2}
+ #mini-play .dsm-metric{font-size:.68rem;padding:7px 8px}
+ #mini-play .dsm-case-brief{grid-column:1;padding:10px 11px;font-size:.8rem}
+ #mini-play .dsm-scene-wrap{grid-column:1;grid-row:auto}
+ #mini-play .dsm-scene-art{aspect-ratio:16/9}
+ #mini-play .dsm-side{grid-column:1;grid-row:auto;display:grid;grid-template-columns:1fr;gap:8px}
+ #mini-play .dsm-investigation-status,#mini-play .dsm-hunt-hint{grid-column:1}
+ #mini-play .dsm-board{grid-template-columns:1fr 1fr}
+ #mini-play .dsm-options{grid-template-columns:1fr}
+ #mini-play .dsm-guide img{width:48px;height:48px}
+ #mini-play .dsm-hotspot{width:32px;height:32px}
+}
+@media(max-width:390px){
+ #mini-play .dsm-board{grid-template-columns:1fr}
+ #mini-play .dsm-brand{font-size:1rem}
+}
+
 </style>
 </head>
 <body>
@@ -1637,40 +1723,38 @@ const DSM_CASES = [
 let dsmCaseIndex=0, dsmFound=[], dsmScore=0, dsmSolved=0, dsmWrong=0, dsmChoiceLocked=false, dsmRationaleLocked=false;
 function dsmEscape(v){return String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 function dsmSceneSvg(c){
- const i=dsmCaseIndex, palette=c.palette, wall=palette[0], accent=palette[1], skin=palette[2];
- const sceneDetails=[
-  '<rect x="55" y="65" width="180" height="130" rx="8" fill="#1a354c" stroke="#9ab7ca" stroke-width="5"/><path d="M145 65V195M55 130H235" stroke="#91adbf" stroke-width="4"/><circle cx="205" cy="91" r="17" fill="#f7d78a"/><rect x="68" y="205" width="240" height="18" rx="5" fill="#79563f"/><path d="M88 223V290M287 223V290" stroke="#4b3429" stroke-width="12"/><rect x="86" y="178" width="86" height="25" rx="4" fill="#c49a69"/><rect x="350" y="70" width="135" height="92" rx="6" fill="#0a1525" stroke="#b6c6d5" stroke-width="4"/><path d="M367 95H466M367 116H448M367 137H461" stroke="#849ab2" stroke-width="4"/><rect x="710" y="55" width="120" height="95" rx="7" fill="#233c51"/><circle cx="770" cy="103" r="34" fill="#0c1928" stroke="#edc878" stroke-width="5"/><path d="M770 103V79M770 103L789 113" stroke="#f3dfb1" stroke-width="4"/>',
-  '<rect x="65" y="55" width="190" height="150" rx="6" fill="#21394e" stroke="#a8c1d1" stroke-width="5"/><path d="M160 57V204M67 130H253" stroke="#9ab1c4" stroke-width="4"/><rect x="320" y="65" width="220" height="145" rx="5" fill="#e4d8c6"/><path d="M340 92H516M340 119H490M340 146H500M340 173H470" stroke="#7e8a99" stroke-width="5"/><rect x="665" y="48" width="165" height="170" rx="7" fill="#49394d" stroke="#bba7bd" stroke-width="5"/><path d="M688 82H807M688 108H795M688 134H810" stroke="#d8c5da" stroke-width="5"/>',
-  '<rect x="65" y="45" width="190" height="145" rx="6" fill="#263c50" stroke="#9eb3c7" stroke-width="5"/><path d="M160 46V189M67 117H253" stroke="#8fa9bc" stroke-width="4"/><rect x="330" y="50" width="170" height="130" rx="7" fill="#624b3d"/><path d="M348 77H482M348 104H466M348 131H475" stroke="#d8c2a1" stroke-width="5"/><rect x="700" y="55" width="120" height="140" rx="5" fill="#24384b" stroke="#a5bacd" stroke-width="5"/><path d="M718 82H800M718 111H790M718 140H802" stroke="#9db2c5" stroke-width="4"/>',
-  '<rect x="65" y="55" width="170" height="130" rx="8" fill="#203c45" stroke="#b3c7c6" stroke-width="5"/><circle cx="150" cy="118" r="42" fill="#132b34" stroke="#e3d39e" stroke-width="5"/><path d="M150 118V87M150 118L177 132" stroke="#f2e1b4" stroke-width="4"/><rect x="335" y="50" width="185" height="140" rx="7" fill="#e8e2d8"/><path d="M355 83H500M355 112H482M355 141H500" stroke="#81909c" stroke-width="5"/><rect x="690" y="45" width="145" height="150" rx="8" fill="#214a45" stroke="#b0c8b9" stroke-width="5"/>',
-  '<rect x="60" y="50" width="190" height="145" rx="8" fill="#493c4d" stroke="#c4b0c9" stroke-width="5"/><path d="M82 80H226M82 110H210M82 140H224" stroke="#d9c7dc" stroke-width="5"/><rect x="340" y="55" width="165" height="145" rx="8" fill="#273e4d" stroke="#b1c1ce" stroke-width="5"/><circle cx="422" cy="128" r="44" fill="#142735" stroke="#e2c78e" stroke-width="5"/><path d="M422 128V94M422 128L446 142" stroke="#f2dfb1" stroke-width="4"/><rect x="690" y="48" width="145" height="145" rx="8" fill="#5a4a3d" stroke="#d0bda3" stroke-width="5"/>'
- ];
- const details=sceneDetails[i]||sceneDetails[0];
- return '<svg class="dsm-scene" viewBox="0 0 900 360" role="img" aria-label="Detailed illustrated scene: '+dsmEscape(c.setting)+'">'+
- '<defs><linearGradient id="dsmRoom" x2="0" y2="1"><stop stop-color="'+wall+'"/><stop offset="1" stop-color="#111a2a"/></linearGradient><linearGradient id="dsmGround" x2="0" y2="1"><stop stop-color="#8a6954"/><stop offset="1" stop-color="#352b2d"/></linearGradient><radialGradient id="dsmGlow"><stop stop-color="'+accent+'" stop-opacity=".4"/><stop offset="1" stop-color="'+accent+'" stop-opacity="0"/></radialGradient><filter id="dsmShadow"><feGaussianBlur stdDeviation="9"/></filter></defs>'+
- '<rect width="900" height="360" fill="url(#dsmRoom)"/><ellipse cx="450" cy="110" rx="430" ry="240" fill="url(#dsmGlow)"/><path d="M0 286H900V360H0Z" fill="url(#dsmGround)"/><path d="M0 286H900" stroke="#f0d4ad" stroke-opacity=".4" stroke-width="4"/>'+
- '<path d="M0 0H900V18H0Z" fill="#ffffff" opacity=".04"/>'+details+
- '<ellipse cx="570" cy="296" rx="110" ry="18" fill="#050b12" opacity=".5" filter="url(#dsmShadow)"/>'+
- '<path d="M495 286V190Q495 158 528 158H615Q650 158 650 190V286" fill="'+accent+'" stroke="#d4e0e9" stroke-opacity=".6" stroke-width="5"/><rect x="510" y="219" width="125" height="65" rx="12" fill="#27384d"/>'+
- '<circle cx="571" cy="123" r="43" fill="'+skin+'"/><path d="M531 118Q523 65 573 68Q622 70 613 124Q596 96 570 100Q548 99 531 118Z" fill="#302a2c"/><path d="M547 133Q571 143 594 132" stroke="#70483e" stroke-width="3" fill="none" stroke-linecap="round"/><circle cx="555" cy="119" r="3.5" fill="#302a2c"/><circle cx="585" cy="119" r="3.5" fill="#302a2c"/><path d="M548 165Q570 151 594 165L640 285H500Z" fill="#dce5eb"/><path d="M510 193L475 254M627 193L662 250" stroke="'+skin+'" stroke-width="18" stroke-linecap="round"/>'+
- '<path d="M745 286V230M745 231Q704 211 706 184Q747 190 753 221Q764 185 799 185Q802 216 753 236" fill="#4d916b" stroke="#b0d9a8" stroke-width="3"/><rect x="720" y="282" width="52" height="30" rx="7" fill="#a56f4b"/>'+
- '<path d="M30 327H870" stroke="#e8d4b8" stroke-opacity=".16" stroke-width="2"/><text x="30" y="346" fill="#fff" opacity=".42" font-size="12" font-family="monospace" letter-spacing="2">FIELD NOTES  /  SCAN THE ROOM  /  SEPARATE SIGNAL FROM NOISE</text></svg>';
+ const index=String(dsmCaseIndex+1).padStart(2,"0");
+ const label=dsmEscape(c.setting);
+ return '<div class="dsm-scene-art"><img class="dsm-scene-img" src="dsm-scenes/case-'+index+'.jpg" alt="Detailed illustrated investigation scene: '+label+'" loading="eager" draggable="false"></div>';
 }
 function renderDsmDetective(){
  const root=document.getElementById("mini-play"); if(!root)return;
  if(dsmCaseIndex>=DSM_CASES.length){
-  root.innerHTML='<div class="dsm-game"><div class="dsm-finish"><div class="medal">🏆</div><div class="dsm-case-chip">INVESTIGATION COMPLETE</div><h2>CASE CLOSED, DETECTIVE.</h2><p>You solved '+dsmSolved+' of '+DSM_CASES.length+' cases. Final score: <strong>'+dsmScore+' pts</strong>.</p><p>You practiced differential diagnosis, duration thresholds, impairment, and DSM-5-TR terminology.</p><button class="dsm-next" onclick="restartDsmDetective()">↻ Replay investigations</button><p class="dsm-learning-note">Fictional learning vignettes, not diagnostic tools. Use the full DSM-5-TR criteria and official NCE study materials.</p></div></div>';return;
+  root.innerHTML='<div class="dsm-game"><div class="dsm-finish"><div class="medal">🏆</div><div class="dsm-case-chip">INVESTIGATION COMPLETE</div><h2>CASE CLOSED, DETECTIVE.</h2><p>You solved '+dsmSolved+' of '+DSM_CASES.length+' cases. Final score: <strong>'+dsmScore+' pts</strong>.</p><p>You practiced diagnostic criteria, duration thresholds, impairment, differential diagnosis, and clinical reasoning.</p><button class="dsm-next" onclick="restartDsmDetective()">↻ Replay investigations</button><p class="dsm-learning-note">Fictional learning vignettes, not diagnostic tools. Use the full DSM-5-TR criteria and official NCE study materials.</p></div></div>';return;
  }
- const c=DSM_CASES[dsmCaseIndex],found=dsmFound[dsmCaseIndex]||[],all=found.length===c.clues.length,targets=[[15,35],[32,72],[42,35],[58,66],[75,37],[87,68],[8,70],[66,22]];
- const decoys=dsmDecoys[dsmCaseIndex]||[];
- const marks=targets.map((p,i)=>{const real=[0,2,4,6].includes(i), clueIndex=[0,1,2,3][[0,2,4,6].indexOf(i)];const done=real?found.includes(clueIndex):dsmUsedDecoys[dsmCaseIndex].includes(i);return '<button class="dsm-hotspot '+(done?(real?'found':'decoy-found'):'')+'" style="left:'+p[0]+'%;top:'+p[1]+'%" aria-label="'+(done?'Investigated':'Inspect object')+'" '+(done?'disabled':'')+' onclick="inspectDsmObject('+i+')">'+(done?(real?'✓':'×'):'⌕')+'</button>';}).join("");
- const evidence=c.clues.map((clue,i)=>found.includes(i)?'<div class="dsm-evidence filled"><strong>Evidence '+(i+1)+' · '+dsmEscape(clue.name)+'</strong><p>'+dsmEscape(clue.detail)+'</p></div>':'<div class="dsm-evidence empty"><span>◌</span><span>Evidence '+(i+1)+' · not yet recovered</span></div>').join("");
- let analysis='';
- if(all){
-  analysis='<div class="dsm-analysis-step"><h4>PHASE 2 · DIFFERENTIAL DIAGNOSIS</h4><p>'+dsmEscape(c.question)+' Choose the single best answer. A wrong answer costs 20 points, but you can reconsider.</p><div class="dsm-options">'+c.options.map((o,i)=>'<button class="dsm-choice" onclick="chooseDsmDiagnosis('+i+')">'+String.fromCharCode(65+i)+'. '+dsmEscape(o)+'</button>').join("")+'</div><div id="dsm-feedback"></div></div>';
- }
- const count=found.length,misses=dsmUsedDecoys[dsmCaseIndex].length;
- root.innerHTML='<div class="dsm-game"><div class="dsm-topline"><span class="dsm-case-chip">CASE '+(dsmCaseIndex+1)+' / '+DSM_CASES.length+' · INVESTIGATION</span><span class="dsm-score-chip">★ '+dsmScore+' PTS</span></div><div class="dsm-progress"><span style="width:'+((dsmCaseIndex/DSM_CASES.length)*100)+'%"></span></div><div class="dsm-brief"><div class="dsm-stamp">🕵️</div><div><h3>'+dsmEscape(c.title)+'</h3><p class="dsm-case-brief"><strong>'+dsmEscape(c.client)+'</strong> · '+dsmEscape(c.brief)+'</p><p class="dsm-difficulty">DIFFICULTY: FIELD ANALYST · FIND 4 RELEVANT DETAILS AMONG 8 OBJECTS</p></div></div><div class="dsm-scene-wrap">'+dsmSceneSvg(c)+'<div class="dsm-scene-label">'+dsmEscape(c.setting)+'</div><div class="dsm-scene-hint">SCAN OBJECTS</div>'+marks+'</div><div class="dsm-investigation-status"><span class="dsm-status-pill">EVIDENCE '+count+'/4</span><span class="dsm-status-pill">FALSE LEADS '+misses+'/4</span><span class="dsm-status-pill">CASE BONUS +'+Math.max(0,60-misses*10)+' PTS</span></div><p class="dsm-hunt-hint">🔎 Search the scene. Some objects are distractions. Tap an object to inspect it; false leads cost points. Collect all four clinically relevant findings to unlock the case analysis.</p><div class="dsm-board">'+evidence+'</div>'+analysis+'<div id="dsm-object-feedback" aria-live="polite"></div><p class="dsm-learning-note">NCE challenge mode: distinguish clinically meaningful evidence from background details. This is a simplified educational case, not a clinical assessment.</p></div>';
+ const c=DSM_CASES[dsmCaseIndex],found=dsmFound[dsmCaseIndex]||[],all=found.length===c.clues.length;
+ const targets=[
+  [[82,18],[16,48],[35,82],[62,91],[89,54],[53,70],[6,80],[46,59]],
+  [[70,19],[25,32],[69,43],[50,83],[91,61],[59,42],[32,75],[88,19]],
+  [[55,75],[20,52],[62,67],[85,51],[76,89],[41,78],[31,58],[12,70]],
+  [[87,19],[33,72],[54,78],[67,87],[16,49],[45,35],[78,52],[92,75]],
+  [[65,20],[24,57],[52,75],[84,56],[40,40],[72,81],[12,30],[91,18]]
+ ][dsmCaseIndex]||[[15,35],[32,72],[42,35],[58,66],[75,37],[87,68],[8,70],[66,22]];
+ const marks=targets.map((p,i)=>{const real=[0,2,4,6].includes(i),clueIndex=[0,1,2,3][[0,2,4,6].indexOf(i)];const done=real?found.includes(clueIndex):dsmUsedDecoys[dsmCaseIndex].includes(i);return '<button class="dsm-hotspot '+(done?(real?'found':'decoy-found'):'')+'" style="left:'+p[0]+'%;top:'+p[1]+'%" aria-label="'+(done?'Investigated':'Inspect object')+'" '+(done?'disabled':'')+' onclick="inspectDsmObject('+i+')">'+(done?(real?'✓':'×'):'⌕')+'</button>';}).join("");
+ const evidence=c.clues.map((clue,i)=>found.includes(i)?'<div class="dsm-evidence filled"><strong>✓ '+dsmEscape(clue.name)+'</strong><p>'+dsmEscape(clue.detail)+'</p><span class="dsm-term">'+dsmEscape(clue.term)+'</span></div>':'<div class="dsm-evidence empty"><span>◌</span><span>Evidence '+(i+1)+' · undiscovered</span></div>').join("");
+ const analysis=all?'<div class="dsm-diagnosis"><h3>PHASE 2 · DIFFERENTIAL DIAGNOSIS</h3><p>'+dsmEscape(c.question)+' Choose the single best answer. A wrong answer costs 20 points.</p><div class="dsm-options">'+c.options.map((o,i)=>'<button class="dsm-choice" onclick="chooseDsmDiagnosis('+i+')">'+String.fromCharCode(65+i)+'. '+dsmEscape(o)+'</button>').join("")+'</div><div id="dsm-feedback"></div></div>':'<div class="dsm-diagnosis"><h3>DIAGNOSTIC BOARD LOCKED</h3><p>Investigate all four clinically relevant objects to unlock the differential diagnosis. '+found.length+' of 4 evidence items recovered.</p></div>';
+ const guide=(dsmCaseIndex%2===0)?"characters/therapist-female.jpg":"characters/therapist.jpg";
+ root.innerHTML='<div class="dsm-game">'+
+ '<div class="dsm-header"><div><div class="dsm-brand">DSM-5-TR <em>DETECTIVE</em></div><div class="dsm-sub">INVESTIGATE · FIND THE CLUES · MAKE THE DIAGNOSIS</div></div><div class="dsm-metric">CASE '+(dsmCaseIndex+1)+' / '+DSM_CASES.length+'</div><div class="dsm-metric">★ '+dsmScore+' PTS</div></div>'+
+ '<div class="dsm-case-brief"><strong>'+dsmEscape(c.title)+' · '+dsmEscape(c.client)+'</strong><br>'+dsmEscape(c.brief)+'</div>'+
+ '<div class="dsm-scene-wrap">'+dsmSceneSvg(c)+'<div class="dsm-scene-label">'+dsmEscape(c.setting)+'</div><div class="dsm-scene-hint">TAP OBJECTS TO EXAMINE</div>'+marks+'</div>'+
+ '<div class="dsm-side"><section class="dsm-panel"><div class="dsm-panel-title">⌕ EVIDENCE RECOVERED · '+found.length+'/4</div><div class="dsm-panel-body"><div class="dsm-board">'+evidence+'</div></div></section><section class="dsm-panel"><div class="dsm-panel-title">CASE NOTES</div><div class="dsm-panel-body"><p style="margin:0;color:#c2d5e6;font-size:.77rem;line-height:1.5">Look for the details that change the diagnostic picture: symptom pattern, duration, impairment, and exclusions. Some scene objects are distractions.</p></div></section></div>'+
+ '<div class="dsm-investigation-status"><span class="dsm-status-pill">EVIDENCE '+found.length+'/4</span><span class="dsm-status-pill">FALSE LEADS '+dsmUsedDecoys[dsmCaseIndex].length+'/4</span><span class="dsm-status-pill">CASE BONUS +'+Math.max(0,60-dsmUsedDecoys[dsmCaseIndex].length*10)+' PTS</span></div>'+
+ '<p class="dsm-hunt-hint">🔎 Search carefully. Not every object is clinically meaningful. Tap the scene to inspect it; false leads cost points.</p>'+
+ analysis+
+ '<div class="dsm-guide"><img src="'+guide+'" alt="Clinical mentor portrait"><p><strong>Detective's reminder:</strong> Don’t diagnose from one symptom. Build the pattern, check the timeline, then identify the criterion that separates the closest alternatives.</p></div>'+
+ '<div class="dsm-learning-note">Educational NCE practice using fictional cases. These simplified vignettes are not a substitute for the full DSM-5-TR criteria or clinical assessment.</div>'+
+ '<div id="dsm-object-feedback" aria-live="polite"></div></div>';
 }
 
 const dsmDecoys=[
