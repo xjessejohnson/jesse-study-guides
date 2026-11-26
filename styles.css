@@ -732,3 +732,8 @@ footer {
 
 /* Keep the copyright line brighter and easier to read on every page. */
 footer p:first-child { color: var(--text-secondary); font-weight: 600; }
+
+
+/* Brand identity: neon green by default, purple interaction state. */
+.brand-title,.brand-title:visited{color:var(--lime);text-shadow:0 0 10px rgba(158,255,51,.16)}
+.brand-title:hover,.brand-title:focus-visible,.brand-title:active{color:#b78cff;text-shadow:0 0 8px rgba(183,140,255,.55),0 0 18px rgba(183,140,255,.32)}
