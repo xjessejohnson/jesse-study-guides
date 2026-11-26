@@ -614,6 +614,47 @@
  .dsm-brief { padding:.75rem; }
 }
 
+
+/* Detective difficulty + illustrated environment v2 */
+#mini-play .dsm-game {max-width:980px}
+.dsm-scene-wrap{background:#0b1726;border-color:#49627e;box-shadow:0 18px 45px #0008}
+.dsm-scene{min-height:260px;filter:saturate(1.08)}
+.dsm-scene::selection{background:transparent}
+.dsm-hotspot{width:32px;height:32px;opacity:.32;background:#a5f3fc;color:#071522;border:2px solid #e0fbff;box-shadow:0 0 0 3px #22d3ee28,0 0 17px #22d3ee55;font-size:.82rem;z-index:2}
+.dsm-hotspot::after{content:"";position:absolute;inset:-8px;border:1px solid #a5f3fc66;border-radius:50%;animation:dsmPulse 2.2s infinite}
+.dsm-hotspot:hover,.dsm-hotspot:focus-visible{opacity:1;transform:translate(-50%,-50%) scale(1.18);background:#67e8f9}
+.dsm-hotspot.found{opacity:1;background:#16a34a;border-color:#bbf7d0;color:white}
+.dsm-hotspot.decoy-found{opacity:.9;background:#9f4560;border-color:#fecdd3;color:white}
+@keyframes dsmPulse{0%{transform:scale(.75);opacity:.75}100%{transform:scale(1.45);opacity:0}}
+.dsm-scene-hint{position:absolute;right:.7rem;top:.65rem;padding:.32rem .5rem;border-radius:7px;background:#091322d9;color:#d7e6f5;font:600 .59rem 'JetBrains Mono',monospace}
+.dsm-hunt-hint{padding:.65rem .75rem;border:1px solid #29435d;border-radius:9px;background:#102136}
+.dsm-investigation-status{display:flex;gap:.5rem;flex-wrap:wrap;margin:.55rem 0}
+.dsm-status-pill{border-radius:7px;padding:.35rem .55rem;background:#17263b;border:1px solid #344a66;color:#c8d9eb;font:700 .62rem 'JetBrains Mono',monospace}
+.dsm-evidence{min-height:98px}
+.dsm-evidence p{font-size:.78rem}
+.dsm-evidence .dsm-term{display:none}
+.dsm-evidence.filled{background:linear-gradient(140deg,#102b36,#101b2d);border-color:#3b7180}
+.dsm-evidence.empty{min-height:70px}
+.dsm-feedback{font-size:.83rem}
+.dsm-feedback.wrong{background:#321d29}
+.dsm-analysis-step{margin-top:.75rem;padding:.85rem;border:1px solid #49617b;border-radius:11px;background:#0e1b2c}
+.dsm-analysis-step h4{margin:0 0 .35rem;color:#fff;font-size:.9rem}
+.dsm-analysis-step p{margin:0 0 .7rem;color:#aebfd2;font-size:.76rem;line-height:1.5}
+.dsm-choice{min-height:54px;line-height:1.4}
+.dsm-choice:disabled{opacity:.7;cursor:default}
+.dsm-choice.selected-wrong{border-color:#fb7185;background:#351c2b}
+.dsm-case-brief{font-size:.8rem!important}
+.dsm-difficulty{color:#fbbf24!important}
+.dsm-score-chip{color:#bef264}
+.dsm-next{box-shadow:0 5px 16px #9eff3330}
+@media(max-width:560px){
+ .dsm-scene{min-height:230px}
+ .dsm-hotspot{width:29px;height:29px}
+ .dsm-evidence{min-height:0}
+ .dsm-investigation-status{gap:.35rem}
+ .dsm-status-pill{font-size:.57rem}
+}
+
 </style>
 </head>
 <body>
@@ -1567,74 +1608,121 @@ const DSM_CASES = [
   {name:"The untouched bed",detail:"Maya reports sleeping about two hours a night and still feeling completely rested. This is a decreased need for sleep, not simply insomnia.",term:"Decreased need for sleep"},
   {name:"The credit-card alert",detail:"She spent thousands on an impulsive business venture and has been speaking rapidly, jumping between plans, and interrupting others.",term:"Manic symptoms"},
   {name:"The hospital bracelet",detail:"Her behavior became so disruptive that family brought her for inpatient psychiatric care. A manic episode can meet the duration criterion sooner when hospitalization is required.",term:"Marked impairment"}
- ],question:"Which diagnosis best fits this episode?",options:["Bipolar II Disorder","Bipolar I Disorder","Cyclothymic Disorder","Major Depressive Disorder"],answer:1,why:"Bipolar I Disorder requires at least one manic episode. Maya has a distinct period of elevated/irritable mood with increased energy, decreased need for sleep, pressured speech, risky behavior, and marked impairment. A history of hypomania or major depression is not required.",distinction:"Bipolar II requires at least one hypomanic episode AND one major depressive episode, with no history of mania. Hospitalization or marked impairment points to mania, not hypomania.",terms:"Mania · hypomania · decreased need for sleep · marked impairment"},
+ ],reasonOptions:["The episode involves hospitalization or marked impairment, which is not compatible with hypomania.","The episode lasted exactly four days, which establishes mania.","A major depressive episode is required before Bipolar I can be diagnosed.","The behavior is chronic and stable across several years."],reasonAnswer:0,reasonWhy:"Mania is distinguished from hypomania by marked impairment, hospitalization, or psychotic features. Hypomania does not cause marked functional impairment or require hospitalization." ,question:"Which diagnosis best fits this episode?",options:["Bipolar II Disorder","Bipolar I Disorder","Cyclothymic Disorder","Major Depressive Disorder"],answer:1,why:"Bipolar I Disorder requires at least one manic episode. Maya has a distinct period of elevated/irritable mood with increased energy, decreased need for sleep, pressured speech, risky behavior, and marked impairment. A history of hypomania or major depression is not required.",distinction:"Bipolar II requires at least one hypomanic episode AND one major depressive episode, with no history of mania. Hospitalization or marked impairment points to mania, not hypomania.",terms:"Mania · hypomania · decreased need for sleep · marked impairment"},
  {title:"The Night After",setting:"Community counseling center · Intake room",client:"Jordan, 34",brief:"Jordan survived a violent assault and is struggling to function. The timeline is the key: inspect the evidence before choosing a trauma-related diagnosis.",palette:["#34283d","#6b526b","#d7a58b"],clues:[
   {name:"The incident report",detail:"The assault involved actual threatened serious injury. This is a qualifying traumatic exposure for trauma- and stressor-related diagnoses.",term:"Trauma exposure"},
   {name:"The date stamp",detail:"Symptoms began immediately after the event and have lasted 21 days. The duration is more than 3 days but less than one month.",term:"3 days to 1 month"},
   {name:"The locked front door",detail:"Jordan has intrusive memories, avoids reminders, feels detached, and startles at ordinary sounds. Symptoms span intrusion, negative mood, dissociation, avoidance, and arousal.",term:"Acute stress symptoms"},
   {name:"The missed shifts",detail:"Jordan cannot return to work and reports significant distress. The symptoms are impairing daily functioning.",term:"Clinically significant distress"}
- ],question:"Which diagnosis best matches the timing and symptom pattern?",options:["Posttraumatic Stress Disorder","Acute Stress Disorder","Adjustment Disorder","Specific Phobia"],answer:1,why:"Acute Stress Disorder occurs from 3 days up to 1 month after trauma exposure and involves at least 9 symptoms across the specified symptom categories. Jordan's 21-day timeline fits this window.",distinction:"PTSD requires the disturbance to persist for more than one month. If symptoms continue beyond that threshold, reassessment is warranted; duration alone is not the only diagnostic criterion.",terms:"Trauma exposure · intrusion · avoidance · arousal · duration threshold"},
+ ],reasonOptions:["Symptoms have lasted 21 days: beyond 3 days but not longer than 1 month.","Any trauma symptom lasting more than 24 hours is PTSD.","A qualifying traumatic event alone establishes PTSD.","Avoidance is the only symptom category needed."],reasonAnswer:0,reasonWhy:"Acute Stress Disorder occupies the 3-day to 1-month window after trauma. PTSD requires symptoms lasting more than one month and its own symptom-cluster criteria.",question:"Which diagnosis best matches the timing and symptom pattern?",options:["Posttraumatic Stress Disorder","Acute Stress Disorder","Adjustment Disorder","Specific Phobia"],answer:1,why:"Acute Stress Disorder occurs from 3 days up to 1 month after trauma exposure and involves at least 9 symptoms across the specified symptom categories. Jordan's 21-day timeline fits this window.",distinction:"PTSD requires the disturbance to persist for more than one month. If symptoms continue beyond that threshold, reassessment is warranted; duration alone is not the only diagnostic criterion.",terms:"Trauma exposure · intrusion · avoidance · arousal · duration threshold"},
  {title:"The Long Winter",setting:"Counseling office · First appointment",client:"Eli, 41",brief:"Eli says the low mood has become so familiar that it feels like part of his personality. Look for the long-term pattern, not just today's mood.",palette:["#243447","#526879","#c69a78"],clues:[
   {name:"The old journal",detail:"Eli describes depressed mood on most days for about three years. The pattern has been chronic rather than a single short episode.",term:"2 years or more"},
   {name:"The sleep log",detail:"He reports low energy, poor self-esteem, difficulty concentrating, and either overeating or sleeping poorly during the same period.",term:"Depressive symptoms"},
   {name:"The two-month gap",detail:"He cannot recall a symptom-free stretch longer than six weeks. For adults, symptom-free intervals must not exceed two months during the two-year period.",term:"No gap over 2 months"},
   {name:"The work review",detail:"The persistent symptoms affect relationships and work, even though Eli often continues meeting basic responsibilities.",term:"Chronic impairment"}
- ],question:"Which diagnosis is the strongest fit?",options:["Major Depressive Disorder, single episode","Persistent Depressive Disorder","Bipolar II Disorder","Adjustment Disorder with depressed mood"],answer:1,why:"Persistent Depressive Disorder (dysthymia) involves depressed mood for most of the day, more days than not, for at least two years in adults, plus associated symptoms. The chronic course and limited symptom-free intervals are the key clues.",distinction:"A major depressive episode is defined by a minimum two-week symptom cluster. PDD emphasizes a chronic pattern lasting at least two years in adults; both diagnoses can sometimes be present.",terms:"Persistent course · depressed mood · 2-year duration · symptom-free interval"},
+ ],reasonOptions:["A chronic course of at least 2 years with no symptom-free interval longer than 2 months.","A single symptom-free week rules out all depressive disorders.","Major depression requires symptoms for at least 2 years.","Persistent Depressive Disorder requires a manic episode."],reasonAnswer:0,reasonWhy:"For adults, Persistent Depressive Disorder is defined by a chronic depressed mood course of at least two years, with no symptom-free interval exceeding two months.",question:"Which diagnosis is the strongest fit?",options:["Major Depressive Disorder, single episode","Persistent Depressive Disorder","Bipolar II Disorder","Adjustment Disorder with depressed mood"],answer:1,why:"Persistent Depressive Disorder (dysthymia) involves depressed mood for most of the day, more days than not, for at least two years in adults, plus associated symptoms. The chronic course and limited symptom-free intervals are the key clues.",distinction:"A major depressive episode is defined by a minimum two-week symptom cluster. PDD emphasizes a chronic pattern lasting at least two years in adults; both diagnoses can sometimes be present.",terms:"Persistent course · depressed mood · 2-year duration · symptom-free interval"},
  {title:"The False Alarm",setting:"Urgent counseling referral · Consultation room",client:"Nia, 29",brief:"Nia's first panic attack sent her to the emergency department. The attacks are now shaping her choices. Find what happens between attacks.",palette:["#243c39","#4b7468","#d8ad83"],clues:[
   {name:"The emergency discharge",detail:"Nia describes repeated, abrupt surges of intense fear that peak within minutes, with racing heart, shortness of breath, dizziness, and fear of dying.",term:"Panic attack"},
   {name:"The calendar reminders",detail:"For six weeks she has worried persistently about another attack and what it might mean. The concern has lasted longer than one month.",term:"1 month of concern"},
   {name:"The changed route",detail:"She stopped driving alone and avoids places where she fears an attack might happen. Her behavior has changed to prevent or escape another episode.",term:"Maladaptive behavior change"},
   {name:"The medical workup",detail:"Her medical evaluation did not identify a substance or medical condition explaining the episodes. The attacks are described as unexpected.",term:"Unexpected attacks"}
- ],question:"Which diagnosis best accounts for the recurrent unexpected attacks and the month of follow-up concern?",options:["Generalized Anxiety Disorder","Panic Disorder","Agoraphobia","Social Anxiety Disorder"],answer:1,why:"Panic Disorder involves recurrent unexpected panic attacks followed by at least one month of persistent concern about additional attacks or their consequences, and/or maladaptive behavior change related to the attacks.",distinction:"GAD centers on excessive worry across multiple domains. Agoraphobia centers on fear of situations where escape or help may be difficult. Panic attacks can occur in many disorders and are not, by themselves, a diagnosis.",terms:"Panic attack · unexpected · anticipatory anxiety · avoidance"},
+ ],reasonOptions:["Recurrent unexpected panic attacks followed by at least one month of concern or maladaptive behavior change.","Worry across multiple life areas for six months is required.","Fear of public places alone establishes panic disorder.","A panic attack is itself a separate DSM diagnosis."],reasonAnswer:0,reasonWhy:"Panic Disorder requires recurrent unexpected panic attacks plus at least one month of persistent concern about further attacks or their consequences, and/or maladaptive behavior change.",question:"Which diagnosis best accounts for the recurrent unexpected attacks and the month of follow-up concern?",options:["Generalized Anxiety Disorder","Panic Disorder","Agoraphobia","Social Anxiety Disorder"],answer:1,why:"Panic Disorder involves recurrent unexpected panic attacks followed by at least one month of persistent concern about additional attacks or their consequences, and/or maladaptive behavior change related to the attacks.",distinction:"GAD centers on excessive worry across multiple domains. Agoraphobia centers on fear of situations where escape or help may be difficult. Panic attacks can occur in many disorders and are not, by themselves, a diagnosis.",terms:"Panic attack · unexpected · anticipatory anxiety · avoidance"},
  {title:"The Ritual at 7:00",setting:"Home visit · Kitchen",client:"Sam, 23",brief:"Sam's family says the daily routines are taking over the household. The distinction is whether the thoughts and rituals are unwanted or experienced as the right way to live.",palette:["#3a3041","#75617a","#d5b08c"],clues:[
   {name:"The handwritten checklist",detail:"Sam repeatedly checks the stove for fear that the house will burn down, even after seeing that it is off. The thought is intrusive and unwanted.",term:"Obsession"},
   {name:"The worn door handle",detail:"Sam checks the lock 20 times to reduce intense anxiety. The behavior is repetitive and feels driven, not enjoyable.",term:"Compulsion"},
   {name:"The clock on the wall",detail:"The checking rituals take more than two hours each day and make Sam late for work. They are time-consuming and impairing.",term:"Time-consuming / impairment"},
   {name:"The interview note",detail:"Sam recognizes the fear is excessive and wishes the thoughts would stop. The pattern is distressing and ego-dystonic.",term:"Ego-dystonic"}
- ],question:"Which diagnosis best fits the intrusive thoughts and anxiety-reducing rituals?",options:["Obsessive-Compulsive Disorder","Obsessive-Compulsive Personality Disorder","Illness Anxiety Disorder","Generalized Anxiety Disorder"],answer:0,why:"OCD involves obsessions (intrusive, unwanted thoughts, urges, or images) and/or compulsions (repetitive behaviors or mental acts performed to reduce distress or prevent a feared event). They are time-consuming or cause significant distress/impairment.",distinction:"OCPD is a pervasive pattern of preoccupation with orderliness, perfectionism, and control, often experienced as appropriate by the person (ego-syntonic). It does not require obsessions and compulsions.",terms:"Obsession · compulsion · ego-dystonic · impairment"}
+ ],reasonOptions:["Intrusive, unwanted obsessions and repetitive compulsions performed to reduce distress.","A lifelong preference for order and perfectionism alone.","The thoughts are experienced as appropriate and desirable.","A single repeated behavior automatically establishes OCD."],reasonAnswer:0,reasonWhy:"OCD is characterized by obsessions and/or compulsions that are time-consuming or cause significant distress or impairment. OCPD instead involves a pervasive pattern of orderliness, perfectionism, and control.",question:"Which diagnosis best fits the intrusive thoughts and anxiety-reducing rituals?",options:["Obsessive-Compulsive Disorder","Obsessive-Compulsive Personality Disorder","Illness Anxiety Disorder","Generalized Anxiety Disorder"],answer:0,why:"OCD involves obsessions (intrusive, unwanted thoughts, urges, or images) and/or compulsions (repetitive behaviors or mental acts performed to reduce distress or prevent a feared event). They are time-consuming or cause significant distress/impairment.",distinction:"OCPD is a pervasive pattern of preoccupation with orderliness, perfectionism, and control, often experienced as appropriate by the person (ego-syntonic). It does not require obsessions and compulsions.",terms:"Obsession · compulsion · ego-dystonic · impairment"}
 ];
-let dsmCaseIndex=0, dsmFound=[], dsmScore=0, dsmSolved=0, dsmWrong=0, dsmChoiceLocked=false;
+let dsmCaseIndex=0, dsmFound=[], dsmScore=0, dsmSolved=0, dsmWrong=0, dsmChoiceLocked=false, dsmRationaleLocked=false;
 function dsmEscape(v){return String(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 function dsmSceneSvg(c){
- const [wall,accent,skin]=c.palette;
- return '<svg class="dsm-scene" viewBox="0 0 900 330" role="img" aria-label="Illustrated '+dsmEscape(c.setting)+' with four clue locations">'+
- '<defs><linearGradient id="dsmWall" x2="0" y2="1"><stop stop-color="'+wall+'"/><stop offset="1" stop-color="#101827"/></linearGradient><linearGradient id="dsmFloor" x2="0" y2="1"><stop stop-color="#795b4b"/><stop offset="1" stop-color="#392c2b"/></linearGradient></defs>'+
- '<rect width="900" height="330" fill="url(#dsmWall)"/><path d="M0 245H900V330H0Z" fill="url(#dsmFloor)"/><path d="M0 244H900" stroke="#d7c2a2" stroke-opacity=".25" stroke-width="4"/>'+
- '<rect x="52" y="42" width="205" height="142" rx="8" fill="#172f45" stroke="#a7c5d6" stroke-opacity=".55" stroke-width="5"/><path d="M154 44V182M54 112H255" stroke="#9bb8c7" stroke-opacity=".45" stroke-width="4"/><circle cx="214" cy="72" r="19" fill="#f8d58a" opacity=".75"/><path d="M52 186L257 186" stroke="#d3dce5" stroke-opacity=".3" stroke-width="7"/>'+
- '<rect x="320" y="53" width="150" height="98" rx="7" fill="#0c1828" stroke="#d2d9e5" stroke-opacity=".55" stroke-width="4"/><path d="M339 79H450M339 96H425M339 113H442" stroke="#8fa4bb" stroke-width="5" stroke-linecap="round" opacity=".6"/>'+
- '<rect x="665" y="40" width="160" height="108" rx="8" fill="'+accent+'" opacity=".65"/><circle cx="745" cy="93" r="35" fill="#111c2d" stroke="#e4c98d" stroke-width="5"/><path d="M745 93V69M745 93L764 104" stroke="#f5dfac" stroke-width="4" stroke-linecap="round"/>'+
- '<path d="M0 246H900" stroke="#d7b38b" stroke-opacity=".35" stroke-width="3"/>'+
- '<rect x="92" y="218" width="280" height="24" rx="7" fill="#6e4e3c"/><path d="M118 240V295M348 240V295" stroke="#493328" stroke-width="12"/><rect x="135" y="189" width="110" height="29" rx="6" fill="#b68a61"/><path d="M146 189V174H231V189" fill="none" stroke="#e2c49a" stroke-width="5"/>'+
- '<path d="M505 244V165Q505 139 530 139H623Q650 139 650 165V244" fill="'+accent+'" stroke="#d7e0e9" stroke-opacity=".3" stroke-width="5"/><rect x="520" y="192" width="116" height="48" rx="13" fill="#27384d"/>'+
- '<circle cx="565" cy="112" r="39" fill="'+skin+'"/><path d="M528 108Q525 62 570 67Q611 70 603 112Q591 91 568 91Q548 91 528 108Z" fill="#302b2d"/><path d="M538 119Q565 133 591 119" stroke="#70483e" stroke-width="3" fill="none" stroke-linecap="round"/><circle cx="550" cy="108" r="3.5" fill="#302b2d"/><circle cx="579" cy="108" r="3.5" fill="#302b2d"/><path d="M541 151Q565 134 590 151L630 240H500Z" fill="#d5e0e7"/><path d="M514 178L482 222M617 178L648 218" stroke="'+skin+'" stroke-width="17" stroke-linecap="round"/>'+
- '<path d="M770 246V189M770 190Q728 171 730 145Q772 150 779 180Q789 147 822 145Q825 177 779 194" fill="#4d916b" stroke="#a7d4a5" stroke-width="3"/><rect x="744" y="241" width="54" height="30" rx="7" fill="#a56f4b"/>'+
- '<rect x="385" y="263" width="118" height="14" rx="7" fill="#2b3546"/><path d="M403 277V311M485 277V311" stroke="#293243" stroke-width="9"/>'+
- '<text x="28" y="316" fill="#ffffff" opacity=".35" font-size="12" font-family="monospace">CASE FILE // OBSERVE BEFORE YOU CONCLUDE</text></svg>';
+ const i=dsmCaseIndex, palette=c.palette, wall=palette[0], accent=palette[1], skin=palette[2];
+ const sceneDetails=[
+  '<rect x="55" y="65" width="180" height="130" rx="8" fill="#1a354c" stroke="#9ab7ca" stroke-width="5"/><path d="M145 65V195M55 130H235" stroke="#91adbf" stroke-width="4"/><circle cx="205" cy="91" r="17" fill="#f7d78a"/><rect x="68" y="205" width="240" height="18" rx="5" fill="#79563f"/><path d="M88 223V290M287 223V290" stroke="#4b3429" stroke-width="12"/><rect x="86" y="178" width="86" height="25" rx="4" fill="#c49a69"/><rect x="350" y="70" width="135" height="92" rx="6" fill="#0a1525" stroke="#b6c6d5" stroke-width="4"/><path d="M367 95H466M367 116H448M367 137H461" stroke="#849ab2" stroke-width="4"/><rect x="710" y="55" width="120" height="95" rx="7" fill="#233c51"/><circle cx="770" cy="103" r="34" fill="#0c1928" stroke="#edc878" stroke-width="5"/><path d="M770 103V79M770 103L789 113" stroke="#f3dfb1" stroke-width="4"/>',
+  '<rect x="65" y="55" width="190" height="150" rx="6" fill="#21394e" stroke="#a8c1d1" stroke-width="5"/><path d="M160 57V204M67 130H253" stroke="#9ab1c4" stroke-width="4"/><rect x="320" y="65" width="220" height="145" rx="5" fill="#e4d8c6"/><path d="M340 92H516M340 119H490M340 146H500M340 173H470" stroke="#7e8a99" stroke-width="5"/><rect x="665" y="48" width="165" height="170" rx="7" fill="#49394d" stroke="#bba7bd" stroke-width="5"/><path d="M688 82H807M688 108H795M688 134H810" stroke="#d8c5da" stroke-width="5"/>',
+  '<rect x="65" y="45" width="190" height="145" rx="6" fill="#263c50" stroke="#9eb3c7" stroke-width="5"/><path d="M160 46V189M67 117H253" stroke="#8fa9bc" stroke-width="4"/><rect x="330" y="50" width="170" height="130" rx="7" fill="#624b3d"/><path d="M348 77H482M348 104H466M348 131H475" stroke="#d8c2a1" stroke-width="5"/><rect x="700" y="55" width="120" height="140" rx="5" fill="#24384b" stroke="#a5bacd" stroke-width="5"/><path d="M718 82H800M718 111H790M718 140H802" stroke="#9db2c5" stroke-width="4"/>',
+  '<rect x="65" y="55" width="170" height="130" rx="8" fill="#203c45" stroke="#b3c7c6" stroke-width="5"/><circle cx="150" cy="118" r="42" fill="#132b34" stroke="#e3d39e" stroke-width="5"/><path d="M150 118V87M150 118L177 132" stroke="#f2e1b4" stroke-width="4"/><rect x="335" y="50" width="185" height="140" rx="7" fill="#e8e2d8"/><path d="M355 83H500M355 112H482M355 141H500" stroke="#81909c" stroke-width="5"/><rect x="690" y="45" width="145" height="150" rx="8" fill="#214a45" stroke="#b0c8b9" stroke-width="5"/>',
+  '<rect x="60" y="50" width="190" height="145" rx="8" fill="#493c4d" stroke="#c4b0c9" stroke-width="5"/><path d="M82 80H226M82 110H210M82 140H224" stroke="#d9c7dc" stroke-width="5"/><rect x="340" y="55" width="165" height="145" rx="8" fill="#273e4d" stroke="#b1c1ce" stroke-width="5"/><circle cx="422" cy="128" r="44" fill="#142735" stroke="#e2c78e" stroke-width="5"/><path d="M422 128V94M422 128L446 142" stroke="#f2dfb1" stroke-width="4"/><rect x="690" y="48" width="145" height="145" rx="8" fill="#5a4a3d" stroke="#d0bda3" stroke-width="5"/>'
+ ];
+ const details=sceneDetails[i]||sceneDetails[0];
+ return '<svg class="dsm-scene" viewBox="0 0 900 360" role="img" aria-label="Detailed illustrated scene: '+dsmEscape(c.setting)+'">'+
+ '<defs><linearGradient id="dsmRoom" x2="0" y2="1"><stop stop-color="'+wall+'"/><stop offset="1" stop-color="#111a2a"/></linearGradient><linearGradient id="dsmGround" x2="0" y2="1"><stop stop-color="#8a6954"/><stop offset="1" stop-color="#352b2d"/></linearGradient><radialGradient id="dsmGlow"><stop stop-color="'+accent+'" stop-opacity=".4"/><stop offset="1" stop-color="'+accent+'" stop-opacity="0"/></radialGradient><filter id="dsmShadow"><feGaussianBlur stdDeviation="9"/></filter></defs>'+
+ '<rect width="900" height="360" fill="url(#dsmRoom)"/><ellipse cx="450" cy="110" rx="430" ry="240" fill="url(#dsmGlow)"/><path d="M0 286H900V360H0Z" fill="url(#dsmGround)"/><path d="M0 286H900" stroke="#f0d4ad" stroke-opacity=".4" stroke-width="4"/>'+
+ '<path d="M0 0H900V18H0Z" fill="#ffffff" opacity=".04"/>'+details+
+ '<ellipse cx="570" cy="296" rx="110" ry="18" fill="#050b12" opacity=".5" filter="url(#dsmShadow)"/>'+
+ '<path d="M495 286V190Q495 158 528 158H615Q650 158 650 190V286" fill="'+accent+'" stroke="#d4e0e9" stroke-opacity=".6" stroke-width="5"/><rect x="510" y="219" width="125" height="65" rx="12" fill="#27384d"/>'+
+ '<circle cx="571" cy="123" r="43" fill="'+skin+'"/><path d="M531 118Q523 65 573 68Q622 70 613 124Q596 96 570 100Q548 99 531 118Z" fill="#302a2c"/><path d="M547 133Q571 143 594 132" stroke="#70483e" stroke-width="3" fill="none" stroke-linecap="round"/><circle cx="555" cy="119" r="3.5" fill="#302a2c"/><circle cx="585" cy="119" r="3.5" fill="#302a2c"/><path d="M548 165Q570 151 594 165L640 285H500Z" fill="#dce5eb"/><path d="M510 193L475 254M627 193L662 250" stroke="'+skin+'" stroke-width="18" stroke-linecap="round"/>'+
+ '<path d="M745 286V230M745 231Q704 211 706 184Q747 190 753 221Q764 185 799 185Q802 216 753 236" fill="#4d916b" stroke="#b0d9a8" stroke-width="3"/><rect x="720" y="282" width="52" height="30" rx="7" fill="#a56f4b"/>'+
+ '<path d="M30 327H870" stroke="#e8d4b8" stroke-opacity=".16" stroke-width="2"/><text x="30" y="346" fill="#fff" opacity=".42" font-size="12" font-family="monospace" letter-spacing="2">FIELD NOTES  /  SCAN THE ROOM  /  SEPARATE SIGNAL FROM NOISE</text></svg>';
 }
 function renderDsmDetective(){
  const root=document.getElementById("mini-play"); if(!root)return;
  if(dsmCaseIndex>=DSM_CASES.length){
-  root.innerHTML='<div class="dsm-game"><div class="dsm-finish"><div class="medal">🏆</div><div class="dsm-case-chip">INVESTIGATION COMPLETE</div><h2>CASE CLOSED, DETECTIVE.</h2><p>You solved '+dsmSolved+' of '+DSM_CASES.length+' cases. Evidence score: <strong>'+dsmScore+' / '+(DSM_CASES.length*100)+'</strong>.</p><p>You reviewed key NCE concepts including mood episodes, trauma duration, depressive course, panic, obsessions, and compulsions.</p><button class="dsm-next" onclick="restartDsmDetective()">↻ Play the cases again</button><p class="dsm-learning-note">Study tool only. These fictional vignettes are simplified for learning and are not a substitute for the full DSM-5-TR criteria or clinical assessment.</p></div></div>';
-  return;
+  root.innerHTML='<div class="dsm-game"><div class="dsm-finish"><div class="medal">🏆</div><div class="dsm-case-chip">INVESTIGATION COMPLETE</div><h2>CASE CLOSED, DETECTIVE.</h2><p>You solved '+dsmSolved+' of '+DSM_CASES.length+' cases. Final score: <strong>'+dsmScore+' pts</strong>.</p><p>You practiced differential diagnosis, duration thresholds, impairment, and DSM-5-TR terminology.</p><button class="dsm-next" onclick="restartDsmDetective()">↻ Replay investigations</button><p class="dsm-learning-note">Fictional learning vignettes, not diagnostic tools. Use the full DSM-5-TR criteria and official NCE study materials.</p></div></div>';return;
  }
- const c=DSM_CASES[dsmCaseIndex], found=dsmFound[dsmCaseIndex]||[];
- const all=found.length===c.clues.length;
- let hotspots=[[18,34],[39,56],[76,30],[84,70]];
- let evidence=c.clues.map((clue,i)=>found.includes(i)?'<div class="dsm-evidence filled"><strong>✓ '+dsmEscape(clue.name)+'</strong><p>'+dsmEscape(clue.detail)+'</p><span class="dsm-term">'+dsmEscape(clue.term)+'</span></div>':'<div class="dsm-evidence empty"><span>🔎</span><span>Evidence '+(i+1)+' · undiscovered</span></div>').join("");
- let diagnosis=all?'<div class="dsm-diagnosis"><h3>🧠 Diagnostic board</h3><p>Review the evidence, then select the best-fitting DSM-5-TR diagnosis.</p><div class="dsm-options">'+c.options.map((o,i)=>'<button class="dsm-choice" onclick="chooseDsmDiagnosis('+i+')">'+String.fromCharCode(65+i)+'. '+dsmEscape(o)+'</button>').join("")+'</div><div id="dsm-feedback"></div></div>':'<div class="dsm-diagnosis"><h3>🔒 Diagnostic board locked</h3><p>Find all '+c.clues.length+' pieces of evidence to unlock the diagnosis choices. You have found '+found.length+' of '+c.clues.length+'.</p></div>';
- root.innerHTML='<div class="dsm-game"><div class="dsm-topline"><span class="dsm-case-chip">CASE '+(dsmCaseIndex+1)+' / '+DSM_CASES.length+' · FIELD INVESTIGATION</span><span class="dsm-score-chip">⭐ '+dsmScore+' PTS</span></div><div class="dsm-progress"><span style="width:'+((dsmCaseIndex/DSM_CASES.length)*100)+'%"></span></div><div class="dsm-brief"><div class="dsm-stamp">🕵️</div><div><h3>'+dsmEscape(c.title)+'</h3><p><strong>'+dsmEscape(c.client)+'</strong> — '+dsmEscape(c.brief)+'</p></div></div><div class="dsm-scene-wrap">'+dsmSceneSvg(c)+'<div class="dsm-scene-label">'+dsmEscape(c.setting)+'</div>'+c.clues.map((clue,i)=>'<button class="dsm-hotspot '+(found.includes(i)?'found':'')+'" style="left:'+hotspots[i][0]+'%;top:'+hotspots[i][1]+'%" aria-label="'+(found.includes(i)?'Found: ':'Investigate ')+dsmEscape(clue.name)+'" '+(found.includes(i)?'disabled':'')+' onclick="collectDsmClue('+i+')">'+(found.includes(i)?'✓':i+1)+'</button>').join("")+'</div><p class="dsm-hunt-hint">👆 Tap the numbered evidence markers in the illustration. Each clue adds a fact to your case board.</p><div class="dsm-board">'+evidence+'</div>'+diagnosis+'<p class="dsm-learning-note">Look for symptom pattern, duration, impairment, and exclusions. This fictional practice case simplifies criteria for study; consult the full DSM-5-TR for exam-level detail.</p></div>';
+ const c=DSM_CASES[dsmCaseIndex],found=dsmFound[dsmCaseIndex]||[],all=found.length===c.clues.length,targets=[[15,35],[32,72],[42,35],[58,66],[75,37],[87,68],[8,70],[66,22]];
+ const decoys=dsmDecoys[dsmCaseIndex]||[];
+ const marks=targets.map((p,i)=>{const real=[0,2,4,6].includes(i), clueIndex=[0,1,2,3][[0,2,4,6].indexOf(i)];const done=real?found.includes(clueIndex):dsmUsedDecoys[dsmCaseIndex].includes(i);return '<button class="dsm-hotspot '+(done?(real?'found':'decoy-found'):'')+'" style="left:'+p[0]+'%;top:'+p[1]+'%" aria-label="'+(done?'Investigated':'Inspect object')+'" '+(done?'disabled':'')+' onclick="inspectDsmObject('+i+')">'+(done?(real?'✓':'×'):'⌕')+'</button>';}).join("");
+ const evidence=c.clues.map((clue,i)=>found.includes(i)?'<div class="dsm-evidence filled"><strong>Evidence '+(i+1)+' · '+dsmEscape(clue.name)+'</strong><p>'+dsmEscape(clue.detail)+'</p></div>':'<div class="dsm-evidence empty"><span>◌</span><span>Evidence '+(i+1)+' · not yet recovered</span></div>').join("");
+ let analysis='';
+ if(all){
+  analysis='<div class="dsm-analysis-step"><h4>PHASE 2 · DIFFERENTIAL DIAGNOSIS</h4><p>'+dsmEscape(c.question)+' Choose the single best answer. A wrong answer costs 20 points, but you can reconsider.</p><div class="dsm-options">'+c.options.map((o,i)=>'<button class="dsm-choice" onclick="chooseDsmDiagnosis('+i+')">'+String.fromCharCode(65+i)+'. '+dsmEscape(o)+'</button>').join("")+'</div><div id="dsm-feedback"></div></div>';
+ }
+ const count=found.length,misses=dsmUsedDecoys[dsmCaseIndex].length;
+ root.innerHTML='<div class="dsm-game"><div class="dsm-topline"><span class="dsm-case-chip">CASE '+(dsmCaseIndex+1)+' / '+DSM_CASES.length+' · INVESTIGATION</span><span class="dsm-score-chip">★ '+dsmScore+' PTS</span></div><div class="dsm-progress"><span style="width:'+((dsmCaseIndex/DSM_CASES.length)*100)+'%"></span></div><div class="dsm-brief"><div class="dsm-stamp">🕵️</div><div><h3>'+dsmEscape(c.title)+'</h3><p class="dsm-case-brief"><strong>'+dsmEscape(c.client)+'</strong> · '+dsmEscape(c.brief)+'</p><p class="dsm-difficulty">DIFFICULTY: FIELD ANALYST · FIND 4 RELEVANT DETAILS AMONG 8 OBJECTS</p></div></div><div class="dsm-scene-wrap">'+dsmSceneSvg(c)+'<div class="dsm-scene-label">'+dsmEscape(c.setting)+'</div><div class="dsm-scene-hint">SCAN OBJECTS</div>'+marks+'</div><div class="dsm-investigation-status"><span class="dsm-status-pill">EVIDENCE '+count+'/4</span><span class="dsm-status-pill">FALSE LEADS '+misses+'/4</span><span class="dsm-status-pill">CASE BONUS +'+Math.max(0,60-misses*10)+' PTS</span></div><p class="dsm-hunt-hint">🔎 Search the scene. Some objects are distractions. Tap an object to inspect it; false leads cost points. Collect all four clinically relevant findings to unlock the case analysis.</p><div class="dsm-board">'+evidence+'</div>'+analysis+'<div id="dsm-object-feedback" aria-live="polite"></div><p class="dsm-learning-note">NCE challenge mode: distinguish clinically meaningful evidence from background details. This is a simplified educational case, not a clinical assessment.</p></div>';
 }
-function collectDsmClue(i){
- const c=DSM_CASES[dsmCaseIndex]; if(!c||!dsmFound[dsmCaseIndex])return;
- if(!dsmFound[dsmCaseIndex].includes(i)){dsmFound[dsmCaseIndex].push(i);renderDsmDetective();}
+
+const dsmDecoys=[
+ ["A shopping receipt with ordinary groceries","A decorative wall clock showing the current time","A houseplant with new leaves","A folded blanket on the sofa"],
+ ["A routine appointment card","A framed landscape photograph","A half-full glass of water","A coat hanging by the door"],
+ ["A grocery list","A television remote","A stack of unopened mail","A clean coffee mug"],
+ ["A bus timetable","A house key on a hook","A weather report","A grocery bag"],
+ ["A recipe card","A decorative bowl","A television schedule","A folded dish towel"]
+];
+let dsmUsedDecoys=DSM_CASES.map(()=>[]);
+function inspectDsmObject(i){
+ const c=DSM_CASES[dsmCaseIndex],found=dsmFound[dsmCaseIndex],box=document.getElementById("dsm-object-feedback");
+ if(!c||!box)return;
+ const map={0:0,2:1,4:2,6:3};
+ if(Object.prototype.hasOwnProperty.call(map,i)){
+  const k=map[i]; if(!found.includes(k)){found.push(k);dsmScore+=20;renderDsmDetective();}
+ } else {
+  if(dsmUsedDecoys[dsmCaseIndex].includes(i))return;
+  dsmUsedDecoys[dsmCaseIndex].push(i);dsmScore=Math.max(0,dsmScore-10);
+  const msg=dsmDecoys[dsmCaseIndex][[1,3,5,7].indexOf(i)];
+  box.className="dsm-feedback wrong";box.innerHTML='<strong>False lead · −10 points</strong><br>'+dsmEscape(msg)+'. This detail does not meaningfully distinguish the diagnostic possibilities. Look for duration, symptom pattern, impairment, or exclusion criteria.';
+  const btn=document.querySelector('.dsm-hotspot[style*="left: '+[[15,35],[32,72],[42,35],[58,66],[75,37],[87,68],[8,70],[66,22]][i][0]+'%"]');
+  if(btn){btn.classList.add("decoy-found");btn.disabled=true;btn.textContent="×";}
+  const pill=document.querySelectorAll(".dsm-status-pill");if(pill[1])pill[1].textContent="FALSE LEADS "+dsmUsedDecoys[dsmCaseIndex].length+"/4";if(document.querySelector(".dsm-score-chip"))document.querySelector(".dsm-score-chip").textContent="★ "+dsmScore+" PTS";
+ }
 }
+
 function chooseDsmDiagnosis(i){
- const c=DSM_CASES[dsmCaseIndex], box=document.getElementById("dsm-feedback"); if(!c||!box||dsmChoiceLocked)return;
- if(i===c.answer){dsmChoiceLocked=true;dsmSolved++;dsmScore+=100;document.querySelectorAll(".dsm-choice").forEach((b,n)=>{b.disabled=true;if(n===i)b.style.borderColor="#4ade80";});box.className="dsm-feedback";box.innerHTML='<strong>✓ Correct — '+dsmEscape(c.options[c.answer])+'</strong><br>'+dsmEscape(c.why)+'<br><br><strong>Exam distinction:</strong> '+dsmEscape(c.distinction)+'<br><br><strong>Terms to remember:</strong> '+dsmEscape(c.terms)+'<br><button class="dsm-next" onclick="nextDsmCase()">Next case →</button>';}
- else {dsmWrong++;box.className="dsm-feedback wrong";box.innerHTML='<strong>Not quite. Revisit the evidence.</strong><br>Ask yourself: which clue best separates these two diagnoses — duration, impairment, symptom pattern, or the quality of the thoughts/behaviors? Try another answer.';document.querySelectorAll(".dsm-choice")[i].classList.add("selected-wrong");}
+ const c=DSM_CASES[dsmCaseIndex],box=document.getElementById("dsm-feedback");if(!c||!box||dsmChoiceLocked)return;
+ if(i===c.answer){
+  dsmChoiceLocked=true;dsmSolved++;dsmScore+=40;
+  document.querySelectorAll(".dsm-choice").forEach((b,n)=>{b.disabled=true;if(n===i)b.style.borderColor="#4ade80";});
+  box.className="dsm-feedback";box.innerHTML='<strong>✓ Working diagnosis supported · +40 points</strong><br>'+dsmEscape(c.why)+'<br><br><strong>Closest differential:</strong> '+dsmEscape(c.distinction)+'<br><br><strong>Clinical vocabulary:</strong> '+dsmEscape(c.terms)+'<div class="dsm-analysis-step"><h4>PHASE 3 · EXPLAIN YOUR REASONING</h4><p>Which finding is the most decisive discriminator from the closest alternative?</p><div class="dsm-options">'+c.reasonOptions.map((o,n)=>'<button class="dsm-choice" onclick="chooseDsmRationale('+n+')">'+String.fromCharCode(65+n)+'. '+dsmEscape(o)+'</button>').join("")+'</div><div id="dsm-rationale-feedback"></div></div>';
+ }else{
+  dsmWrong++;dsmScore=Math.max(0,dsmScore-20);box.className="dsm-feedback wrong";box.innerHTML='<strong>✕ That diagnosis is not the best fit · −20 points</strong><br>Recheck the timeline and the feature that separates the closest look-alike. The case remains open; try again.';
+  const b=document.querySelectorAll(".dsm-analysis-step .dsm-choice");if(b[i])b[i].classList.add("selected-wrong");
+  const score=document.querySelector(".dsm-score-chip");if(score)score.textContent="★ "+dsmScore+" PTS";
+ }
 }
-function nextDsmCase(){dsmCaseIndex++;dsmChoiceLocked=false;renderDsmDetective();}
-function restartDsmDetective(){dsmCaseIndex=0;dsmFound=DSM_CASES.map(()=>[]);dsmScore=0;dsmSolved=0;dsmWrong=0;dsmChoiceLocked=false;renderDsmDetective();}
+function chooseDsmRationale(i){
+ const c=DSM_CASES[dsmCaseIndex],box=document.getElementById("dsm-rationale-feedback");if(!c||!box||dsmRationaleLocked)return;
+ if(i===c.reasonAnswer){
+  dsmRationaleLocked=true;dsmScore+=40;document.querySelectorAll(".dsm-analysis-step .dsm-choice").forEach((b,n)=>{b.disabled=true;if(n===i)b.style.borderColor="#4ade80";});
+  box.className="dsm-feedback";box.innerHTML='<strong>✓ Excellent clinical reasoning · +40 points</strong><br>'+dsmEscape(c.reasonWhy)+'<br><button class="dsm-next" onclick="nextDsmCase()">Next investigation →</button>';
+ }else{
+  dsmScore=Math.max(0,dsmScore-10);box.className="dsm-feedback wrong";box.innerHTML='<strong>Not the strongest discriminator · −10 points</strong><br>Look for the criterion that changes the diagnosis, not a symptom that can occur in several conditions. Try again.';
+  const score=document.querySelector(".dsm-score-chip");if(score)score.textContent="★ "+dsmScore+" PTS";
+ }
+}
+
+function nextDsmCase(){dsmCaseIndex++;dsmChoiceLocked=false;dsmRationaleLocked=false;renderDsmDetective();}
+function restartDsmDetective(){dsmCaseIndex=0;dsmFound=DSM_CASES.map(()=>[]);dsmScore=0;dsmSolved=0;dsmWrong=0;dsmChoiceLocked=false;dsmRationaleLocked=false;dsmUsedDecoys=DSM_CASES.map(()=>[]);renderDsmDetective();}
 
 function openMini(id) {
   if (id === 'dsm') restartDsmDetective();
