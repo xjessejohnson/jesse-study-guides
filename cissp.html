@@ -1,1 +1,272 @@
-$(cat /tmp/cissp_updated.html)
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CISSP Practice | Jesse's Study Guides</title>
+  <meta name="description" content="CISSP study hub featuring an interactive 100-question mastery mock exam, active-recall flash cards, and the CISSP Arcade." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .hub-summary {
+      background: rgba(16, 23, 38, 0.78);
+      border: 1px solid var(--border-slate);
+      border-left: 3px solid var(--cyan);
+      border-radius: 10px;
+      padding: 1.15rem 1.35rem;
+      margin-bottom: 1.5rem;
+      max-width: 780px;
+    }
+    .hub-summary p {
+      color: var(--text-secondary);
+      line-height: 1.68;
+      font-size: 0.95rem;
+    }
+    .hub-summary strong { color: #fff; }
+    .domain-pills {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.85rem;
+    }
+    .domain-pill {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.68rem;
+      padding: 0.28rem 0.6rem;
+      border-radius: 6px;
+      background: rgba(13, 18, 28, 0.9);
+      border: 1px solid var(--border-slate);
+      color: var(--text-secondary);
+    }
+    .domain-pill span { color: var(--lime); font-weight: 700; }
+
+    .module-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 1.25rem;
+      margin-top: 1.25rem;
+    }
+    .module-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-slate);
+      border-radius: 12px;
+      padding: 1.45rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 1.25rem;
+      transition: all 0.2s ease;
+    }
+    .module-card.interactive:hover {
+      border-color: var(--lime);
+      background: var(--bg-card-hover);
+      transform: translateY(-2px);
+    }
+    .module-card-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.55rem;
+    }
+    .module-card h3 {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 1.02rem;
+      text-transform: uppercase;
+      color: #fff;
+    }
+    .module-card p {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      line-height: 1.55;
+    }
+    .btn-lime {
+      padding: 0.75rem 1.25rem;
+      border-radius: 9px;
+      border: none;
+      background: var(--lime);
+      color: #05070c;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.18s ease;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.45rem;
+    }
+    .btn-lime:hover {
+      filter: brightness(1.08);
+      box-shadow: 0 0 22px rgba(158, 255, 51, 0.35);
+      transform: translateY(-1px);
+    }
+  </style>
+</head>
+<body>
+
+  <div class="frame-wrapper">
+    <aside>
+      <div class="brand-block">
+        <div class="brand-row">
+          <div>
+            <a href="index.html" class="brand-title">Jesse's Study Guides</a>
+            <div class="brand-tagline">Unofficial compiled training database v1.0</div>
+          </div>
+          <button class="mobile-menu-btn" id="mobile-menu-btn" aria-expanded="false" aria-controls="nav-drawer">
+            Menu &#9776;
+          </button>
+        </div>
+        <a class="coffee-btn" href="https://www.buymeacoffee.com/xjessejohnson" target="_blank" rel="noopener noreferrer">
+          &#9749; Buy Me a Coffee
+        </a>
+      </div>
+
+            <nav class="nav-drawer" id="nav-drawer">
+        <div class="nav-section">
+          <div class="nav-label">Cybersecurity</div>
+          <a href="cissp.html" class="nav-item"><span>CISSP</span><span class="badge live">Active</span></a>
+          <a href="cism.html" class="nav-item"><span>CISM</span><span class="badge live">Active</span></a>
+          <a href="secplus.html" class="nav-item"><span>Security+</span><span class="badge live">Active</span></a>
+          <a href="ceh.html" class="nav-item"><span>CEH</span><span class="badge live">Active</span></a>
+        </div>
+        <div class="nav-section">
+          <div class="nav-label">Psychology</div>
+          <a href="nce.html" class="nav-item"><span>NCE</span><span class="badge live">Active</span></a>
+          <a href="olere.html" class="nav-item"><span>OLERE (Oklahoma)</span><span class="badge live">Active</span></a>
+          <a href="texas.html" class="nav-item"><span>Texas LPC Jurisprudence</span><span class="badge live">Active</span></a>
+        </div>
+      </nav>
+    </aside>
+
+    <div class="main-area">
+      
+
+      <main class="content-body">
+        <div class="eyebrow">ISC2 CISSP</div>
+        <h1 class="hero-headline">
+          CISSP<br />
+          <span class="outline">STUDY HUB</span>
+        </h1>
+
+        <div class="hub-summary">
+          <p>
+            The <strong>Certified Information Systems Security Professional (CISSP)</strong> is a globally recognized certification issued by <strong>(ISC)²</strong>. Using Computerized Adaptive Testing (CAT) with 100 to 150 questions and a minimum passing score of <strong>700 out of 1000</strong>, it evaluates mastery across eight core security domains.
+          </p>
+          <div class="domain-pills">
+            <div class="domain-pill">1. Security & Risk Mgmt <span>16%</span></div>
+            <div class="domain-pill">2. Asset Security <span>10%</span></div>
+            <div class="domain-pill">3. Architecture & Eng <span>13%</span></div>
+            <div class="domain-pill">4. Comm & Network Sec <span>13%</span></div>
+            <div class="domain-pill">5. IAM <span>13%</span></div>
+            <div class="domain-pill">6. Assessment & Testing <span>12%</span></div>
+            <div class="domain-pill">7. Security Operations <span>13%</span></div>
+            <div class="domain-pill">8. Software Dev Sec <span>10%</span></div>
+          </div>
+        </div>
+
+        <div class="module-grid">
+          <div class="module-card interactive">
+            <div>
+              <div class="module-card-head">
+                <h3>Exam Logic</h3>
+                <span class="badge live">New</span>
+              </div>
+              <p>Study how real CISSP questions work. Spot the key clue, eliminate bad answers, and practice thinking like the exam wants — with 200 randomized examples.</p>
+            </div>
+            <a href="cissp-exam-logic.html" class="btn-lime">Launch Exam Logic &rarr;</a>
+          </div>
+
+          <div class="module-card interactive">
+            <div>
+              <div class="module-card-head">
+                <h3>Mock Exam</h3>
+                <span class="badge live">Active</span>
+              </div>
+              <p>Mastery-mode practice exam. Incorrect answers trigger immediate memory-aid feedback and require you to retry until mastered.</p>
+            </div>
+            <a href="cissp-exam.html" class="btn-lime">Launch Mock Exam &rarr;</a>
+          </div>
+
+          <div class="module-card interactive">
+            <div>
+              <div class="module-card-head">
+                <h3>Flash Cards</h3>
+                <span class="badge live">Active</span>
+              </div>
+              <p>Active-recall deck covering 100 essential 2026 CISSP exam keywords, definitions, and exam-day purposes.</p>
+            </div>
+            <a href="cissp-flashcards.html" class="btn-lime">Launch Flash Cards &rarr;</a>
+          </div>
+
+          <div class="module-card interactive">
+            <div>
+              <div class="module-card-head">
+                <h3>Games</h3>
+                <span class="badge live">6 Games</span>
+              </div>
+              <p>Interactive CISSP games developed by Jesse to lock in ports, ciphers, cloud models, and incident response phases.</p>
+            </div>
+            <a href="cissp-games.html" class="btn-lime">Launch Arcade &rarr;</a>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Privacy Policy Modal -->
+  <div class="modal-backdrop" id="privacy-modal" role="dialog" aria-modal="true" aria-labelledby="privacy-title">
+    <div class="modal-box">
+      <div class="modal-top">
+        <div class="modal-title" id="privacy-title">Privacy Policy</div>
+        <button class="modal-close" id="privacy-close-btn" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body">
+        <p><strong>Effective Date:</strong> November 17, 2026</p>
+        <h4>1. Information We Collect</h4>
+        <p>Jesse's Study Guides is a static, informational study website. We do not require user registration, accounts, or logins, and we do not directly collect names, email addresses, or payment details on this site.</p>
+        <h4>2. Hosting and Server Logs</h4>
+        <p>This website is hosted via Vercel. As part of standard web delivery and security operations, our hosting provider may automatically process basic technical request data such as your IP address, browser type, operating system, and timestamps in temporary server logs.</p>
+        <h4>3. Cookies and Tracking</h4>
+        <p>This website does not use advertising trackers or third-party marketing cookies.</p>
+        <h4>4. Third-Party Links</h4>
+        <p>This site includes an external link to Buy Me a Coffee for voluntary donations. If you choose to visit or donate through that platform, any information you provide is governed directly by Buy Me a Coffee's own privacy policy and terms of service.</p>
+        <h4>5. Changes to This Policy</h4>
+        <p>This policy may be updated as new features or study modules are added to the site. Questions regarding this notice can be directed to the site owner, Jesse Johnson.</p>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <p>&copy; 2026 Jesse Johnson. All rights reserved.</p>
+    <p>
+      This portal is an independent, unofficial personal study resource and is not affiliated with, endorsed by, or sponsored by ISC2, ISACA, CompTIA, NBCC, or any other certification body.
+      CISSP&reg; is a registered trademark of ISC2. CISM&reg; is a registered trademark of ISACA. CompTIA Security+&reg; is a registered trademark of CompTIA. NCE&reg; is a registered trademark of NBCC. All vendor materials, trademarks, and copyrights remain the property of their respective owners.
+    </p>
+    <div class="footer-links">
+      <button type="button" class="privacy-link" id="open-privacy-btn">Privacy Policy</button>
+    </div>
+  </footer>
+
+  <script>
+    const menuBtn = document.getElementById("mobile-menu-btn");
+    const navDrawer = document.getElementById("nav-drawer");
+    menuBtn.addEventListener("click", () => {
+      const isOpen = navDrawer.classList.toggle("open");
+      menuBtn.setAttribute("aria-expanded", String(isOpen));
+      menuBtn.innerHTML = isOpen ? "Close &#10005;" : "Menu &#9776;";
+    });
+
+    const privacyModal = document.getElementById("privacy-modal");
+    document.getElementById("open-privacy-btn").addEventListener("click", () => privacyModal.classList.add("open"));
+    document.getElementById("privacy-close-btn").addEventListener("click", () => privacyModal.classList.remove("open"));
+    privacyModal.addEventListener("click", (e) => { if (e.target === privacyModal) privacyModal.classList.remove("open"); });
+  </script>
+<script src="theme.js"></script>
+</body>
+</html>
