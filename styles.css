@@ -745,3 +745,69 @@ footer p:first-child { color: var(--text-secondary); font-weight: 600; }
 /* Brand identity: neon green by default, purple interaction state. */
 .brand-title,.brand-title:visited{color:var(--lime);text-shadow:0 0 10px rgba(158,255,51,.16)}
 .brand-title:hover,.brand-title:focus-visible,.brand-title:active{color:#b78cff;text-shadow:0 0 8px rgba(183,140,255,.55),0 0 18px rgba(183,140,255,.32)}
+
+/* Light mode overrides for games, exams, and hard-coded dark elements */
+[data-theme="light"] .hub-summary,
+[data-theme="light"] .arcade-panel,
+[data-theme="light"] .game-panel,
+[data-theme="light"] .exam-panel,
+[data-theme="light"] .quiz-area,
+[data-theme="light"] .feedback,
+[data-theme="light"] .modal-box,
+[data-theme="light"] .modal-body {
+  background: #ffffff !important;
+  color: #050505;
+  border-color: #ced0d4;
+}
+[data-theme="light"] .hub-summary strong,
+[data-theme="light"] .module-card h3,
+[data-theme="light"] .game-title,
+[data-theme="light"] .arcade-game-title,
+[data-theme="light"] .q-text,
+[data-theme="light"] .opt-btn,
+[data-theme="light"] .choice,
+[data-theme="light"] .prompt {
+  color: #050505 !important;
+}
+[data-theme="light"] .game-desc,
+[data-theme="light"] .arcade-intro-text,
+[data-theme="light"] .hub-summary p {
+  color: #65676b !important;
+}
+[data-theme="light"] .domain-pill,
+[data-theme="light"] .badge {
+  background: #e7f3ff !important;
+  color: #1877f2 !important;
+  border-color: #1877f2;
+}
+[data-theme="light"] .domain-pill span { color: #1877f2 !important; }
+[data-theme="light"] .opt-btn:hover,
+[data-theme="light"] .choice:hover {
+  background: #e7f3ff !important;
+  border-color: #1877f2 !important;
+}
+[data-theme="light"] .opt-btn.correct,
+[data-theme="light"] .choice.correct {
+  background: #e7f3ff !important;
+  border-color: #1877f2 !important;
+  color: #050505 !important;
+}
+[data-theme="light"] .opt-btn.wrong,
+[data-theme="light"] .choice.wrong {
+  background: #fff0f0 !important;
+  border-color: #fa3e3e !important;
+}
+[data-theme="light"] aside {
+  background: #ffffff;
+  border-color: #ced0d4;
+}
+[data-theme="light"] .topbar {
+  background: #ffffff;
+  border-color: #ced0d4;
+  color: #65676b;
+}
+[data-theme="light"] .icon,
+[data-theme="light"] .nav-item svg,
+[data-theme="light"] .badge-icon {
+  color: #1877f2;
+}
