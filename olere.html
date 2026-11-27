@@ -10,9 +10,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
   <style>
-    .hub-summary { background: rgba(16, 23, 38, 0.78); border: 1px solid var(--border-slate); border-left: 3px solid #c45c26; border-radius: 10px; padding: 1.15rem 1.35rem; margin-bottom: 1.5rem; max-width: 780px; }
-    .hub-summary p { color: var(--text-secondary); line-height: 1.68; font-size: 0.95rem; }
-    .hub-summary strong { color: #fff; }
     .domain-pills { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.85rem; }
     .domain-pill { font-family: 'JetBrains Mono', monospace; font-size: 0.68rem; padding: 0.28rem 0.6rem; border-radius: 6px; background: rgba(13, 18, 28, 0.9); border: 1px solid var(--border-slate); color: var(--text-secondary); }
     .domain-pill span { color: #e8a87c; font-weight: 700; }
@@ -24,6 +21,8 @@
     .module-card p { font-size: 0.88rem; color: var(--text-secondary); line-height: 1.55; }
     .btn-ok { padding: 0.75rem 1.25rem; border-radius: 9px; border: none; background: #c45c26; color: #fff; font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em; text-decoration: none; cursor: pointer; display: inline-flex; align-items: center; gap: 0.4rem; }
     .btn-ok:hover { background: #a34a1c; }
+    .about-btn { margin-top:0.6rem; padding:0.45rem 0.9rem; border-radius:7px; border:1px solid var(--border-slate); background:transparent; color:var(--text-secondary); font-family:'JetBrains Mono',monospace; font-size:0.72rem; cursor:pointer; }
+    .about-btn:hover { border-color:#c45c26; color:#c45c26; }
   </style>
 </head>
 <body>
@@ -60,17 +59,7 @@
       <main class="content-body">
         <div class="eyebrow">Oklahoma</div>
         <h1 class="hero-headline">OLERE<br /><span class="outline">(OKLAHOMA)</span></h1>
-        <div class="hub-summary">
-          <p>
-            The <strong>Oklahoma Legal and Ethical Responsibilities Examination (OLERE)</strong> tests knowledge of state-specific counseling laws, LPC regulations, and ethical standards required for licensure in Oklahoma. Content covers the Oklahoma Licensed Professional Counselor Act, administrative rules, mandated reporting, scope of practice, and continuing education requirements.
-          </p>
-          <div class="domain-pills">
-            <div class="domain-pill"><span>LPC Act</span> Title 59</div>
-            <div class="domain-pill"><span>Rules</span> OAC 86:10</div>
-            <div class="domain-pill"><span>Ethics</span> ACA + OK</div>
-            <div class="domain-pill"><span>Reporting</span> Mandated</div>
-          </div>
-        </div>
+        <button type="button" class="about-btn" id="open-about-btn">About this exam</button>
         <div class="module-grid">
           <div class="module-card interactive">
             <div>
@@ -97,6 +86,23 @@
       </main>
     </div>
   </div>
+  <div class="modal-backdrop" id="about-modal" role="dialog" aria-modal="true">
+    <div class="modal-box">
+      <div class="modal-top">
+        <div class="modal-title">About OLERE</div>
+        <button class="modal-close" id="about-close-btn" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body">
+        <p>The <strong>Oklahoma Legal and Ethical Responsibilities Examination (OLERE)</strong> tests knowledge of state-specific counseling laws, LPC regulations, and ethical standards required for licensure in Oklahoma. Content covers the Oklahoma Licensed Professional Counselor Act, administrative rules, mandated reporting, scope of practice, and continuing education requirements.</p>
+        <div class="domain-pills">
+          <div class="domain-pill"><span>LPC Act</span> Title 59</div>
+          <div class="domain-pill"><span>Rules</span> OAC 86:10</div>
+          <div class="domain-pill"><span>Ethics</span> ACA + OK</div>
+          <div class="domain-pill"><span>Reporting</span> Mandated</div>
+        </div>
+      </div>
+    </div>
+  </div>
   <footer>
     <p>&copy; 2026 Jesse Johnson. All rights reserved.</p>
     <p>Independent study resource. Not affiliated with the Oklahoma State Board of Behavioral Health or NBCC. OLERE content is for educational practice only.</p>
@@ -111,6 +117,10 @@
         menuBtn.innerHTML = isOpen ? "Close &#10005;" : "Menu &#9776;";
       });
     }
+    const aboutModal = document.getElementById('about-modal');
+    document.getElementById('open-about-btn').onclick = () => aboutModal.classList.add('open');
+    document.getElementById('about-close-btn').onclick = () => aboutModal.classList.remove('open');
+    aboutModal.onclick = (e) => { if (e.target === aboutModal) aboutModal.classList.remove('open'); };
   </script>
 <script src="theme.js"></script>
 </body>
