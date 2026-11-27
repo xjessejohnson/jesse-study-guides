@@ -10,21 +10,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
   <style>
-    .hub-summary {
-      background: rgba(16, 23, 38, 0.78);
-      border: 1px solid var(--border-slate);
-      border-left: 3px solid var(--cyan);
-      border-radius: 10px;
-      padding: 1.15rem 1.35rem;
-      margin-bottom: 1.5rem;
-      max-width: 780px;
-    }
-    .hub-summary p {
-      color: var(--text-secondary);
-      line-height: 1.68;
-      font-size: 0.95rem;
-    }
-    .hub-summary strong { color: #fff; }
     .domain-pills {
       display: flex;
       flex-wrap: wrap;
@@ -106,6 +91,19 @@
       box-shadow: 0 0 22px rgba(158, 255, 51, 0.35);
       transform: translateY(-1px);
     }
+    .about-btn {
+      margin-top: 0.6rem;
+      padding: 0.45rem 0.9rem;
+      border-radius: 7px;
+      border: 1px solid var(--border-slate);
+      background: transparent;
+      color: var(--text-secondary);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+    .about-btn:hover { border-color: var(--cyan); color: var(--cyan); }
   </style>
 </head>
 <body>
@@ -153,18 +151,7 @@
           CISM<br />
           <span class="outline">STUDY HUB</span>
         </h1>
-
-        <div class="hub-summary">
-          <p>
-            The <strong>Certified Information Security Manager (CISM)</strong> is an executive management credential issued by <strong>ISACA</strong>. It consists of 150 multiple-choice questions scored on a 200 to 800 scale (<strong>450+ required to pass</strong>) across four domains focused on enterprise governance, risk management, program development, and incident response.
-          </p>
-          <div class="domain-pills">
-            <div class="domain-pill">1. Information Security Governance <span>17%</span></div>
-            <div class="domain-pill">2. Information Security Risk Management <span>20%</span></div>
-            <div class="domain-pill">3. Information Security Program <span>33%</span></div>
-            <div class="domain-pill">4. Incident Management <span>30%</span></div>
-          </div>
-        </div>
+        <button type="button" class="about-btn" id="open-about-btn">About this exam</button>
 
         <div class="module-grid">
           <div class="module-card interactive">
@@ -201,6 +188,25 @@
           </div>
         </div>
       </main>
+    </div>
+  </div>
+
+  <!-- About Modal -->
+  <div class="modal-backdrop" id="about-modal" role="dialog" aria-modal="true" aria-labelledby="about-title">
+    <div class="modal-box">
+      <div class="modal-top">
+        <div class="modal-title" id="about-title">About CISM</div>
+        <button class="modal-close" id="about-close-btn" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body">
+        <p>The <strong>Certified Information Security Manager (CISM)</strong> is an executive management credential issued by <strong>ISACA</strong>. It consists of 150 multiple-choice questions scored on a 200 to 800 scale (<strong>450+ required to pass</strong>) across four domains focused on enterprise governance, risk management, program development, and incident response.</p>
+        <div class="domain-pills">
+          <div class="domain-pill">1. Information Security Governance <span>17%</span></div>
+          <div class="domain-pill">2. Information Security Risk Management <span>20%</span></div>
+          <div class="domain-pill">3. Information Security Program <span>33%</span></div>
+          <div class="domain-pill">4. Incident Management <span>30%</span></div>
+        </div>
+      </div>
     </div>
   </div>
 
@@ -246,6 +252,11 @@
       menuBtn.setAttribute("aria-expanded", String(isOpen));
       menuBtn.innerHTML = isOpen ? "Close &#10005;" : "Menu &#9776;";
     });
+
+    const aboutModal = document.getElementById("about-modal");
+    document.getElementById("open-about-btn").addEventListener("click", () => aboutModal.classList.add("open"));
+    document.getElementById("about-close-btn").addEventListener("click", () => aboutModal.classList.remove("open"));
+    aboutModal.addEventListener("click", (e) => { if (e.target === aboutModal) aboutModal.classList.remove("open"); });
 
     const privacyModal = document.getElementById("privacy-modal");
     document.getElementById("open-privacy-btn").addEventListener("click", () => privacyModal.classList.add("open"));
