@@ -13,15 +13,14 @@
   <link rel="stylesheet" href="styles.css" />
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap&family=JetBrains+Mono:wght@400;700&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
   <style>
-    .hub-summary { background: rgba(16,23,38,0.78); border: 1px solid var(--border-slate); border-left: 3px solid #ef4444; border-radius: 10px; padding: 1.15rem 1.35rem; margin-bottom: 1.5rem; max-width: 780px; }
-    .hub-summary p { color: var(--text-secondary); line-height: 1.68; }
-    .hub-summary strong { color: #fff; }
     .module-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 1.25rem; margin-top: 1.25rem; }
     .module-card { background: var(--bg-card); border: 1px solid var(--border-slate); border-radius: 12px; padding: 1.45rem; display: flex; flex-direction: column; justify-content: space-between; gap: 1.25rem; }
     .module-card.interactive:hover { border-color: #ef4444; transform: translateY(-2px); }
     .module-card h3 { font-family: 'Archivo Black', sans-serif; font-size: 1.02rem; text-transform: uppercase; color: #fff; margin: 0 0 0.4rem; }
     .module-card p { font-size: 0.88rem; color: var(--text-secondary); line-height: 1.55; }
     .btn-sec { padding: 0.75rem 1.25rem; border-radius: 9px; border: none; background: #ef4444; color: #fff; font-family: 'JetBrains Mono', monospace; font-weight: 700; font-size: 0.8rem; text-transform: uppercase; text-decoration: none; display: inline-flex; }
+    .about-btn { margin-top:0.6rem; padding:0.45rem 0.9rem; border-radius:7px; border:1px solid var(--border-slate); background:transparent; color:var(--text-secondary); font-family:'JetBrains Mono',monospace; font-size:0.72rem; cursor:pointer; }
+    .about-btn:hover { border-color:#ef4444; color:#ef4444; }
   </style>
 </head>
 <body>
@@ -58,9 +57,7 @@
       <main class="content-body">
         <div class="eyebrow">CompTIA</div>
         <h1 class="hero-headline">SECURITY+<br /><span class="outline">SY0-701</span></h1>
-        <div class="hub-summary">
-          <p>CompTIA <strong>Security+</strong> validates baseline cybersecurity skills: threats, architecture, operations, and program management. Practice here covers the core domains used on the current exam.</p>
-        </div>
+        <button type="button" class="about-btn" id="open-about-btn">About this exam</button>
         <div class="module-grid">
           <div class="module-card interactive">
             <div>
@@ -87,6 +84,17 @@
       </main>
     </div>
   </div>
+  <div class="modal-backdrop" id="about-modal" role="dialog" aria-modal="true">
+    <div class="modal-box">
+      <div class="modal-top">
+        <div class="modal-title">About Security+</div>
+        <button class="modal-close" id="about-close-btn" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body">
+        <p>CompTIA <strong>Security+</strong> validates baseline cybersecurity skills: threats, architecture, operations, and program management. Practice here covers the core domains used on the current exam.</p>
+      </div>
+    </div>
+  </div>
   <footer>
     <p>&copy; 2026 Jesse Johnson. All rights reserved.</p>
     <p>Independent study resource. Not affiliated with CompTIA. Security+ is a trademark of CompTIA.</p>
@@ -94,6 +102,10 @@
   <script>
     const b = document.getElementById('mobile-menu-btn'), n = document.getElementById('nav-drawer');
     if (b && n) b.onclick = () => n.classList.toggle('open');
+    const aboutModal = document.getElementById('about-modal');
+    document.getElementById('open-about-btn').onclick = () => aboutModal.classList.add('open');
+    document.getElementById('about-close-btn').onclick = () => aboutModal.classList.remove('open');
+    aboutModal.onclick = (e) => { if (e.target === aboutModal) aboutModal.classList.remove('open'); };
   </script>
 <script src="theme.js"></script>
 </body>
