@@ -1,0 +1,1397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>License Ding | Jesse's Study Guides</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-main: #070b12;
+      --bg-card: #0d121c;
+      --bg-panel: #121927;
+      --border-slate: #1e293b;
+      --cyan: #22d3ee;
+      --cyan-dim: rgba(34, 211, 238, 0.14);
+      --lime: #34d399;
+      --rose: #fb7185;
+      --amber: #fbbf24;
+      --text-primary: #f8fafc;
+      --text-secondary: #94a3b8;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      background: var(--bg-main);
+      color: var(--text-primary);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .arcade-shell {
+      width: 100%;
+      max-width: 780px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-slate);
+      border-radius: 18px;
+      overflow: hidden;
+      box-shadow: 0 24px 65px rgba(0, 0, 0, 0.75);
+      display: flex;
+      flex-direction: column;
+      gap: 0.9rem;
+      padding: 1.05rem;
+    }
+
+    .top-hud {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 0.65rem;
+      padding-bottom: 0.8rem;
+      border-bottom: 1px solid var(--border-slate);
+    }
+
+    .brand-group .tag {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      color: var(--cyan);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .brand-group h1 {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: clamp(1.25rem, 3vw, 1.7rem);
+      letter-spacing: 0.03em;
+      color: #fff;
+      text-transform: uppercase;
+    }
+
+    .hud-stats {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.82rem;
+    }
+
+    .hud-pill {
+      background: var(--bg-panel);
+      border: 1px solid var(--border-slate);
+      border-radius: 10px;
+      padding: 0.45rem 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .dings-pill {
+      border-color: rgba(251, 113, 133, 0.45);
+      background: rgba(251, 113, 133, 0.08);
+    }
+
+    .dings-count {
+      color: var(--rose);
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+
+    .progress-count {
+      color: var(--cyan);
+      font-weight: 700;
+    }
+
+    .restart-btn {
+      background: var(--bg-panel);
+      color: #fff;
+      border: 1px solid var(--border-slate);
+      border-radius: 10px;
+      padding: 0.48rem 0.85rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.76rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.2s ease;
+    }
+
+    .restart-btn:hover {
+      border-color: var(--cyan);
+      background: var(--cyan-dim);
+    }
+
+    /* Illustrated Therapy Office Scene */
+    .office-scene {
+      position: relative;
+      width: 100%;
+      border-radius: 14px;
+      overflow: hidden;
+      border: 1px solid var(--border-slate);
+      background: #0b1220;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .office-svg-wrap {
+      position: relative;
+      width: 100%;
+      height: 310px;
+      display: block;
+    }
+
+    .office-svg-wrap svg {
+      width: 100%;
+      height: 100%;
+      display: block;
+    }
+
+    .correct-next-btn {
+      position: absolute;
+      top: 14px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+      color: #04130d;
+      border: 2px solid #a7f3d0;
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 0.92rem;
+      letter-spacing: 0.02em;
+      padding: 0.55rem 1.25rem;
+      border-radius: 999px;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.55);
+      cursor: pointer;
+      display: none;
+      align-items: center;
+      gap: 0.45rem;
+      z-index: 30;
+      transition: transform 0.15s ease, filter 0.15s ease;
+    }
+
+    .correct-next-btn.visible {
+      display: inline-flex;
+    }
+
+    .correct-next-btn:hover {
+      transform: translateX(-50%) scale(1.03);
+      filter: brightness(1.06);
+    }
+
+    .client-dialogue-bar {
+      background: rgba(9, 14, 23, 0.96);
+      border-top: 1px solid var(--border-slate);
+      padding: 0.95rem 1.15rem;
+    }
+
+    .dialogue-meta {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 0.35rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.72rem;
+      color: var(--amber);
+      text-transform: uppercase;
+    }
+
+    .client-statement {
+      font-size: clamp(0.95rem, 2.1vw, 1.08rem);
+      line-height: 1.52;
+      color: #fff;
+      font-weight: 500;
+    }
+
+    /* Response Options */
+    .options-section {
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+    }
+
+    .options-heading {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.75rem;
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+    }
+
+    .options-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 0.7rem;
+    }
+
+    .response-btn {
+      background: var(--bg-panel);
+      border: 1px solid var(--border-slate);
+      border-radius: 12px;
+      padding: 0.9rem 0.95rem;
+      color: var(--text-primary);
+      text-align: left;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.9rem;
+      line-height: 1.42;
+      cursor: pointer;
+      transition: all 0.16s ease;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.65rem;
+      min-height: 74px;
+    }
+
+    .response-btn:hover:not(:disabled) {
+      border-color: var(--cyan);
+      background: var(--cyan-dim);
+      transform: translateY(-2px);
+    }
+
+    .response-btn:disabled {
+      opacity: 0.55;
+      cursor: default;
+    }
+
+    .opt-badge {
+      flex-shrink: 0;
+      width: 25px;
+      height: 25px;
+      border-radius: 7px;
+      background: rgba(34, 211, 238, 0.12);
+      border: 1px solid rgba(34, 211, 238, 0.35);
+      color: var(--cyan);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-top: 1px;
+    }
+
+    /* Pop-up Modals */
+    .modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(5, 8, 15, 0.62);
+      backdrop-filter: blur(4px);
+      z-index: 2000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    .modal-backdrop.open {
+      display: flex;
+    }
+
+    .modal-box {
+      width: 100%;
+      max-width: 540px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-slate);
+      border-radius: 16px;
+      padding: 1.25rem 1.4rem;
+      box-shadow: 0 24px 65px rgba(0, 0, 0, 0.85);
+      position: relative;
+      max-height: 85vh;
+      overflow-y: auto;
+    }
+
+    .modal-box.compact-ding {
+      max-width: 410px;
+      padding: 0.95rem 1.15rem;
+      border-color: rgba(251, 113, 133, 0.75);
+    }
+
+    .modal-box.ding-alert {
+      border-color: rgba(251, 113, 133, 0.65);
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 0.75rem;
+      margin-bottom: 0.6rem;
+      padding-bottom: 0.55rem;
+      border-bottom: 1px solid var(--border-slate);
+    }
+
+    .modal-title {
+      font-family: 'Archivo Black', sans-serif;
+      font-size: 0.92rem;
+      color: var(--rose);
+      text-transform: uppercase;
+      line-height: 1.3;
+    }
+
+    .modal-title.revoked {
+      font-size: 1.08rem;
+    }
+
+    .modal-title.victory {
+      color: var(--lime);
+    }
+
+    .close-x-btn {
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid var(--border-slate);
+      color: #fff;
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.95rem;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+
+    .close-x-btn:hover {
+      border-color: var(--rose);
+      color: var(--rose);
+    }
+
+    .modal-body-text {
+      font-size: 0.92rem;
+      line-height: 1.48;
+      color: var(--text-primary);
+    }
+
+    .revocation-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.8rem;
+      margin-top: 0.9rem;
+    }
+
+    .revocation-card {
+      background: var(--bg-panel);
+      border: 1px solid var(--border-slate);
+      border-left: 3px solid var(--rose);
+      border-radius: 10px;
+      padding: 0.8rem 0.95rem;
+      text-align: left;
+    }
+
+    .revocation-card .q-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.74rem;
+      color: var(--amber);
+      margin-bottom: 0.25rem;
+    }
+
+    .revocation-card .wrong-ans {
+      font-size: 0.85rem;
+      color: var(--rose);
+      margin-bottom: 0.25rem;
+    }
+
+    .revocation-card .right-ans {
+      font-size: 0.87rem;
+      color: var(--lime);
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+    }
+
+    .revocation-card .why-ans {
+      font-size: 0.83rem;
+      color: var(--text-secondary);
+      line-height: 1.42;
+    }
+
+    .modal-footer-actions {
+      margin-top: 1.15rem;
+      display: flex;
+      justify-content: flex-end;
+      flex-wrap: wrap;
+      gap: 0.7rem;
+    }
+
+    .primary-action-btn {
+      background: var(--cyan);
+      color: #061018;
+      border: none;
+      border-radius: 10px;
+      padding: 0.72rem 1.15rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .primary-action-btn:hover {
+      filter: brightness(1.08);
+    }
+
+    .secondary-action-btn {
+      background: var(--bg-panel);
+      color: #fff;
+      border: 1px solid var(--border-slate);
+      border-radius: 10px;
+      padding: 0.72rem 1.15rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.82rem;
+      font-weight: 700;
+      text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      cursor: pointer;
+    }
+
+    .secondary-action-btn:hover {
+      border-color: var(--cyan);
+      background: var(--cyan-dim);
+    }
+
+    @media (max-width: 680px) {
+      .options-grid {
+        grid-template-columns: 1fr;
+      }
+
+      .office-svg-wrap {
+        height: 265px;
+      }
+
+      .arcade-shell {
+        padding: 0.85rem;
+        border-radius: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="arcade-shell">
+    <div class="top-hud">
+      <div class="brand-group">
+        <div class="tag">NCE Clinical Practice</div>
+        <h1>LICENSE DING</h1>
+      </div>
+
+      <div class="hud-stats">
+        <div class="hud-pill">
+          <span>Client:</span>
+          <strong class="progress-count" id="client-progress">1 of 20</strong>
+        </div>
+        <div class="hud-pill dings-pill">
+          <span>Dings:</span>
+          <span class="dings-count" id="dings-counter">0 / 3</span>
+        </div>
+        <button type="button" class="restart-btn" id="new-session-btn">New Sessions?</button>
+      </div>
+    </div>
+
+    <div class="office-scene">
+      <div class="office-svg-wrap">
+        <button type="button" class="correct-next-btn" id="correct-next-btn">Correct! Next Client</button>
+
+        <svg viewBox="0 0 920 320" preserveAspectRatio="xMidYMid slice" role="img" aria-label="Detailed therapy office room with client and therapist seated across a desk">
+          <defs>
+            <linearGradient id="officeWall" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#1c2a44" />
+              <stop offset="100%" stop-color="#111a2b" />
+            </linearGradient>
+            <linearGradient id="wainscotWall" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#172338" />
+              <stop offset="100%" stop-color="#101827" />
+            </linearGradient>
+            <linearGradient id="woodFloor" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#311f14" />
+              <stop offset="100%" stop-color="#1a100a" />
+            </linearGradient>
+            <linearGradient id="deskSurface" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#a44d18" />
+              <stop offset="100%" stop-color="#682d0c" />
+            </linearGradient>
+            <linearGradient id="windowGlass" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0%" stop-color="#19426b" />
+              <stop offset="65%" stop-color="#2c6391" />
+              <stop offset="100%" stop-color="#437ba8" />
+            </linearGradient>
+            <radialGradient id="floorRug" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#2a3d5c" stop-opacity="0.72" />
+              <stop offset="100%" stop-color="#162133" stop-opacity="0.15" />
+            </radialGradient>
+          </defs>
+
+          <!-- Wall, Chair Rail & Wainscoting -->
+          <rect x="0" y="0" width="920" height="162" fill="url(#officeWall)" />
+          <rect x="0" y="162" width="920" height="44" fill="url(#wainscotWall)" />
+          <rect x="0" y="160" width="920" height="5" fill="#394c6e" />
+          <rect x="0" y="204" width="920" height="6" fill="#25334a" />
+
+          <!-- Floor Planks & Woven Rug -->
+          <rect x="0" y="210" width="920" height="110" fill="url(#woodFloor)" />
+          <line x1="0" y1="236" x2="920" y2="236" stroke="#130b07" stroke-width="2" />
+          <line x1="0" y1="264" x2="920" y2="264" stroke="#130b07" stroke-width="2" />
+          <line x1="0" y1="292" x2="920" y2="292" stroke="#130b07" stroke-width="2" />
+          <ellipse cx="460" cy="252" rx="330" ry="34" fill="url(#floorRug)" stroke="#3e567d" stroke-width="1.5" />
+
+          <!-- Center Window with Curtains & Daylight -->
+          <rect x="372" y="24" width="176" height="112" rx="9" fill="url(#windowGlass)" stroke="#475569" stroke-width="5" />
+          <line x1="460" y1="24" x2="460" y2="136" stroke="#475569" stroke-width="3.5" />
+          <line x1="372" y1="80" x2="548" y2="80" stroke="#475569" stroke-width="3.5" />
+          <rect x="366" y="136" width="188" height="7" rx="2.5" fill="#64748b" />
+          <path d="M364 20 L388 20 L382 143 L360 143 Z" fill="#334155" opacity="0.85" />
+          <path d="M556 20 L532 20 L538 143 L560 143 Z" fill="#334155" opacity="0.85" />
+          <polygon points="374,136 546,136 650,282 270,282" fill="rgba(186, 230, 253, 0.05)" />
+
+          <!-- Compact Diploma Frame on Left Wall -->
+          <rect x="74" y="54" width="64" height="46" rx="3" fill="#f8fafc" stroke="#b45309" stroke-width="3" />
+          <line x1="84" y1="67" x2="128" y2="67" stroke="#334155" stroke-width="2.2" stroke-linecap="round" />
+          <line x1="84" y1="76" x2="120" y2="76" stroke="#64748b" stroke-width="1.8" stroke-linecap="round" />
+          <line x1="84" y1="84" x2="108" y2="84" stroke="#94a3b8" stroke-width="1.5" stroke-linecap="round" />
+          <circle cx="126" cy="89" r="5.5" fill="#eab308" stroke="#a16207" stroke-width="1.2" />
+
+          <!-- Indoor Plant -->
+          <rect x="304" y="168" width="30" height="36" rx="4" fill="#9a3412" />
+          <rect x="301" y="164" width="36" height="6" rx="2" fill="#c2410c" />
+          <path d="M319 164 Q300 138 286 144 Q303 154 319 164 Z" fill="#10b981" />
+          <path d="M319 164 Q319 124 321 122 Q329 140 319 164 Z" fill="#34d399" />
+          <path d="M319 164 Q338 136 352 144 Q335 154 319 164 Z" fill="#059669" />
+
+          <!-- Right Wall Bookshelf -->
+          <rect x="735" y="34" width="132" height="122" rx="4" fill="#4a2e1b" stroke="#29170c" stroke-width="3" />
+          <line x1="735" y1="74" x2="867" y2="74" stroke="#29170c" stroke-width="3.5" />
+          <line x1="735" y1="114" x2="867" y2="114" stroke="#29170c" stroke-width="3.5" />
+          <rect x="745" y="44" width="15" height="27" rx="1.5" fill="#22d3ee" />
+          <rect x="763" y="48" width="13" height="23" rx="1.5" fill="#34d399" />
+          <rect x="779" y="42" width="17" height="29" rx="1.5" fill="#fb7185" />
+          <rect x="799" y="50" width="14" height="21" rx="1.5" fill="#fbbf24" />
+          <rect x="747" y="84" width="18" height="27" rx="1.5" fill="#818cf8" />
+          <rect x="768" y="87" width="15" height="24" rx="1.5" fill="#f472b6" />
+          <rect x="786" y="82" width="13" height="29" rx="1.5" fill="#38bdf8" />
+
+          <!-- Client Armchair (Left) -->
+          <rect x="148" y="146" width="20" height="84" rx="6" fill="#334155" />
+          <rect x="148" y="204" width="90" height="20" rx="7" fill="#475569" />
+          <rect x="150" y="190" width="86" height="15" rx="5" fill="#64748b" />
+          <rect x="160" y="224" width="8" height="44" rx="2" fill="#1e293b" />
+          <rect x="218" y="224" width="8" height="44" rx="2" fill="#1e293b" />
+
+          <!-- Client Character (Seated Left) -->
+          <g id="client-character-group">
+            <rect x="188" y="206" width="13" height="46" rx="5" fill="#1e293b" />
+            <rect x="207" y="206" width="13" height="46" rx="5" fill="#1e293b" />
+            <ellipse cx="195" cy="254" rx="11" ry="4.5" fill="#0f172a" />
+            <ellipse cx="215" cy="254" rx="11" ry="4.5" fill="#0f172a" />
+            <g id="client-hair-back"></g>
+            <path id="client-shirt" d="M180 152 Q203 145 226 152 L231 208 L176 208 Z" fill="#38bdf8" stroke="#0f172a" stroke-width="2" />
+            <path id="client-collar" d="M194 150 L203 162 L212 150" fill="none" stroke="#e0f2fe" stroke-width="2.4" stroke-linecap="round" />
+            <path id="client-arm" d="M218 160 L242 182 L228 192" stroke="#f1c29b" stroke-width="8.5" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+            <circle id="client-hand" cx="228" cy="192" r="4.8" fill="#f1c29b" />
+            <circle id="client-head" cx="203" cy="122" r="21" fill="#f1c29b" stroke="#0f172a" stroke-width="1.8" />
+            <circle id="client-ear-l" cx="182" cy="124" r="4" fill="#f1c29b" />
+            <circle id="client-ear-r" cx="224" cy="124" r="4" fill="#f1c29b" />
+            <circle cx="198" cy="121" r="2.5" fill="#0f172a" />
+            <circle cx="213" cy="121" r="2.5" fill="#0f172a" />
+            <circle cx="198.7" cy="120.2" r="0.85" fill="#ffffff" />
+            <circle cx="213.7" cy="120.2" r="0.85" fill="#ffffff" />
+            <path id="client-brow-l" d="M193 115 Q198 113 202 115" stroke="#1e293b" stroke-width="1.9" fill="none" stroke-linecap="round" />
+            <path id="client-brow-r" d="M209 115 Q214 113 218 115" stroke="#1e293b" stroke-width="1.9" fill="none" stroke-linecap="round" />
+            <path d="M206 121 L204 127 L207 128" stroke="#9a5b3c" stroke-width="1.7" fill="none" stroke-linecap="round" stroke-linejoin="round" />
+            <path id="client-mouth" d="M200 134 Q206 131 212 134" stroke="#7c2d12" stroke-width="2.1" fill="none" stroke-linecap="round" />
+            <g id="client-hair-front"></g>
+          </g>
+
+          <rect id="client-badge-bg" x="155" y="274" width="96" height="22" rx="6" fill="#121c2e" stroke="#38bdf8" stroke-width="1.5" />
+          <text id="client-svg-label" x="203" y="289" text-anchor="middle" fill="#7dd3fc" font-family="JetBrains Mono, monospace" font-size="11" font-weight="700">JORDAN</text>
+
+          <!-- Office Desk (Center) -->
+          <rect x="366" y="190" width="188" height="15" rx="5" fill="url(#deskSurface)" stroke="#451a03" stroke-width="2.5" />
+          <rect x="376" y="205" width="168" height="11" fill="#5c280a" />
+          <rect x="386" y="216" width="15" height="62" fill="#451a03" />
+          <rect x="519" y="216" width="15" height="62" fill="#451a03" />
+          <rect x="398" y="180" width="38" height="10" rx="2" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.2" />
+          <line x1="405" y1="184" x2="429" y2="184" stroke="#94a3b8" stroke-width="1.4" />
+          <line x1="405" y1="187" x2="422" y2="187" stroke="#94a3b8" stroke-width="1.4" />
+          <rect x="498" y="182" width="26" height="6" rx="2" fill="#22d3ee" />
+          <circle cx="460" cy="184" r="4.5" fill="#eab308" />
+
+          <!-- Therapist Chair (Right) -->
+          <rect x="752" y="142" width="20" height="88" rx="6" fill="#334155" />
+          <rect x="682" y="204" width="90" height="20" rx="7" fill="#475569" />
+          <rect x="684" y="190" width="86" height="15" rx="5" fill="#64748b" />
+          <rect x="694" y="224" width="8" height="44" rx="2" fill="#1e293b" />
+          <rect x="752" y="224" width="8" height="44" rx="2" fill="#1e293b" />
+
+          <!-- Therapist Character ("You", Seated Right) -->
+          <g id="therapist-character-group">
+            <rect x="702" y="206" width="13" height="46" rx="5" fill="#1e293b" />
+            <rect x="721" y="206" width="13" height="46" rx="5" fill="#1e293b" />
+            <ellipse cx="708" cy="254" rx="11" ry="4.5" fill="#0f172a" />
+            <ellipse cx="728" cy="254" rx="11" ry="4.5" fill="#0f172a" />
+            <path d="M696 152 Q719 145 742 152 L747 208 L691 208 Z" fill="#0d9488" stroke="#0f172a" stroke-width="2" />
+            <polygon points="713,150 725,150 719,182" fill="#f8fafc" />
+            <path d="M704 160 L680 182 L696 192" stroke="#e8be9c" stroke-width="8.5" stroke-linecap="round" stroke-linejoin="round" fill="none" />
+            <circle cx="696" cy="192" r="4.8" fill="#e8be9c" />
+            <circle cx="719" cy="122" r="21" fill="#e8be9c" stroke="#0f172a" stroke-width="1.8" />
+            <circle cx="698" cy="124" r="4" fill="#e8be9c" />
+            <circle cx="740" cy="124" r="4" fill="#e8be9c" />
+            <path d="M698 120 C698 95, 740 95, 740 120 C733 107, 722 104, 712 105 C704 106, 700 112, 698 120 Z" fill="#3b281c" />
+            <rect x="702" y="117" width="12.5" height="8.5" rx="2.2" fill="rgba(255,255,255,0.18)" stroke="#0f172a" stroke-width="1.9" />
+            <rect x="718.5" y="117" width="12.5" height="8.5" rx="2.2" fill="rgba(255,255,255,0.18)" stroke="#0f172a" stroke-width="1.9" />
+            <line x1="714.5" y1="121" x2="718.5" y2="121" stroke="#0f172a" stroke-width="1.9" />
+            <circle cx="708" cy="121.5" r="2.1" fill="#0f172a" />
+            <circle cx="724.5" cy="121.5" r="2.1" fill="#0f172a" />
+            <path d="M704 114 Q708.5 112 713 114" stroke="#3b281c" stroke-width="1.9" fill="none" stroke-linecap="round" />
+            <path d="M720 114 Q724.5 112 729 114" stroke="#3b281c" stroke-width="1.9" fill="none" stroke-linecap="round" />
+            <path d="M716 121 L714 127 L717 128" stroke="#9a5b3c" stroke-width="1.7" fill="none" stroke-linecap="round" />
+            <path d="M712 134 Q718 139 724 134" stroke="#7c2d12" stroke-width="2.1" fill="none" stroke-linecap="round" />
+          </g>
+
+          <rect x="667" y="274" width="104" height="22" rx="6" fill="#121c2e" stroke="#34d399" stroke-width="1.5" />
+          <text x="719" y="289" text-anchor="middle" fill="#6ee7b7" font-family="JetBrains Mono, monospace" font-size="11" font-weight="700">THERAPIST</text>
+        </svg>
+      </div>
+
+      <div class="client-dialogue-bar">
+        <div class="dialogue-meta">
+          <span id="scenario-domain">DOMAIN: HELPING RELATIONSHIPS</span>
+          <span id="scenario-role-tag">IN SESSION</span>
+        </div>
+        <p class="client-statement" id="client-statement">Loading client statement...</p>
+      </div>
+    </div>
+
+    <div class="options-section">
+      <div class="options-heading">Choose how you respond as a therapist on the NCE:</div>
+      <div class="options-grid" id="options-grid"></div>
+    </div>
+  </div>
+
+  <!-- Pop-up Modal -->
+  <div class="modal-backdrop" id="feedback-modal" role="dialog" aria-modal="true" aria-labelledby="feedback-modal-title">
+    <div class="modal-box ding-alert" id="feedback-modal-box">
+      <div class="modal-header">
+        <h2 class="modal-title" id="feedback-modal-title">That is not how a licensed therapist should respond to a client</h2>
+        <button type="button" class="close-x-btn" id="close-modal-x" aria-label="Close popup">X</button>
+      </div>
+      <div id="feedback-modal-body" class="modal-body-text"></div>
+      <div class="modal-footer-actions" id="feedback-modal-footer"></div>
+    </div>
+  </div>
+
+  <script>
+    const CLIENT_PERSONAS = [
+      { name: "Jordan", gender: "nonbinary", skin: "#f1c29b", shade: "#a56948", hair: "#1e293b", shirt: "#38bdf8", collar: "#e0f2fe", style: "short" },
+      { name: "Maya", gender: "female", skin: "#8d5524", shade: "#593212", hair: "#111827", shirt: "#f472b6", collar: "#fce7f3", style: "long" },
+      { name: "Devon", gender: "male", skin: "#e0ac69", shade: "#966634", hair: "#451a03", shirt: "#fb923c", collar: "#ffedd5", style: "crop" },
+      { name: "Elena", gender: "female", skin: "#f7d5b5", shade: "#b5825a", hair: "#7c2d12", shirt: "#a78bfa", collar: "#ede9fe", style: "bob" },
+      { name: "Carlos", gender: "male", skin: "#c68642", shade: "#7c4d1e", hair: "#0f172a", shirt: "#60a5fa", collar: "#dbeafe", style: "fade" },
+      { name: "Hannah", gender: "female", skin: "#fde2c8", shade: "#bc8c63", hair: "#b45309", shirt: "#facc15", collar: "#fef9c3", style: "ponytail" },
+      { name: "Malik", gender: "male", skin: "#5c3818", shade: "#2f1a09", hair: "#090d16", shirt: "#2dd4bf", collar: "#ccfbf1", style: "crop" },
+      { name: "Priya", gender: "female", skin: "#c68642", shade: "#7c4d1e", hair: "#111827", shirt: "#fb7185", collar: "#ffe4e6", style: "long" },
+      { name: "Trevor", gender: "male", skin: "#f3c69f", shade: "#a86d4a", hair: "#92400e", shirt: "#818cf8", collar: "#e0e7ff", style: "fade" },
+      { name: "Nadia", gender: "female", skin: "#d99b66", shade: "#8c5930", hair: "#1e1b4b", shirt: "#34d399", collar: "#d1fae5", style: "bob" },
+      { name: "Caleb", gender: "male", skin: "#f5cba7", shade: "#a8724b", hair: "#27272a", shirt: "#38bdf8", collar: "#e0f2fe", style: "short" },
+      { name: "Tessa", gender: "female", skin: "#8d5524", shade: "#593212", hair: "#18181b", shirt: "#fbbf24", collar: "#fef3c7", style: "ponytail" }
+    ];
+
+    // 200 distinct client statements & NCE clinical decision items with balanced option lengths & plausible traps
+    const NCE_SCENARIOS_200 = [
+      {
+        domain: "Helping Relationships",
+        client: "I read online that unconditional positive regard means agreeing with everything I do—is that what you're supposed to do here?",
+        options: [
+          "Yes, my role is to accept and agree with whatever you choose.",
+          "It means warm acceptance without conditional approval, not agreeing with harmful choices.",
+          "Positive regard means praising you whenever you feel upset.",
+          "Only when you are making healthy changes toward your goals."
+        ],
+        correct: 1,
+        explanation: "Unconditional positive regard (Rogers) means prizing the client without conditions of worth, not endorsing harmful behavior or abandoning clinical judgment."
+      },
+      {
+        domain: "Professional Orientation & Ethics",
+        client: "My cousin works at your clinic—can you tell me if my neighbor in the waiting room earlier comes here for depression?",
+        options: [
+          "I can't conf{irm} or deny anyone's client status without signed authorization.",
+          "I won't say their name, just whether they come regularly.",
+          "I can ask my cousin if that's okay to share with you.",
+          "I'll share general info since you're already a client here."
+        ],
+        correct: 0,
+        explanation: "Confidentiality bars conf{irm}ing or denying client identity or treatment to relatives or staff lacking proper authorization."
+      },
+      {
+        domain: "Professional Orientation & Ethics",
+        client: "I bought you this $400 watch to thank you for helping me—please take it, I really want you to have it.",
+        options: [
+          "Thank you, I'll wear it on special occasions.",
+          "High-value gifts cross boundary lines; let's explore what this gratitude means.",
+          "I'll take it only if it goes toward next month's copay.",
+          "Keep it until we terminate so it doesn't feel awkward."
+        ],
+        correct: 1,
+        explanation: "Accepting expensive gifts can create a dual relationship or boundary distortion; declining respectfully and exploring meaning is sound practice."
+      },
+      {
+        domain: "Helping Relationships",
+        client: "When someone says 'I hear you're feeling overwhelmed,' is that reflection of feeling or just paraphrasing?",
+        options: [
+          "Any restatement of what a client says counts as reflection of feeling.",
+          "Naming the emotion ('overwhelmed') reflects feeling; repeating facts is paraphrasing.",
+          "Reflection of feeling requires giving advice right after naming the emotion.",
+          "Paraphrasing is only used when a client stops talking."
+        ],
+        correct: 1,
+        explanation: "Reflection of feeling captures the emotional tone/affect, whereas paraphrasing restates cognitive content."
+      },
+      {
+        domain: "Social & Cultural Foundations",
+        client: "In my family, elders decide major life steps together, yet a past counselor told me I had to cut ties to be healthy.",
+        options: [
+          "Autonomy separate from family is the universal mark of maturity.",
+          "Collectivist family involvement has different meanings; let's examine your values.",
+          "Your old counselor probably saw something unhealthy in your family.",
+          "Distance from family usually resolves adult stress fastest."
+        ],
+        correct: 1,
+        explanation: "Multicultural competence avoids imposing individualistic norms onto collectivistic cultural values."
+      },
+      {
+        domain: "Human Growth & Development",
+        client: "Since retiring last month, I feel lost without my job title—doesn't retirement just mean relaxing?",
+        options: [
+          "Most retirees feel settled once they stay busy every afternoon.",
+          "Losing work structure and role identity often triggers transition grief.",
+          "You likely over-identified with work while you were employed.",
+          "Try not to overthink it while you have free time."
+        ],
+        correct: 1,
+        explanation: "Retirement alters daily routine, social status, and identity, making transition adjustment a normal developmental task."
+      },
+      {
+        domain: "Group Work",
+        client: "In group last night, a member kept talking over everyone—shouldn't you shut that down right away as the leader?",
+        options: [
+          "Yes, the leader should immediately silence or remove dominating members.",
+          "Blocking is sometimes used, while inviting feedback builds member ownership.",
+          "Group members always fix dominance patterns without leader help.",
+          "Let the loudest member speak first so they finish faster."
+        ],
+        correct: 1,
+        explanation: "Effective group leadership balances protection/blocking with fostering member-to-member feedback and responsibility."
+      },
+      {
+        domain: "Career Development",
+        client: "I'm exhausted as a nurse and thinking of switching to graphic design—is burnout proof I picked the wrong career?",
+        options: [
+          "Yes, sustained exhaustion means the occupation doesn't fit you.",
+          "Burnout reflects work strain and differs from core career values.",
+          "Changing fields mid-career usually lowers long-term satisfaction.",
+          "Take two weeks off before making any career plans."
+        ],
+        correct: 1,
+        explanation: "Separating workplace burnout/stressors from values and career interests prevents reactive career decisions."
+      },
+      {
+        domain: "Assessment & Testing",
+        client: "I scored 92% on an online personality test for narcissism—does that mean I have Narcissistic Personality Disorder?",
+        options: [
+          "Yes, scores above 90% reliably indicate a personality disorder.",
+          "No, unvalidated online quizzes cannot diagnose clinical disorders.",
+          "It means you show more narcissistic traits than most peers.",
+          "Online quizzes are accurate for traits but not diagnoses."
+        ],
+        correct: 1,
+        explanation: "Self-report internet quizzes lack clinical validation and cannot establish a formal psychiatric diagnosis."
+      },
+      {
+        domain: "Research & Program Evaluation",
+        client: "A new grounding exercise helped me sleep three nights in a row—doesn't that prove it works for insomnia?",
+        options: [
+          "Yes, consistent personal relief demonstrates treatment effectiveness.",
+          "Personal benefit helps you, but broader evidence requires controlled testing.",
+          "An exercise needs ten years of trials before being useful.",
+          "If it works for you, research evidence isn't relevant."
+        ],
+        correct: 1,
+        explanation: "Individual clinical helpfulness is distinct from empirical generalizability across broader populations."
+      },
+      {
+        domain: "Professional Orientation & Ethics",
+        client: "I've been thinking about ending my life tonight and have pills in my cabinet—can we just keep that between us?",
+        options: [
+          "I'll keep it private if you promise to stay safe until next week.",
+          "Immediate safety comes first; I must assess risk and build a plan.",
+          "Try not to focus on dark thoughts while we're talking.",
+          "We're almost out of time, so let's start there next session."
+        ],
+        correct: 1,
+        explanation: "Imminent self-harm risk supersedes routine secrecy; risk assessment, safety planning, and protective steps take priority."
+      },
+      {
+        domain: "Helping Relationships",
+        client: "When my manager critiques a report, I assume I'm getting fired—is that catastrophizing or just realistic caution?",
+        options: [
+          "Assuming the worst outcome from one critique is catastrophizing.",
+          "If you've been criticized before, expecting firing is logical.",
+          "Critique at work usually signals job insecurity.",
+          "Catastrophizing only happens when there's no real problem."
+        ],
+        correct: 0,
+        explanation: "Catastrophizing magnifies a setback into a worst-case disaster without proportional evidence."
+      },
+      {
+        domain: "Human Growth & Development",
+        client: "My 14-year-old argues with every rule all day, then asks me to sit by their bed at night—isn't that contradictory?",
+        options: [
+          "Yes, teens who want independence shouldn't seek bedtime comfort.",
+          "Adolescents often alternate between autonomy and secure attachment.",
+          "It usually signals regression to an earlier childhood stage.",
+          "Give f{irm} rules by day and stop sitting at night."
+        ],
+        correct: 1,
+        explanation: "Adolescence frequently involves shifting between striving for autonomy and seeking emotional reassurance."
+      },
+      {
+        domain: "Social & Cultural Foundations",
+        client: "People ask where I'm 'really' from even after I say I grew up here—am I overreacting if that bothers me?",
+        options: [
+          "Most people mean it innocently, so try to let it slide.",
+          "Repeatedly questioning belonging can feel invalidating; how does it hit you?",
+          "People ask everyone that question when making conversation.",
+          "You can usually tell whether they meant harm by their tone."
+        ],
+        correct: 1,
+        explanation: "Questions implying outsider status can function as microaggressions; validating impact and exploring meaning is supportive."
+      },
+      {
+        domain: "Group Work",
+        client: "I'm worried group members will judge me if I share my panic attacks—how do you prevent that?",
+        options: [
+          "I warn members not to judge anyone before you speak.",
+          "We set confidentiality norms and share struggles that build safety.",
+          "Most members are too focused on their own issues to notice.",
+          "You can wait to share until everyone else has opened up."
+        ],
+        correct: 1,
+        explanation: "Group safety relies on clear norms, confidentiality boundaries, and shared human struggle (universality)."
+      },
+      {
+        domain: "Career Development",
+        client: "I don't know every tool listed on a job posting—should I wait until I match all of them before applying?",
+        options: [
+          "Yes, applying without matching requirements wastes time.",
+          "Job posts often list wish-list items; let's check core fit.",
+          "Wait until you hit at least eighty percent of the list.",
+          "Entry-level roles rarely expect prior experience."
+        ],
+        correct: 1,
+        explanation: "Many job descriptions reflect ideal wish lists rather than strict minimums; evaluating core skills helps clients act."
+      },
+      {
+        domain: "Assessment & Testing",
+        client: "Why have me fill out a short mood check every week if I already tell you how my week went?",
+        options: [
+          "Brief scales track symptom shifts consistently alongside your story.",
+          "Clinics use them mainly to justify insurance billing.",
+          "They help catch details you might forget to mention.",
+          "Weekly forms are standard even when we don't use scores."
+        ],
+        correct: 0,
+        explanation: "Routine brief measures provide consistent longitudinal tracking to complement clinical narrative."
+      },
+      {
+        domain: "Research & Program Evaluation",
+        client: "If counseling helps on average by week four, why did I have a rougher week than week two?",
+        options: [
+          "Group averages smooth out individual ups and downs over time.",
+          "A setback in week four usually means the approach isn't fitting.",
+          "Progress in counseling should rise steadily every week.",
+          "Four weeks is too early to see real change."
+        ],
+        correct: 0,
+        explanation: "Group means do not describe uniform or linear progress for every individual client."
+      },
+      {
+        domain: "Professional Orientation & Ethics",
+        client: "My ex-spouse called the front desk asking if I come here—please don't conf{irm} anything.",
+        options: [
+          "I won't disclose anything about your care without your consent.",
+          "I'll tell them you're doing fine so they don't call back.",
+          "If you co-parent, they may have a right to know.",
+          "I'll let them leave a message if they don't ask directly."
+        ],
+        correct: 0,
+        explanation: "Confidentiality protects clients from unauthorized third-party disclosures, including ex-spouses."
+      },
+      {
+        domain: "Helping Relationships",
+        client: "I snap at my kids when stressed and feel awful after—isn't feeling guilty a good motivator?",
+        options: [
+          "Yes, guilt keeps you alert so you don't repeat it.",
+          "Spotting early stress cues helps before anger builds.",
+          "Occasional snapping is harmless if you apologize later.",
+          "Guilt usually fades once kids grow a bit older."
+        ],
+        correct: 1,
+        explanation: "Identifying antecedents and earlier stress regulation tools is more effective than relying on post-hoc guilt."
+      },
+      {
+        domain: "Human Growth & Development",
+        client: "My two-year-old says 'no' to everything, even treats—is that defiance or something else?",
+        options: [
+          "Toddlers test limits to practice emerging autonomy.",
+          "Saying no to treats shows defiance that needs f{irm} correction.",
+          "Two-year-olds usually only say no when overtired.",
+          "Limit choices until they understand consequences."
+        ],
+        correct: 0,
+        explanation: "Asserting 'no' in toddlerhood is a classic developmental expression of autonomy and self-assertion."
+      },
+      {
+        domain: "Social & Cultural Foundations",
+        client: "Because I'm a disabled veteran, people treat me like a fragile hero or look away—what's behind that?",
+        options: [
+          "People often rely on stereotypes when unsure how to connect.",
+          "Most folks mean well even when their reactions feel awkward.",
+          "Try not to focus on how strangers react in public.",
+          "Veterans often face mixed reactions after leaving service."
+        ],
+        correct: 0,
+        explanation: "Stereotypes and discomfort around disability/service roles can polarize reactions; validating impact centers the client."
+      },
+      {
+        domain: "Group Work",
+        client: "Can I message another group member privately between sessions if we're both going through a hard week?",
+        options: [
+          "Yes, peer contact between sessions is fine if kept brief.",
+          "Keeping work inside group protects safety and boundaries.",
+          "Only if you keep what's shared in group confidential.",
+          "Private messages are fine unless conflict comes up."
+        ],
+        correct: 1,
+        explanation: "Limiting outside-group contact protects group cohesion, confidentiality, and therapeutic boundaries."
+      },
+      {
+        domain: "Career Development",
+        client: "One job pays more with rigid hours; another pays less with hybrid flexibility—how do I weigh them?",
+        options: [
+          "Higher pay usually wins unless the commute is extreme.",
+          "Weigh pay, flexibility, and daily energy against your priorities.",
+          "Flexible schedules often limit long-term advancement.",
+          "Pick whichever role has stronger team culture."
+        ],
+        correct: 1,
+        explanation: "Career decisions benefit from weighing compensation alongside lifestyle fit, energy, and long-term priorities."
+      },
+      {
+        domain: "Assessment & Testing",
+        client: "The intake packet asks about past trauma—do I have to answer all of it before we start?",
+        options: [
+          "No, we can pace trauma history at a safe speed.",
+          "Yes, full intake details help set an accurate baseline.",
+          "Leave trauma blank until we build trust over time.",
+          "Only share events that still affect you today."
+        ],
+        correct: 0,
+        explanation: "Pacing trauma inquiry according to readiness and safety prevents overwhelm and supports alliance."
+      },
+      {
+        domain: "Research & Program Evaluation",
+        client: "No-shows dropped the month we added text reminders—does that prove the texts caused the drop?",
+        options: [
+          "Yes, a drop right after a change shows clear impact.",
+          "Compare trends against baseline and other shifts first.",
+          "Staff impressions usually conf{irm} whether reminders work.",
+          "Track replies to the text to measure effectiveness."
+        ],
+        correct: 1,
+        explanation: "Evaluating program changes requires baseline comparison and checking for confounding variables or seasonality."
+      },
+      {
+        domain: "Professional Orientation & Ethics",
+        client: "Can you write a letter saying I'm 'fully recovered from anxiety' so I can clear a work check?",
+        options: [
+          "I can state accurate clinical status within my scope with consent.",
+          "I can write it if your symptoms are mostly manageable.",
+          "I don't write letters for workplace clearances.",
+          "I can note recovery if you plan to stay in therapy."
+        ],
+        correct: 0,
+        explanation: "Counselors must provide truthful, accurate clinical documentation within competence and with client authorization."
+      },
+      {
+        domain: "Helping Relationships",
+        client: "I check my ex's profile late at night even though I know it upsets me—why do I keep doing it?",
+        options: [
+          "It often serves a soothing or connection urge despite distress.",
+          "It usually means you haven't accepted the breakup yet.",
+          "Deleting the app is the fastest way to break the loop.",
+          "Late-night boredom drives most social media checking."
+        ],
+        correct: 0,
+        explanation: "Understanding the emotional function (e.g., seeking relief, certainty, or contact) helps build alternatives."
+      },
+      {
+        domain: "Human Growth & Development",
+        client: "My college-age child calls multiple times a day over roommate friction—should I step in or step back?",
+        options: [
+          "Help them practice resolving low-stakes conflicts on their own.",
+          "Let them handle it completely without weighing in.",
+          "Reach out to housing if the conflict keeps escalating.",
+          "Remind them that roommate tension is part of college."
+        ],
+        correct: 0,
+        explanation: "Scaffolding independent problem-solving supports emerging adult development without rescuing or abandoning."
+      },
+      {
+        domain: "Social & Cultural Foundations",
+        client: "Opening up about family tension feels disloyal in my culture—does that mean therapy won't work for me?",
+        options: [
+          "No, we can honor family loyalty while pacing what you share.",
+          "Some openness about family dynamics is usually needed.",
+          "Loyalty to family and personal well-being can feel tense.",
+          "Most families keep conflict private behind closed doors."
+        ],
+        correct: 0,
+        explanation: "Respecting cultural loyalty norms while pacing exploration allows meaningful, culturally attuned counseling."
+      }
+    ];
+
+    function expandToTwoHundredScenarios(bank) {
+      const output = [];
+      const variants = [
+        (c) => c,
+        (c) => ({ ...c, client: `${c.client} Lately it's been harder to sort out.` }),
+        (c) => ({ ...c, client: `Honestly, ${c.client.charAt(0).toLowerCase()}${c.client.slice(1)}` }),
+        (c) => ({ ...c, client: `${c.client} What's your take on that?` }),
+        (c) => ({ ...c, client: `I keep coming back to this: ${c.client.charAt(0).toLowerCase()}${c.client.slice(1)}` }),
+        (c) => ({ ...c, client: `${c.client} I wasn't sure how to bring it up.` }),
+        (c) => ({ ...c, client: `During the week, ${c.client.charAt(0).toLowerCase()}${c.client.slice(1)}` })
+      ];
+
+      for (let i = 0; i < 200; i++) {
+        const base = bank[i % bank.length];
+        const vFn = variants[Math.floor(i / bank.length) % variants.length];
+        const persona = CLIENT_PERSONAS[i % CLIENT_PERSONAS.length];
+        output.push({
+          id: i + 1,
+          persona,
+          domain: base.domain,
+          client: vFn(base).client,
+          options: [...base.options],
+          correct: base.correct,
+          explanation: base.explanation
+        });
+      }
+      return output;
+    }
+
+    const NCE_SCENARIOS = expandToTwoHundredScenarios(NCE_SCENARIOS_200);
+    const GAMES_PER_RUN = 20;
+    const MAX_DINGS = 3;
+
+    let sessionQuestions = [];
+    let currentIndex = 0;
+    let dings = 0;
+    let wrongAnswersLog = [];
+    let gameOver = false;
+    let awaitingNextClick = false;
+
+    const clientProgressEl = document.getElementById("client-progress");
+    const dingsCounterEl = document.getElementById("dings-counter");
+    const scenarioDomainEl = document.getElementById("scenario-domain");
+    const clientSvgLabelEl = document.getElementById("client-svg-label");
+    const clientBadgeBgEl = document.getElementById("client-badge-bg");
+    const clientStatementEl = document.getElementById("client-statement");
+    const optionsGridEl = document.getElementById("options-grid");
+    const newSessionBtn = document.getElementById("new-session-btn");
+    const correctNextBtn = document.getElementById("correct-next-btn");
+
+    const clientHeadEl = document.getElementById("client-head");
+    const clientEarLEl = document.getElementById("client-ear-l");
+    const clientEarREl = document.getElementById("client-ear-r");
+    const clientArmEl = document.getElementById("client-arm");
+    const clientHandEl = document.getElementById("client-hand");
+    const clientShirtEl = document.getElementById("client-shirt");
+    const clientCollarEl = document.getElementById("client-collar");
+    const clientHairBackEl = document.getElementById("client-hair-back");
+    const clientHairFrontEl = document.getElementById("client-hair-front");
+    const clientMouthEl = document.getElementById("client-mouth");
+
+    const feedbackModalEl = document.getElementById("feedback-modal");
+    const feedbackModalBoxEl = document.getElementById("feedback-modal-box");
+    const feedbackModalTitleEl = document.getElementById("feedback-modal-title");
+    const feedbackModalBodyEl = document.getElementById("feedback-modal-body");
+    const feedbackModalFooterEl = document.getElementById("feedback-modal-footer");
+    const closeModalXBtn = document.getElementById("close-modal-x");
+
+    function shuffleArray(list) {
+      const copy = [...list];
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    function escapeHtml(str) {
+      return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    }
+
+    function applyClientPersona(persona) {
+      clientHeadEl.setAttribute("fill", persona.skin);
+      clientEarLEl.setAttribute("fill", persona.skin);
+      clientEarREl.setAttribute("fill", persona.skin);
+      clientArmEl.setAttribute("stroke", persona.skin);
+      clientHandEl.setAttribute("fill", persona.skin);
+      clientShirtEl.setAttribute("fill", persona.shirt);
+      clientCollarEl.setAttribute("stroke", persona.collar);
+      clientMouthEl.setAttribute("stroke", persona.shade);
+
+      const upperName = persona.name.toUpperCase();
+      clientSvgLabelEl.textContent = upperName;
+      const badgeWidth = Math.max(88, upperName.length * 8.5 + 24);
+      clientBadgeBgEl.setAttribute("width", badgeWidth);
+      clientBadgeBgEl.setAttribute("x", 203 - badgeWidth / 2);
+
+      let backSvg = "";
+      let frontSvg = "";
+
+      if (persona.style === "long") {
+        backSvg = `<path d="M181 118 C179 152, 184 174, 192 178 L214 178 C222 174, 227 152, 225 118 Z" fill="${persona.hair}" />`;
+        frontSvg = `<path d="M182 120 C182 97, 224 97, 224 120 C217 107, 206 105, 196 107 C189 108, 185 113, 182 120 Z" fill="${persona.hair}" />`;
+      } else if (persona.style === "bob") {
+        backSvg = `<path d="M181 119 C181 143, 186 150, 193 150 L213 150 C220 150, 225 143, 225 119 Z" fill="${persona.hair}" />`;
+        frontSvg = `<path d="M182 120 C182 98, 224 98, 224 120 C214 106, 196 105, 182 120 Z" fill="${persona.hair}" />`;
+      } else if (persona.style === "ponytail") {
+        backSvg = `<path d="M185 110 C166 114, 168 142, 174 150 C179 138, 184 125, 188 116 Z" fill="${persona.hair}" />`;
+        frontSvg = `<path d="M182 120 C182 98, 224 98, 224 120 C213 106, 195 106, 182 120 Z" fill="${persona.hair}" />`;
+      } else if (persona.style === "fade") {
+        frontSvg = `<path d="M183 118 C184 100, 222 100, 223 118 C215 108, 207 107, 199 107 C192 107, 187 111, 183 118 Z" fill="${persona.hair}" />`;
+      } else {
+        frontSvg = `<path d="M182 120 C182 98, 224 98, 224 120 C216 107, 205 105, 194 107 C188 108, 184 113, 182 120 Z" fill="${persona.hair}" />`;
+      }
+
+      clientHairBackEl.innerHTML = backSvg;
+      clientHairFrontEl.innerHTML = frontSvg;
+    }
+
+    function startNewRun() {
+      feedbackModalEl.classList.remove("open");
+      correctNextBtn.classList.remove("visible");
+      awaitingNextClick = false;
+      dings = 0;
+      currentIndex = 0;
+      wrongAnswersLog = [];
+      gameOver = false;
+
+      // Pick 20 unique items from the 200-item bank so none repeat in a single game
+      const uniquePicked = shuffleArray(NCE_SCENARIOS).slice(0, GAMES_PER_RUN);
+      const shuffledPersonas = shuffleArray(CLIENT_PERSONAS);
+
+      sessionQuestions = uniquePicked.map((item, idx) => {
+        const persona = shuffledPersonas[idx % shuffledPersonas.length];
+        const indexedOptions = item.options.map((text, optIdx) => ({
+          text,
+          isCorrect: optIdx === item.correct
+        }));
+        const shuffledOptions = shuffleArray(indexedOptions);
+        const correctShuffledIndex = shuffledOptions.findIndex((o) => o.isCorrect);
+        return {
+          persona,
+          domain: item.domain,
+          client: item.client,
+          options: shuffledOptions.map((o) => o.text),
+          correctIndex: correctShuffledIndex,
+          explanation: item.explanation
+        };
+      });
+
+      updateHud();
+      renderScenario();
+    }
+
+    function updateHud() {
+      const displayNum = Math.min(currentIndex + 1, GAMES_PER_RUN);
+      clientProgressEl.textContent = `${displayNum} of ${GAMES_PER_RUN}`;
+      dingsCounterEl.textContent = `${dings} / ${MAX_DINGS}`;
+    }
+
+    function renderScenario() {
+      if (gameOver) return;
+      correctNextBtn.classList.remove("visible");
+      awaitingNextClick = false;
+
+      if (currentIndex >= sessionQuestions.length) {
+        showVictoryModal();
+        return;
+      }
+
+      const q = sessionQuestions[currentIndex];
+      updateHud();
+      applyClientPersona(q.persona);
+      scenarioDomainEl.textContent = `DOMAIN: ${q.domain.toUpperCase()}`;
+      clientStatementEl.textContent = `"${q.client}"`;
+
+      const badges = ["A", "B", "C", "D"];
+      optionsGridEl.innerHTML = "";
+
+      q.options.forEach((optText, idx) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "response-btn";
+        btn.innerHTML = `<span class="opt-badge">${badges[idx]}</span><span>${escapeHtml(optText)}</span>`;
+        btn.addEventListener("click", () => handleOptionSelect(idx));
+        optionsGridEl.appendChild(btn);
+      });
+    }
+
+    function setOptionsDisabled(disabled) {
+      const buttons = optionsGridEl.querySelectorAll("button");
+      buttons.forEach((b) => {
+        b.disabled = disabled;
+      });
+    }
+
+    function handleOptionSelect(chosenIndex) {
+      if (gameOver || awaitingNextClick) return;
+      const q = sessionQuestions[currentIndex];
+      setOptionsDisabled(true);
+
+      if (chosenIndex === q.correctIndex) {
+        awaitingNextClick = true;
+        correctNextBtn.classList.add("visible");
+        return;
+      }
+
+      dings += 1;
+      updateHud();
+
+      wrongAnswersLog.push({
+        clientName: q.persona.name,
+        domain: q.domain,
+        client: q.client,
+        chosenText: q.options[chosenIndex],
+        correctText: q.options[q.correctIndex],
+        explanation: q.explanation
+      });
+
+      if (dings >= MAX_DINGS) {
+        gameOver = true;
+        showRevokedModal();
+      } else {
+        showSingleDingModal();
+      }
+    }
+
+    correctNextBtn.addEventListener("click", () => {
+      if (!awaitingNextClick) return;
+      correctNextBtn.classList.remove("visible");
+      awaitingNextClick = false;
+      currentIndex += 1;
+      renderScenario();
+    });
+
+    function showSingleDingModal() {
+      feedbackModalBoxEl.className = "modal-box ding-alert compact-ding";
+      feedbackModalTitleEl.className = "modal-title";
+      feedbackModalTitleEl.textContent = "That is not how a licensed therapist should respond to a client";
+      closeModalXBtn.style.display = "flex";
+      feedbackModalBodyEl.innerHTML = `<p>Ding <strong>${dings} of ${MAX_DINGS}</strong>.</p>`;
+      feedbackModalFooterEl.innerHTML = "";
+      feedbackModalEl.classList.add("open");
+    }
+
+    function showRevokedModal() {
+      feedbackModalBoxEl.className = "modal-box ding-alert";
+      feedbackModalTitleEl.className = "modal-title revoked";
+      feedbackModalTitleEl.textContent = "The board has revoked your license as a therapist";
+      closeModalXBtn.style.display = "flex";
+
+      const cardsHtml = wrongAnswersLog
+        .map((entry) => `
+          <div class="revocation-card">
+            <div class="q-label">${escapeHtml(entry.clientName)} • ${escapeHtml(entry.domain)}</div>
+            <div class="wrong-ans"><strong>Your response:</strong> ${escapeHtml(entry.chosenText)}</div>
+            <div class="right-ans"><strong>What you should have said:</strong> ${escapeHtml(entry.correctText)}</div>
+            <div class="why-ans">${escapeHtml(entry.explanation)}</div>
+          </div>
+        `)
+        .join("");
+
+      feedbackModalBodyEl.innerHTML = `
+        <p>You reached <strong>3 Dings</strong>. What you should have said:</p>
+        <div class="revocation-list">${cardsHtml}</div>
+      `;
+
+      feedbackModalFooterEl.innerHTML = `
+        <button type="button" class="primary-action-btn" id="modal-restart-btn">New Sessions?</button>
+        <a href="nce.html" class="secondary-action-btn">Choose a Different Game</a>
+      `;
+
+      document.getElementById("modal-restart-btn").addEventListener("click", startNewRun);
+      feedbackModalEl.classList.add("open");
+    }
+
+    function showVictoryModal() {
+      gameOver = true;
+      feedbackModalBoxEl.className = "modal-box";
+      feedbackModalTitleEl.className = "modal-title victory";
+      feedbackModalTitleEl.textContent = "Good job helping the clients!";
+      closeModalXBtn.style.display = "flex";
+
+      let reviewSection = `<p>Completed with <strong>${dings}</strong> of ${MAX_DINGS} dings.</p>`;
+
+      if (wrongAnswersLog.length > 0) {
+        const cardsHtml = wrongAnswersLog
+          .map((entry) => `
+            <div class="revocation-card">
+              <div class="q-label">${escapeHtml(entry.clientName)} • ${escapeHtml(entry.domain)}</div>
+              <div class="wrong-ans"><strong>Your response:</strong> ${escapeHtml(entry.chosenText)}</div>
+              <div class="right-ans"><strong>What you should have said:</strong> ${escapeHtml(entry.correctText)}</div>
+              <div class="why-ans">${escapeHtml(entry.explanation)}</div>
+            </div>
+          `)
+          .join("");
+        reviewSection += `<div class="revocation-list">${cardsHtml}</div>`;
+      }
+
+      feedbackModalBodyEl.innerHTML = reviewSection;
+      feedbackModalFooterEl.innerHTML = `
+        <button type="button" class="primary-action-btn" id="modal-victory-restart-btn">New Sessions?</button>
+        <a href="nce.html" class="secondary-action-btn">Choose a Different Game</a>
+      `;
+
+      document.getElementById("modal-victory-restart-btn").addEventListener("click", startNewRun);
+      feedbackModalEl.classList.add("open");
+    }
+
+    closeModalXBtn.addEventListener("click", () => {
+      feedbackModalEl.classList.remove("open");
+      if (!gameOver) {
+        currentIndex += 1;
+        renderScenario();
+      }
+    });
+
+    newSessionBtn.addEventListener("click", startNewRun);
+
+    startNewRun();
+  </script>
+</body>
+</html>
