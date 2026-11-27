@@ -1,104 +1,52 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#030306">
-<title>Jesse's Study Guides | Homepage Preview</title>
-<meta name="description" content="Interactive study tools, engaging games, and independent study guides for cybersecurity and psychology learners.">
+<title>Jesse's Study Guides | Practice Makes Progress</title>
+<meta name="description" content="Interactive study tools, games, practice exams and study guides for cybersecurity and psychology learners.">
 <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800;900&family=Rajdhani:wght@500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;600;700;800;900&family=Rajdhani:wght@500;600;700;800&display=swap" rel="stylesheet">
 <style>
-:root{--green:#91ff16;--purple:#c34cff;--cyan:#23dfff;--black:#020204}
-*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:var(--black);color:#f8f7fc;font-family:Rajdhani,Arial,sans-serif;overflow-x:hidden}
-body:before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(ellipse at 12% 28%,#79ff0018,transparent 36%),radial-gradient(ellipse at 90% 35%,#a600ff1b,transparent 40%),linear-gradient(#ffffff06 1px,transparent 1px),linear-gradient(90deg,#ffffff06 1px,transparent 1px);background-size:auto,auto,48px 48px,48px 48px}
-.page{width:min(100%,1440px);margin:auto;padding:0 clamp(14px,3vw,38px)}
-header{height:clamp(96px,12vw,148px);display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid var(--purple);box-shadow:0 5px 25px #a52dff66;position:relative;z-index:10;background:#030306}
-.brand{display:flex;align-items:center;min-width:0}.brand img{width:clamp(230px,47vw,470px);height:auto;max-height:120px;object-fit:contain;object-position:left center;filter:drop-shadow(0 0 10px #9dff1977)}
-.menu{width:clamp(62px,9vw,90px);height:clamp(56px,8vw,78px);border:2px solid #39303f;border-radius:19px;background:linear-gradient(145deg,#1b1720,#050507);color:#fff;font-size:clamp(30px,5vw,42px);box-shadow:0 0 22px #a93dff44;cursor:pointer}
-nav{display:none;position:absolute;right:0;top:calc(100% - 6px);width:min(320px,calc(100vw - 28px));padding:14px;background:#100d17;border:1px solid var(--purple);border-radius:15px;box-shadow:0 15px 50px #000;max-height:78vh;overflow:auto}nav.open{display:grid;gap:5px}.nav-title{padding:7px 10px;color:var(--green);font:800 12px Orbitron,sans-serif;letter-spacing:1px;text-transform:uppercase}nav a{padding:10px 12px;border-radius:8px;font-size:18px;font-weight:700}nav a:hover{background:#91ff1619;color:var(--green)}
-.hero{position:relative;min-height:clamp(510px,66vw,760px);display:flex;align-items:center;isolation:isolate;overflow:hidden}
-.hero:before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,#000 0%,#000 22%,#000d 42%,#0004 70%,#0002 100%),linear-gradient(0deg,#020204 0%,transparent 22%)}
-.hero-art{position:absolute;z-index:-2;right:-2%;top:0;width:73%;height:100%;object-fit:cover;object-position:center;filter:drop-shadow(0 0 24px #9f36ff55)}
-.hero-copy{position:relative;z-index:2;width:57%;padding:45px 0}.hero h1{font:italic 900 clamp(34px,6.3vw,76px)/1.08 Orbitron,sans-serif;letter-spacing:-2px;margin:0 0 26px;text-shadow:0 3px 14px #000}.hero h1 span{display:block;color:var(--green);text-shadow:0 0 22px #91ff1680}.hero p{font-size:clamp(18px,2.3vw,27px);line-height:1.2;max-width:530px;margin:0 0 36px;font-weight:600;text-shadow:0 2px 9px #000}
-.cta{display:inline-flex;align-items:center;gap:22px;padding:13px 27px;border:2px solid var(--green);border-radius:23px;font:italic 800 clamp(18px,2.4vw,27px) Rajdhani,sans-serif;background:linear-gradient(100deg,#91ff1625,#050507cc);box-shadow:0 0 12px var(--green),0 0 30px #91ff1670,inset 0 0 18px #91ff1628;transition:.2s}.cta:hover{transform:translateY(-3px);box-shadow:0 0 24px var(--green),0 0 44px #91ff1680}.cta b{font-size:1.5em}
-.paths{padding:28px 0 40px}.section-heading{display:flex;align-items:center;justify-content:center;gap:18px;text-align:center;margin:0 0 28px}.section-heading:before,.section-heading:after{content:"";height:3px;flex:1;max-width:220px;background:linear-gradient(90deg,transparent,var(--green));box-shadow:0 0 12px var(--green);transform:skewX(35deg)}.section-heading:after{background:linear-gradient(90deg,var(--purple),transparent);box-shadow:0 0 12px var(--purple);transform:skewX(-35deg)}.section-heading h2{font:italic 900 clamp(25px,4.8vw,47px) Orbitron,sans-serif;margin:0 0 7px;white-space:nowrap}.section-heading p{font-size:clamp(16px,2vw,22px);font-style:italic;margin:0;color:#eee}
-.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(12px,2vw,22px)}
-.card{--accent:var(--green);position:relative;display:block;overflow:hidden;aspect-ratio:1.22;border:2px solid var(--accent);border-radius:18px;clip-path:polygon(0 18px,18px 0,calc(100% - 18px) 0,100% 18px,100% calc(100% - 18px),calc(100% - 18px) 100%,18px 100%,0 calc(100% - 18px));background:#05050a;box-shadow:0 0 17px color-mix(in srgb,var(--accent) 48%,transparent),inset 0 0 24px color-mix(in srgb,var(--accent) 18%,transparent);transition:.2s}
-.card:before{content:"";position:absolute;inset:6px;z-index:2;border:1px solid color-mix(in srgb,var(--accent) 45%,transparent);clip-path:inherit;pointer-events:none}.card:hover{transform:translateY(-4px);box-shadow:0 0 30px color-mix(in srgb,var(--accent) 68%,transparent)}.card.cyber{--accent:#23dfff}.card.psych{--accent:#c34cff}.card.games{--accent:#91ff16}.card.tools{--accent:#bd4dff}
-.card img{width:100%;height:100%;display:block;object-fit:cover;object-position:center;filter:drop-shadow(0 0 10px #000)}.card-content{position:absolute;left:4px;right:4px;bottom:10px;text-align:center;padding:22px 3px 5px;background:linear-gradient(0deg,#000f 0%,#000b 65%,transparent 100%);text-shadow:0 2px 8px #000}
-.card-content h3{font:italic 900 clamp(15px,2.5vw,24px) Orbitron,sans-serif;margin:0 0 5px}
-.card-content p{font-size:clamp(12px,1.8vw,17px);font-weight:600;line-height:1.12;margin:0 0 5px}
-.card-content strong{font-size:clamp(13px,2vw,18px);font-style:italic;color:var(--accent)}
-.card-content b{font-size:1.2em;margin-left:5px}
-.motto{display:flex;align-items:center;gap:clamp(13px,3vw,30px);padding:clamp(14px,2.4vw,25px);margin:6px 0 58px;border:2px solid var(--green);border-radius:20px;background:linear-gradient(100deg,#91ff1624,#050507 48%,#91ff1610);box-shadow:0 0 18px #91ff1680,inset 0 0 28px #91ff1620}
-.trophy{width:clamp(72px,11vw,130px);flex:0 0 auto;filter:drop-shadow(0 0 13px #ffd84a)}.motto-copy{border-left:2px solid var(--green);padding-left:clamp(13px,2.4vw,27px)}.motto h2{font:italic 900 clamp(17px,3vw,31px) Orbitron,sans-serif;margin:0 0 8px}.motto p{font-size:clamp(14px,2vw,21px);margin:0 0 7px}.motto strong{font-size:clamp(17px,2.8vw,29px);font-style:italic;color:var(--green);font-weight:800}
-footer{border-top:2px solid var(--purple);padding:23px 0 32px;text-align:center;color:#c2bfca;font-size:14px;position:relative}footer:before{content:"⌃⌃";position:absolute;left:50%;top:-23px;transform:translateX(-50%);background:#030306;padding:0 20px;color:var(--green);font-size:28px;text-shadow:0 0 12px var(--green)}
-@media(min-width:1000px){.hero-copy{width:50%}.hero-art{width:68%}.cards{gap:23px}.card{aspect-ratio:1.3}.card-label{font-size:24px}}
-@media(max-width:650px){.page{padding:0 18px}header{height:110px}.brand img{width:min(74vw,440px);max-height:92px}.menu{width:68px;height:64px;border-radius:17px}.hero{min-height:0;display:flex;flex-direction:column;align-items:stretch;padding:28px 0 0}.hero:before{background:linear-gradient(180deg,#000 0%,#000e 23%,#0002 57%,#020204 100%)}.hero-copy{width:100%;padding:0;z-index:3}.hero h1{font-size:clamp(27px,7.3vw,43px);line-height:1.12;letter-spacing:-1px;margin:0 0 17px;max-width:390px}.hero h1 span{display:block}.hero p{font-size:clamp(16px,4vw,20px);line-height:1.2;max-width:355px;margin:0 0 22px}.cta{font-size:19px;padding:11px 20px;gap:15px}.hero-art{position:relative;z-index:0;right:auto;top:auto;width:calc(100% + 36px);height:auto;aspect-ratio:1.13;object-fit:cover;object-position:center 45%;margin:-3px -18px -2px;mask-image:linear-gradient(180deg,#000 0%,#000 86%,transparent 100%)}.paths{padding:22px 0 29px}.section-heading{gap:8px;margin-bottom:21px}.section-heading:before,.section-heading:after{max-width:none;width:12%;flex:0 0 12%}.section-heading h2{font-size:clamp(19px,5vw,28px)}.section-heading p{font-size:15px}.cards{gap:12px}.card{aspect-ratio:1.14;border-radius:14px}.card-content h3{font-size:clamp(14px,3.7vw,20px)}.card-content p{font-size:clamp(11px,2.9vw,15px)}.card-content strong{font-size:clamp(12px,3vw,16px)}.motto{margin:5px 0 42px;padding:13px 10px;gap:10px;border-radius:15px}.trophy{width:62px}.motto-copy{padding-left:11px}.motto h2{font-size:clamp(12px,3.6vw,17px);line-height:1.2}.motto p{font-size:12px;line-height:1.2}.motto strong{font-size:clamp(14px,3.8vw,18px)}}
-@media(max-width:370px){.page{padding:0 12px}header{height:96px}.brand img{width:68vw}.menu{width:58px;height:55px}.hero h1{font-size:27px}.hero-art{width:calc(100% + 24px);margin-inline:-12px}.card{aspect-ratio:1.08}.card-content h3{font-size:13px}.card-content p{font-size:10px}.card-content strong{font-size:11px}.trophy{width:54px}}
+:root{--bg:#030306;--green:#91ff16;--purple:#c34cff;--white:#f8f7fc;--muted:#d4d1dd;--cyan:#24dfff}
+*{box-sizing:border-box}a{color:inherit;text-decoration:none}html{scroll-behavior:smooth}body{margin:0;background:var(--bg);color:var(--white);font-family:Rajdhani,Arial,sans-serif;overflow-x:hidden}
+body:before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(ellipse at 15% 30%,#6dff0012,transparent 34%),radial-gradient(ellipse at 90% 35%,#a600ff18,transparent 37%),linear-gradient(#ffffff08 1px,transparent 1px),linear-gradient(90deg,#ffffff08 1px,transparent 1px);background-size:auto,auto,48px 48px,48px 48px}
+a{color:inherit;text-decoration:none}.wrap{width:min(100%,1440px);margin:auto;padding:0 clamp(16px,3vw,42px)}
+header{height:clamp(94px,12vw,148px);display:flex;align-items:center;justify-content:space-between;border-bottom:2px solid #a52dff;box-shadow:0 5px 22px #a52dff55;position:relative;z-index:10;background:#030306}
+.brand{display:flex;align-items:center;gap:clamp(8px,1.4vw,18px)}.brand img{width:clamp(110px,16vw,210px);height:auto;filter:drop-shadow(0 0 10px #8cff1977)}.brand-word{font:italic 900 clamp(23px,4.6vw,55px)/.88 Orbitron,sans-serif;letter-spacing:-2px}.brand-word em{display:block;color:var(--green);font-style:italic}.brand-word span{display:block;font-size:.68em;color:#fff;margin-top:7px}
+.menu{width:clamp(62px,10vw,94px);height:clamp(56px,8vw,78px);border:2px solid #39303f;border-radius:20px;background:linear-gradient(145deg,#1b1720,#050507);color:#fff;font-size:clamp(30px,5vw,43px);box-shadow:0 0 22px #a93dff44;cursor:pointer}
+nav{display:none;position:absolute;right:20px;top:calc(100% - 8px);width:min(300px,90vw);padding:12px;background:#100d17;border:1px solid var(--purple);border-radius:14px;box-shadow:0 15px 50px #000}nav.open{display:grid;gap:5px}nav a{padding:9px 12px;font-size:18px;font-weight:700;border-radius:8px}nav a:hover{background:#91ff1619;color:var(--green)}.nav-title{padding:7px 12px 3px;color:var(--green);font:800 12px Orbitron,sans-serif;letter-spacing:1px;text-transform:uppercase}
+.hero{position:relative;min-height:clamp(500px,65vw,760px);display:flex;align-items:center;isolation:isolate;overflow:hidden}
+.hero:before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(90deg,#000 0%,#000 26%,#000d 44%,#0002 72%,#0004 100%),linear-gradient(0deg,#030306 0%,transparent 23%),radial-gradient(ellipse at 74% 53%,#82ff001d,transparent 30%),radial-gradient(ellipse at 86% 40%,#ae29ff28,transparent 42%)}
+.hero-copy{position:relative;z-index:2;width:54%;padding:50px 0}.hero h1{font:italic 900 clamp(36px,6.4vw,78px)/1.08 Orbitron,sans-serif;letter-spacing:-2px;margin:0 0 30px;text-shadow:0 3px 14px #000}.hero h1 span{display:block;color:var(--green);text-shadow:0 0 22px #91ff1677}.hero p{font-size:clamp(18px,2.3vw,28px);line-height:1.2;max-width:540px;margin:0 0 40px;text-shadow:0 2px 9px #000;font-weight:600}
+.cta{display:inline-flex;align-items:center;gap:22px;padding:13px 27px;border:2px solid var(--green);border-radius:24px;font:italic 800 clamp(18px,2.4vw,28px) Rajdhani,sans-serif;background:linear-gradient(100deg,#91ff1625,#050507cc);box-shadow:0 0 12px var(--green),0 0 30px #91ff1670,inset 0 0 18px #91ff1628;transition:.2s}.cta:hover{transform:translateY(-3px);box-shadow:0 0 24px var(--green),0 0 44px #91ff1680}.cta b{font-size:1.5em}
+.hero-visual{position:absolute;z-index:1;right:-1%;top:0;width:67%;height:100%;display:flex;align-items:center;justify-content:center;pointer-events:none}.hero-visual img{width:100%;height:100%;object-fit:contain;object-position:center;filter:drop-shadow(0 0 20px #a238ff40)}
+.paths{padding:30px 0 42px}.section-title{display:flex;align-items:center;justify-content:center;gap:20px;text-align:center;margin:0 0 32px}.section-title:before,.section-title:after{content:"";height:3px;flex:1;max-width:210px;background:linear-gradient(90deg,transparent,var(--green));box-shadow:0 0 12px var(--green);transform:skewX(35deg)}.section-title:after{background:linear-gradient(90deg,var(--purple),transparent);box-shadow:0 0 12px var(--purple);transform:skewX(-35deg)}.section-title h2{font:italic 900 clamp(26px,4.8vw,48px) Orbitron,sans-serif;margin:0 0 7px;white-space:nowrap}.section-title p{font-size:clamp(16px,2.1vw,23px);font-style:italic;margin:0;color:#eee}
+.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(14px,2vw,24px)}
+.card{--accent:var(--green);position:relative;isolation:isolate;overflow:hidden;min-height:clamp(230px,29vw,340px);border:2px solid var(--accent);border-radius:18px;clip-path:polygon(0 19px,19px 0,calc(100% - 19px) 0,100% 19px,100% calc(100% - 19px),calc(100% - 19px) 100%,19px 100%,0 calc(100% - 19px));background:#07070c;box-shadow:0 0 18px color-mix(in srgb,var(--accent) 38%,transparent),inset 0 0 24px color-mix(in srgb,var(--accent) 14%,transparent);transition:transform .2s,box-shadow .2s}
+.card:before{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(180deg,#0000 22%,#000b 78%,#000f 100%)}.card:hover{transform:translateY(-5px);box-shadow:0 0 30px color-mix(in srgb,var(--accent) 65%,transparent)}
+.card.cyber{--accent:#22dfff}.card.psych{--accent:#c34cff}.card.games{--accent:#8dff16}.card.tools{--accent:#b75aff}
+.card-art{height:62%;min-height:130px;position:absolute;inset:0 0 auto;z-index:-2}.card-art img{width:100%;height:100%;object-fit:cover;object-position:center;opacity:.95}.card-content{position:absolute;inset:auto 8px 13px;text-align:center;text-shadow:0 2px 9px #000}.card h3{font:italic 900 clamp(20px,3vw,34px) Orbitron,sans-serif;margin:0 0 9px}.card p{font-size:clamp(15px,2vw,22px);font-weight:600;line-height:1.1;margin:0 0 9px}.card .link{font-size:clamp(16px,2.2vw,23px);font-weight:800;font-style:italic;color:var(--accent)}.link b{font-size:1.25em;margin-left:8px}
+.motto{display:flex;align-items:center;gap:clamp(14px,3vw,34px);padding:clamp(15px,2.5vw,27px);margin:5px 0 60px;border:2px solid var(--green);border-radius:20px;background:linear-gradient(100deg,#91ff1624,#050507 47%,#91ff1610);box-shadow:0 0 18px #91ff1680,inset 0 0 28px #91ff1620}.trophy{width:clamp(75px,12vw,135px);flex:0 0 auto;filter:drop-shadow(0 0 13px #ffd84a)}.motto-copy{border-left:2px solid var(--green);padding-left:clamp(13px,2.4vw,28px)}.motto h2{font:italic 900 clamp(18px,3vw,34px) Orbitron,sans-serif;margin:0 0 8px}.motto p{font-size:clamp(15px,2vw,23px);margin:0 0 8px}.motto strong{font-size:clamp(18px,2.8vw,31px);font-style:italic;color:var(--green);font-weight:800}
+footer{border-top:2px solid var(--purple);padding:24px 0 34px;text-align:center;color:#aaa;font-size:14px;position:relative}footer:before{content:"⌃⌃";position:absolute;left:50%;top:-23px;transform:translateX(-50%);background:#030306;padding:0 20px;color:var(--green);font-size:28px;text-shadow:0 0 12px var(--green)}
+@media(min-width:1000px){.hero-copy{width:49%}.hero-visual{width:65%;right:0}.cards{gap:24px}.card{min-height:350px}.card-art{height:72%}.card-content{bottom:18px}}
+@media(max-width:650px){.wrap{padding:0 18px}header{height:112px}.brand img{width:150px}.brand-word{font-size:clamp(22px,6vw,34px)}.menu{width:72px;height:66px;border-radius:17px}.hero{min-height:0;display:flex;flex-direction:column;align-items:stretch;padding:28px 0 0}.hero:before{background:linear-gradient(180deg,#000 0%,#000e 26%,#0003 58%,#030306 100%),radial-gradient(ellipse at 68% 52%,#8dff1622,transparent 38%),radial-gradient(ellipse at 82% 45%,#b02aff2c,transparent 48%)}.hero-copy{width:100%;padding:0;z-index:3}.hero h1{font-size:clamp(28px,7.2vw,43px);line-height:1.13;letter-spacing:-1px;margin:0 0 18px;max-width:390px}.hero h1 span{display:block}.hero p{font-size:clamp(16px,4vw,20px);line-height:1.2;max-width:330px;margin:0 0 22px}.cta{font-size:19px;padding:11px 20px;gap:15px}.hero-visual{position:relative;right:auto;top:auto;width:calc(100% + 36px);height:auto;aspect-ratio:4/4.2;margin:-8px -18px -2px;align-self:center}.hero-visual img{object-fit:cover;object-position:center 48%;width:100%;height:100%;mask-image:linear-gradient(180deg,#000 0%,#000 83%,transparent 100%)}.paths{padding:22px 0 30px}.section-title{gap:8px;margin-bottom:22px}.section-title:before,.section-title:after{max-width:none;width:13%;flex:0 0 13%}.section-title h2{font-size:clamp(20px,5.2vw,29px)}.section-title p{font-size:15px}.cards{gap:13px}.card{min-height:clamp(205px,61vw,265px);border-radius:14px}.card-art{height:64%}.card-content{bottom:12px;inset-inline:5px}.card h3{font-size:clamp(15px,4.1vw,20px);margin-bottom:6px}.card p{font-size:clamp(12px,3.25vw,16px);line-height:1.1}.card .link{font-size:15px}.motto{margin:5px 0 42px;padding:14px 11px;gap:10px;border-radius:15px}.trophy{width:65px}.motto-copy{padding-left:11px}.motto h2{font-size:clamp(13px,3.7vw,18px);line-height:1.2}.motto p{font-size:12px;line-height:1.2}.motto strong{font-size:clamp(14px,3.8vw,18px)}}
+@media(max-width:370px){.wrap{padding:0 12px}header{height:96px}.brand img{width:112px}.brand-word{font-size:21px}.menu{width:58px;height:55px}.hero h1{font-size:27px}.hero-visual{width:calc(100% + 24px);margin-inline:-12px}.card{min-height:205px}.card h3{font-size:14px}.card p{font-size:11px}.trophy{width:54px}}
 @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
-
-/* Reference-match refinement: composition, scale, and image layering */
-@media(min-width:651px){
- .hero{min-height:clamp(520px,66vw,760px)}
- .hero-art{right:0;width:76%;height:100%;object-fit:cover;object-position:center}
- .hero-copy{width:54%;padding-left:12px}
- .hero:before{background:linear-gradient(90deg,#000 0%,#000 25%,#000d 43%,#0002 75%,transparent 100%),linear-gradient(0deg,#020204 0%,transparent 23%)}
- .card{aspect-ratio:1.12}
-}
-@media(max-width:650px){
- .hero{height:clamp(555px,142vw,720px);min-height:0;display:block;padding:0;margin:0 -18px;overflow:hidden}
- .hero:before{inset:0;background:linear-gradient(90deg,#000 0%,#000 19%,#000d 45%,#0002 100%),linear-gradient(0deg,#020204 0%,transparent 26%);z-index:1}
- .hero-copy{position:relative;z-index:3;width:57%;padding:42px 0 0 18px}
- .hero h1{font-size:clamp(25px,6.7vw,39px);line-height:1.12;max-width:390px;margin-bottom:20px}
- .hero p{font-size:clamp(15px,3.8vw,19px);line-height:1.2;max-width:330px;margin-bottom:26px}
- .hero-art{position:absolute;z-index:0;right:-13%;bottom:0;width:112%;height:76%;aspect-ratio:auto;object-fit:cover;object-position:56% center;margin:0;mask-image:linear-gradient(180deg,transparent 0%,#000 13%,#000 87%,transparent 100%);filter:drop-shadow(0 0 24px #a42aff66)}
- .paths{padding-top:18px}
- .card{aspect-ratio:1.08}
-}
-@media(max-width:390px){
- .hero{height:590px}
- .hero-copy{width:62%;padding-top:34px}
- .hero h1{font-size:26px}
- .hero p{font-size:15px}
- .hero-art{right:-22%;width:125%;height:73%;object-position:55% center}
-}
-</style>
-</head>
-<body><div class="page">
-<header>
-<a class="brand" href="index.html" aria-label="Jesse's Study Guides home"><img src="assets/homepage/brand.svg" alt="Jesse's Study Guides"></a>
-<button class="menu" id="menuBtn" aria-label="Open navigation" aria-expanded="false">☰</button>
-<nav id="navMenu" aria-label="Site navigation">
-<div><div class="nav-title">Cybersecurity</div><a href="cissp.html">CISSP</a><a href="cism.html">CISM</a><a href="secplus.html">Security+</a><a href="ceh.html">CEH</a></div>
-<div><div class="nav-title">Psychology</div><a href="nce.html">NCE</a><a href="olere.html">OLERE (Oklahoma)</a><a href="texas.html">Texas LPC Jurisprudence</a></div>
-<div><div class="nav-title">Explore</div><a href="games.html">Games</a><a href="#paths">Study resources</a><a href="https://www.buymeacoffee.com/xjessejohnson" target="_blank" rel="noopener noreferrer">Buy Me a Coffee</a></div>
-</nav>
-</header>
-<main>
-<section class="hero" aria-labelledby="heroTitle">
-<div class="hero-copy"><h1 id="heroTitle">Every hard question gets easier with <span>practice.</span></h1><p>Interactive study tools, engaging games, and expert guides for cybersecurity, psychology, and more!</p><a class="cta" href="#paths">Start Learning <b>›</b></a></div>
-<img class="hero-art" src="assets/homepage/hero.svg" alt="A student studying beneath a glowing green and purple brain rising from an open book">
-</section>
-<section class="paths" id="paths" aria-labelledby="pathsTitle">
-<div class="section-heading"><div><h2 id="pathsTitle">Choose Your Path</h2><p>Expert study resources for your goals</p></div></div>
-<div class="cards">
-<a class="card cyber" href="cissp.html" aria-label="Explore Cybersecurity: CISSP, CISM, Security Plus and CEH"><img src="assets/homepage/cyber.svg" alt=""><div class="card-content"><h3>Cybersecurity</h3><p>CISSP · CISM · Security+<br>CEH &amp; More</p><strong>Explore <b>→</b></strong></div></a>
-<a class="card psych" href="nce.html" aria-label="Explore Psychology: NCE, DSM-5-TR, OLERE and Texas LPC"><img src="assets/homepage/psychology.svg" alt=""><div class="card-content"><h3>Psychology</h3><p>NCE · DSM-5-TR<br>&amp; More</p><strong>Explore <b>→</b></strong></div></a>
-<a class="card games" href="games.html" aria-label="Play learning games"><img src="assets/homepage/games.svg" alt=""><div class="card-content"><h3>Games</h3><p>Test Your Knowledge<br>While You Play!</p><strong>Play Now <b>→</b></strong></div></a>
-<a class="card tools" href="#paths" aria-label="Explore study tools, mock exams and flashcards"><img src="assets/homepage/study-tools.svg" alt=""><div class="card-content"><h3>Study Tools</h3><p>Mock Exams,<br>Flashcards &amp; More</p><strong>Get Started <b>→</b></strong></div></a>
-</div>
-</section>
-<section class="motto" aria-label="Encouragement to keep practicing">
-<img class="trophy" src="assets/homepage/trophy.svg" alt="Gold trophy">
-<div class="motto-copy"><h2>Every hard question gets easier with practice.</h2><p>Build confidence. Learn at your pace. Progress one question at a time.</p><strong>Let's Level Up Your Learning!</strong></div>
-</section>
-</main>
-<footer><p>© 2026 Jesse Johnson. Independent study resources · Learn at your own pace · Practice with purpose.</p></footer>
-</div>
-<script>
-const menuBtn=document.getElementById('menuBtn'),nav=document.getElementById('navMenu');
-menuBtn.addEventListener('click',()=>{const open=nav.classList.toggle('open');menuBtn.setAttribute('aria-expanded',String(open));});
-nav.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{nav.classList.remove('open');menuBtn.setAttribute('aria-expanded','false');}));
-</script>
+</style></head>
+<body><div class="wrap">
+<header><a class="brand" href="test.html" aria-label="Jesse's Study Guides home"><img src="assets/logo-brainbook.svg" alt=""><span class="brand-word"><em>Jesse's</em><span>Study Guides</span></span></a><button class="menu" id="menu" aria-label="Open menu" aria-expanded="false">☰</button><nav id="nav" aria-label="Site navigation">
+<div class="nav-title">Cybersecurity</div><a href="cissp.html">CISSP</a><a href="cism.html">CISM</a><a href="secplus.html">Security+</a><a href="ceh.html">CEH</a>
+<div class="nav-title">Psychology</div><a href="nce.html">NCE</a><a href="olere.html">OLERE (Oklahoma)</a><a href="texas.html">Texas LPC Jurisprudence</a>
+<div class="nav-title">Explore</div><a href="games.html">Games</a><a href="#paths">Study resources</a><a href="https://www.buymeacoffee.com/xjessejohnson" target="_blank" rel="noopener noreferrer">Buy Me a Coffee</a></nav></header>
+<main><section class="hero"><div class="hero-copy"><h1>Every hard question gets easier with <span>practice.</span></h1><p>Interactive study tools, engaging games, and expert guides for cybersecurity, psychology, and more!</p><a class="cta" href="#paths">Start Learning <b>›</b></a></div><div class="hero-visual"><img src="assets/home-hero.svg" alt="A student studying beneath a glowing green and purple brain rising from an open book"></div></section>
+<section class="paths" id="paths"><div class="section-title"><div><h2>Choose Your Path</h2><p>Expert study resources for your goals</p></div></div><div class="cards">
+<a class="card cyber" href="cissp.html"><div class="card-art"><img src="assets/path-cyber.svg" alt=""></div><div class="card-content"><h3>Cybersecurity</h3><p>CISSP · CISM · Security+<br>CEH &amp; More</p><span class="link">Explore <b>→</b></span></div></a>
+<a class="card psych" href="nce.html"><div class="card-art"><img src="assets/path-psych.svg" alt=""></div><div class="card-content"><h3>Psychology</h3><p>NCE · DSM-5-TR<br>OLERE · Texas LPC &amp; More</p><span class="link">Explore <b>→</b></span></div></a>
+<a class="card games" href="games.html"><div class="card-art"><img src="assets/path-games.svg" alt=""></div><div class="card-content"><h3>Games</h3><p>Test Your Knowledge<br>While You Play!</p><span class="link">Play Now <b>→</b></span></div></a>
+<a class="card tools" href="#paths"><div class="card-art"><img src="assets/path-tools.svg" alt=""></div><div class="card-content"><h3>Study Tools</h3><p>Mock Exams,<br>Flashcards &amp; More</p><span class="link">Get Started <b>→</b></span></div></a>
+</div></section>
+<section class="motto"><svg class="trophy" viewBox="0 0 120 120" fill="none" aria-hidden="true"><path d="M35 12h50v24c0 25-11 39-25 39S35 61 35 36V12Z" fill="#ffd43b" stroke="#fff0a1" stroke-width="4"/><path d="M35 23H14v10c0 18 12 27 29 27M85 23h21v10c0 18-12 27-29 27" stroke="#ffdb48" stroke-width="8" stroke-linecap="round"/><path d="M60 75v20m-24 12h48M45 95h30l7 12H38l7-12Z" stroke="#ffd43b" stroke-width="6" stroke-linejoin="round"/><path d="m60 19 5 10 11 2-8 8 2 11-10-6-10 6 2-11-8-8 11-2 5-10Z" fill="#fff8ce"/></svg><div class="motto-copy"><h2>Progress is built one question at a time.</h2><p>Explore. Practice. Strengthen what you know.</p><strong>Let's Level Up Your Learning!</strong></div></section></main>
+<footer>© 2026 Jesse Johnson · Independent study resources · Learn at your own pace · Practice with purpose</footer></div>
+<script>const b=document.getElementById('menu'),n=document.getElementById('nav');b.addEventListener('click',()=>{const o=n.classList.toggle('open');b.setAttribute('aria-expanded',String(o))});n.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{n.classList.remove('open');b.setAttribute('aria-expanded','false')}));</script>
 </body></html>
