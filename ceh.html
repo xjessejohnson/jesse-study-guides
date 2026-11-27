@@ -13,14 +13,14 @@
   <link rel="stylesheet" href="styles.css" />
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap&family=JetBrains+Mono:wght@400;700&family=Plus+Jakarta+Sans:wght@400;600;700&display=swap" rel="stylesheet" />
   <style>
-    .hub-summary { background:rgba(16,23,38,.78); border:1px solid var(--border-slate); border-left:3px solid #a3e635; border-radius:10px; padding:1.15rem 1.35rem; margin-bottom:1.5rem; max-width:780px; }
-    .hub-summary p { color:var(--text-secondary); line-height:1.68; }
     .module-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(230px,1fr)); gap:1.25rem; margin-top:1.25rem; }
     .module-card { background:var(--bg-card); border:1px solid var(--border-slate); border-radius:12px; padding:1.45rem; display:flex; flex-direction:column; justify-content:space-between; gap:1.25rem; }
     .module-card:hover { border-color:#a3e635; }
     .module-card h3 { font-family:'Archivo Black',sans-serif; font-size:1.02rem; text-transform:uppercase; color:#fff; margin:0 0 .4rem; }
     .module-card p { font-size:.88rem; color:var(--text-secondary); }
     .btn { padding:.75rem 1.25rem; border-radius:9px; background:#a3e635; color:#111; font-family:'JetBrains Mono',monospace; font-weight:700; font-size:.8rem; text-transform:uppercase; text-decoration:none; display:inline-flex; }
+    .about-btn { margin-top:0.6rem; padding:0.45rem 0.9rem; border-radius:7px; border:1px solid var(--border-slate); background:transparent; color:var(--text-secondary); font-family:'JetBrains Mono',monospace; font-size:0.72rem; cursor:pointer; }
+    .about-btn:hover { border-color:#a3e635; color:#a3e635; }
   </style>
 </head>
 <body>
@@ -54,7 +54,7 @@
       <main class="content-body">
         <div class="eyebrow">EC-Council</div>
         <h1 class="hero-headline">CEH<br /><span class="outline">ETHICAL HACKER</span></h1>
-        <div class="hub-summary"><p><strong>Certified Ethical Hacker</strong> practice covering reconnaissance, scanning, exploitation concepts, and rules of engagement. For authorized testing knowledge only.</p></div>
+        <button type="button" class="about-btn" id="open-about-btn">About this exam</button>
         <div class="module-grid">
           <div class="module-card"><div><h3>Practice Exam</h3><p>Instant feedback or full exam mode, with question jumper.</p></div><a class="btn" href="ceh-exam.html">Launch Exam &rarr;</a></div>
           <div class="module-card"><div><h3>Flashcards</h3><p>Phases, tools, and attack classes.</p></div><a class="btn" href="ceh-flashcards.html">Study Cards &rarr;</a></div>
@@ -63,8 +63,25 @@
       </main>
     </div>
   </div>
+  <div class="modal-backdrop" id="about-modal" role="dialog" aria-modal="true">
+    <div class="modal-box">
+      <div class="modal-top">
+        <div class="modal-title">About CEH</div>
+        <button class="modal-close" id="about-close-btn" aria-label="Close">✕</button>
+      </div>
+      <div class="modal-body">
+        <p><strong>Certified Ethical Hacker</strong> practice covering reconnaissance, scanning, exploitation concepts, and rules of engagement. For authorized testing knowledge only.</p>
+      </div>
+    </div>
+  </div>
   <footer><p>&copy; 2026 Jesse Johnson. All rights reserved.</p><p>Independent study resource. Not affiliated with EC-Council. CEH is a trademark of EC-Council.</p></footer>
-  <script>document.getElementById('mobile-menu-btn').onclick=()=>document.getElementById('nav-drawer').classList.toggle('open');</script>
+  <script>
+    document.getElementById('mobile-menu-btn').onclick=()=>document.getElementById('nav-drawer').classList.toggle('open');
+    const aboutModal = document.getElementById('about-modal');
+    document.getElementById('open-about-btn').onclick = () => aboutModal.classList.add('open');
+    document.getElementById('about-close-btn').onclick = () => aboutModal.classList.remove('open');
+    aboutModal.onclick = (e) => { if (e.target === aboutModal) aboutModal.classList.remove('open'); };
+  </script>
 <script src="theme.js"></script>
 </body>
 </html>
