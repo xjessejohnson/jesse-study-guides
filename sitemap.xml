@@ -18,7 +18,9 @@
   <url><loc>https://jesse-study-guides.vercel.app/ceh-exam.html</loc><priority>0.8</priority></url>
   <url><loc>https://jesse-study-guides.vercel.app/ceh-flashcards.html</loc><priority>0.7</priority></url>
   <url><loc>https://jesse-study-guides.vercel.app/ceh-phase.html</loc><priority>0.7</priority></url>
-  <url><loc>https://jesse-study-guides.vercel.app/nce.html</loc><priority>0.9</priority></url>
+  <url><loc>https://jesse-study-guides.vercel.app/nce.html</loc></url>
+  <url><loc>https://jesse-study-guides.vercel.app/nce-exam-logic.html</loc></url>
+  <url><loc>https://jesse-study-guides.vercel.app/nce.html<priority>0.9</priority></url>
   <url><loc>https://jesse-study-guides.vercel.app/nce-exam.html</loc><priority>0.8</priority></url>
   <url><loc>https://jesse-study-guides.vercel.app/nce-flashcards.html</loc><priority>0.7</priority></url>
   <url><loc>https://jesse-study-guides.vercel.app/nce-games.html</loc><priority>0.7</priority></url>
