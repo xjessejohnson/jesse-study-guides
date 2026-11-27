@@ -20,18 +20,16 @@
   <link href="https://fonts.googleapis.com/css2?family=Archivo+Black&display=swap&family=JetBrains+Mono:wght@500;700&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
     .home-hero-wrapper { width: 100%; max-width: 820px; display: flex; flex-direction: column; gap: 1.35rem; }
-    .hero-header-row { display: flex; align-items: flex-start; justify-content: space-between; gap: 1.5rem; }
-    .hero-headline-wrap { flex: 1; min-width: 0; }
-    .hero-kicker { font-family: 'JetBrains Mono', monospace; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--cyan); }
-    .hero-headline { margin: 0.35rem 0; font-size: clamp(1.7rem, 3.6vw, 2.7rem); line-height: 1.05; }
-    .hero-tagline { margin: 0.4rem 0 0; color: var(--text-secondary); font-size: 1.02rem; line-height: 1.5; max-width: 46ch; }
-    .hero-avatar-col { flex-shrink: 0; width: 120px; display: flex; flex-direction: column; gap: 0.45rem; }
-    .hero-side { display: flex; align-items: flex-start; gap: 0.85rem; flex-shrink: 0; max-width: 340px; }
-    .hero-side .hero-tagline { margin: 0; font-size: 0.92rem; line-height: 1.45; max-width: 22ch; }
+    .hero-header-row { display: flex; align-items: flex-start; gap: 1.25rem; }
+    .hero-avatar-col { flex-shrink: 0; width: 130px; display: flex; flex-direction: column; gap: 0.45rem; }
+    .hero-text-col { flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 0.5rem; }
+    .hero-headline { margin: 0; font-size: clamp(1.55rem, 3.2vw, 2.4rem); line-height: 1.05; }
+    .hero-tagline { margin: 0; color: var(--text-secondary); font-size: 0.98rem; line-height: 1.45; }
     @media (max-width: 680px) {
-      .hero-side { flex-direction: row; max-width: none; gap: 0.65rem; align-items: flex-start; }
-      .hero-side .hero-tagline { max-width: none; font-size: 0.82rem; }
-      .hero-avatar-col { width: 88px; }
+      .hero-header-row { gap: 0.7rem; }
+      .hero-avatar-col { width: 96px; }
+      .hero-headline { font-size: 1.05rem; line-height: 1.12; }
+      .hero-tagline { font-size: 0.78rem; line-height: 1.35; }
     }
 
     .hero-avatar-wrap { width: 100%; aspect-ratio: 896/1200; border-radius: 12px; overflow: hidden; border: 1.5px solid rgba(34,211,238,0.45); }
@@ -66,10 +64,6 @@
     [data-theme="light"] .hero-headline, [data-theme="light"] .hero-kicker { color: #0b1220; }
     [data-theme="light"] .hero-kicker { color: #0e7490; }
     @media (max-width: 680px) {
-      .hero-header-row { flex-direction: row; align-items: flex-start; gap: 0.75rem; }
-      .hero-headline { font-size: 1.15rem; line-height: 1.1; }
-      .hero-headline-wrap { flex: 1; min-width: 0; }
-      .hero-avatar-col { width: 88px; }
       .card-grid { grid-template-columns: 1fr 1fr; }
     }
   </style>
@@ -108,16 +102,14 @@
       <main class="content-body">
         <div class="home-hero-wrapper">
           <div class="hero-header-row">
-            <div class="hero-headline-wrap">
-              <h1 class="hero-headline">EVERY HARD<br />QUESTION GETS<br />EASIER WITH<br /><span class="outline">PRACTICE</span></h1>
-            </div>
-            <div class="hero-side">
-              <div class="hero-avatar-col">
-                <div class="hero-avatar-wrap">
-                  <img src="jesse-avatar.png" alt="Jesse Johnson, creator of Jesse's Study Guides" class="hero-avatar-img" />
-                </div>
-                <button type="button" class="about-link-btn" id="open-about-btn">&#9432; About Me</button>
+            <div class="hero-avatar-col">
+              <div class="hero-avatar-wrap">
+                <img src="jesse-avatar.png" alt="Jesse Johnson, creator of Jesse's Study Guides" class="hero-avatar-img" />
               </div>
+              <button type="button" class="about-link-btn" id="open-about-btn">&#9432; About Me</button>
+            </div>
+            <div class="hero-text-col">
+              <h1 class="hero-headline">EVERY HARD<br />QUESTION GETS<br />EASIER WITH<br /><span class="outline">PRACTICE</span></h1>
               <p class="hero-tagline">Practice exams, flashcards, and study games built for high-stakes certification and licensure prep.</p>
             </div>
           </div>
