@@ -119,17 +119,85 @@ footer{text-align:center;padding:12px 15px 20px;color:#aab0b9;font-size:13px}
  .card p{font-size:11px}
  .mission-copy h2{font-size:13px}
 }
+
+/* Corrected reference-matched responsive composition */
+.site{max-width:1200px}
+.topbar{height:clamp(72px,10vw,126px);padding:0 2.5%;gap:12px}
+.brand{display:flex;align-items:center;gap:10px;width:auto;max-width:75%;line-height:1}
+.brand img{width:clamp(78px,13vw,150px);height:clamp(60px,9vw,112px);max-height:none;object-fit:contain;flex:none}
+.brand-name{display:flex;flex-direction:column;font-family:'Orbitron',sans-serif;font-style:italic;line-height:1.02;white-space:nowrap;text-shadow:0 0 12px #000}
+.brand-name b{font-size:clamp(19px,3.5vw,39px);color:var(--green);font-weight:900}
+.brand-name strong{font-size:clamp(16px,2.7vw,30px);color:#fff;font-weight:800}
+.menu-button{width:clamp(48px,8vw,76px);aspect-ratio:1.05;border-radius:22%;gap:6px}
+.menu-button span{width:clamp(25px,4vw,38px);height:3px}
+.hero{height:clamp(430px,60vw,650px);min-height:0}
+.hero-art{width:100%;height:100%;object-fit:cover;object-position:62% center;image-rendering:auto}
+.hero:after{background:linear-gradient(90deg,#020204 0%,#020204 17%,#020204e8 35%,#02020480 55%,transparent 78%),linear-gradient(0deg,#020204 0%,transparent 22%)}
+.hero-copy{left:4%;top:14%;width:48%}
+.hero h1{font-size:clamp(27px,4.1vw,49px);line-height:1.12}
+.hero p{font-size:clamp(17px,2.1vw,24px);line-height:1.2}
+.paths{padding:22px 3% 0}
+.cards{gap:16px 20px}
+.card{aspect-ratio:1.34}
+.card>img{object-fit:cover}
+.mission{margin:26px 0 38px}
+@media(max-width:520px){
+ .topbar{height:66px;padding:0 3%;border-bottom-width:2px;gap:6px}
+ .brand{gap:5px;max-width:76%}
+ .brand img{width:92px;height:62px}
+ .brand-name b{font-size:19px}
+ .brand-name strong{font-size:15px}
+ .menu-button{width:46px;height:44px;min-width:46px;border-radius:14px;gap:5px}
+ .menu-button span{width:25px;height:3px}
+ .hero{height:72vw;min-height:0;max-height:285px}
+ .hero-art{width:100%;height:100%;object-fit:cover;object-position:61% center}
+ .hero:after{background:linear-gradient(90deg,#020204 0%,#020204 18%,#020204e8 38%,#02020470 60%,transparent 100%),linear-gradient(0deg,#020204 0%,transparent 23%)}
+ .hero-copy{top:13%;left:4%;width:51%;max-width:none}
+ .hero h1{font-size:clamp(19px,5.6vw,22px);line-height:1.13;letter-spacing:-.055em;margin-bottom:5%}
+ .hero h1 span{white-space:nowrap}
+ .hero p{font-size:clamp(13px,3.8vw,15px);line-height:1.18;margin-bottom:7%}
+ .start{min-width:0;padding:9px 15px;border-width:2px;border-radius:22px;font-size:clamp(13px,3.7vw,15px);gap:11px}
+ .paths{padding:16px 3% 0}
+ .section-heading{gap:8px;margin-bottom:16px}
+ .section-heading:before,.section-heading:after{height:20px;border-top-width:2px}
+ .section-heading h2{font-size:clamp(19px,5.2vw,23px)}
+ .section-heading p{font-size:clamp(13px,3.7vw,16px)}
+ .cards{gap:10px}
+ .card{aspect-ratio:1.27;border-radius:12px}
+ .card-copy{bottom:5%}
+ .card h3{font-size:clamp(12px,3.8vw,16px)}
+ .card p{font-size:clamp(11px,3.1vw,14px)}
+ .card .action{font-size:clamp(11px,3.2vw,14px);margin-top:3px}
+ .mission{margin:18px 0 28px;min-height:112px;padding:8px 3%;gap:3%;border-radius:15px;border-width:2px}
+ .trophy-wrap img{max-height:94px}
+ .mission-copy h2{font-size:clamp(12px,3.7vw,16px)}
+ .mission-copy p{font-size:clamp(10px,3vw,13px)}
+ .mission-copy em{font-size:clamp(19px,5vw,24px)}
+ .bottom-line{height:24px}
+}
+@media(max-width:370px){
+ .brand img{width:78px}
+ .brand-name b{font-size:17px}
+ .brand-name strong{font-size:13px}
+ .hero-copy{width:54%}
+ .hero h1{font-size:18px}
+ .hero p{font-size:12px}
+ .start{font-size:12px;padding:8px 12px}
+ .card h3{font-size:11px}
+ .card p,.card .action{font-size:10px}
+}
+
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important}}
 </style>
 </head>
 <body>
 <main class="site">
 <header class="topbar">
-<a class="brand" href="test.html" aria-label="Jesse's Study Guides home"><img src="assets/homepage/brand.svg" alt="Jesse's Study Guides"></a>
+<a class="brand" href="test.html" aria-label="Jesse's Study Guides home"><img src="assets/logo-brainbook.svg" alt=""><span class="brand-name"><b>Jesse's</b><strong>Study Guides</strong></span></a>
 <button class="menu-button" type="button" aria-label="Open navigation menu" aria-expanded="false" onclick="toggleMenu(true)"><span></span><span></span><span></span></button>
 </header>
 <section class="hero" aria-labelledby="hero-title">
-<img class="hero-art" src="assets/homepage/hero.svg" alt="" fetchpriority="high">
+<img class="hero-art" src="assets/home-hero.svg" alt="" fetchpriority="high">
 <div class="hero-copy">
 <h1 id="hero-title"><span>Every hard</span><span>question gets</span><span>easier with</span><span><em>practice.</em></span></h1>
 <p>Interactive study tools, engaging games, and expert guides for cybersecurity, psychology, and more!</p>
@@ -139,10 +207,10 @@ footer{text-align:center;padding:12px 15px 20px;color:#aab0b9;font-size:13px}
 <section class="paths" id="paths" aria-labelledby="paths-title">
 <div class="section-heading"><div><h2 id="paths-title">Choose Your Path</h2><p>Expert study resources for your goals</p></div></div>
 <div class="cards">
-<a class="card cyber" href="cissp.html"><img src="assets/homepage/cyber.svg" alt="" loading="lazy"><div class="card-copy"><h3>Cybersecurity</h3><p>CISSP · CISM · Security+<br>CEH &amp; More</p><span class="action">Explore →</span></div></a>
-<a class="card psych" href="nce.html"><img src="assets/homepage/psychology.svg" alt="" loading="lazy"><div class="card-copy"><h3>Psychology</h3><p>NCE · DSM-5-TR<br>&amp; More</p><span class="action">Explore →</span></div></a>
-<a class="card games" href="games.html"><img src="assets/homepage/games.svg" alt="" loading="lazy"><div class="card-copy"><h3>Games</h3><p>Test Your Knowledge<br>While You Play!</p><span class="action">Play Now →</span></div></a>
-<a class="card tools" href="games.html"><img src="assets/homepage/study-tools.svg" alt="" loading="lazy"><div class="card-copy"><h3>Study Tools</h3><p>Mock Exams,<br>Flashcards &amp; More</p><span class="action">Get Started →</span></div></a>
+<a class="card cyber" href="cissp.html"><img src="assets/path-cyber.svg" alt="" loading="lazy"><div class="card-copy"><h3>Cybersecurity</h3><p>CISSP · CISM · Security+<br>CEH &amp; More</p><span class="action">Explore →</span></div></a>
+<a class="card psych" href="nce.html"><img src="assets/path-psych.svg" alt="" loading="lazy"><div class="card-copy"><h3>Psychology</h3><p>NCE · DSM-5-TR<br>&amp; More</p><span class="action">Explore →</span></div></a>
+<a class="card games" href="games.html"><img src="assets/path-games.svg" alt="" loading="lazy"><div class="card-copy"><h3>Games</h3><p>Test Your Knowledge<br>While You Play!</p><span class="action">Play Now →</span></div></a>
+<a class="card tools" href="games.html"><img src="assets/path-tools.svg" alt="" loading="lazy"><div class="card-copy"><h3>Study Tools</h3><p>Mock Exams,<br>Flashcards &amp; More</p><span class="action">Get Started →</span></div></a>
 </div>
 <section class="mission" aria-label="A note about practice">
 <div class="trophy-wrap"><img src="assets/homepage/trophy.svg" alt="" loading="lazy"></div>
