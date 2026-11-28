@@ -21,14 +21,14 @@ button{font:inherit}
 .topbar{height:clamp(76px,18.55vw,158px);display:flex;align-items:center;justify-content:space-between;gap:2%;padding:0 2.8%;position:relative;background:#020204;border-bottom:3px solid transparent;border-image:linear-gradient(90deg,var(--green),#a72dff 58%,#7d19ff) 1;box-shadow:0 5px 22px #a020ff28}
 .brand{display:flex;align-items:center;flex:1;min-width:0;max-width:calc(100% - clamp(62px,13.4vw,98px) - 16px);height:100%;gap:1.5%;line-height:1}
 .brand-mark{display:block;position:relative;flex:0 0 31%;height:100%;overflow:hidden}
-.brand-mark img{display:block;width:auto;height:100%;max-width:none;object-fit:contain;object-position:left center}
+.brand-mark img{display:block;width:100%;height:100%;max-width:none;object-fit:cover;object-position:left center}
 .brand-wordmark{display:flex;flex-direction:column;justify-content:center;min-width:0;font-family:'Orbitron',sans-serif;font-style:italic;font-weight:900;letter-spacing:-.065em;line-height:.98;text-shadow:0 0 13px #65ff0055}
 .brand-wordmark span:first-child{color:var(--green);font-size:clamp(19px,5.1vw,48px)}
 .brand-wordmark span:last-child{color:#fff;font-size:clamp(15px,4.1vw,39px);white-space:nowrap;text-shadow:0 0 10px #fff4}
 .menu-button{width:clamp(62px,13.2vw,96px);aspect-ratio:1.02;flex:none;border-radius:25%;border:2px solid #44364c;background:linear-gradient(145deg,#19151d,#030305 70%);box-shadow:0 0 18px #a92cff45,inset 0 0 12px #fff1;display:grid;place-content:center;gap:clamp(5px,.9vw,8px);cursor:pointer}
 .menu-button span{display:block;width:clamp(28px,5.4vw,45px);height:clamp(3px,.55vw,5px);background:#fff;border-radius:5px;box-shadow:0 0 8px #fff9}
 .hero{height:min(71.9vw,690px);min-height:285px;position:relative;overflow:hidden;border-bottom:1px solid #ffffff18;background:#030305}
-.hero-art{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:left center;z-index:0}
+.hero-art{position:absolute;inset:0;width:100%;height:100%;object-fit:fill;object-position:center;z-index:0}
 .hero:after{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,#020204 0%,#020204 17%,#020204eb 34%,#0202049c 52%,#02020422 75%,transparent 100%),linear-gradient(0deg,#020204 0%,transparent 24%);pointer-events:none}
 .hero-copy{position:absolute;z-index:2;left:4%;top:13.2%;width:51%;max-width:570px}
 .hero h1{margin:0 0 4.8%;font-family:'Orbitron',sans-serif;font-size:clamp(22px,5.85vw,59px);font-weight:800;font-style:italic;line-height:1.17;letter-spacing:-.055em;text-shadow:0 3px 14px #000}
@@ -45,13 +45,13 @@ button{font:inherit}
 .section-heading h2{font-family:'Orbitron',sans-serif;font-style:italic;font-size:clamp(22px,5.35vw,43px);line-height:1.1;margin:0;text-shadow:0 0 12px #fff3;white-space:nowrap}
 .section-heading p{margin:5px 0 0;font-size:clamp(15px,2.75vw,24px);font-style:italic;line-height:1.05;color:#eee;white-space:nowrap}
 .cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(12px,2.1vw,22px) clamp(14px,2.5vw,24px)}
-.card{position:relative;display:block;aspect-ratio:1.28;min-width:0;overflow:hidden;border-radius:18px;background:#070710;isolation:isolate;transition:transform .2s,filter .2s}
+.card{position:relative;display:block;aspect-ratio:1.28;min-width:0;overflow:hidden;border-radius:0;background:#070710;isolation:isolate;transition:transform .2s,filter .2s}
 .card:hover{transform:translateY(-3px);filter:brightness(1.12)}
 .card>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2}
-.card:after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(0deg,#020208e8 0%,#02020875 34%,transparent 76%)}
-.card.cyber{border:2px solid #11cfff;box-shadow:0 0 10px #00cfff88,inset 0 0 16px #00cfff55}
-.card.psych,.card.tools{border:2px solid #c13cff;box-shadow:0 0 10px #b22cff88,inset 0 0 16px #b22cff55}
-.card.games{border:2px solid #5dff00;box-shadow:0 0 10px #5dff0088,inset 0 0 16px #5dff0055}
+.card:after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(0deg,#020208a8 0%,#02020830 40%,transparent 76%)}
+.card.cyber{border:0;box-shadow:none}
+.card.psych,.card.tools{border:0;box-shadow:none}
+.card.games{border:0;box-shadow:none}
 .card-copy{position:absolute;left:3%;right:3%;bottom:5.5%;text-align:center;text-shadow:0 2px 7px #000}
 .card h3{margin:0 0 3px;font-family:'Orbitron',sans-serif;font-style:italic;font-size:clamp(15px,3.3vw,29px);line-height:1.05}
 .card p{margin:0;font-size:clamp(13px,2.5vw,22px);font-weight:600;line-height:1.12}
@@ -100,7 +100,7 @@ footer{text-align:center;padding:12px 15px 20px;color:#aab0b9;font-size:13px}
  .section-heading h2{font-size:clamp(21px,5.35vw,38px)}
  .section-heading p{font-size:clamp(15px,2.75vw,20px)}
  .cards{gap:clamp(10px,1.7vw,14px)}
- .card{aspect-ratio:1.28;border-radius:14px}
+ .card{aspect-ratio:1.28;border-radius:0}
  .card-copy{bottom:5.5%}
  .card h3{font-size:clamp(15px,3.3vw,24px)}
  .card p{font-size:clamp(13px,2.5vw,19px)}
