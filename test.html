@@ -86,30 +86,33 @@ footer{text-align:center;padding:12px 15px 20px;color:#aab0b9;font-size:13px}
  .mission{margin-top:38px}
 }
 @media(max-width:520px){
- .topbar{border-bottom-width:2px}
- .hero{height:71.9vw;min-height:280px}
+ /* Compact mobile composition: fit the complete reference design inside a phone browser viewport. */
+ .topbar{height:clamp(63px,15.4vw,131px);border-bottom-width:2px}
+ .hero{height:59.7vw;min-height:232px}
  .hero-art{object-position:left center}
  .hero:after{background:linear-gradient(90deg,#020204 0%,#020204 17%,#020204ed 35%,#0202049b 54%,#02020420 77%,transparent 100%),linear-gradient(0deg,#020204 0%,transparent 24%)}
  .hero-copy{top:13%;left:4%;width:52%;max-width:none}
- .hero h1{font-size:clamp(22px,5.85vw,42px);line-height:1.17;letter-spacing:-.055em;margin-bottom:4.8%}
- .hero p{font-size:clamp(16px,3.35vw,24px);line-height:1.2;margin-bottom:7%}
- .start{padding:10px 18px;min-height:clamp(48px,9vw,64px);border-width:2px;border-radius:26px;font-size:clamp(15px,3.2vw,23px)}
- .paths{padding:clamp(17px,2.7vw,22px) 3% 0}
- .section-heading{gap:9px;margin-bottom:clamp(16px,2.6vw,20px)}
- .section-heading:before,.section-heading:after{height:23px;border-top-width:3px}
- .section-heading h2{font-size:clamp(21px,5.35vw,38px)}
- .section-heading p{font-size:clamp(15px,2.75vw,20px)}
- .cards{gap:clamp(10px,1.7vw,14px)}
- .card{aspect-ratio:1.28;border-radius:0}
- .card-copy{bottom:5.5%}
- .card h3{font-size:clamp(15px,3.3vw,24px)}
- .card p{font-size:clamp(13px,2.5vw,19px)}
- .card .action{font-size:clamp(13px,2.55vw,19px);margin-top:4px}
- .mission{margin:clamp(19px,3vw,25px) 0 clamp(30px,4.8vw,40px);min-height:clamp(142px,21.2vw,165px);grid-template-columns:34% 1fr;padding:8px 3%}
- .mission-copy h2{font-size:clamp(16px,3.55vw,25px)}
- .mission-copy p{font-size:clamp(12px,2.55vw,17px)}
- .mission-copy em{font-size:clamp(27px,6.1vw,43px)}
- .bottom-line{height:28px}
+ .hero h1{font-size:clamp(18px,4.85vw,35px);line-height:1.14;letter-spacing:-.055em;margin-bottom:4%}
+ .hero p{font-size:clamp(13px,2.78vw,20px);line-height:1.16;margin-bottom:5.8%}
+ .start{padding:8px 15px;min-height:clamp(40px,7.5vw,53px);border-width:2px;border-radius:24px;font-size:clamp(12px,2.65vw,19px)}
+ .paths{padding:clamp(14px,2.2vw,18px) 3% 0}
+ .section-heading{gap:8px;margin-bottom:clamp(13px,2.1vw,17px)}
+ .section-heading:before,.section-heading:after{height:19px;border-top-width:3px}
+ .section-heading h2{font-size:clamp(17px,4.44vw,32px)}
+ .section-heading p{font-size:clamp(12px,2.28vw,17px)}
+ .cards{gap:clamp(8px,1.4vw,12px)}
+ .card{aspect-ratio:1.55;border-radius:0}
+ .card>img{object-fit:cover}
+ .card-copy{bottom:4.5%}
+ .card h3{font-size:clamp(12px,2.75vw,20px)}
+ .card p{font-size:clamp(10px,2.08vw,15px)}
+ .card .action{font-size:clamp(10px,2.12vw,16px);margin-top:3px}
+ .mission{margin:clamp(15px,2.4vw,20px) 0 clamp(19px,3.2vw,27px);min-height:clamp(118px,17.6vw,138px);grid-template-columns:34% 1fr;padding:7px 3%}
+ .mission-copy h2{font-size:clamp(13px,2.95vw,21px)}
+ .mission-copy p{font-size:clamp(10px,2.12vw,15px)}
+ .mission-copy em{font-size:clamp(22px,5.05vw,36px)}
+ .bottom-line{height:23px}
+ footer{padding:8px 10px 12px;font-size:10px}
 }
 @media(max-width:370px){
  .hero-copy{width:56%}
