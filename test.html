@@ -1,97 +1,173 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Jesse's Study Guides</title>
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Montserrat:ital,wght@0,600;0,800;1,800&display=swap" />
-    <style>
-      body { margin: 0; background: #05060c; color: #f4f7fb; font-family: Montserrat, system-ui, sans-serif; }
-      a { color: inherit; text-decoration: none; }
-      .poster { position: relative; container-type: inline-size; width: 100%; margin: 0 auto; }
-      .poster > img { width: 100%; height: auto; display: block; }
-      .hit { position: absolute; z-index: 3; display: block; color: transparent; background: transparent; border: 0; padding: 0; }
-      .hit-menu { top: 1.5%; left: 78%; width: 17%; height: 5.4%; }
-      .hit-cyber, .hit-psych { top: 56%; width: 44%; height: 16%; }
-      .hit-cyber { left: 4%; } .hit-psych { left: 52%; }
-      .hit-games, .hit-tools { top: 72%; width: 44%; height: 16%; }
-      .hit-games { left: 4%; } .hit-tools { left: 52%; }
-      .brand-lockup, .cover-title, .cover-sub, .cover-mission, .path-title, .card-label, .copy-note {
-        position: absolute; z-index: 2; margin: 0; pointer-events: none;
-      }
-      .brand-lockup { top: 2.4%; left: 27%; line-height: 0.9; }
-      .brand-lockup .j { display: block; color: #39ff14; font-style: italic; font-weight: 800; font-size: 5.6cqw; text-shadow: 0 0 14px rgba(57,255,20,.55); }
-      .brand-lockup .g { display: block; color: #fff; font-style: italic; font-weight: 800; font-size: 3.9cqw; }
-      .cover-title { top: 9%; left: 4%; width: 42%; color: #fff; font-size: 5.3cqw; font-weight: 800; font-style: italic; line-height: 0.96; letter-spacing: -0.03em; text-shadow: 0 2px 14px #000; }
-      .cover-title em { color: #39ff14; font-style: italic; text-shadow: 0 0 16px rgba(57,255,20,.6); }
-      .cover-sub { top: 20.4%; left: 4%; width: 42%; color: #d7dee6; font-size: 2.45cqw; font-weight: 600; line-height: 1.28; }
-      .coffee { position: absolute; z-index: 4; top: 27.2%; left: 4%; display: inline-flex; align-items: center; gap: 0.4em; padding: 0.42em 0.8em; border-radius: 999px; background: #ffdd00; color: #111; font-size: 2.6cqw; font-weight: 800; line-height: 1; }
-      .coffee svg { width: 1.15em; height: 1.15em; }
-      .start-btn { position: absolute; z-index: 4; top: 30.6%; left: 4%; display: inline-flex; align-items: center; justify-content: space-between; gap: 0.8em; width: 38%; padding: 0.42em 0.9em; border-radius: 999px; border: 2px solid #39ff14; color: #fff; background: rgba(0,0,0,.28); font-size: 3.5cqw; font-weight: 700; box-shadow: 0 0 16px rgba(57,255,20,.4); }
-      .path-title { top: 49.5%; left: 10%; width: 80%; text-align: center; }
-      .path-title h2 { margin: 0; color: #fff; font-size: 5.2cqw; font-style: italic; font-weight: 800; letter-spacing: -0.03em; }
-      .path-title p { margin: 0.12em 0 0; color: #c5ced8; font-size: 2.6cqw; }
-      .card-label { width: 40%; text-align: center; }
-      .card-label h3 { margin: 0; color: #fff; font-size: 3cqw; font-style: italic; font-weight: 800; }
-      .card-label p { margin: 0.04em 0 0; color: #e7edf3; font-size: 2cqw; line-height: 1.15; }
-      .card-label .go { display: block; margin-top: 0.06em; font-size: 2.05cqw; font-weight: 700; }
-      .go.cyber { color: #3ad6ff; } .go.psych { color: #d38bff; } .go.game { color: #39ff14; }
-      .c1 { top: 66%; left: 6%; } .c2 { top: 66%; left: 54%; }
-      .c3 { top: 81.4%; left: 6%; } .c4 { top: 81.4%; left: 54%; }
-      .cover-mission { top: 90.4%; left: 32%; width: 62%; color: #fff; }
-      .cover-mission strong { display: block; font-size: 3.1cqw; font-style: italic; font-weight: 800; line-height: 1.05; }
-      .cover-mission span { display: block; margin-top: 0.15em; color: #e7edf3; font-size: 2.1cqw; font-weight: 600; line-height: 1.25; }
-      .cover-mission em { display: block; margin-top: 0.04em; font-family: "Great Vibes", cursive; font-style: normal; font-size: 3.6cqw; color: #39ff14; line-height: 1; }
-      .copy-note { position: static; display: block; pointer-events: auto; padding: 0.8rem 1rem 1.4rem; text-align: center; color: #9aa6b2; font-size: 0.8rem; }
-      .nav { position: fixed; inset: 0; z-index: 40; background: rgba(3,4,8,.94); display: flex; flex-direction: column; padding: 1.2rem; }
-      .nav a { color: #fff; font: 800 1.35rem/1.2 Montserrat, system-ui, sans-serif; padding: .8rem 0; border-bottom: 1px solid #1c2430; }
-      .nav header { display: flex; justify-content: space-between; align-items: center; }
-      .nav button { background: none; color: #fff; border: 1px solid #1c2430; border-radius: .7rem; min-width: 2.75rem; min-height: 2.75rem; font-size: 1.3rem; }
-    </style>
-  </head>
-  <body>
-    <main class="poster">
-      <img src="assets/poster.jpg" alt="" />
-      <p class="brand-lockup"><span class="j">Jesse's</span><span class="g">Study Guides</span></p>
-      <h1 class="cover-title">Every hard<br />question<br />becomes easier<br /><em>with practice.</em></h1>
-      <p class="cover-sub">I made this site for myself to study easier. If it has helped you in anyway you can support my future projects by buying me a coffee.</p>
-      <a class="coffee" href="https://www.buymeacoffee.com/xjessejohnson" target="_blank" rel="noreferrer">
-        <svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M4 8h12a3 3 0 0 1 0 6h-1.1A5 5 0 0 1 10 19H8a5 5 0 0 1-4.9-4H3V8h1zm12 2v2h1a1 1 0 0 0 0-2h-1zM7 21h6v1H7z" /></svg>
-        Buy me a coffee
-      </a>
-      <a class="start-btn" href="#paths">Start Learning <span aria-hidden="true">›</span></a>
-      <div class="path-title">
-        <h2>Choose Your Path</h2>
-        <p>Expert study resources for your goals</p>
-      </div>
-      <div class="card-label c1"><h3>Cybersecurity</h3><p>CISSP · CISM · Security+<br />CEH & More</p><span class="go cyber">Explore →</span></div>
-      <div class="card-label c2"><h3>Psychology</h3><p>NCE · DSM-5-TR<br />& More</p><span class="go psych">Explore →</span></div>
-      <div class="card-label c3"><h3>Games</h3><p>Test Your Knowledge<br />While You Play!</p><span class="go game">Play Now →</span></div>
-      <div class="card-label c4"><h3>Study Tools</h3><p>Mock Exams,<br />Flashcards & More</p><span class="go psych">Get Started →</span></div>
-      <p class="cover-mission"><strong>Practice, not a promise.</strong><span>Tools I use myself. Nothing here guarantees a pass.</span><em>Show up and study.</em></p>
-      <button type="button" class="hit hit-menu" aria-label="Open menu" onclick="document.getElementById('menu').hidden=false"></button>
-      <a class="hit hit-cyber" href="cissp.html">Cybersecurity</a>
-      <a class="hit hit-psych" href="nce.html">Psychology</a>
-      <a class="hit hit-games" id="paths" href="games.html">Games</a>
-      <a class="hit hit-tools" href="cissp.html">Study Tools</a>
-      <p class="copy-note">© 2026 Jesse Johnson · Independent study resources · Learn at your own pace · Practice with purpose</p>
-    </main>
-    <div class="nav" id="menu" hidden>
-      <header>
-        <strong>Menu</strong>
-        <button type="button" aria-label="Close menu" onclick="document.getElementById('menu').hidden=true">×</button>
-      </header>
-      <a href="test.html">Home</a>
-      <a href="cissp.html">CISSP</a>
-      <a href="cism.html">CISM</a>
-      <a href="secplus.html">Security+</a>
-      <a href="ceh.html">CEH</a>
-      <a href="nce.html">NCE</a>
-      <a href="olere.html">OLERE</a>
-      <a href="texas.html">Texas LPC</a>
-      <a href="games.html">Games</a>
-      <a href="https://www.buymeacoffee.com/xjessejohnson" target="_blank" rel="noreferrer">Buy Me a Coffee</a>
-    </div>
-  </body>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#030305">
+<title>Jesse's Study Guides</title>
+<meta name="description" content="Interactive study tools, engaging games, and study guides for cybersecurity, psychology, and more.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;700;800;900&family=Rajdhani:wght@500;600;700&family=Great+Vibes&display=swap" rel="stylesheet">
+<style>
+:root{--green:#65ff00;--purple:#c43cff;--cyan:#13cfff;--black:#030305;--white:#f8f8fb}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;background:var(--black)}
+body{margin:0;background:#030305;color:var(--white);font-family:'Rajdhani',Arial,sans-serif;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+button{font:inherit}
+.site{width:100%;max-width:1100px;margin:0 auto;background:#030305;position:relative;isolation:isolate;overflow:hidden;box-shadow:0 0 60px #000}
+.site:before{content:"";position:absolute;inset:0;pointer-events:none;z-index:-1;background:repeating-linear-gradient(0deg,transparent 0 70px,#6a2aff08 71px 72px),radial-gradient(ellipse at 5% 28%,#19ff1010,transparent 28%),radial-gradient(ellipse at 95% 44%,#a000ff12,transparent 30%)}
+.topbar{height:clamp(104px,18.7vw,178px);display:flex;align-items:center;justify-content:space-between;padding:0 3.2%;position:relative;background:#020204;border-bottom:3px solid transparent;border-image:linear-gradient(90deg,var(--green),#a72dff 58%,#7d19ff) 1;box-shadow:0 5px 20px #a020ff22}
+.brand{display:block;width:min(70%,590px);line-height:0}
+.brand img{display:block;width:100%;height:auto;max-height:100%;object-fit:contain}
+.menu-button{width:clamp(64px,13vw,94px);aspect-ratio:1.08;border-radius:24%;border:2px solid #44364c;background:linear-gradient(145deg,#19151d,#030305 70%);box-shadow:0 0 18px #a92cff36,inset 0 0 12px #fff1;display:grid;place-content:center;gap:7px;cursor:pointer;flex:none}
+.menu-button span{width:clamp(29px,5.5vw,44px);height:4px;background:#fff;border-radius:5px;box-shadow:0 0 8px #fff9}
+.hero{height:clamp(500px,72vw,700px);position:relative;overflow:hidden;border-bottom:1px solid #ffffff16;background:#030305}
+.hero-art{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;object-position:58% center;z-index:0}
+.hero:after{content:"";position:absolute;inset:0;z-index:1;background:linear-gradient(90deg,#020204 0%,#020204 20%,#020204e8 38%,#02020478 57%,transparent 78%),linear-gradient(0deg,#020204 0%,transparent 25%);pointer-events:none}
+.hero-copy{position:absolute;z-index:2;left:4%;top:13%;width:49%;max-width:520px}
+.hero h1{margin:0 0 4.5%;font-family:'Orbitron',sans-serif;font-size:clamp(27px,5.35vw,58px);font-weight:800;font-style:italic;line-height:1.13;letter-spacing:-.055em;text-shadow:0 3px 14px #000}
+.hero h1 span{display:block;white-space:nowrap}
+.hero h1 em{font-style:italic;color:var(--green);text-shadow:0 0 17px #55ff0088}
+.hero p{font-size:clamp(17px,2.75vw,27px);font-weight:600;line-height:1.22;margin:0 0 7%;max-width:480px;text-shadow:0 2px 9px #000}
+.start{display:inline-flex;align-items:center;justify-content:center;gap:22px;padding:13px 26px;min-width:245px;border:3px solid var(--green);border-radius:28px;background:#020604d9;color:#fff;font-family:'Orbitron',sans-serif;font-style:italic;font-weight:800;font-size:clamp(15px,2.7vw,25px);box-shadow:0 0 12px #64ff00,0 0 30px #64ff0060,inset 0 0 15px #64ff0022;transition:transform .2s,box-shadow .2s}
+.start:hover{transform:translateY(-2px);box-shadow:0 0 18px #64ff00,0 0 42px #64ff0077}
+.start b{font-size:1.5em;line-height:.7}
+.paths{padding:24px 3% 0;position:relative}
+.section-heading{display:flex;align-items:center;justify-content:center;gap:18px;text-align:center;margin:0 auto 25px;position:relative}
+.section-heading:before,.section-heading:after{content:"";height:30px;flex:1;max-width:190px;border-top:4px solid var(--green);filter:drop-shadow(0 0 6px var(--green));transform:skewX(35deg)}
+.section-heading:after{border-color:var(--purple);filter:drop-shadow(0 0 6px var(--purple));transform:skewX(-35deg)}
+.section-heading h2{font-family:'Orbitron',sans-serif;font-style:italic;font-size:clamp(22px,4.8vw,42px);line-height:1.1;margin:0;text-shadow:0 0 12px #fff3}
+.section-heading p{margin:5px 0 0;font-size:clamp(15px,2.6vw,23px);font-style:italic;line-height:1.05;color:#eee}
+.cards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px 22px}
+.card{position:relative;display:block;aspect-ratio:1.62;min-width:0;overflow:hidden;border-radius:18px;background:#070710;isolation:isolate;transition:transform .2s,filter .2s}
+.card:hover{transform:translateY(-3px);filter:brightness(1.12)}
+.card>img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;z-index:-2}
+.card:after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(0deg,#020208e8 0%,#0202088c 34%,transparent 76%)}
+.card.cyber{border:2px solid #11cfff;box-shadow:0 0 10px #00cfff88,inset 0 0 16px #00cfff55}
+.card.psych,.card.tools{border:2px solid #c13cff;box-shadow:0 0 10px #b22cff88,inset 0 0 16px #b22cff55}
+.card.games{border:2px solid #5dff00;box-shadow:0 0 10px #5dff0088,inset 0 0 16px #5dff0055}
+.card-copy{position:absolute;left:3%;right:3%;bottom:5%;text-align:center;text-shadow:0 2px 7px #000}
+.card h3{margin:0 0 3px;font-family:'Orbitron',sans-serif;font-style:italic;font-size:clamp(15px,3vw,28px);line-height:1.05}
+.card p{margin:0;font-size:clamp(13px,2.2vw,21px);font-weight:600;line-height:1.12}
+.card .action{display:block;margin-top:5px;font-family:'Orbitron',sans-serif;font-style:italic;font-size:clamp(13px,2.3vw,21px);font-weight:800}
+.cyber .action{color:#31dfff}.psych .action,.tools .action{color:#d58bff}.games .action{color:var(--green)}
+.mission{margin:30px 0 48px;min-height:clamp(140px,22vw,205px);display:grid;grid-template-columns:29% 1fr;align-items:center;gap:3%;padding:12px 4%;border:3px solid var(--green);border-radius:25px;background:linear-gradient(110deg,#071407ed,#020504 50%,#050208);box-shadow:0 0 13px #5dff00,0 0 28px #5dff0055,inset 0 0 20px #5dff0020}
+.trophy-wrap{height:100%;display:grid;place-items:center;border-right:2px solid #eaffc7;padding-right:10%}
+.trophy-wrap img{width:min(100%,150px);height:100%;max-height:160px;object-fit:contain;filter:drop-shadow(0 0 9px #ffd75a)}
+.mission-copy h2{font-family:'Orbitron',sans-serif;font-size:clamp(16px,3vw,28px);font-style:italic;line-height:1.12;margin:0 0 7px}
+.mission-copy p{font-size:clamp(13px,2.1vw,20px);font-weight:600;line-height:1.2;margin:0;color:#f3f3f3}
+.mission-copy em{display:block;margin-top:5px;color:var(--green);font-family:'Great Vibes',cursive;font-size:clamp(25px,4.2vw,42px);line-height:1.05}
+.bottom-line{height:30px;position:relative;border-top:4px solid var(--purple);filter:drop-shadow(0 0 7px var(--purple));display:flex;justify-content:center}
+.bottom-line:before{content:"";position:absolute;top:-4px;width:105px;height:28px;background:#030305;border:4px solid var(--purple);border-bottom:0;border-radius:35px 35px 0 0}
+.chevrons{position:relative;z-index:1;color:var(--green);font-size:31px;line-height:20px;font-weight:900;text-shadow:0 0 10px var(--green)}
+footer{text-align:center;padding:12px 15px 20px;color:#aab0b9;font-size:13px}
+.menu-panel{position:fixed;inset:0;z-index:20;background:#030305f5;backdrop-filter:blur(12px);padding:24px;display:none;overflow:auto}
+.menu-panel.open{display:block}
+.menu-head{display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #342342;padding-bottom:16px;margin-bottom:16px}
+.menu-head strong{font-family:'Orbitron',sans-serif;color:var(--green);font-size:24px}
+.menu-head button{background:#17111d;border:1px solid #7541a0;color:#fff;border-radius:12px;width:48px;height:48px;font-size:30px}
+.menu-group{margin:18px 0}
+.menu-group h3{color:var(--green);font-family:'Orbitron',sans-serif;font-size:13px;letter-spacing:1px;text-transform:uppercase;margin:0 0 8px}
+.menu-group a{display:block;padding:11px 4px;border-bottom:1px solid #ffffff18;font-size:21px;font-weight:700}
+@media(min-width:900px){
+ .site{box-shadow:0 0 90px #000}
+ .topbar{padding-inline:3.5%}
+ .hero{height:min(66vw,690px);min-height:560px}
+ .hero-copy{top:15%;left:5%;width:45%}
+ .hero h1{font-size:clamp(48px,4.5vw,58px)}
+ .hero p{font-size:clamp(23px,2.1vw,27px)}
+ .cards{gap:24px 28px}
+ .card{aspect-ratio:1.72}
+ .mission{margin-top:38px}
+}
+@media(max-width:520px){
+ .topbar{height:clamp(96px,18.7vw,126px);padding-inline:3%}
+ .brand{width:70%}
+ .menu-button{width:clamp(60px,13vw,78px);border-radius:23%;gap:6px}
+ .menu-button span{width:clamp(27px,5.8vw,34px);height:3.5px}
+ .hero{height:clamp(490px,72vw,540px)}
+ .hero-art{object-position:58% center}
+ .hero:after{background:linear-gradient(90deg,#020204 0%,#020204 18%,#020204e8 43%,#02020470 65%,transparent 100%),linear-gradient(0deg,#020204 0%,transparent 25%)}
+ .hero-copy{top:13%;left:4%;width:51%}
+ .hero h1{font-size:clamp(25px,5.4vw,37px);letter-spacing:-.06em;line-height:1.16;margin-bottom:5%}
+ .hero p{font-size:clamp(15px,2.75vw,19px);line-height:1.18;margin-bottom:7%}
+ .start{min-width:0;padding:11px 17px;border-width:2px;border-radius:24px;font-size:clamp(14px,2.8vw,19px);gap:12px}
+ .paths{padding:18px 3% 0}
+ .section-heading{gap:9px;margin-bottom:20px}
+ .section-heading:before,.section-heading:after{height:23px;border-top-width:3px}
+ .section-heading h2{font-size:clamp(19px,4.7vw,27px)}
+ .section-heading p{font-size:clamp(14px,2.6vw,17px)}
+ .cards{gap:12px}
+ .card{aspect-ratio:1.06;border-radius:14px}
+ .card-copy{bottom:5%}
+ .card h3{font-size:clamp(13px,2.9vw,19px)}
+ .card p{font-size:clamp(12px,2.35vw,16px)}
+ .card .action{font-size:clamp(12px,2.45vw,16px);margin-top:4px}
+ .mission{margin:22px 0 36px;min-height:clamp(135px,21vw,160px);padding:10px 3%;gap:3%;border-radius:18px;border-width:2px}
+ .trophy-wrap img{max-height:130px}
+ .mission-copy h2{font-size:clamp(14px,2.9vw,19px)}
+ .mission-copy p{font-size:clamp(12px,2.15vw,15px)}
+ .mission-copy em{font-size:clamp(22px,4.2vw,29px)}
+}
+@media(max-width:370px){
+ .hero-copy{width:55%}
+ .hero h1{font-size:24px}
+ .hero p{font-size:14px}
+ .card h3{font-size:12px}
+ .card p{font-size:11px}
+ .mission-copy h2{font-size:13px}
+}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important}}
+</style>
+</head>
+<body>
+<main class="site">
+<header class="topbar">
+<a class="brand" href="test.html" aria-label="Jesse's Study Guides home"><img src="assets/homepage/brand.svg" alt="Jesse's Study Guides"></a>
+<button class="menu-button" type="button" aria-label="Open navigation menu" aria-expanded="false" onclick="toggleMenu(true)"><span></span><span></span><span></span></button>
+</header>
+<section class="hero" aria-labelledby="hero-title">
+<img class="hero-art" src="assets/homepage/hero.svg" alt="" fetchpriority="high">
+<div class="hero-copy">
+<h1 id="hero-title"><span>Every hard</span><span>question gets</span><span>easier with</span><span><em>practice.</em></span></h1>
+<p>Interactive study tools, engaging games, and expert guides for cybersecurity, psychology, and more!</p>
+<a class="start" href="#paths">Start Learning <b aria-hidden="true">›</b></a>
+</div>
+</section>
+<section class="paths" id="paths" aria-labelledby="paths-title">
+<div class="section-heading"><div><h2 id="paths-title">Choose Your Path</h2><p>Expert study resources for your goals</p></div></div>
+<div class="cards">
+<a class="card cyber" href="cissp.html"><img src="assets/homepage/cyber.svg" alt="" loading="lazy"><div class="card-copy"><h3>Cybersecurity</h3><p>CISSP · CISM · Security+<br>CEH &amp; More</p><span class="action">Explore →</span></div></a>
+<a class="card psych" href="nce.html"><img src="assets/homepage/psychology.svg" alt="" loading="lazy"><div class="card-copy"><h3>Psychology</h3><p>NCE · DSM-5-TR<br>&amp; More</p><span class="action">Explore →</span></div></a>
+<a class="card games" href="games.html"><img src="assets/homepage/games.svg" alt="" loading="lazy"><div class="card-copy"><h3>Games</h3><p>Test Your Knowledge<br>While You Play!</p><span class="action">Play Now →</span></div></a>
+<a class="card tools" href="games.html"><img src="assets/homepage/study-tools.svg" alt="" loading="lazy"><div class="card-copy"><h3>Study Tools</h3><p>Mock Exams,<br>Flashcards &amp; More</p><span class="action">Get Started →</span></div></a>
+</div>
+<section class="mission" aria-label="A note about practice">
+<div class="trophy-wrap"><img src="assets/homepage/trophy.svg" alt="" loading="lazy"></div>
+<div class="mission-copy"><h2>Practice, not a promise.</h2><p>Independent study resources. Build your knowledge one question at a time.</p><em>Let's Level Up Your Learning!</em></div>
+</section>
+</section>
+<div class="bottom-line" aria-hidden="true"><span class="chevrons">⌃<br>⌃</span></div>
+<footer>© 2026 Jesse Johnson · Independent study resources · Learn at your own pace</footer>
+</main>
+<nav class="menu-panel" id="site-menu" aria-label="Main navigation" aria-hidden="true">
+<div class="menu-head"><strong>Explore</strong><button type="button" aria-label="Close menu" onclick="toggleMenu(false)">×</button></div>
+<div class="menu-group"><h3>Cybersecurity</h3><a href="cissp.html">CISSP</a><a href="cism.html">CISM</a><a href="secplus.html">Security+</a><a href="ceh.html">CEH</a></div>
+<div class="menu-group"><h3>Psychology</h3><a href="nce.html">NCE</a><a href="olere.html">OLERE</a><a href="texas.html">Texas LPC</a></div>
+<div class="menu-group"><h3>Explore</h3><a href="games.html">Games</a><a href="test.html">Home</a></div>
+</nav>
+<script>
+function toggleMenu(open){
+ const menu=document.getElementById('site-menu');
+ const button=document.querySelector('.menu-button');
+ menu.classList.toggle('open',open);
+ menu.setAttribute('aria-hidden',String(!open));
+ button.setAttribute('aria-expanded',String(open));
+ document.body.style.overflow=open?'hidden':'';
+}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')toggleMenu(false)});
+</script>
+</body>
 </html>
