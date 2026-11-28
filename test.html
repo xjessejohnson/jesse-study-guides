@@ -85,317 +85,101 @@ footer{text-align:center;padding:12px 15px 20px;color:#aab0b9;font-size:13px}
  .card{aspect-ratio:1.28}
  .mission{margin-top:38px}
 }
+
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important}}
+/* Single mobile layout system: fixed to the phone viewport, with no competing overrides. */
 @media(max-width:520px){
-  /* Match the reference composition: preserve the full artwork proportions and keep every panel inside the viewport. */
-  html,body{width:100%;max-width:100%;overflow-x:hidden}
-  .site{width:100%;max-width:100%;overflow:hidden}
-  .topbar{height:18.55vw;min-height:112px;max-height:132px;padding-inline:2.8%;border-bottom-width:3px}
-  .brand{max-width:calc(100% - clamp(62px,13.4vw,98px) - 12px);gap:1.5%}
-  .brand-mark{flex:0 0 31%;min-width:0}
+  html,body{width:100%;height:100%;min-height:0;margin:0;overflow:hidden!important}
+  .site{
+    width:100%;max-width:100%;height:100svh;min-height:0;margin:0;
+    display:grid;grid-template-columns:minmax(0,1fr);
+    grid-template-rows:9.5svh 34svh 52.5svh 4svh;
+    overflow:hidden;box-shadow:none;
+  }
+  .topbar{
+    grid-row:1;width:100%;height:100%;min-height:0;max-height:none;
+    padding:0 2.5%;gap:2%;border-bottom-width:2px;
+  }
+  .brand{min-width:0;max-width:calc(100% - 68px);height:100%;gap:1%;overflow:hidden}
+  .brand-mark{flex:0 0 34%;height:100%;min-width:0;overflow:hidden}
   .brand-mark img{width:100%;height:100%;object-fit:contain;object-position:left center}
-  .brand-wordmark span:first-child{font-size:clamp(19px,5.1vw,27px)}
-  .brand-wordmark span:last-child{font-size:clamp(15px,4.1vw,23px)}
-  .menu-button{width:clamp(62px,13.2vw,94px)}
-  .hero{height:71.9vw;min-height:285px;max-height:510px}
-  .hero-art{object-fit:cover;object-position:center center}
-  .hero:after{background:linear-gradient(90deg,#020204 0%,#020204 17%,#020204eb 34%,#0202049c 52%,#02020422 75%,transparent 100%),linear-gradient(0deg,#020204 0%,transparent 24%)}
-  .hero-copy{top:13.2%;left:4%;width:51%;max-width:none}
-  .hero h1{font-size:clamp(22px,5.85vw,39px);line-height:1.17;letter-spacing:-.055em;margin-bottom:4.8%}
+  .brand-wordmark{min-width:0}
+  .brand-wordmark span:first-child{font-size:clamp(19px,5.8vw,26px)}
+  .brand-wordmark span:last-child{font-size:clamp(15px,4.5vw,21px)}
+  .menu-button{width:clamp(52px,13.2vw,64px);height:auto;aspect-ratio:1;flex:0 0 auto;gap:5px}
+  .menu-button span{width:clamp(25px,6vw,31px);height:3px}
+  .hero{
+    grid-row:2;width:100%;height:100%;min-height:0;max-height:none;
+    position:relative;overflow:hidden;
+  }
+  .hero-art{
+    position:absolute;inset:0;width:100%;height:100%;
+    object-fit:cover;object-position:58% center;
+  }
+  .hero:after{
+    background:linear-gradient(90deg,#020204 0%,#020204 10%,#020204ed 32%,#020204a8 53%,#02020424 78%,transparent 100%),
+               linear-gradient(0deg,#020204 0%,transparent 23%);
+  }
+  .hero-copy{top:12.5%;left:4.5%;width:53%;max-width:none}
+  .hero h1{margin:0 0 4.5%;font-size:clamp(20px,5.7vw,28px);line-height:1.16;letter-spacing:-.055em}
   .hero h1 span{white-space:nowrap}
-  .hero p{font-size:clamp(16px,3.35vw,23px);line-height:1.2;margin-bottom:7%;max-width:100%}
-  .start{padding:clamp(10px,1.8vw,14px) clamp(18px,3.8vw,27px);min-height:clamp(48px,9vw,64px);border-width:3px;border-radius:28px;font-size:clamp(15px,3.2vw,22px)}
-  .paths{padding:clamp(18px,3vw,24px) 3% 0}
-  .section-heading{gap:clamp(9px,2vw,14px);margin-bottom:clamp(18px,2.8vw,22px)}
-  .section-heading:before,.section-heading:after{height:30px;border-top-width:4px}
-  .section-heading h2{font-size:clamp(22px,5.35vw,36px)}
-  .section-heading p{font-size:clamp(15px,2.75vw,19px)}
-  .cards{width:100%;grid-template-columns:repeat(2,minmax(0,1fr));gap:clamp(12px,2.1vw,16px) clamp(14px,2.5vw,18px)}
-  .card{width:100%;aspect-ratio:1.28;min-width:0}
-  .card>img{width:100%;height:100%;object-fit:fill}
-  .card-copy{left:3%;right:3%;bottom:5.5%}
-  .card h3{font-size:clamp(15px,3.3vw,22px);margin-bottom:3px}
-  .card p{font-size:clamp(13px,2.5vw,17px);line-height:1.12}
-  .card .action{font-size:clamp(13px,2.55vw,17px);margin-top:5px}
-  .mission{width:100%;margin:clamp(22px,3.2vw,24px) 0 clamp(34px,5vw,38px);min-height:21.2vw;max-height:160px;grid-template-columns:34% minmax(0,1fr);padding:10px 3.5%;background-size:100% 100%;background-position:center;background-repeat:no-repeat}
-  .mission-copy{min-width:0;padding-left:2%}
-  .mission-copy h2{font-size:clamp(17px,3.55vw,24px);line-height:1.12;margin-bottom:7px}
-  .mission-copy p{font-size:clamp(13px,2.55vw,17px);line-height:1.2}
-  .mission-copy em{font-size:clamp(29px,6.1vw,40px);line-height:1.05}
-  .bottom-line{height:31px}
-  footer{padding:12px 15px 20px;font-size:13px}
+  .hero p{max-width:100%;margin:0 0 5.5%;font-size:clamp(13px,3.35vw,16px);line-height:1.18}
+  .start{min-height:0;padding:9px 15px;border-width:2px;border-radius:24px;gap:10px;font-size:clamp(13px,3.2vw,16px);white-space:nowrap}
+  .paths{
+    grid-row:3;width:100%;height:100%;min-width:0;min-height:0;
+    display:grid;grid-template-columns:minmax(0,1fr);
+    grid-template-rows:14% minmax(0,1fr) 19%;
+    row-gap:0;padding:1.5% 3% 1%;overflow:hidden;
+  }
+  .section-heading{min-width:0;margin:0;gap:7px;transform:none}
+  .section-heading:before,.section-heading:after{
+    flex:1 1 0;min-width:0;height:20px;border-top-width:3px
+  }
+  .section-heading h2{font-size:clamp(18px,5.1vw,24px);line-height:1.05}
+  .section-heading p{margin-top:4px;font-size:clamp(12px,2.8vw,14px);line-height:1.05}
+  .cards{
+    width:100%;height:100%;min-width:0;min-height:0;
+    display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+    grid-template-rows:repeat(2,minmax(0,1fr));gap:2% 3%;
+    overflow:hidden;
+  }
+  .card{width:100%;height:100%;min-width:0;min-height:0;aspect-ratio:auto;border-radius:0;overflow:hidden}
+  .card>img{
+    position:absolute;inset:0;display:block;width:100%;height:100%;
+    object-fit:cover;object-position:center center;
+  }
+  .card-copy{left:3%;right:3%;bottom:5%;text-align:center}
+  .card h3{margin:0 0 3px;font-size:clamp(12px,3.35vw,16px);line-height:1.05}
+  .card p{font-size:clamp(10px,2.65vw,13px);line-height:1.08}
+  .card .action{margin-top:3px;font-size:clamp(10px,2.7vw,13px);line-height:1.05}
+  .mission{
+    width:100%;height:100%;min-width:0;min-height:0;max-height:none;
+    margin:0;padding:6px 3.5%;display:grid;grid-template-columns:34% minmax(0,1fr);
+    align-items:center;background-size:cover;background-position:center;background-repeat:no-repeat;
+  }
+  .mission-copy{grid-column:2;min-width:0;padding-left:2%}
+  .mission-copy h2{margin:0 0 3px;font-size:clamp(12px,3.15vw,15px);line-height:1.05}
+  .mission-copy p{font-size:clamp(10px,2.35vw,12px);line-height:1.08}
+  .mission-copy em{margin-top:3px;font-size:clamp(17px,4.8vw,23px);line-height:1;white-space:nowrap}
+  .bottom-line{grid-row:4;width:100%;height:100%;min-height:0;border-top-width:3px}
+  .bottom-line:before{top:-3px;width:72px;height:17px;border-width:3px;border-bottom:0}
+  .chevrons{font-size:19px;line-height:12px}
+  footer{display:none}
 }
 @media(max-width:370px){
-  .topbar{min-height:96px}
+  .brand-wordmark span:first-child{font-size:19px}
+  .brand-wordmark span:last-child{font-size:15px}
   .hero-copy{width:56%}
-  .hero h1{font-size:22px}
-  .hero p{font-size:15px}
-  .start{font-size:14px;padding:9px 14px}
-  .card h3{font-size:13px}
-  .card p,.card .action{font-size:11px}
-  .mission-copy h2{font-size:14px}
-  .mission-copy p{font-size:11px}
-}
-@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*:before,*:after{transition:none!important}}
-
-/* Mobile viewport composition: one complete home screen, not a vertically stacked hero. */
-@media (max-width:520px) {
-  html, body {
-    width:100%;
-    height:100%;
-    min-height:0;
-    margin:0;
-    overflow:hidden !important;
-  }
-  .site {
-    width:100%;
-    max-width:100%;
-    height:100svh;
-    min-height:0;
-    margin:0 auto;
-    display:grid;
-    grid-template-rows:10.5svh 33svh 54svh 2.5svh;
-    overflow:hidden;
-  }
-  .topbar {
-    width:100%;
-    height:100%;
-    min-height:0;
-    max-height:none;
-    padding:0 2.8%;
-    gap:2%;
-  }
-  .brand {
-    min-width:0;
-    max-width:calc(100% - 72px);
-    height:100%;
-    gap:1.5%;
-  }
-  .brand-mark {
-    flex:0 0 31%;
-    min-width:0;
-    height:100%;
-  }
-  .brand-mark img {
-    width:100%;
-    height:100%;
-    object-fit:contain;
-    object-position:left center;
-  }
-  .brand-wordmark { min-width:0; }
-  .brand-wordmark span:first-child { font-size:clamp(19px,5.1vw,27px); }
-  .brand-wordmark span:last-child { font-size:clamp(15px,4.1vw,23px); }
-  .menu-button {
-    width:clamp(58px,13.2vw,76px);
-    height:auto;
-    aspect-ratio:1;
-    flex:0 0 auto;
-    border-radius:23%;
-  }
-  .hero {
-    width:100%;
-    height:100%;
-    min-height:0;
-    max-height:none;
-    position:relative;
-    overflow:hidden;
-  }
-  .hero-art {
-    position:absolute;
-    inset:0;
-    width:100%;
-    height:100%;
-    object-fit:cover;
-    object-position:center 46%;
-  }
-  .hero:after {
-    background:
-      linear-gradient(90deg,#020204 0%,#020204 14%,#020204ed 34%,#020204a8 53%,#02020420 78%,transparent 100%),
-      linear-gradient(0deg,#020204 0%,transparent 22%);
-  }
-  .hero-copy {
-    top:12%;
-    left:4%;
-    width:53%;
-    max-width:none;
-  }
-  .hero h1 {
-    margin:0 0 4.5%;
-    font-size:clamp(21px,5.85vw,29px);
-    line-height:1.16;
-    letter-spacing:-.055em;
-  }
-  .hero h1 span { white-space:nowrap; }
-  .hero p {
-    max-width:100%;
-    margin:0 0 6%;
-    font-size:clamp(14px,3.35vw,17px);
-    line-height:1.17;
-  }
-  .start {
-    min-height:0;
-    padding:10px 18px;
-    border-width:2.5px;
-    border-radius:28px;
-    gap:12px;
-    font-size:clamp(14px,3.2vw,17px);
-    white-space:nowrap;
-  }
-  .paths {
-    width:100%;
-    min-width:0;
-    min-height:0;
-    height:100%;
-    display:grid;
-    grid-template-rows:16% minmax(0,1fr) 20%;
-    row-gap:0;
-    padding:2.2% 3% 0;
-    overflow:hidden;
-  }
-  .section-heading {
-    min-width:0;
-    margin:0;
-    gap:clamp(7px,2vw,12px);
-  }
-  .section-heading:before,.section-heading:after {
-    flex:1 1 0;
-    min-width:0;
-    height:22px;
-    border-top-width:3px;
-  }
-  .section-heading h2 {
-    font-size:clamp(19px,5.35vw,25px);
-    line-height:1.05;
-  }
-  .section-heading p {
-    margin-top:4px;
-    font-size:clamp(13px,2.75vw,15px);
-    line-height:1.05;
-  }
-  .cards {
-    width:100%;
-    min-width:0;
-    min-height:0;
-    height:100%;
-    display:grid;
-    grid-template-columns:repeat(2,minmax(0,1fr));
-    grid-template-rows:repeat(2,minmax(0,1fr));
-    gap:2.2% 3.2%;
-    overflow:hidden;
-  }
-  .card {
-    width:100%;
-    min-width:0;
-    min-height:0;
-    height:100%;
-    aspect-ratio:auto;
-    border-radius:0;
-    overflow:hidden;
-  }
-  .card>img {
-    position:absolute;
-    inset:0;
-    display:block;
-    width:100%;
-    height:100%;
-    object-fit:cover;
-    object-position:center top;
-  }
-  .card-copy {
-    left:3%;
-    right:3%;
-    bottom:5%;
-  }
-  .card h3 {
-    margin:0 0 3px;
-    font-size:clamp(13px,3.3vw,17px);
-    line-height:1.05;
-  }
-  .card p {
-    font-size:clamp(11px,2.5vw,13px);
-    line-height:1.08;
-  }
-  .card .action {
-    margin-top:3px;
-    font-size:clamp(11px,2.55vw,13px);
-    line-height:1.05;
-  }
-  .mission {
-    width:100%;
-    min-width:0;
-    min-height:0;
-    height:100%;
-    max-height:none;
-    margin:2% 0 1%;
-    padding:7px 3.5%;
-    grid-template-columns:34% minmax(0,1fr);
-    background-size:100% 100%;
-    background-position:center;
-    background-repeat:no-repeat;
-  }
-  .mission-copy {
-    min-width:0;
-    padding-left:2%;
-  }
-  .mission-copy h2 {
-    margin:0 0 3px;
-    font-size:clamp(12px,3.15vw,16px);
-    line-height:1.05;
-  }
-  .mission-copy p {
-    font-size:clamp(10px,2.3vw,12px);
-    line-height:1.08;
-  }
-  .mission-copy em {
-    margin-top:3px;
-    font-size:clamp(18px,5vw,25px);
-    line-height:1;
-    white-space:nowrap;
-  }
-  .bottom-line {
-    width:100%;
-    height:100%;
-    min-height:0;
-    border-top-width:3px;
-  }
-  .bottom-line:before {
-    top:-3px;
-    width:74px;
-    height:18px;
-    border-width:3px;
-    border-bottom:0;
-  }
-  .chevrons {
-    font-size:20px;
-    line-height:13px;
-  }
-  footer { display:none; }
+  .hero h1{font-size:20px}
+  .hero p{font-size:12px}
+  .start{font-size:12px;padding:8px 12px}
+  .card h3{font-size:12px}
+  .card p,.card .action{font-size:10px}
+  .mission-copy h2{font-size:11px}
+  .mission-copy p{font-size:9px}
+  .mission-copy em{font-size:16px}
 }
 
-/* Reference-layout alignment refinements (mobile only). */
-@media (max-width:520px) {
-  .site {
-    grid-template-rows:8.6svh 33.5svh 54svh 3.9svh;
-  }
-  .topbar { padding-inline:2.2%; }
-  .brand { max-width:calc(100% - 76px); gap:0; }
-  .brand-mark { flex-basis:39%; }
-  .brand-mark img { object-fit:contain; object-position:left center; }
-  .brand-wordmark span:first-child { font-size:clamp(22px,6.0vw,30px); }
-  .brand-wordmark span:last-child { font-size:clamp(17px,4.8vw,25px); }
-  .hero-art { object-position:center 48%; }
-  .hero-copy { top:13.5%; left:4%; width:51%; }
-  .hero h1 { font-size:clamp(21px,5.65vw,29px); line-height:1.18; margin-bottom:5%; }
-  .hero p { font-size:clamp(14px,3.15vw,17px); line-height:1.2; }
-  .paths {
-    grid-template-rows:13% minmax(0,1fr) 20%;
-    padding-top:1.2%;
-  }
-  .section-heading { transform:translateY(-1px); }
-  .cards { gap:2.2% 3.2%; }
-  .card>img { object-fit:cover; object-position:center center; }
-  .card-copy { bottom:5.5%; }
-  .mission { margin-top:1%; }
-}
 </style>
 </head>
 <body>
